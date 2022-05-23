@@ -34,6 +34,7 @@
     "packages/richtext",
     "packages/scrolldisable",
     "packages/selectcustom",
+    "packages/shopify",
     "packages/sliderdots",
     "packages/untransform",
     "packages/toc",
