@@ -10,11 +10,19 @@ Please, make sure you know how to use `npm Workspaces` before performing any act
 
 ## How to start
 
-`cd` into one of the packages.
+Install all the dependencies on the root package unsin `npm install`.
 
-Use `npm run dev` to build for development, you can define a custom build directory setting an `.env` file.
+`cd` into one of the packages, and install the dependencies of that package.
+
+Use `npm run dev` to build for development.
 
 Use `npm run build` to build for production.
+
+Use `npm run serve` to start a local server under `http://localhost:3000`, this will allow to work directly from the Webflow project by importing a script like this:
+
+```html
+<script async src="http://localhost:3000/packages/copyclip/copyclip.js"></script>
+```
 
 ## Specification
 
@@ -110,8 +118,6 @@ It can be `childOf`, to have elements `childOf` Filter UI and `childOf` Collecti
 
 #### Not classified cases
 
-
-
 - `cmsfilter` → Filter → It will not validate if there are more than one form with input elements. It will only check for single element filter existence.
 
 - `cmsfilter` → Will not validate start checked for checkbox.
@@ -139,7 +145,8 @@ It can be `childOf`, to have elements `childOf` Filter UI and `childOf` Collecti
 #### Issues
 
 Comment on
-/**
- * Defines the text that will be success to the clipboard.
- */
-Text
+/\*\*
+
+- Defines the text that will be success to the clipboard.
+  \*/
+  Text
