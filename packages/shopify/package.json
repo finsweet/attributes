@@ -32,5 +32,11 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes"
+  "homepage": "https://www.finsweet.com/attributes",
+  "dependencies": {
+    "shopify-buy": "^2.15.1"
+  },
+  "devDependencies": {
+    "@types/shopify-buy": "^2.10.10"
+  }
 }

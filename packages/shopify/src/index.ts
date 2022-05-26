@@ -1,8 +1,8 @@
-import { assessScript } from '$global/factory/assess';
 import { initAttributes } from '$global/factory/init';
 
 import { version } from '../package.json';
-import { init } from './init';
+import { initializeShopifyClient } from './actions/shopifyClient';
+import { assessScriptAttributes, init } from './init';
 import { ATTRIBUTE } from './utils/constants';
 
 /**
@@ -12,10 +12,15 @@ initAttributes();
 
 window.fsAttributes[ATTRIBUTE] ||= {};
 
-const { preventsLoad } = assessScript();
+const scriptAttributes = assessScriptAttributes();
+const {
+  globalAttributeParams: { preventsLoad },
+} = scriptAttributes;
+
 const attribute = window.fsAttributes[ATTRIBUTE];
 
 attribute.version = version;
+initializeShopifyClient(scriptAttributes);
 
 if (preventsLoad) attribute.init = init;
 else {

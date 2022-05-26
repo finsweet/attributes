@@ -26,6 +26,16 @@ export const ATTRIBUTES = {
     key: `${ATTRIBUTES_PREFIX}-${EXAMPLE_SETTING_KEY}`,
     values: EXAMPLE_SETTING_VALUES,
   },
+
+  /**
+   * Defines the storefrontAccessToken provided by Shopify
+   */
+  token: { key: `${ATTRIBUTES_PREFIX}-token` },
+
+  /**
+   * Defines the domain where the Shopify store is hosted
+   */
+  domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
