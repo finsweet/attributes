@@ -1,5 +1,3 @@
-import { Debug } from '@finsweet/ts-utils';
-
 import { assessScript } from '$global/factory/assess';
 
 import { logHello } from './actions/console';
@@ -25,16 +23,12 @@ export const assessScriptAttributes = (): ShopifyAttributeParams => {
 
   const tokenValue = currentScript?.getAttribute(token.key);
   if (!tokenValue) {
-    const message = 'token must be provided';
-    Debug.alert(message, 'error');
-    throw new Error(message);
+    throw new Error('token must be provided');
   }
 
   const domainValue = currentScript?.getAttribute(domain.key);
   if (!domainValue) {
-    const message = 'domain must be provided';
-    Debug.alert(message, 'error');
-    throw new Error(message);
+    throw new Error('domain must be provided');
   }
 
   return { globalAttributeParams, domain: domainValue, token: tokenValue };
