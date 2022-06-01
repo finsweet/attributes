@@ -19,7 +19,7 @@ export const init = (): void => {
 export const assessScriptAttributes = (): ShopifyAttributeParams => {
   const { currentScript } = document;
   const globalAttributeParams = assessScript();
-  const { token, domain } = ATTRIBUTES;
+  const { token, domain, productPage } = ATTRIBUTES;
 
   const tokenValue = currentScript?.getAttribute(token.key);
   if (!tokenValue) {
@@ -31,5 +31,7 @@ export const assessScriptAttributes = (): ShopifyAttributeParams => {
     throw new Error('domain must be provided');
   }
 
-  return { globalAttributeParams, domain: domainValue, token: tokenValue };
+  const productPageValue = currentScript?.getAttribute(productPage.key) || productPage.defaultValue
+
+  return { globalAttributeParams, domain: domainValue, token: tokenValue, productPage: productPageValue };
 };

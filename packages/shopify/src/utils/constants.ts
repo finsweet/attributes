@@ -7,6 +7,26 @@ const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
 export const EXAMPLE_ELEMENT_KEY = 'example';
 export const EXAMPLE_SETTING_KEY = 'example';
 export const EXAMPLE_SETTING_VALUES = { value: 'value' };
+export const PRODUCT_TITLE = 'title';
+export const PRODUCT_DESCRIPTION = 'description';
+export const PRODUCT_HANDLE = 'handle';
+export const PRODUCT_CREATED = 'created';
+export const PRODUCT_UPDATED = 'updated';
+export const PRODUCT_PUBLISHED = 'published';
+export const PRODUCT_IMAGE = 'image';
+export const PRODUCT_SKU = 'sku';
+export const PRODUCT_PRICE = 'price';
+export const PRODUCT_COMPARE_PRICE = 'compareprice';
+export const PRODUCT_DISCOUNTED_PERCENT = 'discountedpercent';
+export const PRODUCT_TYPE = 'type';
+export const PRODUCT_VENDOR = 'vendor';
+export const PRODUCT_WEIGHT = 'weight';
+
+export const QUERY_PARAMS = {
+  id: "id",
+  handle: "handle"
+}
+
 
 export const ATTRIBUTES = {
   element: {
@@ -16,6 +36,22 @@ export const ATTRIBUTES = {
        * This is an element example definition.
        */
       example: EXAMPLE_ELEMENT_KEY,
+
+      // product elements
+      title: PRODUCT_TITLE,
+      description: PRODUCT_DESCRIPTION,
+      handle: PRODUCT_HANDLE,
+      created: PRODUCT_CREATED,
+      updated: PRODUCT_UPDATED,
+      published: PRODUCT_PUBLISHED,
+      image: PRODUCT_IMAGE,
+      sku: PRODUCT_SKU,
+      price: PRODUCT_PRICE,
+      compareprice: PRODUCT_COMPARE_PRICE,
+      discountedpercent: PRODUCT_DISCOUNTED_PERCENT,
+      type: PRODUCT_TYPE,
+      vendor: PRODUCT_VENDOR,
+      weight: PRODUCT_WEIGHT
     },
   },
 
@@ -36,6 +72,11 @@ export const ATTRIBUTES = {
    * Defines the domain where the Shopify store is hosted
    */
   domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
+
+  /**
+   * Defines the Webflow product page slug
+   */
+  productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);

@@ -12,4 +12,9 @@ export interface ShopifyAttributeParams {
    * Defines the domain where the Shopify store is hosted
    */
   domain: string;
+
+   /**
+   * Defines the Webflow product page slug
+   */
+    productPage: string;
 }
