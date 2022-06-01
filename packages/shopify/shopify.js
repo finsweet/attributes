@@ -7891,7 +7891,7 @@
     const queryElement3 = (elementKey, params) => {
       const selector = getSelector3("element", elementKey, params);
       const scope = params?.scope || document;
-      return params?.returnMultiple ? scope.querySelectorAll(selector) : scope.querySelector(selector);
+      return params?.all ? scope.querySelectorAll(selector) : scope.querySelector(selector);
     };
     return [getSelector3, queryElement3];
   };
@@ -8142,7 +8142,7 @@
       weight
     ];
     productAttributes.forEach((attribute2, index) => {
-      const matchedElements = queryElement2(attribute2, { scope: parentElement, returnMultiple: true });
+      const matchedElements = queryElement2(attribute2, { scope: parentElement, all: true });
       matchedElements.forEach((element) => {
         if (attribute2 === "image") {
           element.setAttribute("src", productValues[index]);

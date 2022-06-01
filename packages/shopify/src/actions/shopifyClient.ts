@@ -97,7 +97,7 @@ const bindProductData = (parentElement: HTMLElement, product: Product) => {
 
     productAttributes.forEach((attribute: string, index: number) => {
         //@ts-ignore
-        const matchedElements = queryElement(attribute, { scope: parentElement, returnMultiple: true }) as NodeListOf<Element>;
+        const matchedElements = queryElement(attribute, { scope: parentElement, all: true }) as NodeListOf<Element>;
         matchedElements.forEach(element => {
             if (attribute === 'image') {
                 element.setAttribute('src', productValues[index])
