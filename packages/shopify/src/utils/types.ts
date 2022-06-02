@@ -13,8 +13,18 @@ export interface ShopifyAttributeParams {
    */
   domain: string;
 
-   /**
-   * Defines the Webflow product page slug
+  /**
+  * Defines the Webflow product page slug.
+  * @default /test/product-template
+  */
+  productPage: string;
+
+  /**
+   * Defines the slug or the url to redirect the user to when something goes wrong on
+   * product page
+   * @default 404.html
    */
-    productPage: string;
+  redirectURL: string;
 }
+
+export type ProductAttribute = 'title' | 'description' | 'handle' | 'created' | 'updated' | 'published' | 'image' | 'sku' | 'price' | 'compareprice' | 'discountedpercent' | 'type' | 'vendor' | 'weight'

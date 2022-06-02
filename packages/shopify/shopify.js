@@ -7976,6 +7976,30 @@
   // package.json
   var version = "1.0.0";
 
+  // ../../node_modules/@finsweet/ts-utils/dist/components/Debug.js
+  var Debug = class {
+    static activateAlerts() {
+      this.alertsActivated = true;
+    }
+    static alert(text, type) {
+      if (this.alertsActivated)
+        window.alert(text);
+      if (type === "error")
+        throw new Error(text);
+    }
+  };
+  __publicField(Debug, "alertsActivated", false);
+
+  // ../../global/factory/assess.ts
+  var assessScript = () => {
+    const { currentScript } = document;
+    const { preventLoad, debugMode } = ATTRIBUTES;
+    const preventsLoad2 = typeof currentScript?.getAttribute(preventLoad.key) === "string";
+    if (typeof currentScript?.getAttribute(debugMode.key) === "string")
+      Debug.activateAlerts();
+    return { preventsLoad: preventsLoad2 };
+  };
+
   // src/actions/shopifyClient.ts
   var import_shopify_buy = __toESM(require_shopify_buy(), 1);
 
@@ -7999,6 +8023,7 @@
   var PRODUCT_TYPE = "type";
   var PRODUCT_VENDOR = "vendor";
   var PRODUCT_WEIGHT = "weight";
+  var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
   var QUERY_PARAMS = {
     id: "id",
     handle: "handle"
@@ -8030,7 +8055,8 @@
     },
     token: { key: `${ATTRIBUTES_PREFIX2}-token` },
     domain: { key: `${ATTRIBUTES_PREFIX2}-domain` },
-    productPage: { key: `${ATTRIBUTES_PREFIX2}-productpage`, defaultValue: "/tests/product-template" }
+    productPage: { key: `${ATTRIBUTES_PREFIX2}-productpage`, defaultValue: "/tests/product-template" },
+    redirectURL: { key: `${ATTRIBUTES_PREFIX2}-redirectURL`, defaultValue: "/404" }
   };
   var [getSelector2, queryElement2] = generateSelectors(ATTRIBUTES2);
 
@@ -8062,32 +8088,32 @@
   var initializeShopifyClient = async (params) => {
     shopifyClient = new ShopifyClient(params);
     attributesParams = params;
-    checkProductTemplatePage(params.productPage);
+    checkProductTemplatePage(params);
   };
-  var checkProductTemplatePage = async (productSlug) => {
+  var checkProductTemplatePage = async (params) => {
+    const { productPage, redirectURL } = params;
     const path = window.location.pathname;
-    if (path.endsWith(productSlug)) {
+    if (path.endsWith(productPage)) {
       const { id, handle } = QUERY_PARAMS;
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
-      const idValue = urlParams.get(id);
+      const idValue = PRODUCT_ID_PREFIX + urlParams.get(id);
       const handleValue = urlParams.get(handle);
-      if (idValue) {
-        bindProductById(idValue);
-      } else if (handleValue) {
-        bindProductByHandle(handleValue);
-      } else {
-        throw new Error(`${id} or ${handle} must be provided in URL query parameter`);
+      try {
+        let product;
+        if (idValue) {
+          product = await shopifyClient.fetchProductById(idValue);
+        } else if (handleValue) {
+          product = await shopifyClient.fetchProductByHandle(handle);
+        } else {
+          window.location.href = redirectURL;
+          return;
+        }
+        bindProductData(document.querySelector("body"), product);
+      } catch (e) {
+        window.location.href = redirectURL;
       }
     }
-  };
-  var bindProductById = async (id) => {
-    const product = await shopifyClient.fetchProductById(id);
-    bindProductData(document.querySelector("body"), product);
-  };
-  var bindProductByHandle = async (handle) => {
-    const product = await shopifyClient.fetchProductByHandle(handle);
-    bindProductData(document.querySelector("body"), product);
   };
   var bindProductData = (parentElement, product) => {
     const {
@@ -8153,41 +8179,16 @@
     });
   };
 
-  // ../../node_modules/@finsweet/ts-utils/dist/components/Debug.js
-  var Debug = class {
-    static activateAlerts() {
-      this.alertsActivated = true;
-    }
-    static alert(text, type) {
-      if (this.alertsActivated)
-        window.alert(text);
-      if (type === "error")
-        throw new Error(text);
-    }
-  };
-  __publicField(Debug, "alertsActivated", false);
-
-  // ../../global/factory/assess.ts
-  var assessScript = () => {
-    const { currentScript } = document;
-    const { preventLoad, debugMode } = ATTRIBUTES;
-    const preventsLoad2 = typeof currentScript?.getAttribute(preventLoad.key) === "string";
-    if (typeof currentScript?.getAttribute(debugMode.key) === "string")
-      Debug.activateAlerts();
-    return { preventsLoad: preventsLoad2 };
-  };
-
-  // src/actions/console.ts
-  var logHello = () => console.log("Hello!");
-
   // src/init.ts
-  var init = () => {
-    logHello();
+  var init = (params) => {
+    return () => {
+      initializeShopifyClient(params);
+    };
   };
   var assessScriptAttributes = () => {
     const { currentScript } = document;
     const globalAttributeParams = assessScript();
-    const { token, domain, productPage } = ATTRIBUTES2;
+    const { token, domain, productPage, redirectURL } = ATTRIBUTES2;
     const tokenValue = currentScript?.getAttribute(token.key);
     if (!tokenValue) {
       throw new Error("token must be provided");
@@ -8197,7 +8198,14 @@
       throw new Error("domain must be provided");
     }
     const productPageValue = currentScript?.getAttribute(productPage.key) || productPage.defaultValue;
-    return { globalAttributeParams, domain: domainValue, token: tokenValue, productPage: productPageValue };
+    const redirectURLValue = currentScript?.getAttribute(redirectURL.key) || redirectURL.defaultValue;
+    return {
+      globalAttributeParams,
+      domain: domainValue,
+      token: tokenValue,
+      productPage: productPageValue,
+      redirectURL: redirectURLValue
+    };
   };
 
   // src/index.ts
@@ -8209,12 +8217,11 @@
   } = scriptAttributes;
   var attribute = window.fsAttributes[ATTRIBUTE];
   attribute.version = version;
-  initializeShopifyClient(scriptAttributes);
   if (preventsLoad)
-    attribute.init = init;
+    attribute.init = init(scriptAttributes);
   else {
     window.Webflow ||= [];
-    window.Webflow.push(init);
+    window.Webflow.push(init(scriptAttributes));
   }
 })();
 /*
