@@ -83,7 +83,7 @@ export const ATTRIBUTES = {
   /**
    * Defines the slug or the url to redirect the user to when something goes wrong on product page
    */
-    redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirectURL`, defaultValue: "/404" },
+  redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
