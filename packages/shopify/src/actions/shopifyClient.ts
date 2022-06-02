@@ -1,7 +1,7 @@
 import Client, { Product } from 'shopify-buy';
-import { queryElement, QUERY_PARAMS } from '../utils/constants';
+import { queryElement, QUERY_PARAMS, PRODUCT_ID_PREFIX } from '../utils/constants';
 
-import { ShopifyAttributeParams } from '../utils/types';
+import { ProductAttribute, ShopifyAttributeParams } from '../utils/types';
 
 class ShopifyClient {
     private readonly token: string;
@@ -38,49 +38,42 @@ export const initializeShopifyClient = async (params: ShopifyAttributeParams) =>
     shopifyClient = new ShopifyClient(params);
     attributesParams = params;
 
-    checkProductTemplatePage(params.productPage);
+    checkProductTemplatePage(params);
 };
 
 // Check if the page is a product template page then bind product based on the
 // query params
-const checkProductTemplatePage = async (productSlug: string) => {
+const checkProductTemplatePage = async (params: ShopifyAttributeParams) => {
+    const { productPage, redirectURL } = params;
+
     const path = window.location.pathname
-    if (path.endsWith(productSlug)) {
+    if (path.endsWith(productPage)) {
 
         const { id, handle } = QUERY_PARAMS
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
-        const idValue = urlParams.get(id);
+        const idValue = PRODUCT_ID_PREFIX + urlParams.get(id);
         const handleValue = urlParams.get(handle);
 
-        if (idValue) {
-            bindProductById(idValue);
-        } else if (handleValue) {
-            bindProductByHandle(handleValue);
-        } else {
-            throw new Error(`${id} or ${handle} must be provided in URL query parameter`);
+        try {
+            let product: Product;
+            if (idValue) {
+                product = await shopifyClient.fetchProductById(idValue);
+            } else if (handleValue) {
+                product = await shopifyClient.fetchProductByHandle(handle);
+            } else {
+                window.location.href = redirectURL as string
+                return
+            }
+            bindProductData(document.querySelector("body") as HTMLElement, product);
+        } catch (e) {
+            window.location.href = redirectURL as string
         }
     }
 
 }
-
-export const bindProductById = async (id: string) => {
-    const product = await shopifyClient.fetchProductById(id);
-    bindProductData(document.querySelector("body") as HTMLElement, product);
-}
-
-/**
- * Fetches the product details using the handle to query 
- * @param handle is the handle property that uniquely identifies the product
- * @returns void
- */
-export const bindProductByHandle = async (handle: string) => {
-    const product = await shopifyClient.fetchProductByHandle(handle);
-    bindProductData(document.querySelector("body") as HTMLElement, product);
-}
-
 
 const bindProductData = (parentElement: HTMLElement, product: Product) => {
     const { title, description, handle, createdAt, updatedAt, publishedAt,
@@ -92,12 +85,12 @@ const bindProductData = (parentElement: HTMLElement, product: Product) => {
     const productAttributes = ['title', 'description', 'handle', 'created', 'updated',
         'published', 'image', 'sku', 'price', 'compareprice', 'discountedpercent', 'type', 'vendor',
         'weight'];
+
     const productValues = [title, description, handle, createdAt, updatedAt, publishedAt, image?.src,
         sku, price, compareAtPrice, discount, typeValue, vendor, weight];
 
     productAttributes.forEach((attribute: string, index: number) => {
-        //@ts-ignore
-        const matchedElements = queryElement(attribute, { scope: parentElement, all: true }) as NodeListOf<Element>;
+        const matchedElements = queryElement(attribute as ProductAttribute, { scope: parentElement, all: true }) as NodeListOf<Element>;
         matchedElements.forEach(element => {
             if (attribute === 'image') {
                 element.setAttribute('src', productValues[index])
@@ -105,7 +98,6 @@ const bindProductData = (parentElement: HTMLElement, product: Product) => {
                 element.textContent = productValues[index];
             }
         });
-
     })
 
 }

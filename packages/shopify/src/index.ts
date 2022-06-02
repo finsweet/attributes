@@ -20,10 +20,9 @@ const {
 const attribute = window.fsAttributes[ATTRIBUTE];
 
 attribute.version = version;
-initializeShopifyClient(scriptAttributes);
 
-if (preventsLoad) attribute.init = init;
+if (preventsLoad) attribute.init = init(scriptAttributes);
 else {
   window.Webflow ||= [];
-  window.Webflow.push(init);
+  window.Webflow.push(init(scriptAttributes));
 }

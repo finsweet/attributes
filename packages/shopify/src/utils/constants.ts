@@ -22,6 +22,8 @@ export const PRODUCT_TYPE = 'type';
 export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
 
+export const PRODUCT_ID_PREFIX = "gid://shopify/Product/"
+
 export const QUERY_PARAMS = {
   id: "id",
   handle: "handle"
@@ -77,6 +79,11 @@ export const ATTRIBUTES = {
    * Defines the Webflow product page slug
    */
   productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
+
+  /**
+   * Defines the slug or the url to redirect the user to when something goes wrong on product page
+   */
+    redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirectURL`, defaultValue: "/404" },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
