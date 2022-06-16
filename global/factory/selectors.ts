@@ -25,6 +25,15 @@ export const generateSelectors = <
 >(
   attributes: Attributes
 ) => {
+  type AttributesValues = Attributes['element']['values'];
+  type AttributesValuesKeys = keyof AttributesValues;
+  type AttributeStaticParams = {
+    operator?: AttributeOperator;
+  };
+  type AttributeDynamicParams = AttributeStaticParams & {
+    instanceIndex?: number;
+  };
+
   /**
    * Generates a query selector based on the preferences.
    * @param name The name of the attribute.
@@ -37,13 +46,8 @@ export const generateSelectors = <
     name: Name,
     valueKey?: ValueKey,
     params?: Attributes[Name]['values'][ValueKey] extends AttributeStaticValue
-      ? {
-        operator?: AttributeOperator;
-      }
-      : {
-        instanceIndex?: number;
-        operator?: AttributeOperator;
-      }
+      ? AttributeStaticParams
+      : AttributeDynamicParams
   ): string => {
     const attribute = attributes[name];
 
@@ -72,31 +76,37 @@ export const generateSelectors = <
   /**
    * Queries an element using the generated element selectors.
    * @param elementKey The element key.
-   * @param params.index Only accepted when the value is dynamic.
+   * @param params.instanceIndex Only accepted when the value is dynamic.
    * @param params.operator Optional operator for the selector.
    * @param params.scope The scope for the query. Defaults to `document`.
    * @param params.all determines if array of matched elements should be returned.
    */
-  const queryElement = <
-    E extends Element = Element,
-    ElementKey extends keyof Attributes['element']['values'] = keyof Attributes['element']['values']
-  >(
+  function queryElement<E extends Element = Element, ElementKey extends AttributesValuesKeys = AttributesValuesKeys>(
     elementKey: ElementKey,
-    params?: { scope?: ParentNode, all?: boolean } & (Attributes['element']['values'][ElementKey] extends AttributeStaticValue
-      ? {
-        operator?: AttributeOperator;
-      }
-      : {
-        instanceIndex?: number;
-        operator?: AttributeOperator;
-      }),
-  ) => {
+    params?: {
+      scope?: ParentNode;
+      all?: false;
+    } & (AttributesValues[ElementKey] extends AttributeStaticValue ? AttributeStaticParams : AttributeDynamicParams)
+  ): E | null;
+  function queryElement<E extends Element = Element, ElementKey extends AttributesValuesKeys = AttributesValuesKeys>(
+    elementKey: ElementKey,
+    params?: {
+      scope?: ParentNode;
+      all: true;
+    } & (AttributesValues[ElementKey] extends AttributeStaticValue ? AttributeStaticParams : AttributeDynamicParams)
+  ): NodeListOf<E>;
+  function queryElement<E extends Element = Element, ElementKey extends AttributesValuesKeys = AttributesValuesKeys>(
+    elementKey: ElementKey,
+    params?: {
+      scope?: ParentNode;
+      all?: boolean;
+    } & (AttributesValues[ElementKey] extends AttributeStaticValue ? AttributeStaticParams : AttributeDynamicParams)
+  ): NodeListOf<E> | E | null {
     const selector = getSelector('element', elementKey, params);
-    const scope = (params?.scope || document)
-
+    const scope = params?.scope || document;
 
     return params?.all ? scope.querySelectorAll<E>(selector) : scope.querySelector<E>(selector);
-  };
+  }
 
   return [getSelector, queryElement] as const;
 };
