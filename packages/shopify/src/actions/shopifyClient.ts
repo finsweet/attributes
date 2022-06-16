@@ -1,17 +1,103 @@
 import Client, { Product } from 'shopify-buy';
+import { queryElement, QUERY_PARAMS, PRODUCT_ID_PREFIX } from '../utils/constants';
 
-import { ShopifyAttributeParams } from '../utils/types';
+import { ProductAttribute, ShopifyAttributeParams } from '../utils/types';
 
-export const initializeShopifyClient = (params: ShopifyAttributeParams) => {
-  const { token, domain } = params;
-  const client = Client.buildClient({
-    domain: domain,
-    storefrontAccessToken: token,
-  });
+class ShopifyClient {
+    private readonly token: string;
+    private readonly domain: string;
+    private readonly client: Client.Client;
 
-  client.product.fetchAll().then((products: Product[]) => {
-    // Do something with the products
-    // eslint-disable-next-line no-console
-    console.log(products);
-  });
+    constructor(params: ShopifyAttributeParams) {
+        this.token = params.token;
+        this.domain = params.domain;
+
+        this.client = Client.buildClient({
+            domain: this.domain,
+            storefrontAccessToken: this.token,
+        });
+    }
+
+    async fetchProductById(id: string): Promise<Product> {
+        return this.client.product.fetch(id);
+    }
+
+    async fetchProductByHandle(handle: string): Promise<Product> {
+        return this.client.product.fetchByHandle(handle);
+    }
+
+    async fetchAllProducts(): Promise<Product[]> {
+        return this.client.product.fetchAll();
+    }
+}
+
+let shopifyClient: ShopifyClient;
+let attributesParams: ShopifyAttributeParams;
+
+export const initializeShopifyClient = async (params: ShopifyAttributeParams) => {
+    shopifyClient = new ShopifyClient(params);
+    attributesParams = params;
+
+    checkProductTemplatePage(params);
 };
+
+// Check if the page is a product template page then bind product based on the
+// query params
+const checkProductTemplatePage = async (params: ShopifyAttributeParams) => {
+    const { productPage, redirectURL } = params;
+
+    const path = window.location.pathname
+    if (path.endsWith(productPage)) {
+
+        const { id, handle } = QUERY_PARAMS
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        const idValue = PRODUCT_ID_PREFIX + urlParams.get(id);
+        const handleValue = urlParams.get(handle);
+
+        try {
+            let product: Product;
+            if (idValue) {
+                product = await shopifyClient.fetchProductById(idValue);
+            } else if (handleValue) {
+                product = await shopifyClient.fetchProductByHandle(handle);
+            } else {
+                window.location.href = redirectURL as string
+                return
+            }
+            bindProductData(document.querySelector("body") as HTMLElement, product);
+        } catch (e) {
+            window.location.href = redirectURL as string
+        }
+    }
+
+}
+
+const bindProductData = (parentElement: HTMLElement, product: Product) => {
+    const { title, description, handle, createdAt, updatedAt, publishedAt,
+        variants, type: { name: typeValue }, vendor } = product.attrs;
+
+    const { sku, price, compareAtPrice, discount, image,
+        weight } = variants[0];
+
+    const productAttributes = ['title', 'description', 'handle', 'created', 'updated',
+        'published', 'image', 'sku', 'price', 'compareprice', 'discountedpercent', 'type', 'vendor',
+        'weight'];
+
+    const productValues = [title, description, handle, createdAt, updatedAt, publishedAt, image?.src,
+        sku, price, compareAtPrice, discount, typeValue, vendor, weight];
+
+    productAttributes.forEach((attribute: string, index: number) => {
+        const matchedElements = queryElement(attribute as ProductAttribute, { scope: parentElement, all: true }) as NodeListOf<Element>;
+        matchedElements.forEach(element => {
+            if (attribute === 'image') {
+                element.setAttribute('src', productValues[index])
+            } else {
+                element.textContent = productValues[index];
+            }
+        });
+    })
+
+}

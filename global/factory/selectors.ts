@@ -38,12 +38,12 @@ export const generateSelectors = <
     valueKey?: ValueKey,
     params?: Attributes[Name]['values'][ValueKey] extends AttributeStaticValue
       ? {
-          operator?: AttributeOperator;
-        }
+        operator?: AttributeOperator;
+      }
       : {
-          instanceIndex?: number;
-          operator?: AttributeOperator;
-        }
+        instanceIndex?: number;
+        operator?: AttributeOperator;
+      }
   ): string => {
     const attribute = attributes[name];
 
@@ -75,24 +75,27 @@ export const generateSelectors = <
    * @param params.index Only accepted when the value is dynamic.
    * @param params.operator Optional operator for the selector.
    * @param params.scope The scope for the query. Defaults to `document`.
+   * @param params.all determines if array of matched elements should be returned.
    */
   const queryElement = <
     E extends Element = Element,
     ElementKey extends keyof Attributes['element']['values'] = keyof Attributes['element']['values']
   >(
     elementKey: ElementKey,
-    params?: { scope?: ParentNode } & (Attributes['element']['values'][ElementKey] extends AttributeStaticValue
+    params?: { scope?: ParentNode, all?: boolean } & (Attributes['element']['values'][ElementKey] extends AttributeStaticValue
       ? {
-          operator?: AttributeOperator;
-        }
+        operator?: AttributeOperator;
+      }
       : {
-          instanceIndex?: number;
-          operator?: AttributeOperator;
-        })
+        instanceIndex?: number;
+        operator?: AttributeOperator;
+      }),
   ) => {
     const selector = getSelector('element', elementKey, params);
+    const scope = (params?.scope || document)
 
-    return (params?.scope || document).querySelector<E>(selector);
+
+    return params?.all ? scope.querySelectorAll<E>(selector) : scope.querySelector<E>(selector);
   };
 
   return [getSelector, queryElement] as const;

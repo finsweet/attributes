@@ -1,15 +1,19 @@
 import { assessScript } from '$global/factory/assess';
 
-import { logHello } from './actions/console';
+import { initializeShopifyClient } from './actions/shopifyClient';
 import { ATTRIBUTES } from './utils/constants';
 import { ShopifyAttributeParams } from './utils/types';
 
 /**
  * Inits the attribute.
  */
-export const init = (): void => {
-  logHello();
+export const init = (params: ShopifyAttributeParams) => {
+  return (): void => {
+    initializeShopifyClient(params)
+  }
 };
+
+
 
 /**
  * Checks the Shopify params of the Attribute `<script>`.
@@ -19,7 +23,7 @@ export const init = (): void => {
 export const assessScriptAttributes = (): ShopifyAttributeParams => {
   const { currentScript } = document;
   const globalAttributeParams = assessScript();
-  const { token, domain } = ATTRIBUTES;
+  const { token, domain, productPage, redirectURL } = ATTRIBUTES;
 
   const tokenValue = currentScript?.getAttribute(token.key);
   if (!tokenValue) {
@@ -31,5 +35,12 @@ export const assessScriptAttributes = (): ShopifyAttributeParams => {
     throw new Error('domain must be provided');
   }
 
-  return { globalAttributeParams, domain: domainValue, token: tokenValue };
+  const productPageValue = currentScript?.getAttribute(productPage.key) || productPage.defaultValue;
+
+  const redirectURLValue = currentScript?.getAttribute(redirectURL.key) || redirectURL.defaultValue;
+
+  return {
+    globalAttributeParams, domain: domainValue, token: tokenValue, productPage: productPageValue,
+    redirectURL: redirectURLValue
+  };
 };
