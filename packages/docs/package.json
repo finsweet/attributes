@@ -1,20 +1,27 @@
 {
   "name": "@finsweet/attributes-docs",
-  "version": "1.7.4",
+  "version": "1.7.7",
   "description": "Attributes documentation custom code.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
   "main": "docs.js",
   "files": [
     "docs.js",
     "changelog.js",
     "api.js",
+    "support.js",
     "attributes.json",
     "changesets.json"
   ],
-  "type": "module",
-  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
   },
   "repository": {
     "type": "git",
@@ -24,11 +31,19 @@
     "name": "Finsweet",
     "url": "https://www.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes",
-  "dependencies": {
-    "marked": "^4.0.15"
-  },
   "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*",
+    "@finsweet/attributes-cmscore": "workspace:*",
     "@types/marked": "^4.0.3"
+  },
+  "dependencies": {
+    "@finsweet/attributes-codehighlight": "workspace:*",
+    "@finsweet/attributes-copyclip": "workspace:*",
+    "@finsweet/attributes-toc": "workspace:*",
+    "@finsweet/ts-utils": "^0.33.1",
+    "@global/factory": "workspace:*",
+    "marked": "^4.0.15"
   }
 }

@@ -1,4 +1,7 @@
-import { ATTRIBUTE as COPYCLIP_ATTRIBUTE, ATTRIBUTES as COPYCLIP_ATTRIBUTES } from 'packages/copyclip/src/constants';
+import {
+  ATTRIBUTE as COPYCLIP_ATTRIBUTE,
+  ATTRIBUTES as COPYCLIP_ATTRIBUTES,
+} from '@finsweet/attributes-copyclip/src/constants';
 
 import { queryElement } from '../utils/constants';
 

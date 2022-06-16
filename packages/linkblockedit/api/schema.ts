@@ -1,5 +1,5 @@
-import { DIV_BLOCK, TEXT_BLOCK, BUTTON } from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+import { DIV_BLOCK, TEXT_BLOCK, BUTTON } from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import { PARENT_ELEMENT_KEY } from '../src/constants';
 

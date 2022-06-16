@@ -1,5 +1,6 @@
-import AttributeNotHasStyleError from './AttributeNotHasStyleError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeNotHasStyleError from './AttributeNotHasStyleError';
 
 describe('Test Error - Attribute condition setting not match', () => {
   test('Attribute type element not match required setting', () => {

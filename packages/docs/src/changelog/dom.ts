@@ -1,10 +1,9 @@
 import { cloneNode } from '@finsweet/ts-utils';
+import type { AttributeChangesets } from '@global/types/changesets';
 import { marked } from 'marked';
 
-import { AttributeChangesets } from '$global/types/changesets';
-
 import { queryElement } from '../utils/constants';
-import { AttributesData } from '../utils/types';
+import type { AttributesData } from '../utils/types';
 
 /**
  * Creates a new `Collection Item` element from a changeset's data.

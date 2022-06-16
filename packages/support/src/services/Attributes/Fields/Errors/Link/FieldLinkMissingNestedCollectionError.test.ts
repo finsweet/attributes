@@ -1,5 +1,6 @@
-import FieldLinkMissingNestedCollectionError from './FieldLinkMissingNestedCollectionError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import FieldLinkMissingNestedCollectionError from './FieldLinkMissingNestedCollectionError';
 
 describe('Field - Link - Main Collection Link Not Found Error', () => {
   test('Field is missing main link to collection', () => {

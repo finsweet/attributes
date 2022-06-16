@@ -12,3 +12,5 @@ declare namespace svelte.JSX {
     onclick_outside?: () => void;
   }
 }
+
+declare const global = any;

@@ -1,5 +1,5 @@
-import { DIV_BLOCK, HEADING, PARAGRAPH, TEXT_BLOCK } from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+import { DIV_BLOCK, HEADING, PARAGRAPH, TEXT_BLOCK } from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import {
   WRAPPER_ELEMENT_KEY,

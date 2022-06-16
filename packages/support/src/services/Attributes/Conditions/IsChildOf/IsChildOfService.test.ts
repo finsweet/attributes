@@ -1,9 +1,10 @@
+import type { AttributeElementSchema, AttributeSchemaCondition } from '@global/types/schema';
+import CMS_LOAD from '@src/schemas/cms-load';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type { ItemError } from '@src/types/Error.types';
-import type { AttributeElementSchema, AttributeSchemaCondition } from '$global/types/schema';
-import { isChildOf } from './IsChildOfService';
+
 import AttributeIsNotChildrenOfError from './Errors/AttributeIsNotChildrenOfError';
-import CMS_LOAD from '@src/schemas/cms-load';
+import { isChildOf } from './IsChildOfService';
 
 describe('Test is child of', () => {
   test('Test schema element is child of selector successful', () => {

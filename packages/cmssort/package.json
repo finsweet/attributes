@@ -1,0 +1,53 @@
+{
+  "name": "@finsweet/attributes-cmssort",
+  "version": "1.9.0",
+  "description": "Create advanced and complex no-code sorting for Webflow CMS Collection List content.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
+  "main": "cmssort.js",
+  "files": [
+    "cmssort.js",
+    "examples.json",
+    "schema.json",
+    "changesets.json"
+  ],
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finsweet/attributes.git"
+  },
+  "keywords": [
+    "webflow",
+    "attributes",
+    "no code"
+  ],
+  "author": {
+    "name": "Finsweet",
+    "url": "https://www.finsweet.com/"
+  },
+  "bugs": {
+    "url": "https://sweetjs.finsweet.com/"
+  },
+  "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*"
+  },
+  "dependencies": {
+    "@finsweet/attributes-cmscore": "workspace:*",
+    "@finsweet/ts-utils": "^0.33.1",
+    "@global/constants": "workspace:*",
+    "@global/helpers": "workspace:*",
+    "@global/import": "workspace:*",
+    "@global/factory": "workspace:*"
+  }
+}

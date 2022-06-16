@@ -1,3 +1,11 @@
+import type {
+  SchemaInput,
+  SchemaInputElement,
+  SchemaInputElementSetting,
+  SchemaInputField,
+  SchemaInputFieldSetting,
+} from '@src/types/Input.types';
+
 import {
   addElement,
   deleteElement,
@@ -16,13 +24,6 @@ import {
   setFieldSettingOption,
   getFieldSettingOption,
 } from './SchemaInputService';
-import type {
-  SchemaInput,
-  SchemaInputElement,
-  SchemaInputElementSetting,
-  SchemaInputField,
-  SchemaInputFieldSetting,
-} from '@src/types/Input.types';
 
 describe('Test element', () => {
   const config = {

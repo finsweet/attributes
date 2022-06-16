@@ -10,6 +10,7 @@ import alias from '@rollup/plugin-alias';
 import copy from 'rollup-plugin-copy'
 import path from 'path'
 import { svelteSVG } from "rollup-plugin-svelte-svg";
+import url from '@rollup/plugin-url'
 
 const projectRootDir = path.resolve(__dirname);
 
@@ -82,7 +83,13 @@ export default {
       sourceMap: !production,
       inlineSources: !production
     }),
-
+    url({
+      // by default, rollup-plugin-url will not handle font files
+      include: ['public/fonts/*.woff2'],
+      // setting infinite limit will ensure that the files
+      // are always bundled with the code, not copied to /dist
+      limit: Infinity,
+    }),
     // In dev mode, call `npm run start` once
     // the bundle has been generated
     !production && serve(),
@@ -99,7 +106,8 @@ export default {
         { src: 'public/build/support.js', dest: '.' },
       ],
       hook: 'closeBundle',
-    })
+    }),
+
   ],
   watch: {
     clearScreen: false

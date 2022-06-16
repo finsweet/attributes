@@ -1,6 +1,7 @@
-import AttributeNotHasLinkError from './Errors/AttributeNotHasLinkError';
-import type { AttributeSchemaConditions, AttributeSchemaCondition } from '$global/types/schema';
+import type { AttributeSchemaConditions, AttributeSchemaCondition } from '@global/types/schema';
 import type { SchemaSelector } from '@src/types/Schema.types';
+
+import AttributeNotHasLinkError from './Errors/AttributeNotHasLinkError';
 
 export function hasLink(elementSelector: SchemaSelector, conditions: AttributeSchemaConditions) {
   conditions.forEach((condition: AttributeSchemaCondition) => {

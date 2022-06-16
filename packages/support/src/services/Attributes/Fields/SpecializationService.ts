@@ -1,4 +1,4 @@
-import type { DOMSelector } from '$global/types/schema';
+import type { DOMSelector } from '@global/types/schema';
 
 export function validateElementType(element: HTMLElement, selector: string): boolean {
   const elementTag = element.tagName.toLowerCase();

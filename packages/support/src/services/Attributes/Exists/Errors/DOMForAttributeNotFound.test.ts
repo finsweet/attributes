@@ -1,7 +1,8 @@
-import DOMForAttributeNotFound from './DOMForAttributeNotFound';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import type { AttributeElementSchema } from '@global/types/schema';
 import CMS_LOAD from '@src/schemas/cms-load';
-import type { AttributeElementSchema } from '$global/types/schema';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import DOMForAttributeNotFound from './DOMForAttributeNotFound';
 
 describe('Test Error - DOM For Attribute not found', () => {
   test('Attribute type element not found', () => {

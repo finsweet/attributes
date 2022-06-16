@@ -1,4 +1,4 @@
-import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory/selectors';
+import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
 export const ATTRIBUTE = 'copyclip';
 
@@ -11,7 +11,6 @@ export const TEXT_SETTING_KEY = 'text';
 export const SUCCESS_MESSAGE_SETTING_KEY = 'message';
 export const SUCESSS_DURATION_SETTING_KEY = 'duration';
 export const SUCESSS_CLASS_SETTING_KEY = 'active';
-export const SELECTOR_SETTING_KEY = 'selector';
 
 export const ATTRIBUTES = {
   /**

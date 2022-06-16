@@ -1,29 +1,16 @@
 {
+  "extends": "@finsweet/tsconfig",
   "compilerOptions": {
-    /* Basic Options */
-    "target": "ES2019" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */,
-    "module": "ESNext" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */,
-    "checkJs": false /* Report errors in .js files. */,
-    "removeComments": true /* Do not emit comments to output. */,
-    "noEmit": true /* Do not emit outputs. */,
-    "downlevelIteration": true /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */,
-
-    /* Strict Type-Checking Options */
-    "strict": true /* Enable all strict type-checking options. */,
-
-    /* Module Resolution Options */
-    "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
-    "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
-    "paths": {
-      "$base/*": ["/*"],
-      "$global/*": ["global/*"],
-      "$cms/*": ["packages/cms/*"]
-    } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
-    "resolveJsonModule": true,
-    "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
-
-    /* Advanced Options */
-    "skipLibCheck": true /* Skip type checking of declaration files. */,
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
-  }
+    "target": "ES2019",
+    "rootDir": ".",
+    "baseUrl": "."
+  },
+  "include": ["./packages/**/*.ts", "./global/**/*.ts"],
+  "exclude": [
+    "./packages/a11y/**/*.ts",
+    "./packages/components/**/*.ts",
+    "./packages/cmssave/**/*.ts",
+    "./packages/template/**/*.ts",
+    "./packages/support/**/*.ts"
+  ]
 }

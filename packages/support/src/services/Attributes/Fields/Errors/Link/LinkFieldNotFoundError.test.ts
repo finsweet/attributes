@@ -1,5 +1,6 @@
-import LinkFieldNotFoundError from './LinkFieldNotFoundError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import LinkFieldNotFoundError from './LinkFieldNotFoundError';
 
 describe('Field not found - Link', () => {
   test('Link field not found', () => {

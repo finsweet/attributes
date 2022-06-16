@@ -1,10 +1,10 @@
-import { hasSettings } from './SettingsService';
+import type { AttributeElementSchema, AttributeSchemaCondition } from '@global/types/schema';
+import CMS_LOAD from '@src/schemas/cms-load';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import type { ItemError } from '@src/types/Error.types';
 
 import SettingNotMatchError from './Errors/SettingNotMatchError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
-import CMS_LOAD from '@src/schemas/cms-load';
-import type { ItemError } from '@src/types/Error.types';
-import type { AttributeElementSchema, AttributeSchemaCondition } from '$global/types/schema';
+import { hasSettings } from './SettingsService';
 
 describe('Test if settings match', () => {
   test('Test schema element setting match', () => {

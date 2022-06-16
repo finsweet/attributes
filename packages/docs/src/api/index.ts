@@ -1,8 +1,11 @@
+import { ATTRIBUTE as CODEHIGHLIGHT_ATTRIBUTE } from '@finsweet/attributes-codehighlight/src/utils/constants';
+import {
+  ATTRIBUTE as TOC_ATTRIBUTE,
+  queryElement as queryTOCElement,
+} from '@finsweet/attributes-toc/src/utils/constants';
 import { marked } from 'marked';
-import { ATTRIBUTE as CODEHIGHLIGHT_ATTRIBUTE } from 'packages/codehighlight/src/utils/constants';
-import { attributesData } from 'packages/docs/api/attributes';
-import { ATTRIBUTE as TOC_ATTRIBUTE, queryElement as queryTOCElement } from 'packages/toc/src/utils/constants';
 
+import { attributesData } from '../../api/attributes';
 import { getAttributeReadme } from './fetch';
 
 declare global {

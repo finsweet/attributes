@@ -1,6 +1,5 @@
 import type { FormField } from '@finsweet/ts-utils';
-
-import { getInstanceIndex } from '$global/helpers/instances';
+import { getInstanceIndex } from '@global/helpers';
 
 import { ATTRIBUTES, getSelector } from '../utils/constants';
 import { relationshipsStore } from '../utils/stores';

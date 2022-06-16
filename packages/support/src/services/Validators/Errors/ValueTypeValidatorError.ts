@@ -1,4 +1,5 @@
 import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
+
 export default class ValueTypeValidatorError extends AbstractSchemaError {
   type = 'setting-type-of-value-not-match';
   typeInputError: string;

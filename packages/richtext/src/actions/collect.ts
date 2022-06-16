@@ -2,7 +2,7 @@ import { HTML_EMBED_CSS_CLASS } from '@finsweet/ts-utils';
 
 import { IGNORE_LINE_PREFIX } from '../utils/constants';
 import { HAS_COMPONENT_TEMPLATE_REGEX, HAS_HTML_OPENING_TAG_REGEX } from '../utils/regex';
-import { TextElement } from '../utils/types';
+import type { TextElement } from '../utils/types';
 
 /**
  * Queries all the valid paragraphs.

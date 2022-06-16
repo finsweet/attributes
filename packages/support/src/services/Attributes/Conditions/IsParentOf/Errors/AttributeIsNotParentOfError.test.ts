@@ -1,12 +1,13 @@
-import AttributeIsNotParentOfError from './AttributeIsNotParentOfError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
-import CUSTOM_SELECT from '@src/schemas/custom-select';
 import type {
   AttributeElementSchema,
   AttributeSchemaCondition,
   AttributeMainCondition,
   AttributeSelectorCondition,
-} from '$global/types/schema';
+} from '@global/types/schema';
+import CUSTOM_SELECT from '@src/schemas/custom-select';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeIsNotParentOfError from './AttributeIsNotParentOfError';
 
 describe('Test Error - Attribute not found', () => {
   test('Attribute type element not found', () => {

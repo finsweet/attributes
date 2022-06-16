@@ -1,5 +1,6 @@
-import FieldLinkNestedCollectionLinkNotWorkingError from './FieldLinkNestedCollectionLinkNotWorkingError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import FieldLinkNestedCollectionLinkNotWorkingError from './FieldLinkNestedCollectionLinkNotWorkingError';
 
 describe('Field - Link - Nested Collection Link Not Working', () => {
   test('Field is missing nested link to collection item', () => {

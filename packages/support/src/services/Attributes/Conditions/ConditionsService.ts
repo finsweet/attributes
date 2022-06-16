@@ -1,13 +1,13 @@
+import type { AttributeSchema, AttributeSchemaCondition, AttributeSchemaConditions } from '@global/types/schema';
+import type { SchemaSelector, SchemaSettings } from '@src/types/Schema.types';
+
+import { exists } from './Exists/ExistsService';
 import { isChildOf } from './IsChildOf/IsChildOfService';
 import { isParentOf } from './IsParentOf/isParentOfService';
-import { exists } from './Exists/ExistsService';
-import { hasSettings } from './Settings/SettingsService';
 import { isSiblingOf } from './IsSiblingOf/IsSiblingOfService';
 import { hasLink } from './Link/LinkService';
+import { hasSettings } from './Settings/SettingsService';
 import { hasStyle } from './Style/StyleService';
-
-import type { AttributeSchema, AttributeSchemaCondition, AttributeSchemaConditions } from '$global/types/schema';
-import type { SchemaSelector, SchemaSettings } from '@src/types/Schema.types';
 
 interface AttributeConditionsByType {
   [key: string]: AttributeSchemaConditions;

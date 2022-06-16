@@ -1,5 +1,5 @@
+import type { DOMSelector, ElementSelector, ParentSelector, SelectorSelector } from '@global/types/schema';
 import type { ItemError } from '@src/types/Error.types';
-import type { DOMSelector, ElementSelector, ParentSelector, SelectorSelector } from '$global/types/schema';
 
 export default class AbstractSchemaError extends Error implements ItemError {
   public type: string;
@@ -45,10 +45,10 @@ export default class AbstractSchemaError extends Error implements ItemError {
     }
 
     return selectors.map((selector: DOMSelector | string) => {
-      if ((<DOMSelector>selector).label) {
+      if ((selector as DOMSelector).label) {
         const label =
-          ((<DOMSelector>selector).label === 'Any element' && 'any element on the page') ||
-          (<DOMSelector>selector).label;
+          ((selector as DOMSelector).label === 'Any element' && 'any element on the page') ||
+          (selector as DOMSelector).label;
 
         return this.toLabel(label);
       }

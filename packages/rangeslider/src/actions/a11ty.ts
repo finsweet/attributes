@@ -4,7 +4,7 @@ import {
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
   TABINDEX_KEY,
-} from '$global/constants/a11ty';
+} from '@global/constants/a11ty';
 
 /**
  * Sets the required `a11ty` attributes to a `Handle` element.

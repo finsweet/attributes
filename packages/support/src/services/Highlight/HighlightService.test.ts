@@ -1,5 +1,6 @@
-import { createHighlight } from './HighlightService';
 import CMS_LOAD from '@src/schemas/cms-load';
+
+import { createHighlight } from './HighlightService';
 
 describe('Highlight elements on page', () => {
   test('Create highlight setup for attribute', () => {

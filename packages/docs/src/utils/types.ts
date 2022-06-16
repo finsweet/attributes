@@ -11,11 +11,13 @@ interface BaseAttributeData {
 
 type NotSupportedAttributeData = BaseAttributeData & {
   allowSupport: false;
+  loadMode?: string;
+  examplesSrc?: string;
 };
 
 export type SupportedAttributeData = BaseAttributeData & {
-  examplesSrc: string;
   loadMode: string;
+  examplesSrc: string;
   schemaSrc: string;
   allowSupport: true;
 };

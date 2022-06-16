@@ -1,5 +1,6 @@
-import AttributeValueNotMatchTypeError from './AttributeValueNotMatchTypeError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeValueNotMatchTypeError from './AttributeValueNotMatchTypeError';
 
 describe('Test Error - Attribute duplicated', () => {
   test('Attribute type element duplicated', () => {

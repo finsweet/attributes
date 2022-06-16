@@ -7,8 +7,8 @@ import {
   EMBED_CODE,
   IMAGE,
   SLIDER_NAV,
-} from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+} from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import {
   SLIDER_ELEMENT_KEY,

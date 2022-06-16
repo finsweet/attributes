@@ -17,7 +17,7 @@
     padding: 0.1rem 0.5rem;
 
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .tool_select-badge-on-page {

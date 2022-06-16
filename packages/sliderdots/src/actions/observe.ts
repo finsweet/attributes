@@ -1,6 +1,6 @@
 import type { SliderNavElement } from '@finsweet/ts-utils';
 
-import { DotsRelationship } from '../utils/types';
+import type { DotsRelationship } from '../utils/types';
 import { syncDotsProperties } from './sync';
 
 /**

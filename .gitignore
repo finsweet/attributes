@@ -26,3 +26,8 @@ typings/
 
 # Temp builds
 temp/
+
+# Production files
+packages/**/changesets.json
+packages/**/examples.json
+packages/**/schema.json

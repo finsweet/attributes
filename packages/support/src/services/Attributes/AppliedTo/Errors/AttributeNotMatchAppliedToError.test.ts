@@ -1,7 +1,8 @@
-import AttributeNotMatchAppliedToError from './AttributeNotMatchAppliedToError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import type { AttributeElementSchema } from '@global/types/schema';
 import CMS_LOAD from '@src/schemas/cms-load';
-import type { AttributeElementSchema } from '$global/types/schema';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeNotMatchAppliedToError from './AttributeNotMatchAppliedToError';
 
 describe('Test Error - Attribute not found', () => {
   test('Attribute type element not found', () => {

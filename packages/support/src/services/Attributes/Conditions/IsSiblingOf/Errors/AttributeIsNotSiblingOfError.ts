@@ -1,6 +1,6 @@
+import type { DOMSelector } from '@global/types/schema';
 import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
 import type { SchemaSelector, ElementItemSelector } from '@src/types/Schema.types';
-import type { DOMSelector } from '$global/types/schema';
 
 export default class AttributeIsNotParentOfElementError extends AbstractSchemaError {
   type = 'conditions-isSiblingOf';

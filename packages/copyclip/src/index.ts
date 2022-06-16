@@ -1,5 +1,5 @@
-import { assessScript } from '$global/factory/assess';
-import { initAttributes } from '$global/factory/init';
+import { assessScript } from '@global/factory/assess';
+import { initAttributes } from '@global/factory/init';
 
 import { version } from '../package.json';
 import { ATTRIBUTE } from './constants';

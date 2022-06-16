@@ -1,5 +1,6 @@
-import MissingFieldSettingError from './MissingFieldSettingError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import MissingFieldSettingError from './MissingFieldSettingError';
 
 describe('Missing field settings error.', () => {
   test('Missing field setting with specialization', () => {

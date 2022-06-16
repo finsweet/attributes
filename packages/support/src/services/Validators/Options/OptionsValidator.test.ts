@@ -1,5 +1,6 @@
-import { optionsValidator } from './OptionsValidator';
 import type { ValueTypeError } from '@src/types/Error.types';
+
+import { optionsValidator } from './OptionsValidator';
 
 describe('Option  Validators', () => {
   /**

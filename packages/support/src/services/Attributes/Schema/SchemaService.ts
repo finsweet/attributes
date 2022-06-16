@@ -1,4 +1,3 @@
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type {
   AttributeSchema,
   AttributeElementSchema,
@@ -7,9 +6,10 @@ import type {
   AttributeSettingCondition,
   AttributeSettingConditionSetting,
   AttributeSchemaCondition,
-} from '$global/types/schema';
-import type { SchemaSettings, SCHEMA_ITEM_TYPES } from '@src/types/Schema.types';
+} from '@global/types/schema';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type { SchemaInput } from '@src/types/Input.types';
+import type { SchemaSettings, SCHEMA_ITEM_TYPES } from '@src/types/Schema.types';
 
 /**
  * Create the SchemaSelector for elements

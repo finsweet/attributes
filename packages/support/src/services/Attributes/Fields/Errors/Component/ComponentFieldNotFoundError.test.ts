@@ -1,5 +1,6 @@
-import ComponentFieldNotFoundError from './ComponentFieldNotFoundError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import ComponentFieldNotFoundError from './ComponentFieldNotFoundError';
 
 describe('Field not found - Component', () => {
   test('Component field not found', () => {

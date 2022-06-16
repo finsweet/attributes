@@ -1,4 +1,4 @@
-import { ATTRIBUTES_PREFIX } from '$global/constants/attributes';
+import { ATTRIBUTES_PREFIX } from '@global/constants/attributes';
 
 const ATTRIBUTES_SUPPORT_QUERY_PARAM = `${ATTRIBUTES_PREFIX}-support`;
 const ATTRIBUTES_SUPPORT_SOURCE = 'https://cdn.jsdelivr.net/npm/@finsweet/attributes-support@1/support.js';

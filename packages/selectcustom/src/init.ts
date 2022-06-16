@@ -1,4 +1,4 @@
-import { ATTRIBUTE as CMS_SELECT_ATTRIBUTE } from '$cms/cmsselect/src/constants';
+import { ATTRIBUTE as CMS_SELECT_ATTRIBUTE } from '@finsweet/attributes-cmsselect/src/constants';
 
 import { listenEvents } from './actions/events';
 import { observeElements } from './actions/observe';

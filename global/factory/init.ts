@@ -1,6 +1,8 @@
-import { ATTRIBUTES, getSelector } from '$global/constants/attributes';
-import { importSupport } from '$global/import/support';
-import type { FsAttributes, FsAttributesCallback } from '$global/types/global';
+import { importSupport } from '@global/import';
+
+import { ATTRIBUTES, getSelector } from './constants';
+
+type FsAttributes = typeof window.fsAttributes;
 
 /**
  * Makes sure the window object is defined.
@@ -58,6 +60,8 @@ const initLoadPromises = (fsAttributes: FsAttributes) => {
  * @param fsAttributes The {@link FsAttributes} object.
  */
 const runExistingCallbacks = (fsAttributes: FsAttributes) => {
-  const existingCallbacks = Array.isArray(window.fsAttributes) ? (window.fsAttributes as FsAttributesCallback[]) : [];
+  const existingCallbacks = Array.isArray(window.fsAttributes)
+    ? (window.fsAttributes as Parameters<FsAttributes['push']>)
+    : [];
   fsAttributes.push(...existingCallbacks);
 };

@@ -1,7 +1,8 @@
-import AttributeNotHasLinkError from './AttributeNotHasLinkError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import type { AttributeElementSchema } from '@global/types/schema';
 import CMS_PREV_NEXT from '@src/schemas/cms-previous-next';
-import type { AttributeElementSchema } from '$global/types/schema';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeNotHasLinkError from './AttributeNotHasLinkError';
 
 describe('Test Error - Attribute not found', () => {
   test('Attribute type element not sibling of required element', () => {

@@ -1,3 +1,11 @@
+import type {
+  AttributeSchema,
+  AttributeSchemaConditions,
+  AttributeSchemaCondition,
+  AttributeMainCondition,
+  DOMSelector,
+  AttributeElementSchema,
+} from '@global/types/schema';
 import {
   createSchemaSelectorFromSchema,
   createSchemaSelectorFromItem,
@@ -7,17 +15,9 @@ import {
   assertElementIsSiblingOfElement,
   assertElementIsSiblingOfElements,
 } from '@src/services/DOM/Assertions/AssertionsService';
-import AttributeIsNotSiblingOfError from './Errors/AttributeIsNotSiblingOfError';
-
-import type {
-  AttributeSchema,
-  AttributeSchemaConditions,
-  AttributeSchemaCondition,
-  AttributeMainCondition,
-  DOMSelector,
-  AttributeElementSchema,
-} from '$global/types/schema';
 import type { SchemaSelector, SchemaSettings, ElementItemSelector } from '@src/types/Schema.types';
+
+import AttributeIsNotSiblingOfError from './Errors/AttributeIsNotSiblingOfError';
 
 export function isSiblingOf(
   elementSelector: SchemaSelector,

@@ -1,3 +1,4 @@
+import { isFormField } from '@finsweet/ts-utils';
 import ClipboardJS from 'clipboard';
 
 /**
@@ -25,7 +26,16 @@ export const createClipboardJsInstance = ({
   successClass: string;
 }) => {
   const clipboard = new ClipboardJS(trigger, {
-    text: () => textToCopy || target?.textContent || trigger.textContent || '',
+    text: () => {
+      if (textToCopy) return textToCopy;
+
+      if (target) {
+        const text = isFormField(target) ? target.value : target.textContent || '';
+        return text;
+      }
+
+      return trigger.textContent || '';
+    },
   });
 
   let successState = false;

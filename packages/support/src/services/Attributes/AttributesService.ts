@@ -1,11 +1,12 @@
-import { validateElement } from './Elements/ElementsService';
-import { validateField } from './Fields/FieldsService';
-import { validateElementSetting } from './Elements/ElementsSettingsService';
-import { validateFieldSetting } from './Fields/FieldsSettingsService';
+import type { AttributeSchema, AttributeElementSchema } from '@global/types/schema';
 import type { SchemaInput } from '@src/types/Input.types';
-import type { AttributeSchema, AttributeElementSchema } from '$global/types/schema';
-import type { SchemaSettings } from '@src/types/Schema.types';
 import type { SchemaInputFieldSetting, InputChannel } from '@src/types/Input.types';
+import type { SchemaSettings } from '@src/types/Schema.types';
+
+import { validateElement } from './Elements/ElementsService';
+import { validateElementSetting } from './Elements/ElementsSettingsService';
+import { validateField } from './Fields/FieldsService';
+import { validateFieldSetting } from './Fields/FieldsSettingsService';
 
 /**
  * Validate attributes schema by user input

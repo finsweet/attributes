@@ -2,6 +2,9 @@
   "name": "@finsweet/attributes-codehighlight",
   "version": "1.3.0",
   "description": "Syntax highlighting for your Webflow sites.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
   "main": "codehighlight.js",
   "files": [
     "codehighlight.js",
@@ -10,11 +13,14 @@
     "changesets.json",
     "themes"
   ],
-  "type": "module",
-  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
   },
   "repository": {
     "type": "git",
@@ -35,8 +41,15 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes",
   "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*",
     "highlight.js": "^11.4.0"
+  },
+  "dependencies": {
+    "@global/factory": "workspace:*",
+    "@global/constants": "workspace:*",
+    "@finsweet/attributes-richtext": "workspace:*"
   }
 }

@@ -11,7 +11,12 @@
   "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "",
+    "test:headed": ""
   },
   "repository": {
     "type": "git",
@@ -30,7 +35,14 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "homepage": "https://www.finsweet.com/attributes",
+  "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/types": "workspace:*",
+    "@motionone/dom": "^10.10.0",
+    "@motionone/types": "^10.9.0"
+  },
   "dependencies": {
-    "motion": "^10.4.0"
+    "@global/factory": "workspace:*",
+    "motion": "^10.10.0"
   }
 }

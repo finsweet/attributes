@@ -1,10 +1,10 @@
-import { getSchemaItem, createSchemaSelectorFromItem } from '@src/services/Attributes/Schema/SchemaService';
-import { elementExists, elementDuplicated, domElementExists } from '@src/services/Attributes/Exists/ExistsService';
+import type { AttributeSchema, AttributeElementSchema } from '@global/types/schema';
 import { elementAppliedTo } from '@src/services/Attributes/AppliedTo/AppliedToService';
 import useElementsConditions from '@src/services/Attributes/Conditions/ConditionsService';
-import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
+import { elementExists, elementDuplicated, domElementExists } from '@src/services/Attributes/Exists/ExistsService';
+import { getSchemaItem, createSchemaSelectorFromItem } from '@src/services/Attributes/Schema/SchemaService';
 import { queryAllElements } from '@src/services/DOM/Queries/QueriesService';
-import type { AttributeSchema, AttributeElementSchema } from '$global/types/schema';
+import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
 import type { SchemaInputElement, InputChannel } from '@src/types/Input.types';
 import type { SchemaSettings } from '@src/types/Schema.types';
 

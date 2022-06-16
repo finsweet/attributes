@@ -2,6 +2,9 @@
   "name": "@finsweet/attributes-scrolldisable",
   "version": "1.4.0",
   "description": "Disables scrolling on certain events.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
   "main": "scrolldisable.js",
   "files": [
     "scrolldisable.js",
@@ -9,11 +12,14 @@
     "schema.json",
     "changesets.json"
   ],
-  "type": "module",
-  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
   },
   "repository": {
     "type": "git",
@@ -33,11 +39,17 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes",
   "dependencies": {
-    "body-scroll-lock": "^4.0.0-beta.0"
+    "@finsweet/ts-utils": "^0.33.1",
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*",
+    "body-scroll-lock": "^4.0.0-beta.0",
+    "just-debounce": "^1.1.0"
   },
   "devDependencies": {
+    "@global/constants": "workspace:*",
+    "@global/factory": "workspace:*",
     "@types/body-scroll-lock": "^3.1.0"
   }
 }

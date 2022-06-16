@@ -2,7 +2,7 @@ import { cloneNode, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { SliderElement, SlideElement, SliderDotElement } from '@finsweet/ts-utils';
 
 import { ATTRIBUTES, queryElement } from '../utils/constants';
-import { DotsRelationship } from '../utils/types';
+import type { DotsRelationship } from '../utils/types';
 
 const {
   remove: { key: removeKey, values: removeValues },

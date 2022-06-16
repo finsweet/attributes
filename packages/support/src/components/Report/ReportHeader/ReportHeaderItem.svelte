@@ -2,18 +2,21 @@
   import StatusIcon from '@src/components/Layout/Icons/StatusIcon.svelte';
   import ArrowIcon from '@src/components/Layout/Icons/ArrowDown.svelte';
   import AttributeKey from '@src/components/Attributes/AttributeKey.svelte';
-  import { scrollInto } from '@src/services/DOM/Utils/Utils';
+  import { scrollInto, propagateClickToField } from '@src/services/DOM/Utils/Utils';
 
   export let message: string;
   export let key: string;
-  export let id: string;
+  export let id: string | null;
 
   function scrollToAttribute() {
-    scrollInto(`#${id}`, 0);
+    if (id) {
+      propagateClickToField(`#${id}`);
+      scrollInto(`#${id}`, 0);
+    }
   }
 </script>
 
-<div class="tool_results-item" on:click={scrollToAttribute}>
+<div class="tool_results-item" class:app-error={id === null} on:click={scrollToAttribute}>
   <StatusIcon status={false} />
   <div class="tool_results-item-block">
     <AttributeKey>
@@ -48,6 +51,16 @@
     background-color: #442b2c;
     color: #fff;
     border-bottom: 1px solid #000;
+  }
+
+  .tool_results-item.app-error {
+    cursor: default;
+  }
+
+  .app-error :global(a) {
+    text-decoration: underline;
+    font-weight: 500;
+    color: #fff;
   }
 
   .tool_results-item > :global(.icon-status) {

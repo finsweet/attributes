@@ -1,4 +1,4 @@
-import { generateSelectors } from '$global/factory/selectors';
+import { generateSelectors } from '@global/factory';
 
 export const ATTRIBUTES_PREFIX = 'fs-docs';
 

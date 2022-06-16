@@ -3,7 +3,7 @@
   import StatusIcon from '@src/components/Layout/Icons/StatusIcon.svelte';
   import ResultItem from '@src/components/Report/ReportHeader/ReportHeaderItem.svelte';
 
-  import { schemaFormActions, schemaForm, schemaSettingsKey, schemaSettingsInstance } from '@src/stores';
+  import { schemaFormActions, schemaForm, schemaSettingsKey, schemaSettingsInstance, appError } from '@src/stores';
 
   let invalidAttributes = schemaFormActions.findInvalidAttributes();
   let validAttributes = schemaFormActions.findValidAttributes();
@@ -12,17 +12,24 @@
     invalidAttributes = schemaFormActions.findInvalidAttributes();
     validAttributes = schemaFormActions.findValidAttributes();
   }
+
+  const finsweetProUrl = 'https://www.finsweet.com/fin-pro';
+  const slackUrl = 'https://my.finsweet.com/urls/community-slack';
+  const appErrorMessage =
+    `This is an unexpected use case. ` +
+    `We can not validate your configuration. If you are a <a target="_blank" href="${finsweetProUrl}">Pro</a>, ` +
+    `please send us a message in <a target="_blank" href="${slackUrl}">Slack</a>. We will review your configuration.`;
 </script>
 
 <div class="tool_results">
-  {#if validAttributes.length > 0 && invalidAttributes.length === 0}
+  {#if validAttributes.length > 0 && invalidAttributes.length === 0 && !$appError}
     <Header>
       <div class="status">
         <StatusIcon status={true} /> Nice Job! Everything is ok!
       </div>
     </Header>
   {/if}
-  {#if invalidAttributes.length > 0}
+  {#if invalidAttributes.length > 0 && !$appError}
     <Header>
       <div class="status">
         <StatusIcon status={false} />
@@ -47,8 +54,17 @@
       {/each}
     </div>
   {/if}
-
-  <!-- {JSON.stringify(invalidAttributes)} -->
+  {#if $appError}
+    <Header>
+      <div class="status">
+        <StatusIcon status={false} />
+        Unexpected use case.
+      </div>
+    </Header>
+    <div class="tool_results-item" data-testid="report-item" data-test="appError" data-error="appError">
+      <ResultItem key="App" message={appErrorMessage} id={null} />
+    </div>
+  {/if}
 </div>
 
 <style>

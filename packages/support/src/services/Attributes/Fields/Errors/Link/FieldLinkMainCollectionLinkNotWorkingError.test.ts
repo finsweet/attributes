@@ -1,5 +1,6 @@
-import FieldLinkMainCollectionLinkNotWorkingError from './FieldLinkMainCollectionLinkNotWorkingError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import FieldLinkMainCollectionLinkNotWorkingError from './FieldLinkMainCollectionLinkNotWorkingError';
 
 describe('Field - Link - Main Collection Link Not Found Error', () => {
   test('Field is missing main link to collection', () => {

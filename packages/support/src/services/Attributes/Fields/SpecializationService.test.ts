@@ -1,5 +1,6 @@
+import type { DOMSelector } from '@global/types/schema';
+
 import { validateDOMSelectors } from './SpecializationService';
-import type { DOMSelector } from '$global/types/schema';
 
 describe('Validate Selector', () => {
   test('Validate selector checkbox success', () => {

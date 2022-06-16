@@ -1,14 +1,3 @@
-import {
-  getSchemaItem,
-  createSchemaSelectorFromItem,
-  createSchemaSelectorFromSchema,
-} from '@src/services/Attributes/Schema/SchemaService';
-import { elementSettingExists } from '@src/services/Attributes/Exists/ExistsService';
-import { elementSettingAppliedTo, elementsSameNode } from '@src/services/Attributes/AppliedTo/AppliedToService';
-import conditionsService from '@src/services/Attributes/Conditions/ConditionsService';
-import valuesService from '@src/services/Attributes/Values/ValuesService';
-import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
-import type { SchemaInputElementSetting, InputChannel } from '@src/types/Input.types';
 import type {
   AttributeElementSchema,
   AttributeSchema,
@@ -16,7 +5,18 @@ import type {
   AttributeSchemaSettingAppliedTo,
   AttributeSchemaConditions,
   AttributeValue,
-} from '$global/types/schema';
+} from '@global/types/schema';
+import { elementSettingAppliedTo, elementsSameNode } from '@src/services/Attributes/AppliedTo/AppliedToService';
+import conditionsService from '@src/services/Attributes/Conditions/ConditionsService';
+import { elementSettingExists } from '@src/services/Attributes/Exists/ExistsService';
+import {
+  getSchemaItem,
+  createSchemaSelectorFromItem,
+  createSchemaSelectorFromSchema,
+} from '@src/services/Attributes/Schema/SchemaService';
+import valuesService from '@src/services/Attributes/Values/ValuesService';
+import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
+import type { SchemaInputElementSetting, InputChannel } from '@src/types/Input.types';
 import type { SchemaSettings, ElementItemSelector, SchemaSelector } from '@src/types/Schema.types';
 
 /**
@@ -30,6 +30,7 @@ export function validateElementSetting(
 ): SchemaInputElementSetting {
   const settingSchema = getSchemaItem(schema, 'settings', inputSetting.setting) as AttributeSettingSchema;
 
+  // console.log('validate setting');
   const { appliedTo, conditions, value } = settingSchema;
 
   const settingSelector = createSchemaSelectorFromItem(

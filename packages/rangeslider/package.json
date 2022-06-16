@@ -2,6 +2,9 @@
   "name": "@finsweet/attributes-rangeslider",
   "version": "1.6.0",
   "description": "Build a custom Range Slider Form component natively in Webflow.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
   "main": "rangeslider.js",
   "files": [
     "rangeslider.js",
@@ -9,11 +12,14 @@
     "schema.json",
     "changesets.json"
   ],
-  "type": "module",
-  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
   },
   "repository": {
     "type": "git",
@@ -31,5 +37,15 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes"
+  "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*"
+  },
+  "dependencies": {
+    "@finsweet/ts-utils": "^0.33.1",
+    "@global/constants": "workspace:*",
+    "@global/factory": "workspace:*",
+    "just-debounce": "^1.1.0"
+  }
 }

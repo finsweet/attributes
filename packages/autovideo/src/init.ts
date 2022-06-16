@@ -1,7 +1,7 @@
 import { Debug } from '@finsweet/ts-utils';
 
 import { ATTRIBUTE } from './constants';
-import { VideoStore } from './types';
+import type { VideoStore } from './types';
 
 /**
  * Inits the attribute.

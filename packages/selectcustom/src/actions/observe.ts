@@ -1,6 +1,5 @@
+import { ARIA_EXPANDED_KEY } from '@global/constants/a11ty';
 import debounce from 'just-debounce';
-
-import { ARIA_EXPANDED_KEY } from '$global/constants/a11ty';
 
 import type { Settings } from '../utils/types';
 import { populateOptions } from './populate';

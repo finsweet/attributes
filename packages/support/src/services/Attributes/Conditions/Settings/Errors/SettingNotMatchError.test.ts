@@ -1,5 +1,6 @@
-import SettingNotMatchError from './SettingNotMatchError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import SettingNotMatchError from './SettingNotMatchError';
 
 describe('Test Error - Attribute condition setting not match', () => {
   test('Attribute type element not match required setting', () => {

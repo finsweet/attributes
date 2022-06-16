@@ -3,14 +3,14 @@
   import Header from '@src/components/Layout/Header.svelte';
   import Config from '@src/components/Config/Config.svelte';
   import Schema from '@src/components/Schema/Schema.svelte';
-  import Tutorial from '@src/components/Tutorial.svelte';
+  // import Tutorial from '@src/components/Tutorial.svelte';
   import Actions from '@src/components/Actions/Actions.svelte';
   import Loading from '@src/components/Loading.svelte';
   import Minimize from '@src/components/Minimize.svelte';
   import Initial from '@src/components/Initial.svelte';
-  import type { AttributeSchema } from '$global/types/schema';
+  import type { AttributeSchema } from '@global/types/schema';
   import type { AttributeLoaded } from '@src/types/Schema.types';
-  import type { AttributesData, SupportedAttributeData } from '$docs/src/utils/types';
+  import type { AttributesData, SupportedAttributeData } from '@finsweet/attributes-docs/src/utils/types';
   import { isScriptLoaded } from '@src/services/Attributes/Script/ScriptService';
 
   import {
@@ -112,8 +112,8 @@
   <Minimize {toggleMinimize} isMinimized={minimize} />
   <div id="support-internal" class="walkthrough_interface">
     <Header>
-      <div>Attributes Automated Support</div>
-      <Tutorial />
+      <div>Attributes Automated Support Service</div>
+      <!--<Tutorial />-->
     </Header>
     <Config />
     {#if $schemaSettingsKey}
@@ -128,34 +128,10 @@
 </div>
 
 <style>
-  @font-face {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 300;
-    src: local('Open Sans Light'), local('OpenSans-Light'),
-      url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
-  }
-
-  @font-face {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Open Sans'), local('OpenSans'),
-      url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
-  }
-
-  @font-face {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 600;
-    src: local('Open Sans Semibold'), local('OpenSans-Semibold'),
-      url(https://fonts.gstatic.com/s/opensans/v13/MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
-  }
-
   .walkthrough {
     position: fixed;
     left: auto;
-    font-family: 'Open Sans';
+    font-family: 'Graphik';
     top: 0%;
     right: 0%;
     bottom: 0%;

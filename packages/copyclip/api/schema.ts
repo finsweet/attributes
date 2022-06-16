@@ -6,8 +6,9 @@ import {
   TEXT_BLOCK,
   PARAGRAPH,
   HEADING,
-} from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+  FORM_INPUT,
+} from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import {
   TRIGGER_ELEMENT_KEY,
@@ -17,7 +18,6 @@ import {
   SUCCESS_MESSAGE_SETTING_KEY,
   SUCESSS_DURATION_SETTING_KEY,
   SUCESSS_CLASS_SETTING_KEY,
-  SELECTOR_SETTING_KEY,
   DEFAULT_SUCCESS_CSS_CLASS,
   DEFAULT_SUCCESS_DURATION,
 } from './../src/constants';
@@ -39,7 +39,7 @@ export const schema: AttributeSchema = {
       required: true,
       requiresInstance: true,
       multiplesInInstance: false,
-      appliedTo: [TEXT_BLOCK, PARAGRAPH, HEADING],
+      appliedTo: [TEXT_BLOCK, PARAGRAPH, HEADING, FORM_INPUT],
       conditions: [
         {
           condition: 'exists',
@@ -53,7 +53,7 @@ export const schema: AttributeSchema = {
       description: 'Defines a sibling element to act as the copy target.',
       required: false,
       requiresInstance: false,
-      appliedTo: [TEXT_BLOCK, PARAGRAPH, HEADING],
+      appliedTo: [TEXT_BLOCK, PARAGRAPH, HEADING, FORM_INPUT],
       multiplesInInstance: false,
       conditions: [
         {

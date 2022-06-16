@@ -10,9 +10,12 @@
     schemaSettingsInstance,
     schemaSettingsKey,
     isSubmitted,
+    appError,
   } from '@src/stores';
 
   function clearForm() {
+    $appError = false;
+
     $validatingMode = VALIDATE_MODES.VALIDATING;
 
     const schemaSettings = {

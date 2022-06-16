@@ -1,4 +1,4 @@
-import { collectSettings } from '../actions/settings';
+import type { collectSettings } from '../actions/settings';
 
 export type Settings = NonNullable<ReturnType<typeof collectSettings>>;
 

@@ -1,4 +1,4 @@
-import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory/selectors';
+import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
 export const ATTRIBUTE = 'displayvalues';
 

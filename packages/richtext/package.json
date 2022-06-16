@@ -2,6 +2,9 @@
   "name": "@finsweet/attributes-richtext",
   "version": "1.6.0",
   "description": "Add HTML to Rich Text elements, add components from the same page or from different pages, add classes, ids, attributes, and more.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
   "main": "richtext.js",
   "files": [
     "richtext.js",
@@ -9,11 +12,14 @@
     "schema.json",
     "changesets.json"
   ],
-  "type": "module",
-  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
   },
   "repository": {
     "type": "git",
@@ -33,8 +39,15 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes",
   "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*",
     "@types/dompurify": "^2.3.1"
+  },
+  "dependencies": {
+    "@finsweet/ts-utils": "^0.33.1",
+    "@global/constants": "workspace:*",
+    "@global/factory": "workspace:*"
   }
 }

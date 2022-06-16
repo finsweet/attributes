@@ -1,8 +1,9 @@
+import type { DOMSelector } from '@global/types/schema';
 import { assertAttributeIsAppliedToElement } from '@src/services/DOM/Assertions/AssertionsService';
 import { queryElementWithAttribute } from '@src/services/DOM/Queries/QueriesService';
-import AttributeNotMatchAppliedToError from './Errors/AttributeNotMatchAppliedToError';
-import type { DOMSelector } from '$global/types/schema';
 import type { SchemaSelector, ElementItemSelector } from '@src/types/Schema.types';
+
+import AttributeNotMatchAppliedToError from './Errors/AttributeNotMatchAppliedToError';
 
 export function elementAppliedTo(elements: HTMLElement[], appliedTo: DOMSelector[], elementSelector: SchemaSelector) {
   let status = false;

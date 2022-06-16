@@ -1,7 +1,7 @@
 import { simulateEvent } from '@finsweet/ts-utils';
 
 import { getSelector } from '../utils/constants';
-import { DotsRelationship } from '../utils/types';
+import type { DotsRelationship } from '../utils/types';
 
 /**
  * Listens for click events in the custom slider nav.

@@ -6,7 +6,7 @@
   import CommaSeparatedFloat from './Fields/CommaSeparatedFloat.svelte';
   import Int from './Fields/Int.svelte';
   import CommaSeparatedInt from './Fields/CommaSeparatedInt.svelte';
-  import type { AttributeSettingValuePrimitive, AttributeSettingValueOptions } from '$global/types/schema';
+  import type { AttributeSettingValuePrimitive, AttributeSettingValueOptions } from '@global/types/schema';
 
   export let id: string;
   export let value: AttributeSettingValuePrimitive | AttributeSettingValueOptions;

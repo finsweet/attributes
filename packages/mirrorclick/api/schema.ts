@@ -1,5 +1,5 @@
-import { DIV_BLOCK, BUTTON, TEXT_LINK, LINK_BLOCK, ANY_ELEMENT } from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+import { DIV_BLOCK, BUTTON, TEXT_LINK, LINK_BLOCK, ANY_ELEMENT } from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import { TRIGGER_ELEMENT_KEY, TARGET_ELEMENT_KEY, DELAY_SETTING_KEY } from '../src/constants';
 

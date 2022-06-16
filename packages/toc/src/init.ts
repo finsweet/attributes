@@ -1,7 +1,6 @@
+import { ATTRIBUTE as RICH_TEXT_ATTRIBUTE } from '@finsweet/attributes-richtext/src/utils/constants';
 import { restartWebflow } from '@finsweet/ts-utils';
-import { ATTRIBUTE as RICH_TEXT_ATTRIBUTE } from 'packages/richtext/src/utils/constants';
-
-import { getInstanceIndex } from '$global/helpers/instances';
+import { getInstanceIndex } from '@global/helpers';
 
 import { collectHeadingsData, collectLinksData } from './actions/collect';
 import { observeLinksState } from './actions/observe';

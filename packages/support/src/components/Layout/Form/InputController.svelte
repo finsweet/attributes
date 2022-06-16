@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import debounce from '@src/utils/debounce';
   import type { ItemError } from '@src/types/Error.types';
 
   export let validate: (value: string) => boolean | Error;

@@ -1,15 +1,14 @@
-import valueService from './ValuesService';
-import AttributeValueNotMatchTypeError from './Errors/AttributeValueNotMatchTypeError';
-import AttributeValueNotMatchExpectedError from './Errors/AttributeValueNotMatchExpectedError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
-import ValueTypeValidatorError from '@src/services/Validators/Errors/ValueTypeValidatorError';
+import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
 //mocks
 import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';
-import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
-
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import ValueTypeValidatorError from '@src/services/Validators/Errors/ValueTypeValidatorError';
 import { floatValidator, commaSeparatedFloatValidator } from '@src/services/Validators/Float/FloatValidator';
-
 import type { ItemError } from '@src/types/Error.types';
+
+import AttributeValueNotMatchExpectedError from './Errors/AttributeValueNotMatchExpectedError';
+import AttributeValueNotMatchTypeError from './Errors/AttributeValueNotMatchTypeError';
+import valueService from './ValuesService';
 
 jest.mock('@src/services/DOM/Queries/QueriesService', () => {
   return {

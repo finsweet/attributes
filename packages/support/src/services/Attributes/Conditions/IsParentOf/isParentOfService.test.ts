@@ -1,9 +1,10 @@
+import type { AttributeElementSchema, AttributeSchemaCondition } from '@global/types/schema';
 import CUSTOM_SELECT from '@src/schemas/custom-select';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import type { ItemError } from '@src/types/Error.types';
+
 import AttributeIsNotParentOfError from './Errors/AttributeIsNotParentOfError';
 import { isParentOf } from './isParentOfService';
-import type { ItemError } from '@src/types/Error.types';
-import type { AttributeElementSchema, AttributeSchemaCondition } from '$global/types/schema';
 
 describe('Test if parent of', () => {
   test('Test schema element is parent of selector successful', () => {

@@ -2,7 +2,7 @@
   import SelectDisplay from '@src/components/Layout/Form/SelectDisplay.svelte';
   import SelectDropdown from '@src/components/Layout/Form/SelectDropdown.svelte';
   import SelectOption from '@src/components/Layout/Form/SelectOption.svelte';
-  import type { FieldSpecialization } from '$global/types/schema';
+  import type { FieldSpecialization } from '@global/types/schema';
   import type { SchemaInputField, FieldChangeSpecialization } from '@src/types/Input.types';
 
   export let options: FieldSpecialization[];

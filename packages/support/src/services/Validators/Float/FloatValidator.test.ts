@@ -1,5 +1,6 @@
-import { floatValidator, commaSeparatedFloatValidator } from './FloatValidator';
 import type { ValueTypeError } from '@src/types/Error.types';
+
+import { floatValidator, commaSeparatedFloatValidator } from './FloatValidator';
 
 describe('Validate Float ', () => {
   /**

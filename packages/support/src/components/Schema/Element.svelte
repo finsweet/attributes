@@ -48,11 +48,13 @@
     if (checked) {
       schemaFormActions.addElement(value);
       isChecked = true;
-    } else {
-      if (!isRequired) {
-        schemaFormActions.removeElement(value);
-        isChecked = false;
-      }
+      return;
+    }
+
+    if (!isRequired) {
+      schemaFormActions.removeElement(value);
+      schemaFormActions.disableElementSettings(value);
+      isChecked = false;
     }
   }
 

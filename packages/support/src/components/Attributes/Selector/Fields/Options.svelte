@@ -2,7 +2,7 @@
   import SelectDisplay from '@src/components/Layout/Form/SelectDisplay.svelte';
   import SelectDropdown from '@src/components/Layout/Form/SelectDropdown.svelte';
   import SelectOption from '@src/components/Layout/Form/SelectOption.svelte';
-  import type { AttributeSettingValueOptions } from '$global/types/schema';
+  import type { AttributeSettingValueOptions } from '@global/types/schema';
   import { createEventDispatcher } from 'svelte';
   // import SolutionIcon from '@src/components/Layout/Icons/tips-icon.svg';
 
@@ -31,7 +31,6 @@
   }
 
   function selectAttribute(value: string) {
-    console.log(value);
     dispatch('change', value);
     forceClose();
   }

@@ -1,5 +1,5 @@
-import { IMAGE } from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+import { IMAGE } from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import { SRC_ELEMENT_KEY } from '../src/constants';
 

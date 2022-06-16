@@ -11,10 +11,9 @@ export const attributesData: AttributesData = [
     scriptSrc: 'autovideo.js',
     examplesSrc: 'examples.json',
     loadMode: 'defer',
-    schemaSrc: 'schema.json',
     changesetsSrc: 'changesets.json',
     readmeSrc: 'README.md',
-    allowSupport: true,
+    allowSupport: false,
   },
   {
     key: 'cmscombine',

@@ -1,4 +1,4 @@
-import type { AttributeOperator, AttributeStaticValue, AttributeValue } from '$global/types/selectors';
+import type { AttributeOperator, AttributeStaticValue, AttributeValue } from './types';
 
 /**
  * Creates a dynamic attribute value.

@@ -1,7 +1,6 @@
 import { DROPDOWN_CSS_CLASSES, findTextNode } from '@finsweet/ts-utils';
 import type { Dropdown, DropdownList, DropdownToggle } from '@finsweet/ts-utils';
-
-import { ARIA_CURRENT_KEY, TABINDEX_KEY } from '$global/constants/a11ty';
+import { ARIA_CURRENT_KEY, TABINDEX_KEY } from '@global/constants/a11ty';
 
 import { ATTRIBUTES, getSelector, queryElement } from '../utils/constants';
 import type { OptionsStore } from '../utils/types';

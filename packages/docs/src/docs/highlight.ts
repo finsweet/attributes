@@ -1,7 +1,7 @@
 import {
   ATTRIBUTE as CODEHIGHLIGHT_ATTRIBUTE,
   ATTRIBUTES as CODEHIGHLIGHT_ATTRIBUTES,
-} from 'packages/codehighlight/src/utils/constants';
+} from '@finsweet/attributes-codehighlight/src/utils/constants';
 
 import { queryElement } from '../utils/constants';
 

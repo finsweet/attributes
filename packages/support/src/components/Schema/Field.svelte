@@ -11,11 +11,11 @@
   import AttributeToggle from '@src/components/Attributes/AttributeToggle.svelte';
   import AttributeRequired from '@src/components/Attributes/AttributeRequired.svelte';
   import AttributeSelector from '@src/components/Attributes/Selector/Selector.svelte';
-  import AttributeFieldAdd from '@src/components/Field/AttributeFieldAdd.svelte';
-  import AttributeFieldDel from '@src/components/Field/AttributeFieldDel.svelte';
   import FieldSpecialization from '@src/components/Field/Specialization/FieldSpecialization.svelte';
   import FieldSettings from '@src/components/Schema/FieldSetting.svelte';
   import InputValidation from '@src/components/Report/ReportAttribute.svelte';
+  import FieldHeader from '@src/components/Field/FieldHeader.svelte';
+  import FieldWrapper from '@src/components/Field/FieldWrapper.svelte';
   import type { FieldUI } from '@src/types/Schema.types';
   import type {
     SchemaInputField,
@@ -26,8 +26,10 @@
 
   import { schemaFormActions, schemaForm, toggleAttributeSelector } from '@src/stores';
 
-  export let addField: () => void;
+  export let addField: (event: Event) => void;
   export let deleteField: (fieldIndex: string) => void;
+  export let toggleFields: (fieldIndex: string | null) => void;
+  export let selectedField: string | null;
   export let field: FieldUI;
   export let fieldInput: SchemaInputField;
 
@@ -35,6 +37,8 @@
   export let changeFieldElement: FieldChangeIdentifier;
 
   let hasSettings = field?.settings?.length > 0 || false;
+
+  let isOpen = selectedField === fieldInput.index;
 
   let isChecked = true;
   let isRequired = true;
@@ -70,62 +74,70 @@
   $: if ($toggleAttributeSelector) {
     isOpenSelector = $toggleAttributeSelector === selectorId;
   }
+
+  $: {
+    if (fieldInput) {
+      isOpen = selectedField === fieldInput.index;
+    }
+  }
 </script>
 
 <Attribute>
-  <AttributeItem id={selectorId} checked={isChecked} status={fieldStatus}>
-    <AttributeItemHeader>
-      <AttributeCheckbox onCheck={null} {isChecked} {isRequired} key={field.key} status={fieldStatus} />
-      <AttributeItemContainer>
-        <AttributeContainer>
-          <AttributeLabel {toggleSelector}>
-            <AttributeKey>
-              {field.key}
-            </AttributeKey>
-            <AttributeText>
-              {field.description}
-              {#if fieldInput && fieldInput.index === 'field-1'}
-                <AttributeRequired />
-              {/if}
-            </AttributeText>
-          </AttributeLabel>
-          <AttributeToggle isOpen={isOpenSelector} {toggleSelector} />
-
-          {#if fieldInput && fieldInput.index !== 'field-1'}
-            <AttributeFieldDel deleteField={() => deleteField((fieldInput && fieldInput.index) || '')} />
+  <FieldHeader {toggleFields} {addField} {deleteField} {fieldInput} {isOpen} />
+  <FieldWrapper isOpen={selectedField === fieldInput.index}>
+    <AttributeItem id={selectorId} checked={isChecked} status={fieldStatus}>
+      <AttributeItemHeader>
+        <AttributeCheckbox onCheck={null} {isChecked} {isRequired} key={field.key} status={fieldStatus} />
+        <AttributeItemContainer>
+          <AttributeContainer>
+            <AttributeLabel {toggleSelector}>
+              <AttributeKey>
+                {field.key}
+              </AttributeKey>
+              <AttributeText>
+                {field.description}
+                {#if fieldInput && fieldInput.index === 'field-1'}
+                  <AttributeRequired />
+                {/if}
+              </AttributeText>
+            </AttributeLabel>
+            <AttributeToggle isOpen={isOpenSelector} {toggleSelector} />
+          </AttributeContainer>
+          {#if isOpenSelector}
+            <AttributeSelector
+              type="field"
+              key={field.key}
+              value={fieldInput.identifier}
+              specialization={fieldInput.specialization}
+            />
           {/if}
-
-          <AttributeFieldAdd {addField} />
-        </AttributeContainer>
-        {#if isOpenSelector}
-          <AttributeSelector
-            type="field"
-            key={field.key}
-            value={fieldInput.identifier}
-            specialization={fieldInput.specialization}
+        </AttributeItemContainer>
+      </AttributeItemHeader>
+      {#if fieldInput && fieldInput.validation}
+        {#each fieldInput.validation.messages as inputMessage}
+          <InputValidation
+            status={fieldInput.validation.status}
+            message={inputMessage.message}
+            type={inputMessage.type}
           />
-        {/if}
-      </AttributeItemContainer>
-    </AttributeItemHeader>
-    {#if fieldInput && fieldInput.validation}
-      {#each fieldInput.validation.messages as inputMessage}
-        <InputValidation
-          status={fieldInput.validation.status}
-          message={inputMessage.message}
-          type={inputMessage.type}
+        {/each}
+      {/if}
+      <FieldSpecialization
+        specializations={field.specializations}
+        {changeFieldElement}
+        {changeFieldIdentifier}
+        fieldIndex={fieldInput}
+      />
+    </AttributeItem>
+    {#if hasSettings}
+      {#each field.settings as setting}
+        <FieldSettings
+          fieldKey={field.key}
+          fieldIndex={fieldInput.index}
+          {setting}
+          identifier={fieldInput.identifier}
         />
       {/each}
     {/if}
-    <FieldSpecialization
-      specializations={field.specializations}
-      {changeFieldElement}
-      {changeFieldIdentifier}
-      fieldIndex={fieldInput}
-    />
-  </AttributeItem>
-  {#if hasSettings}
-    {#each field.settings as setting}
-      <FieldSettings fieldKey={field.key} fieldIndex={fieldInput.index} {setting} identifier={fieldInput.identifier} />
-    {/each}
-  {/if}
+  </FieldWrapper>
 </Attribute>

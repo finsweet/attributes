@@ -1,8 +1,9 @@
-import AttributeIsNotSiblingOfError from './AttributeIsNotSiblingOfError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
+import type { AttributeElementSchema, DOMSelector } from '@global/types/schema';
 import COPY_CLIP from '@src/schemas/copy-clip';
-import type { AttributeElementSchema, DOMSelector } from '$global/types/schema';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type { ElementItemSelector } from '@src/types/Schema.types';
+
+import AttributeIsNotSiblingOfError from './AttributeIsNotSiblingOfError';
 
 describe('Test Error - Attribute not found', () => {
   test('Attribute type element not sibling of required element', () => {

@@ -1,5 +1,6 @@
-import MissingFieldAppliedTagError from './MissingFieldAppliedTagError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import MissingFieldAppliedTagError from './MissingFieldAppliedTagError';
 
 describe('Missing field applied tag error.', () => {
   test('Field is missing correct html tag with parent.', () => {

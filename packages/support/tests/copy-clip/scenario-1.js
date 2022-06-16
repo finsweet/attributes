@@ -2,10 +2,8 @@ import {
   selectAttribute,
   selectItem,
   clickRunCheck,
-  typeFieldIdentifier,
   selectItemAndInputSetting,
   selectMultipleInstances,
-  selectFieldSpecialization,
   selectInstance,
 } from './../helpers/actions';
 import {

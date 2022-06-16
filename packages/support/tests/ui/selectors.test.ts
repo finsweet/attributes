@@ -32,6 +32,17 @@ test('Test element selector', async t => {
   await assertSelectorValue('element-list', 'list');
 });
 
+test('Test element setting selector - boolean', async t => {
+
+  await selectAttribute('CMS Filter');
+
+  await clickToggleSelector('element-setting-showquery');
+
+  await assertSelectorName('element-setting-showquery', 'fs-cmsfilter-showquery');
+  await assertSelectorValue('element-setting-showquery', 'true');
+});
+
+
 test('Test element setting selector - input', async t => {
 
   await selectAttribute('CMS Filter');

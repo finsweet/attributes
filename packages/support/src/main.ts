@@ -1,3 +1,6 @@
+import GraphikBold from './../public/fonts/Graphik-Bold-Web.woff2';
+import GraphikMedium from './../public/fonts/Graphik-Medium-Web.woff2';
+import GraphikRegular from './../public/fonts/Graphik-Regular-Web.woff2';
 import App from './components/App.svelte';
 
 const section = document.createElement('section');
@@ -13,34 +16,31 @@ const app = new App({
 });
 
 const styleFonts = `
-  @font-face {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 300;
-    src: local('Open Sans Light'),
-      local('OpenSans-Light'),
-      url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff)
-      format('woff');
-  }
 
   @font-face {
-    font-family: 'Open Sans';
+    font-family: 'Graphik';
     font-style: normal;
     font-weight: 400;
-    src: local('Open Sans'),
-    local('OpenSans'),
-    url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+
+    src: url(${GraphikRegular}) format('woff2');
+  }
+  @font-face {
+    font-family: 'Graphik';
+    font-style: normal;
+    font-weight: 500;
+    src: url(${GraphikMedium}) format('woff2');
   }
 
+
   @font-face {
-    font-family: 'Open Sans';
+    font-family: 'Graphik';
     font-style: normal;
-    font-weight: 600;
-    src: local('Open Sans Semibold'),
-    local('OpenSans-Semibold'),
-    url(https://fonts.gstatic.com/s/opensans/v13/MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff)
-    format('woff');
+    font-weight: 700;
+
+    src: url(${GraphikBold}) format('woff2');
   }
+
+
 `;
 const style = document.createElement('style');
 style.setAttribute('type', 'text/css');

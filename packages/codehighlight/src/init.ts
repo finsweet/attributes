@@ -1,4 +1,4 @@
-import { ATTRIBUTE as RICH_TEXT_ATTRIBUTE } from 'packages/richtext/src/utils/constants';
+import { ATTRIBUTE as RICH_TEXT_ATTRIBUTE } from '@finsweet/attributes-richtext/src/utils/constants';
 
 import { importHighlightJS, importHighlightJSTheme } from './actions/import';
 import { ATTRIBUTE, ATTRIBUTES, getSelector } from './utils/constants';

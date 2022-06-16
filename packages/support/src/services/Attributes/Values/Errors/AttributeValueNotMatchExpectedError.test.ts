@@ -1,5 +1,6 @@
-import AttributeValueNotMatchExpectedError from './AttributeValueNotMatchExpectedError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeValueNotMatchExpectedError from './AttributeValueNotMatchExpectedError';
 
 describe('Test Error - Attribute duplicated', () => {
   test('Attribute type element duplicated', () => {

@@ -1,5 +1,5 @@
-import { FORM_INPUT } from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+import { FORM_INPUT } from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import { TRIGGER_ELEMENT_KEY, TARGET_ELEMENT_KEY } from './../src/constants';
 

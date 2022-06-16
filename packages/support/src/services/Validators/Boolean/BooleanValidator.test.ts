@@ -1,5 +1,6 @@
-import { booleanValidator } from './BooleanValidator';
 import type { ValueTypeError } from '@src/types/Error.types';
+
+import { booleanValidator } from './BooleanValidator';
 
 describe('Validator boolean ', () => {
   /**

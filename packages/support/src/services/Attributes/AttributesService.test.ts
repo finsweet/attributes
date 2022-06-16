@@ -1,8 +1,4 @@
-import { validateElement } from './Elements/ElementsService';
-import { validateElementSetting } from './Elements/ElementsSettingsService';
-import { validateFieldSetting } from './Fields/FieldsSettingsService';
-import { validateField } from './Fields/FieldsService';
-import type { AttributeSchema } from '$global/types/schema';
+import type { AttributeSchema } from '@global/types/schema';
 import type {
   InputChannel,
   SchemaInput,
@@ -11,6 +7,12 @@ import type {
   SchemaInputField,
   SchemaInputFieldSetting,
 } from '@src/types/Input.types';
+
+import { validateInputForm } from './AttributesService';
+import { validateElement } from './Elements/ElementsService';
+import { validateElementSetting } from './Elements/ElementsSettingsService';
+import { validateField } from './Fields/FieldsService';
+import { validateFieldSetting } from './Fields/FieldsSettingsService';
 
 jest.mock('./Elements/ElementsService', () => ({
   validateElement: jest.fn(),
@@ -32,8 +34,6 @@ const validateElementMock = validateElement as jest.Mock;
 const validateFieldMock = validateField as jest.Mock;
 const validateElementSettingMock = validateElementSetting as jest.Mock;
 const validateFieldSettingMock = validateFieldSetting as jest.Mock;
-
-import { validateInputForm } from './AttributesService';
 
 describe('Use Attributes Validation', () => {
   beforeEach(() => {

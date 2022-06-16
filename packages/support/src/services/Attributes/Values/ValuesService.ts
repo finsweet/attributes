@@ -1,16 +1,18 @@
-import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';
 import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
+import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';
+import { booleanValidator } from '@src/services/Validators/Boolean/BooleanValidator';
+import { floatValidator, commaSeparatedFloatValidator } from '@src/services/Validators/Float/FloatValidator';
+import { intValidator, commaSeparatedIntValidator } from '@src/services/Validators/Int/IntValidator';
 // validators
 import { optionsValidator } from '@src/services/Validators/Options/OptionsValidator';
-import { booleanValidator } from '@src/services/Validators/Boolean/BooleanValidator';
-import { intValidator, commaSeparatedIntValidator } from '@src/services/Validators/Int/IntValidator';
 import { stringValidator, commaSeparatedStringValidator } from '@src/services/Validators/String/StringValidator';
-import { floatValidator, commaSeparatedFloatValidator } from '@src/services/Validators/Float/FloatValidator';
+import type { ValueTypeError } from '@src/types/Error.types';
+import type { SchemaSelector } from '@src/types/Schema.types';
+
+import AttributeValueNotFoundError from './Errors/AttributeValueNotFoundError';
+import AttributeValueNotMatchExpectedError from './Errors/AttributeValueNotMatchExpectedError';
 // erros
 import AttributeValueNotMatchTypeError from './Errors/AttributeValueNotMatchTypeError';
-import AttributeValueNotMatchExpectedError from './Errors/AttributeValueNotMatchExpectedError';
-import type { SchemaSelector } from '@src/types/Schema.types';
-import type { ValueTypeError } from '@src/types/Error.types';
 
 export function valueServiceV2(
   elements: HTMLElement[],
@@ -91,8 +93,13 @@ export default function valueService(
   const attributeElementSelector =
     `${(elementAppliedTo && elementAppliedTo.getElementSelector()) || ''}` + schemaSelector.getAttributeSelector();
 
-  // Query attribute value by Applied Selector
-  const attributeValueInDOM = queryAttributeValue(attributeElementSelector, schemaSelector.attribute);
+  let attributeValueInDOM;
+
+  try {
+    attributeValueInDOM = queryAttributeValue(attributeElementSelector, schemaSelector.attribute);
+  } catch {
+    throw new AttributeValueNotFoundError(schemaSelector, appliedToSelectors[0]);
+  }
 
   // validate html value type
   try {

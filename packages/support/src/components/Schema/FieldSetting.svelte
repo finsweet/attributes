@@ -18,7 +18,7 @@
     schemaSettingsInstance,
     schemaSettingsKey,
   } from '@src/stores';
-  import type { AttributeSettingSchema } from '$global/types/schema';
+  import type { AttributeSettingSchema } from '@global/types/schema';
   import type { SchemaInput, SchemaInputFieldSetting, SchemaInputValidation } from '@src/types/Input.types';
 
   export let setting: AttributeSettingSchema;
@@ -54,12 +54,14 @@
 
       if (index === null) {
         schemaFormActions.addFieldSetting(fieldKey, fieldIndex, setting.key, checkedOption);
-      } else {
-        schemaFormActions.enableFieldSetting(fieldKey, fieldIndex, setting.key);
+        return;
       }
-    } else {
-      schemaFormActions.disableFieldSetting(fieldKey, fieldIndex, setting.key);
+
+      schemaFormActions.enableFieldSetting(fieldKey, fieldIndex, setting.key);
+      return;
     }
+
+    schemaFormActions.disableFieldSetting(fieldKey, fieldIndex, setting.key);
   }
 
   function checkIsEnable(schemaForm: SchemaInput[]) {

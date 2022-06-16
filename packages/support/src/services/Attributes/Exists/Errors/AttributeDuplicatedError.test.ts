@@ -1,5 +1,6 @@
-import AttributeDuplicatedError from './AttributeDuplicatedError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeDuplicatedError from './AttributeDuplicatedError';
 
 describe('Test Error - Attribute duplicated', () => {
   test('Attribute type element duplicated', () => {

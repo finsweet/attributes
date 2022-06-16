@@ -1,11 +1,12 @@
-import AttributeNotHasStyleError from './Errors/AttributeNotHasStyleError';
 import type {
   AttributeSchemaConditions,
   AttributeSchemaCondition,
   AttributeStyleCondition,
   AttributeStyleConditionStyles,
-} from '$global/types/schema';
+} from '@global/types/schema';
 import type { SchemaSelector } from '@src/types/Schema.types';
+
+import AttributeNotHasStyleError from './Errors/AttributeNotHasStyleError';
 
 export function hasStyle(elementSelector: SchemaSelector, conditions: AttributeSchemaConditions) {
   conditions.forEach((condition: AttributeSchemaCondition) => {

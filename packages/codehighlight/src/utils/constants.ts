@@ -1,4 +1,4 @@
-import { generateSelectors } from '$global/factory/selectors';
+import { generateSelectors } from '@global/factory/selectors';
 
 export const ATTRIBUTE = 'codehighlight';
 

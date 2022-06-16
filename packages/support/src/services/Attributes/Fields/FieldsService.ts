@@ -1,30 +1,4 @@
-import {
-  getSchemaItem,
-  createSchemaSelectorFromItem,
-  createSchemaSelectorFromSchema,
-} from '@src/services/Attributes/Schema/SchemaService';
-import { validateDOMSelectors } from './SpecializationService';
-import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
-// ui errors
-import MissingFieldIdentifierError from './Errors/UI/MissingFieldIdentifierError';
-import MissingFieldSpecializationError from './Errors/UI/MissingFieldSpecializationError';
-// field errors
-import MissingFieldError from './Errors/MissingFieldError';
-import MissingFieldAppliedTagError from './Errors/MissingFieldAppliedTagError';
-// components
-import ComponentFieldNotFoundError from './Errors/Component/ComponentFieldNotFoundError';
-import ComponentMissingExternalComponentError from './Errors/Component/ComponentMissingExternalComponentError';
-import ComponentLinkNotWorkingError from './Errors/Component/ComponentLinkNotWorkingError';
-
-// links
-import FieldLinkNotFoundError from './Errors/Link/LinkFieldNotFoundError';
-import FieldLinkMainCollectionLinkNotFoundError from './Errors/Link/FieldLinkMainCollectionLinkNotFoundError';
-import FieldLinkMainCollectionLinkNotWorkingError from './Errors/Link/FieldLinkMainCollectionLinkNotWorkingError';
-import FieldLinkMissingNestedCollectionError from './Errors/Link/FieldLinkMissingNestedCollectionError';
-import FieldLinkNestedCollectionLinkNotFoundError from './Errors/Link/FieldLinkNestedCollectionLinkNotFoundError';
-import FieldLinkNestedCollectionLinkNotWorkingError from './Errors/Link/FieldLinkNestedCollectionLinkNotWorkingError';
 // types
-
 import type {
   AttributeSchema,
   ParentSelector,
@@ -34,9 +8,34 @@ import type {
   AttributeFieldSchema,
   FieldSpecialization,
   InstanceFieldSpecializationAppliedTo,
-} from '$global/types/schema';
-import type { SchemaSettings, SchemaSelector } from '@src/types/Schema.types';
+} from '@global/types/schema';
+import {
+  getSchemaItem,
+  createSchemaSelectorFromItem,
+  createSchemaSelectorFromSchema,
+} from '@src/services/Attributes/Schema/SchemaService';
+import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
 import type { InputChannel, SchemaInputField, InputValidationMessage } from '@src/types/Input.types';
+import type { SchemaSettings, SchemaSelector } from '@src/types/Schema.types';
+
+// components
+import ComponentFieldNotFoundError from './Errors/Component/ComponentFieldNotFoundError';
+import ComponentLinkNotWorkingError from './Errors/Component/ComponentLinkNotWorkingError';
+import ComponentMissingExternalComponentError from './Errors/Component/ComponentMissingExternalComponentError';
+import FieldLinkMainCollectionLinkNotFoundError from './Errors/Link/FieldLinkMainCollectionLinkNotFoundError';
+import FieldLinkMainCollectionLinkNotWorkingError from './Errors/Link/FieldLinkMainCollectionLinkNotWorkingError';
+import FieldLinkMissingNestedCollectionError from './Errors/Link/FieldLinkMissingNestedCollectionError';
+import FieldLinkNestedCollectionLinkNotFoundError from './Errors/Link/FieldLinkNestedCollectionLinkNotFoundError';
+import FieldLinkNestedCollectionLinkNotWorkingError from './Errors/Link/FieldLinkNestedCollectionLinkNotWorkingError';
+// links
+import FieldLinkNotFoundError from './Errors/Link/LinkFieldNotFoundError';
+import MissingFieldAppliedTagError from './Errors/MissingFieldAppliedTagError';
+// field errors
+import MissingFieldError from './Errors/MissingFieldError';
+// ui errors
+import MissingFieldIdentifierError from './Errors/UI/MissingFieldIdentifierError';
+import MissingFieldSpecializationError from './Errors/UI/MissingFieldSpecializationError';
+import { validateDOMSelectors } from './SpecializationService';
 
 type FieldValidatorResponse = HTMLElement | InputValidationMessage | null;
 

@@ -1,6 +1,5 @@
 <script lang="ts">
   import AttributeItem from '@src/components/Attributes/AttributeItem.svelte';
-  import { checkSettingCondition } from '@src/services/Attributes/Schema/SchemaService';
   import AttributeKey from '@src/components/Attributes/AttributeKey.svelte';
   import AttributeItemHeader from '@src/components/Attributes/AttributeItemHeader.svelte';
   import AttributeCheckbox from '@src/components/Attributes/AttributeCheckbox.svelte';
@@ -11,6 +10,7 @@
   import AttributeToggle from '@src/components/Attributes/AttributeToggle.svelte';
   import AttributeSelector from '@src/components/Attributes/Selector/Selector.svelte';
   import InputValidation from '@src/components/Report/ReportAttribute.svelte';
+  import { checkSettingCondition } from '@src/services/Attributes/Schema/SchemaService';
   import {
     schemaForm,
     schemaFormActions,
@@ -18,7 +18,7 @@
     toggleAttributeSelector,
     schemaSettingsKey,
   } from '@src/stores';
-  import type { AttributeSettingSchema } from '$global/types/schema';
+  import type { AttributeSettingSchema } from '@global/types/schema';
   import type { SchemaInput, SchemaInputValidation } from '@src/types/Input.types';
 
   export let setting: AttributeSettingSchema;
@@ -38,15 +38,23 @@
     if (checked) {
       let checkedOption: string = option || setting.value.default || '';
 
+      const element = schemaFormActions.findElement(parent);
+      if (!element) {
+        schemaFormActions.addElement(parent);
+      }
+
       let index = schemaFormActions.findElementSettingIndex(parent, setting.key);
+
       if (index === null) {
         schemaFormActions.addElementSetting(parent, setting.key, checkedOption);
-      } else {
-        schemaFormActions.enableElementSetting(parent, setting.key);
+        return;
       }
-    } else {
-      schemaFormActions.disableElementSetting(parent, setting.key);
+
+      schemaFormActions.enableElementSetting(parent, setting.key);
+      return;
     }
+
+    schemaFormActions.disableElementSetting(parent, setting.key);
   }
 
   function checkIsEnable(schemaForm: SchemaInput[]) {

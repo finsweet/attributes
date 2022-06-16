@@ -1,5 +1,6 @@
-import ComponentMissingExternalComponentError from './ComponentMissingExternalComponentError';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import ComponentMissingExternalComponentError from './ComponentMissingExternalComponentError';
 
 describe('Missing component on external page error.', () => {
   test('Field is missing component on external page.', () => {

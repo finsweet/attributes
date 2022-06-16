@@ -10,6 +10,7 @@
     VALIDATE_MODES,
     validatingMode,
     isSubmitted,
+    appError,
   } from '@src/stores';
 
   async function validateForm() {
@@ -21,6 +22,8 @@
       return;
     }
 
+    $appError = false;
+
     const schemaSettings = {
       key: $schemaSettingsKey,
       instance: $schemaSettingsInstance,
@@ -28,7 +31,12 @@
 
     $validatingMode = VALIDATE_MODES.VALIDATING;
 
-    $schemaForm = await validateInputForm($schemaForm, $schemaData, schemaSettings);
+    try {
+      $schemaForm = await validateInputForm($schemaForm, $schemaData, schemaSettings);
+    } catch (e) {
+      $appError = true;
+      console.error(e);
+    }
 
     scrollTo('#support-internal', 100);
 

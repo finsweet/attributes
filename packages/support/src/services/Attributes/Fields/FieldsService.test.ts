@@ -1,11 +1,11 @@
-import {
-  validateField,
-  // validateSpecializationApplyTo,
-} from './FieldsService';
-import type { SchemaSettings } from '@src/types/Schema.types';
-import type { SchemaInputField } from '@src/types/Input.types';
 import CMS_FILTER from '@src/schemas/cms-filter';
 import CMS_SORT from '@src/schemas/cms-sort';
+import type { SchemaInputField } from '@src/types/Input.types';
+import type { SchemaSettings } from '@src/types/Schema.types';
+
+import {
+  validateField, // validateSpecializationApplyTo,
+} from './FieldsService';
 
 describe('Test field service', () => {
   it('Test specialization with parent and selector', async () => {

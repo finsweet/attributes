@@ -1,8 +1,7 @@
 import { SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
+import { ARIA_LABEL_KEY, ARIA_PRESSED_KEY, ARIA_ROLE_KEY, TABINDEX_KEY } from '@global/constants/a11ty';
 
-import { ARIA_LABEL_KEY, ARIA_PRESSED_KEY, ARIA_ROLE_KEY, TABINDEX_KEY } from '$global/constants/a11ty';
-
-import { DotsRelationship } from '../utils/types';
+import type { DotsRelationship } from '../utils/types';
 
 /**
  * Syncronizes the properties from the original `Slider Dot` with the `Custom Slider Dot`.

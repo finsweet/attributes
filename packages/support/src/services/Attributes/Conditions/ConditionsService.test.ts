@@ -1,12 +1,12 @@
-import conditionsService from './ConditionsService';
+import type { AttributeElementSchema, AttributeSettingSchema } from '@global/types/schema';
+import CMS_LOAD from '@src/schemas/cms-load';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 
+import conditionsService from './ConditionsService';
+import { exists } from './Exists/ExistsService';
 //mocks
 import { isChildOf } from './IsChildOf/IsChildOfService';
-import { exists } from './Exists/ExistsService';
 import { hasSettings } from './Settings/SettingsService';
-import type { AttributeElementSchema, AttributeSettingSchema } from '$global/types/schema';
-import CMS_LOAD from '@src/schemas/cms-load';
 
 jest.mock('./Exists/ExistsService', () => ({
   exists: jest.fn(),

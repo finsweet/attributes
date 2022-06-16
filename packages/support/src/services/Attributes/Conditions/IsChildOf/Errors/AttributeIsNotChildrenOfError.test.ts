@@ -1,12 +1,13 @@
-import AttributeIsNotChildrenOfError from './AttributeIsNotChildrenOfError';
-import SchemaSelector from '@src/services/Selector/SchemaSelector';
-import CMS_LOAD from '@src/schemas/cms-load';
 import type {
   AttributeElementSchema,
   AttributeSchemaCondition,
   AttributeMainCondition,
   AttributeSelectorCondition,
-} from '$global/types/schema';
+} from '@global/types/schema';
+import CMS_LOAD from '@src/schemas/cms-load';
+import SchemaSelector from '@src/services/Selector/SchemaSelector';
+
+import AttributeIsNotChildrenOfError from './AttributeIsNotChildrenOfError';
 
 describe('Test Error - Attribute not found', () => {
   test('Attribute type element not found', () => {

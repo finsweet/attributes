@@ -7,8 +7,8 @@ import {
   NAVBAR,
   SECTION,
   RICH_TEXT_BLOCK,
-} from '$global/constants/webflow-selectors';
-import type { AttributeSchema } from '$global/types/schema';
+} from '@global/constants/webflow-selectors';
+import type { AttributeSchema } from '@global/types/schema';
 
 import {
   WHEN_VISIBLE_ELEMENT_KEY,

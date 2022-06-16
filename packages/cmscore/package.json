@@ -1,0 +1,50 @@
+{
+  "name": "@finsweet/attributes-cmscore",
+  "version": "1.6.7",
+  "description": "Core functionalities of all cms Attributes.",
+  "main": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "cmscore.js",
+    "changesets.json"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finsweet/attributes.git"
+  },
+  "keywords": [
+    "webflow",
+    "attributes",
+    "no code"
+  ],
+  "author": {
+    "name": "Finsweet",
+    "url": "https://www.finsweet.com/"
+  },
+  "bugs": {
+    "url": "https://sweetjs.finsweet.com/"
+  },
+  "homepage": "https://www.finsweet.com/attributes",
+  "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*",
+    "@finsweet/attributes-animation": "workspace:*"
+  },
+  "dependencies": {
+    "@global/helpers": "workspace:*",
+    "@global/import": "workspace:*",
+    "@finsweet/ts-utils": "^0.33.1",
+    "emittery": "^0.11.0"
+  }
+}

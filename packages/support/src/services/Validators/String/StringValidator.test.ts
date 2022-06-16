@@ -1,5 +1,6 @@
-import { stringValidator, commaSeparatedStringValidator } from './StringValidator';
 import type { ValueTypeError } from '@src/types/Error.types';
+
+import { stringValidator, commaSeparatedStringValidator } from './StringValidator';
 
 describe('String  Validator', () => {
   /**
