@@ -1,19 +1,17 @@
-import { assessScript } from '$global/factory/assess';
+import { assessScript } from '@global/factory';
 
 import { initializeShopifyClient } from './actions/shopifyClient';
 import { ATTRIBUTES } from './utils/constants';
-import { ShopifyAttributeParams } from './utils/types';
+import type { ShopifyAttributeParams } from './utils/types';
 
 /**
  * Inits the attribute.
  */
 export const init = (params: ShopifyAttributeParams) => {
   return (): void => {
-    initializeShopifyClient(params)
-  }
+    initializeShopifyClient(params);
+  };
 };
-
-
 
 /**
  * Checks the Shopify params of the Attribute `<script>`.
@@ -40,7 +38,10 @@ export const assessScriptAttributes = (): ShopifyAttributeParams => {
   const redirectURLValue = currentScript?.getAttribute(redirectURL.key) || redirectURL.defaultValue;
 
   return {
-    globalAttributeParams, domain: domainValue, token: tokenValue, productPage: productPageValue,
-    redirectURL: redirectURLValue
+    globalAttributeParams,
+    domain: domainValue,
+    token: tokenValue,
+    productPage: productPageValue,
+    redirectURL: redirectURLValue,
   };
 };

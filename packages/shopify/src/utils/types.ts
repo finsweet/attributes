@@ -1,4 +1,4 @@
-import { GlobalAttributeParams } from '$global/types/global';
+import type { GlobalAttributeParams } from '@global/factory/types';
 
 export interface ShopifyAttributeParams {
   globalAttributeParams: GlobalAttributeParams;
@@ -14,9 +14,9 @@ export interface ShopifyAttributeParams {
   domain: string;
 
   /**
-  * Defines the Webflow product page slug.
-  * @default /test/product-template
-  */
+   * Defines the Webflow product page slug.
+   * @default /test/product-template
+   */
   productPage: string;
 
   /**
@@ -27,4 +27,18 @@ export interface ShopifyAttributeParams {
   redirectURL: string;
 }
 
-export type ProductAttribute = 'title' | 'description' | 'handle' | 'created' | 'updated' | 'published' | 'image' | 'sku' | 'price' | 'compareprice' | 'discountedpercent' | 'type' | 'vendor' | 'weight'
+export type ProductAttribute =
+  | 'title'
+  | 'description'
+  | 'handle'
+  | 'created'
+  | 'updated'
+  | 'published'
+  | 'image'
+  | 'sku'
+  | 'price'
+  | 'compareprice'
+  | 'discountedpercent'
+  | 'type'
+  | 'vendor'
+  | 'weight';

@@ -1,4 +1,4 @@
-import { initAttributes } from '$global/factory/init';
+import { initAttributes } from '@global/factory';
 
 import { version } from '../package.json';
 import { initializeShopifyClient } from './actions/shopifyClient';

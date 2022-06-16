@@ -1,4 +1,4 @@
-import { generateSelectors } from '$global/factory/selectors';
+import { generateSelectors } from '@global/factory';
 
 export const ATTRIBUTE = 'shopify';
 
@@ -22,13 +22,12 @@ export const PRODUCT_TYPE = 'type';
 export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
 
-export const PRODUCT_ID_PREFIX = "gid://shopify/Product/"
+export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 
 export const QUERY_PARAMS = {
-  id: "id",
-  handle: "handle"
-}
-
+  id: 'id',
+  handle: 'handle',
+};
 
 export const ATTRIBUTES = {
   element: {
@@ -53,7 +52,7 @@ export const ATTRIBUTES = {
       discountedpercent: PRODUCT_DISCOUNTED_PERCENT,
       type: PRODUCT_TYPE,
       vendor: PRODUCT_VENDOR,
-      weight: PRODUCT_WEIGHT
+      weight: PRODUCT_WEIGHT,
     },
   },
 
@@ -78,12 +77,12 @@ export const ATTRIBUTES = {
   /**
    * Defines the Webflow product page slug
    */
-  productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
+  productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: '/tests/product-template' },
 
   /**
    * Defines the slug or the url to redirect the user to when something goes wrong on product page
    */
-  redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
+  redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: '/404' },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
