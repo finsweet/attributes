@@ -9,8 +9,7 @@
   "files": [
     "shopify.js",
     "examples.json",
-    "schema.json",
-    "changesets.json"
+    "schema.json"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
