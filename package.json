@@ -20,7 +20,7 @@
     "build": "pnpm -r --filter \"./packages/**\" build",
     "lint": "pnpm -r --filter \"./packages/**\" lint",
     "check": "pnpm -r --filter \"./packages/**\" check",
-    "format": "pnpm -r --filter \"./packages/**\" --filter format",
+    "format": "pnpm -r --filter \"./packages/**\" format",
     "test": "pnpm -r --filter \"./packages/**\" --filter !@finsweet/attributes-support test --workspace-concurrency=1",
     "test:headed": "pnpm -r --filter \"./packages/**\" --filter !@finsweet/attributes-support test:headed --workspace-concurrency=1",
     "release": "changeset publish",
