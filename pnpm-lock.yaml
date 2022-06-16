@@ -569,6 +569,25 @@ importers:
         specifier: ^10.0.2
         version: 10.0.2
 
+  packages/shopify:
+    specifiers:
+      '@global/build': workspace:*
+      '@global/constants': workspace:*
+      '@global/factory': workspace:*
+      '@global/tests': workspace:*
+      '@global/types': workspace:*
+      '@types/shopify-buy': ^2.10.10
+      shopify-buy: ^2.15.1
+    dependencies:
+      '@global/constants': link:../../global/constants
+      '@global/factory': link:../../global/factory
+      shopify-buy: 2.15.1
+    devDependencies:
+      '@global/build': link:../../global/build
+      '@global/tests': link:../../global/tests
+      '@global/types': link:../../global/types
+      '@types/shopify-buy': 2.10.10
+
   packages/sliderdots:
     dependencies:
       '@finsweet/attributes-utils':
@@ -1550,6 +1569,12 @@ packages:
 
   /@types/semver@7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+  /@types/shopify-buy/2.10.10:
+    resolution: {integrity: sha512-KNX9ToXmH67+w2K+snlPbanM/dnmVxBKll7H1+UgPMJTDWxFzWttoNaiueSsiUEmNwu3NoFuGXdwew1bTLY4TQ==}
+    dev: true
+
+  /@types/source-list-map/0.1.2:
+    resolution: {integrity: sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==}
     dev: true
 
   /@types/trusted-types@2.0.2:
@@ -3477,6 +3502,11 @@ packages:
     dev: true
 
   /side-channel@1.0.4:
+  /shopify-buy/2.15.1:
+    resolution: {integrity: sha512-ijtQXSTlzNWJ4xEYucfvJZ80PYYEKub+sVcXr77krDagv0NM9SHzkUVk37tMDJIwzh5KM+LOmed6ZN5V1cFyBg==}
+    dev: false
+
+  /side-channel/1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
       call-bind: 1.0.2
