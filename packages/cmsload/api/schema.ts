@@ -33,6 +33,7 @@ import {
   SHOW_QUERY_SETTING_KEY,
   STAGGER_SETTING_KEY,
   THRESHOLD_SETTING_KEY,
+  EMPTY_ELEMENT_KEY,
 } from '../src/utils/constants';
 
 export const schema: AttributeSchema = {
@@ -176,6 +177,21 @@ export const schema: AttributeSchema = {
               value: MODE_SETTING_VALUES.pagination,
             },
           ],
+        },
+      ],
+    },
+    {
+      key: EMPTY_ELEMENT_KEY,
+      description: 'Defines the Empty State element for when there are no elements to show.',
+      required: false,
+      requiresInstance: true,
+      multiplesInInstance: false,
+      appliedTo: [DIV_BLOCK],
+      conditions: [
+        {
+          condition: 'exists',
+          type: 'element',
+          element: LIST_ELEMENT_KEY,
         },
       ],
     },

@@ -20,6 +20,7 @@ const {
   duration: { key: durationKey },
   easing: { key: easingKey },
   showQuery: { key: showQueryKey, values: showQueryValues },
+  allowSubmit: { key: allowSubmitKey, values: allowSubmitValues },
   tagFormat: { key: tagsFormatKey },
   highlight: { key: highlightKey, values: highlightValues },
   highlightCSS: { key: highlightCSSKey },
@@ -68,6 +69,9 @@ export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | un
   // Query Params
   const showQueryParams = listInstance.getAttribute(showQueryKey) === showQueryValues.true;
 
+  // Allow Form Submission
+  const allowSubmit = listInstance.getAttribute(allowSubmitKey) === allowSubmitValues.true;
+
   // Highlight
   const highlightAll = listInstance.getAttribute(highlightKey) === highlightValues.true;
   const highlightCSSClass = listInstance.getAttribute(highlightCSSKey) || DEFAULT_HIGHLIGHT_CSS_CLASS;
@@ -91,6 +95,7 @@ export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | un
   const filtersInstance = new CMSFilters(formBlock, listInstance, {
     resultsElement,
     showQueryParams,
+    allowSubmit,
     highlightAll,
     highlightCSSClass,
     activeCSSClass,

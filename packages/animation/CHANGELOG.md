@@ -1,25 +1,44 @@
-# `animation` Changelog
+# @finsweet/attributes-animation
 
-## [v1.0.5] 25th October 2021
+## 1.0.6
+
+### Patch Changes
+
+- Updated dependencies [627bf25]
+  - @global/factory@1.1.0
+
+## 1.0.5
+
+### Patch Changes
 
 - Added `prepareIn` function.
 
-## [v1.0.4] 25th October 2021
+## 1.0.4
+
+### Patch Changes
 
 - Switched `anchor` option for `insertAfter` option.
 
-## [v1.0.3] 25th October 2021
+## 1.0.3
+
+### Patch Changes
 
 - Fixed `anchor` option not being properly used in `Node.insertBefore`.
 
-## [v1.0.2] 25th October 2021
+## 1.0.2
+
+### Patch Changes
 
 - Added `initAttributes` call to make sure `window.fsAttributes` exists.
 
-## [v1.0.1] 25th October 2021
+## 1.0.1
+
+### Patch Changes
 
 - Added `functions.js` in the `package.json`'s `files`.
 
-## [v1.0.0] 25th October 2021
+## 1.0.0
+
+### Major Changes
 
 - Created the attribute package.

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmstabs",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Convert the native Webflow tabs component to CMS tabs",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

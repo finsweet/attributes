@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsfilter",
-  "version": "1.11.2",
+  "version": "1.12.1",
   "description": "Filter items from Webflow CMS dynamic collection list.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -19,7 +19,8 @@
     "check": "tsc --noEmit",
     "format": "prettier --write ./src",
     "test": "pnpm playwright test",
-    "test:headed": "pnpm playwright test --headed"
+    "test:headed": "pnpm playwright test --headed",
+    "serve": "serve ../../"
   },
   "repository": {
     "type": "git",

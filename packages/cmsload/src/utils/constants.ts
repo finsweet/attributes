@@ -12,6 +12,7 @@ export const VISIBLE_COUNT_ELEMENT_KEY = 'visible-count';
 export const SCROLL_ANCHOR_ELEMENT_KEY = 'scroll-anchor';
 export const PAGE_BUTTON_ELEMENT_KEY = 'page-button';
 export const PAGE_DOTS_ELEMENT_KEY = 'page-dots';
+export const EMPTY_ELEMENT_KEY = 'empty';
 
 export const MODE_SETTING_KEY = 'mode';
 export const MODE_SETTING_VALUES = {
@@ -76,6 +77,11 @@ export const ATTRIBUTES = {
        * Defines an element where to scroll the view every time a page in `Pagination` mode is switched.
        */
       scrollAnchor: generateDynamicAttibuteValue(SCROLL_ANCHOR_ELEMENT_KEY),
+
+      /**
+       * Defines the Empty State element for when there are no elements to show.
+       */
+      empty: generateDynamicAttibuteValue(EMPTY_ELEMENT_KEY),
 
       /**
        * Defines the template element to generate all page buttons for the `paginate` mode.

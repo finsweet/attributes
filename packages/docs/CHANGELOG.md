@@ -1,0 +1,217 @@
+# @finsweet/attributes-docs
+
+## 1.7.9
+
+### Patch Changes
+
+- 627bf25: Added `fs-formsubmit` Attribute
+- Updated dependencies [627bf25]
+  - @global/factory@1.1.0
+  - @finsweet/attributes-codehighlight@1.3.2
+  - @finsweet/attributes-copyclip@1.5.2
+  - @finsweet/attributes-toc@1.0.8
+
+## 1.7.8
+
+### Patch Changes
+
+- @finsweet/attributes-codehighlight@1.3.1
+- @finsweet/attributes-toc@1.0.7
+
+## 1.7.7
+
+### Patch Changes
+
+- Fixed `Generate a url` copy to clipboard functionality.
+
+## 1.7.6
+
+### Patch Changes
+
+- Added script for generate a URL in form on support page.
+
+## 1.7.5
+
+### Patch Changes
+
+- Disabled autovideo support in attributes.json.
+
+## 1.7.4
+
+### Patch Changes
+
+- Added missing `href` to the `cmscore` package.
+
+## 1.7.3
+
+### Patch Changes
+
+- Updated `AttributesData` interface to differenciate between supported (must appear in the Attributes Support Tool) and not supported (must not appear in the Attributes Support Tool) attributes.
+- Added `cmscore` data in the `attributes.json` API.
+
+## 1.7.2
+
+### Patch Changes
+
+- Created custom code for `/api` pages.
+- Added `readmeSrc` property to the `AttributesData` interfaces.
+
+## 1.7.1
+
+### Patch Changes
+
+- Added `fs-toc` schema.
+
+## 1.7.0
+
+### Minor Changes
+
+- Fixed Copy Code/Examples buttons not working.
+- Moved internally used Attribute packages to be externally loaded in separate `<script>` tags and triggered using the new `FsAttributes.push()` developer API.
+
+## 1.6.9
+
+### Patch Changes
+
+- Added new `attribute-card` element to make all `changelog` cards clickeable.
+
+## 1.6.8
+
+### Patch Changes
+
+- Fixed `changelog.js` not being included in the package files.
+
+## 1.6.7
+
+### Patch Changes
+
+- Fixed new `changeset` element creation issue with the new `queryElement` helper.
+- Turned the `attributeTitle` element into a `<a>` tag.
+
+## 1.6.6
+
+### Patch Changes
+
+- Fixed Webflow overriding the `collapse-all` element's scroll anchor behavior.
+
+## 1.6.5
+
+### Patch Changes
+
+- Fixed `collapse-all` not using the `hash` for the scroll anchor.
+
+## 1.6.4
+
+### Patch Changes
+
+- Fixed `collapse-all` using the full URL instead of just the hash to query select the scroll anchor.
+
+## 1.6.3
+
+### Patch Changes
+
+- Implemented `scrollIntoView` for the anchor link of `collapse-all`.
+
+## 1.6.2
+
+### Patch Changes
+
+- Fixed `collapse-all` button not scrolling to anchor on click.
+
+## 1.6.16
+
+### Patch Changes
+
+- Added the new `codehighlight` package in the `attributes.json` API.
+
+## 1.6.15
+
+### Patch Changes
+
+- Included the new `untransform` => `smartlightbox` package rename in the `attributes.json` API.
+
+## 1.6.14
+
+### Patch Changes
+
+- Updated `Collapse All` button logic to work with the new setup.
+
+## 1.6.13
+
+### Patch Changes
+
+- Updated `attributes.json` API to include `selectcustom`.
+
+## 1.6.12
+
+### Patch Changes
+
+- Replaced `markdown-it` for `marked` as it's a more lightweight markdown parser.
+- Fixed `Collapse All` button not behaving correctly.
+
+## 1.6.11
+
+### Patch Changes
+
+- Made sure that the programatically created `<a>` `attribute-card` elements hold the correspondent attributes after the conversion.
+
+## 1.6.10
+
+### Patch Changes
+
+- Programatically turned the `attribute-card` element into an `<a>` tag, as Webflow doesn't allow Rich Text Blocks inside links.
+
+## 1.6.1
+
+### Patch Changes
+
+- Allowed `collpase-all` button to perform anchor scrolling to any section of the page.
+
+## 1.6.0
+
+### Minor Changes
+
+- Added `fs-docs-element="collapse-all"` element.
+- Updated `changelog` filtering system to pull the `changesets` data from each Attribute.
+
+## 1.5.0
+
+### Minor Changes
+
+- Switched to `changesets` changelog population.
+- Created `changelog` filtering system.
+- Rearranged files structure.
+- Updated all `attributes.json` data to include `changesets.json` and `schema.json` files.
+
+## 1.4.1
+
+### Patch Changes
+
+- Switched from using `hljs.highlightBlock` to `hljs.highlightElement`.
+
+## 1.4.0
+
+### Minor Changes
+
+- Added code highlighting.
+
+## 1.3.1
+
+### Patch Changes
+
+- Added new packages in `attributes.json`.
+
+## 1.3.0
+
+### Minor Changes
+
+- Removed unused code bits.
+- Added `try`/`catch` check on the attributes data fetching.
+- Made sure the script can be placed in the global Custom Code section instead of each Attribute's page.
+- Added example copy validity check.
+
+## 1.2.1
+
+### Major Changes
+
+- Created `CHANGELOG.md`.

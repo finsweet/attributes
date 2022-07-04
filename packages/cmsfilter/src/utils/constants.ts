@@ -26,6 +26,8 @@ export const TYPE_SETTING_KEY = 'type';
 export const TYPE_SETTING_VALUES = { date: 'date' } as const;
 export const SHOW_QUERY_SETTING_KEY = 'showquery';
 export const SHOW_QUERY_SETTING_VALUES = { true: 'true' } as const;
+export const ALLOW_SUBMIT_SETTING_KEY = 'allowsubmit';
+export const ALLOW_SUBMIT_SETTING_VALUES = { true: 'true' } as const;
 export const HIDE_EMPTY_SETTING_KEY = 'hideempty';
 export const HIDE_EMPTY_SETTING_VALUES = { true: 'true' } as const;
 export const HIGHLIGHT_SETTING_KEY = 'highlight';
@@ -143,6 +145,11 @@ export const ATTRIBUTES = {
    * Defines if the filter query params should be displayed on the URL.
    */
   showQuery: { key: `${ATTRIBUTES_PREFIX}-${SHOW_QUERY_SETTING_KEY}`, values: SHOW_QUERY_SETTING_VALUES },
+
+  /**
+   * Defines if the filters form should not prevent default behavior when submitting it.
+   */
+  allowSubmit: { key: `${ATTRIBUTES_PREFIX}-${ALLOW_SUBMIT_SETTING_KEY}`, values: ALLOW_SUBMIT_SETTING_VALUES },
 
   /**
    * Defines if a filter element should be hidden when there are no results for it.

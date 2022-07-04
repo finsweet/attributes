@@ -97,6 +97,11 @@ export class CMSFilters {
   private readonly showQueryParams;
 
   /**
+   * Defines if the filters form should not prevent default behavior when submitting it.
+   */
+  private readonly allowSubmit;
+
+  /**
    * Defines the global active CSS class to apply on active filters.
    */
   private readonly activeCSSClass: string;
@@ -129,6 +134,7 @@ export class CMSFilters {
     {
       resultsElement,
       showQueryParams,
+      allowSubmit,
       highlightAll,
       highlightCSSClass,
       activeCSSClass,
@@ -136,6 +142,7 @@ export class CMSFilters {
     }: {
       resultsElement: HTMLElement | null;
       showQueryParams: boolean;
+      allowSubmit: boolean;
       highlightAll: boolean;
       highlightCSSClass: string;
       activeCSSClass: string;
@@ -149,6 +156,7 @@ export class CMSFilters {
     this.resetButtonsData = resetButtonsData;
     this.resultsElement = resultsElement;
     this.showQueryParams = showQueryParams;
+    this.allowSubmit = allowSubmit;
     this.activeCSSClass = activeCSSClass;
     this.debouncing = debouncing;
     this.highlightAll = highlightAll;
@@ -247,8 +255,10 @@ export class CMSFilters {
    * @param e The `Submit` event.
    */
   private async handleSubmit(e: Event) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    if (!this.allowSubmit) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
 
     await this.applyFilters();
   }

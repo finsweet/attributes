@@ -1,5 +1,5 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
-import { addItemsAnimation, addListAnimation, checkCMSCoreVersion } from '@finsweet/attributes-cmscore';
+import { addItemsAnimation, addListAnimation } from '@finsweet/attributes-cmscore';
 import { COMMERCE_CSS_CLASSES, LIGHTBOX_CSS_CLASSES } from '@finsweet/ts-utils';
 
 import { initDefaultMode } from './modes/default';
@@ -61,6 +61,10 @@ export const initLoadInstance = async (listInstance: CMSList) => {
   const loaderElement = queryElement<HTMLElement>('loader', { instanceIndex });
   if (loaderElement) listInstance.addLoader(loaderElement);
 
+  // Empty State Element
+  const emptyElement = queryElement<HTMLElement>('empty', { instanceIndex });
+  if (emptyElement) listInstance.addEmptyElement(emptyElement);
+
   // Get items count element
   if (!listInstance.itemsCount) {
     const itemsCount = queryElement<HTMLElement>('itemsCount', { instanceIndex });
@@ -70,8 +74,7 @@ export const initLoadInstance = async (listInstance: CMSList) => {
   // Get page count element
   if (!listInstance.visibleCount) {
     const visibleCount = queryElement<HTMLElement>('visibleCount', { instanceIndex });
-    // TODO: Remove this check after 1 week
-    if (visibleCount && checkCMSCoreVersion('>=', '1.6.1')) listInstance.addVisibleCount(visibleCount);
+    if (visibleCount) listInstance.addVisibleCount(visibleCount);
   }
 
   // Get scroll anchor

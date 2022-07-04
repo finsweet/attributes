@@ -38,6 +38,7 @@ import {
   RANGE_SETTING_KEY,
   TYPE_SETTING_KEY,
   SHOW_QUERY_SETTING_KEY,
+  ALLOW_SUBMIT_SETTING_KEY,
   HIGHLIGHT_SETTING_KEY,
   HIGHLIGHT_CLASS_SETTING_KEY,
   ACTIVE_CLASS_SETTING_KEY,
@@ -469,7 +470,18 @@ export const schema: AttributeSchema = {
         default: 'true',
       },
     },
-
+    {
+      key: ALLOW_SUBMIT_SETTING_KEY,
+      description: 'Defines if the filters form should not prevent default behavior when submitting it.',
+      appliedTo: {
+        elements: [LIST_ELEMENT_KEY],
+      },
+      conditions: [],
+      value: {
+        type: 'boolean',
+        default: 'true',
+      },
+    },
     {
       key: TAG_FORMAT_SETTING_KEY,
       description: 'Defines the format of the tag.',

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-displayvalues",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Display the value of a Form Element.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

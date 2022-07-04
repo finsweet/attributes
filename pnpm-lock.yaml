@@ -475,6 +475,23 @@ importers:
       '@global/tests': link:../../global/tests
       '@global/types': link:../../global/types
 
+  packages/formsubmit:
+    specifiers:
+      '@finsweet/ts-utils': ^0.33.1
+      '@global/build': workspace:*
+      '@global/constants': workspace:*
+      '@global/factory': workspace:*
+      '@global/tests': workspace:*
+      '@global/types': workspace:*
+    dependencies:
+      '@finsweet/ts-utils': 0.33.1
+      '@global/constants': link:../../global/constants
+      '@global/factory': link:../../global/factory
+    devDependencies:
+      '@global/build': link:../../global/build
+      '@global/tests': link:../../global/tests
+      '@global/types': link:../../global/types
+
   packages/linkblockedit:
     specifiers:
       '@global/build': workspace:*
