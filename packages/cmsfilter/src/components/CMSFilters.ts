@@ -1,5 +1,5 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
-import { isFormField, isVisible, sameValues } from '@finsweet/ts-utils';
+import { FORM_CSS_CLASSES, isFormField, isVisible, sameValues } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
 import { importAnimations } from '@global/import';
 import debounce from 'just-debounce';
@@ -205,7 +205,17 @@ export class CMSFilters {
 
     // Reset buttons
     for (const [resetButton, filterKeys] of resetButtonsData) {
-      resetButton?.addEventListener('click', () => this.resetFilters(filterKeys));
+      resetButton.addEventListener('click', () => this.resetFilters(filterKeys));
+
+      const radioField = resetButton.closest(`.${FORM_CSS_CLASSES.radioField}`);
+      if (!radioField) continue;
+
+      const radio = radioField.querySelector('input');
+      if (!radio) continue;
+
+      radio.addEventListener('input', () => {
+        if (radio.checked) this.resetFilters(filterKeys);
+      });
     }
 
     // Submit button visibility

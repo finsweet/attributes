@@ -17,8 +17,8 @@ export const RELOAD_SETTING_VALUES = { true: 'true' };
 export const REDIRECT_SETTING_KEY = 'redirect';
 export const REDIRECT_SETTING_VALUES = { true: 'true' };
 export const REDIRECT_URL_SETTING_KEY = 'redirecturl';
-export const REDIRECT_TARGET_SETTING_KEY = 'redirecttarget';
-export const REDIRECT_TARGET_SETTING_VALUES = { newTab: 'new-tab' };
+export const REDIRECT_NEW_TAB_SETTING_KEY = 'redirectnewtab';
+export const REDIRECT_NEW_TAB_SETTING_VALUES = { true: 'true' };
 export const ENHANCE_SETTING_KEY = 'enhance';
 export const ENHANCE_SETTING_VALUES = { true: 'true' };
 
@@ -91,9 +91,9 @@ export const ATTRIBUTES = {
   /**
    * Defines the redirect target, either on place or on a new tab.
    */
-  redirectTarget: {
-    key: `${ATTRIBUTES_PREFIX}-${REDIRECT_TARGET_SETTING_KEY}`,
-    values: REDIRECT_TARGET_SETTING_VALUES,
+  redirectNewTab: {
+    key: `${ATTRIBUTES_PREFIX}-${REDIRECT_NEW_TAB_SETTING_KEY}`,
+    values: REDIRECT_NEW_TAB_SETTING_VALUES,
   },
 
   /**

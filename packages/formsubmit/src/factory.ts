@@ -34,7 +34,7 @@ export const initFormInstance = (formElement: Element) => {
   const [redirect, redirectTimeout] = parseActionAttribute(rawRedirect);
   const redirectUrl = formElement.getAttribute(ATTRIBUTES.redirectUrl.key);
   const redirectToNewTab =
-    formElement.getAttribute(ATTRIBUTES.redirectTarget.key) === ATTRIBUTES.redirectTarget.values.newTab;
+    formElement.getAttribute(ATTRIBUTES.redirectNewTab.key) === ATTRIBUTES.redirectNewTab.values.true;
 
   // Enhance
   const enhance = formElement.getAttribute(ATTRIBUTES.enhance.key) === ATTRIBUTES.enhance.values.true;

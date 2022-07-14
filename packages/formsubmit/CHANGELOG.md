@@ -1,5 +1,17 @@
 # @finsweet/attributes-formsubmit
 
+## 1.1.1
+
+### Patch Changes
+
+- f0da85d: Added examples
+
+## 1.1.0
+
+### Minor Changes
+
+- 368e990: Renamed `redirecttarget` to `redirectnewtab`
+
 ## 1.0.1
 
 ### Patch Changes
