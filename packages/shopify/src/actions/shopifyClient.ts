@@ -3,6 +3,7 @@ import type { Product } from 'shopify-buy';
 
 import { queryElement, QUERY_PARAMS, PRODUCT_ID_PREFIX } from '../utils/constants';
 import type { ProductAttribute, ShopifyAttributeParams } from '../utils/types';
+import { body } from './util';
 
 class ShopifyClient {
   private readonly token: string;
@@ -39,13 +40,13 @@ export const initializeShopifyClient = async (params: ShopifyAttributeParams) =>
   shopifyClient = new ShopifyClient(params);
   attributesParams = params;
 
-  checkProductTemplatePage(params);
+  checkProductTemplatePage();
 };
 
 // Check if the page is a product template page then bind product based on the
 // query params
-const checkProductTemplatePage = async (params: ShopifyAttributeParams) => {
-  const { productPage, redirectURL } = params;
+const checkProductTemplatePage = async () => {
+  const { productPage, redirectURL } = attributesParams;
 
   const path = window.location.pathname;
   if (path.endsWith(productPage)) {
@@ -67,12 +68,29 @@ const checkProductTemplatePage = async (params: ShopifyAttributeParams) => {
         window.location.href = redirectURL as string;
         return;
       }
-      bindProductData(document.querySelector('body') as HTMLElement, product);
+      bindProductData(body, product);
     } catch (e) {
       window.location.href = redirectURL as string;
     }
   }
 };
+
+export const productAttributes = [
+  'title',
+  'description',
+  'handle',
+  'created',
+  'updated',
+  'published',
+  'image',
+  'sku',
+  'price',
+  'compareprice',
+  'discountpercent',
+  'type',
+  'vendor',
+  'weight',
+];
 
 const bindProductData = (parentElement: HTMLElement, product: Product) => {
   const {
@@ -89,23 +107,6 @@ const bindProductData = (parentElement: HTMLElement, product: Product) => {
 
   const { sku, price, compareAtPrice, discount, image, weight } = variants[0];
 
-  const productAttributes = [
-    'title',
-    'description',
-    'handle',
-    'created',
-    'updated',
-    'published',
-    'image',
-    'sku',
-    'price',
-    'compareprice',
-    'discountedpercent',
-    'type',
-    'vendor',
-    'weight',
-  ];
-
   const productValues = [
     title,
     description,
@@ -117,7 +118,7 @@ const bindProductData = (parentElement: HTMLElement, product: Product) => {
     sku,
     price,
     compareAtPrice,
-    discount,
+    discount || 0,
     typeValue,
     vendor,
     weight,
