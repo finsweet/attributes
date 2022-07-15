@@ -67,7 +67,7 @@ const checkProductTemplatePage = async () => {
         window.location.href = redirectURL as string;
         return;
       }
-      bindProductData(document.querySelector('body') as HTMLElement, product);
+      bindProductData(document.body, product);
     } catch (e) {
       window.location.href = redirectURL as string;
     }
