@@ -17,10 +17,12 @@ export const PRODUCT_IMAGE = 'image';
 export const PRODUCT_SKU = 'sku';
 export const PRODUCT_PRICE = 'price';
 export const PRODUCT_COMPARE_PRICE = 'compareprice';
-export const PRODUCT_DISCOUNTED_PERCENT = 'discountedpercent';
+export const PRODUCT_DISCOUNTED_PERCENT = 'discountpercent';
+export const PRODUCT_DISCOUNTED_VALUE = 'discountvalue';
 export const PRODUCT_TYPE = 'type';
 export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
+export const LOADER = 'loader';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 
@@ -49,10 +51,11 @@ export const ATTRIBUTES = {
       sku: PRODUCT_SKU,
       price: PRODUCT_PRICE,
       compareprice: PRODUCT_COMPARE_PRICE,
-      discountedpercent: PRODUCT_DISCOUNTED_PERCENT,
+      discountpercent: PRODUCT_DISCOUNTED_PERCENT,
       type: PRODUCT_TYPE,
       vendor: PRODUCT_VENDOR,
       weight: PRODUCT_WEIGHT,
+      loader: LOADER,
     },
   },
 
@@ -83,6 +86,11 @@ export const ATTRIBUTES = {
    * Defines the slug or the url to redirect the user to when something goes wrong on product page
    */
   redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: '/404' },
+
+  /**
+   * Used for running tests
+   */
+  testMode: { key: `${ATTRIBUTES_PREFIX}-testmode`, defaultValue: false },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);

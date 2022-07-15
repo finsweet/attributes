@@ -25,6 +25,13 @@ export interface ShopifyAttributeParams {
    * @default 404.html
    */
   redirectURL: string;
+
+  /**
+   * Used for running tests
+   *
+   * @default false
+   */
+  testMode: boolean;
 }
 
 export type ProductAttribute =
@@ -38,7 +45,7 @@ export type ProductAttribute =
   | 'sku'
   | 'price'
   | 'compareprice'
-  | 'discountedpercent'
+  | 'discountpercent'
   | 'type'
   | 'vendor'
   | 'weight';
