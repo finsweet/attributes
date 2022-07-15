@@ -21,7 +21,7 @@ export const init = (params: ShopifyAttributeParams) => {
 export const assessScriptAttributes = (): ShopifyAttributeParams => {
   const { currentScript } = document;
   const globalAttributeParams = assessScript();
-  const { token, domain, productPage, redirectURL } = ATTRIBUTES;
+  const { token, domain, productPage, redirectURL, testMode } = ATTRIBUTES;
 
   const tokenValue = currentScript?.getAttribute(token.key);
   if (!tokenValue) {
@@ -37,11 +37,14 @@ export const assessScriptAttributes = (): ShopifyAttributeParams => {
 
   const redirectURLValue = currentScript?.getAttribute(redirectURL.key) || redirectURL.defaultValue;
 
+  const testModeValue = Boolean(currentScript?.getAttribute(testMode.key));
+
   return {
     globalAttributeParams,
     domain: domainValue,
     token: tokenValue,
     productPage: productPageValue,
     redirectURL: redirectURLValue,
+    testMode: testModeValue,
   };
 };

@@ -11,7 +11,7 @@ export type AttributeOperator = 'prefixed' | 'suffixed' | 'contains';
 export interface GlobalAttributeParams {
   /**
    * Defines if the `<script>` should prevent automatically loading the library.
-   * Useful for cases where a JS developer whants to programatically init the library.
+   * Useful for cases where a JS developer wants to programatically init the library.
    */
   preventsLoad: boolean;
 }
