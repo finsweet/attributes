@@ -3,7 +3,6 @@ import type { Product } from 'shopify-buy';
 
 import { queryElement, QUERY_PARAMS, PRODUCT_ID_PREFIX } from '../utils/constants';
 import type { ProductAttribute, ShopifyAttributeParams } from '../utils/types';
-import { body } from './util';
 
 class ShopifyClient {
   private readonly token: string;
@@ -68,7 +67,7 @@ const checkProductTemplatePage = async () => {
         window.location.href = redirectURL as string;
         return;
       }
-      bindProductData(body, product);
+      bindProductData(document.querySelector('body') as HTMLElement, product);
     } catch (e) {
       window.location.href = redirectURL as string;
     }

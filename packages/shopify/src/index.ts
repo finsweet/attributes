@@ -21,15 +21,12 @@ const attribute = window.fsAttributes[ATTRIBUTE];
 
 attribute.version = version;
 
-if (preventsLoad) attribute.init = init(scriptAttributes);
-else {
-  window.Webflow ||= [];
-  window.Webflow.push(init(scriptAttributes));
-}
-
 if (testMode) {
-  const initFunction = window.fsAttributes['fs-shopify'].init;
-  if (typeof initFunction === 'function') {
-    initFunction();
+  init(scriptAttributes)();
+} else {
+  if (preventsLoad) attribute.init = init(scriptAttributes);
+  else {
+    window.Webflow ||= [];
+    window.Webflow.push(init(scriptAttributes));
   }
 }
