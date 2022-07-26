@@ -1,8 +1,9 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import { importCMSCore } from '@finsweet/attributes-cmscore';
+import { CMS_NEST_ATTRIBUTE } from '@global/constants/attributes';
 
 import { initListNesting } from './factory';
-import { ATTRIBUTE, getSelector } from './utils/constants';
+import { getSelector } from './utils/constants';
 
 /**
  * Inits the attribute.
@@ -16,7 +17,7 @@ export const init = async (): Promise<CMSList[]> => {
 
   await Promise.all(listInstances.map((listInstance) => initListNesting(listInstance, cmsCore)));
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(listInstances);
+  window.fsAttributes[CMS_NEST_ATTRIBUTE].resolve?.(listInstances);
 
   return listInstances;
 };

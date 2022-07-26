@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsload",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "Load More Webflow CMS items on the page after the page has loaded.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

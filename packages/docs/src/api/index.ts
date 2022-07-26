@@ -1,8 +1,5 @@
-import { ATTRIBUTE as CODEHIGHLIGHT_ATTRIBUTE } from '@finsweet/attributes-codehighlight/src/utils/constants';
-import {
-  ATTRIBUTE as TOC_ATTRIBUTE,
-  queryElement as queryTOCElement,
-} from '@finsweet/attributes-toc/src/utils/constants';
+import { queryElement as queryTOCElement } from '@finsweet/attributes-toc/src/utils/constants';
+import { CODE_HIGHLIGHT_ATTRIBUTE, TOC_ATTRIBUTE } from '@global/constants/attributes';
 import { marked } from 'marked';
 
 import { attributesData } from '../../api/attributes';
@@ -29,6 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   contentsElement.innerHTML = marked.parse(markdown);
 
-  window.fsAttributes[CODEHIGHLIGHT_ATTRIBUTE].init?.();
+  window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE].init?.();
   window.fsAttributes[TOC_ATTRIBUTE]?.init?.();
 });

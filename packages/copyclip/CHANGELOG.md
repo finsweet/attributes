@@ -1,5 +1,12 @@
 # @finsweet/attributes-copyclip
 
+## 1.5.3
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.5.2
 
 ### Patch Changes

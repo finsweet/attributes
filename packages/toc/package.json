@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-toc",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Automatically generate a table of contents based on heading tags. Works with Webflow Rich Text, Webflow \"Current\" class, and anchor scroll. CMS, static, and all text elements are supported.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "@finsweet/ts-utils": "^0.33.1",
-    "@finsweet/attributes-richtext": "workspace:*",
     "@global/constants": "workspace:*",
     "@global/factory": "workspace:*",
     "@global/helpers": "workspace:*",

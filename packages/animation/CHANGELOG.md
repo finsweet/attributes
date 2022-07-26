@@ -1,5 +1,12 @@
 # @finsweet/attributes-animation
 
+## 1.0.7
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.0.6
 
 ### Patch Changes

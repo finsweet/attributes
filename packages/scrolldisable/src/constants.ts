@@ -1,8 +1,7 @@
+import { SCROLL_DISABLE_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'scrolldisable';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${SCROLL_DISABLE_ATTRIBUTE}`;
 
 export const WHEN_VISIBLE_ELEMENT_KEY = 'when-visible';
 export const ENABLE_ELEMENT_KEY = 'enable';

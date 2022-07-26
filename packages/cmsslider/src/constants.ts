@@ -1,8 +1,7 @@
+import { CMS_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmsslider';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_SLIDER_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const SLIDER_ELEMENT_KEY = 'slider';

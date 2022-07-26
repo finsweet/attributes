@@ -28,6 +28,7 @@ export class Form {
   private reload;
   private reloadTimeout;
   private enhance;
+  private disabled;
   private ixTriggers;
   private resetButtons;
   private currentRedirectTimeout?: number;
@@ -46,6 +47,7 @@ export class Form {
     redirectUrl,
     redirectToNewTab,
     enhance,
+    disable,
     ixTriggers,
     resetButtons,
   }: {
@@ -60,6 +62,7 @@ export class Form {
     redirectUrl?: string | null;
     redirectToNewTab?: boolean;
     enhance: boolean;
+    disable: boolean;
     ixTriggers: NodeListOf<Element>;
     resetButtons: NodeListOf<Element>;
   }) {
@@ -78,6 +81,7 @@ export class Form {
     this.reload = reload;
     this.reloadTimeout = reloadTimeout;
     this.enhance = enhance;
+    this.disabled = disable;
     this.ixTriggers = ixTriggers;
     this.resetButtons = resetButtons;
 
@@ -102,13 +106,18 @@ export class Form {
    * @param e The submit event.
    */
   private async handleSubmit(e: SubmitEvent) {
-    const { reset, redirect, reload, enhance } = this;
+    const { reset, redirect, reload, enhance, disabled } = this;
 
     let success: boolean;
 
-    if (enhance) {
+    if (disabled || enhance) {
       e.preventDefault();
       e.stopImmediatePropagation();
+    }
+
+    if (disabled) return;
+
+    if (enhance) {
       success = await this.handleEnhancedSubmit();
     } else {
       success = await checkFormSuccess(this);

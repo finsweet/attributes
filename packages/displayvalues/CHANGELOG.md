@@ -1,5 +1,12 @@
 # @finsweet/attributes-displayvalues
 
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.2.1
 
 ### Patch Changes

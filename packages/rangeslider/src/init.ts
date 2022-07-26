@@ -1,4 +1,5 @@
 import { getHiddenParent, isNotEmpty, isVisible } from '@finsweet/ts-utils';
+import { RANGE_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
 import debounce from 'just-debounce';
 
 import { getClientX } from './actions/events';
@@ -6,7 +7,7 @@ import { getSettings } from './actions/settings';
 import { adjustValueToStep, getClosestValidHandle } from './actions/values';
 import type { Handle } from './components/Handle';
 import { createFillInstance, createHandleInstances } from './factory';
-import { ATTRIBUTE, getSelector } from './utils/constants';
+import { getSelector } from './utils/constants';
 import type { HandleInstances } from './utils/types';
 
 /**
@@ -19,7 +20,7 @@ export const init = (): HandleInstances[] => {
 
   const handleInstances = wrapperElements.map(initRangeSlider).filter(isNotEmpty);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(handleInstances);
+  window.fsAttributes[RANGE_SLIDER_ATTRIBUTE].resolve?.(handleInstances);
 
   return handleInstances;
 };

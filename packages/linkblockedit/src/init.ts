@@ -1,6 +1,7 @@
 import { ARIA_LABEL_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES, TABINDEX_KEY } from '@global/constants/a11ty';
+import { LINK_BLOCK_EDIT_ATTRIBUTE } from '@global/constants/attributes';
 
-import { ATTRIBUTE, getSelector } from './constants';
+import { getSelector } from './constants';
 
 /**
  * Inits editor friendly link blocks.
@@ -39,7 +40,7 @@ export const init = (): NodeListOf<HTMLElement> => {
     return false;
   });
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(elements);
+  window.fsAttributes[LINK_BLOCK_EDIT_ATTRIBUTE].resolve?.(elements);
 
   return elements;
 };

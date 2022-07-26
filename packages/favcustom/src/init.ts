@@ -1,4 +1,6 @@
-import { ATTRIBUTE, queryElement } from './constants';
+import { FAV_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
+
+import { queryElement } from './constants';
 
 /**
  * Inits setting a custom favicon to the current page.
@@ -20,7 +22,7 @@ export const init = (): string | undefined => {
   // Append the new one
   document.head.appendChild(linkElement);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(linkHref);
+  window.fsAttributes[FAV_CUSTOM_ATTRIBUTE].resolve?.(linkHref);
 
   return linkHref;
 };

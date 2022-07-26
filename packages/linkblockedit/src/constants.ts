@@ -1,8 +1,7 @@
+import { LINK_BLOCK_EDIT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'linkblockedit';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${LINK_BLOCK_EDIT_ATTRIBUTE}`;
 
 export const PARENT_ELEMENT_KEY = 'parent';
 export const SELECTOR_SETTING_KEY = 'selector';

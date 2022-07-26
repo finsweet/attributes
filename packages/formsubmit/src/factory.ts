@@ -36,6 +36,9 @@ export const initFormInstance = (formElement: Element) => {
   const redirectToNewTab =
     formElement.getAttribute(ATTRIBUTES.redirectNewTab.key) === ATTRIBUTES.redirectNewTab.values.true;
 
+  // Disable
+  const disable = formElement.getAttribute(ATTRIBUTES.disable.key) === ATTRIBUTES.disable.values.true;
+
   // Enhance
   const enhance = formElement.getAttribute(ATTRIBUTES.enhance.key) === ATTRIBUTES.enhance.values.true;
 
@@ -51,6 +54,7 @@ export const initFormInstance = (formElement: Element) => {
     redirectTimeout,
     redirectToNewTab,
     enhance,
+    disable,
     ixTriggers,
     resetButtons,
   });

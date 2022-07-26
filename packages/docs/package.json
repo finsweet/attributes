@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-docs",
-  "version": "1.7.9",
+  "version": "1.7.10",
   "description": "Attributes documentation custom code.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -44,6 +44,7 @@
     "@finsweet/attributes-toc": "workspace:*",
     "@finsweet/ts-utils": "^0.33.1",
     "@global/factory": "workspace:*",
+    "@global/constants": "workspace:*",
     "marked": "^4.0.15"
   }
 }

@@ -1,8 +1,7 @@
+import { RICH_TEXT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory/selectors';
 
-export const ATTRIBUTE = 'richtext';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${RICH_TEXT_ATTRIBUTE}`;
 
 export const RICH_TEXT_ELEMENT_KEY = 'rich-text';
 export const COMPONENT_SETTING_KEY = 'component';

@@ -1,9 +1,8 @@
+import { SELECT_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
 import { ARROW_DOWN_KEY, ARROW_UP_KEY, SPACE_KEY, TAB_KEY } from '@global/constants/keyboard';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'selectcustom';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${SELECT_CUSTOM_ATTRIBUTE}`;
 
 export const DROPDOWN_ELEMENT_KEY = 'dropdown';
 export const LABEL_ELEMENT_KEY = 'label';

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmscss",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Add CSS classes to Collection Item elements based on a media query.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

@@ -1,5 +1,19 @@
 # @finsweet/attributes-formsubmit
 
+## 1.2.1
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
+## 1.2.0
+
+### Minor Changes
+
+- f623bc7: Added new `fs-formsubmit-disable="true"` Attribute.
+  If set to the `form` element, the form will be completely disabled, preventing all form submissions.
+
 ## 1.1.1
 
 ### Patch Changes

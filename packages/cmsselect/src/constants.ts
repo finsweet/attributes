@@ -1,8 +1,7 @@
+import { CMS_SELECT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmsselect';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_SELECT_ATTRIBUTE}`;
 
 export const TEXT_VALUE_ELEMENT_KEY = 'text-value';
 export const SELECT_ELEMENT_KEY = 'select';

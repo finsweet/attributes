@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsfilter",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "description": "Filter items from Webflow CMS dynamic collection list.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

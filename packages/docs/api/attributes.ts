@@ -1,8 +1,39 @@
+import {
+  AUTO_VIDEO_ATTRIBUTE,
+  CMS_COMBINE_ATTRIBUTE,
+  CMS_CORE,
+  CMS_FILTER_ATTRIBUTE,
+  CMS_LOAD_ATTRIBUTE,
+  CMS_NEST_ATTRIBUTE,
+  CMS_SELECT_ATTRIBUTE,
+  CMS_SLIDER_ATTRIBUTE,
+  CMS_SORT_ATTRIBUTE,
+  CMS_TABS_ATTRIBUTE,
+  CMS_PREV_NEXT_ATTRIBUTE,
+  CODE_HIGHLIGHT_ATTRIBUTE,
+  COPY_CLIP_ATTRIBUTE,
+  COUNT_ITEMS_ATTRIBUTE,
+  RANGE_SLIDER_ATTRIBUTE,
+  RICH_TEXT_ATTRIBUTE,
+  TOC_ATTRIBUTE,
+  SCROLL_DISABLE_ATTRIBUTE,
+  SELECT_CUSTOM_ATTRIBUTE,
+  SLIDER_DOTS_ATTRIBUTE,
+  SMART_LIGHTBOX_ATTRIBUTE,
+  SOCIAL_SHARE_ATTRIBUTE,
+  FORM_SUBMIT_ATTRIBUTE,
+  LINK_BLOCK_EDIT_ATTRIBUTE,
+  MIRROR_CLICK_ATTRIBUTE,
+  MIRROR_INPUT_ATTRIBUTE,
+  FAV_CUSTOM_ATTRIBUTE,
+  QUERY_PARAM_ATTRIBUTE,
+} from '@global/constants/attributes';
+
 import type { AttributesData } from '../src/utils/types';
 
 export const attributesData: AttributesData = [
   {
-    key: 'autovideo',
+    key: AUTO_VIDEO_ATTRIBUTE,
     title: 'Auto Video',
     description:
       'All videos on the page (Background Video components & <video> elements used in HTML Embeds) play and pause based on if the video is visible in the viewport.',
@@ -16,7 +47,7 @@ export const attributesData: AttributesData = [
     allowSupport: false,
   },
   {
-    key: 'cmscombine',
+    key: CMS_COMBINE_ATTRIBUTE,
     title: 'CMS Combine',
     description:
       'Take multiple Collection Lists from different Collections and Combine them to one single Collection List.',
@@ -31,7 +62,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmscore',
+    key: CMS_CORE,
     title: 'CMS Core',
     description: 'Core functionalities of all cms Attributes.',
     href: 'https://www.finsweet.com/attributes/api/cms-core',
@@ -42,7 +73,7 @@ export const attributesData: AttributesData = [
     allowSupport: false,
   },
   {
-    key: 'cmsfilter',
+    key: CMS_FILTER_ATTRIBUTE,
     title: 'CMS Filter',
     description: 'Create advanced and complex no-code filter systems for Webflow CMS Collection List content.',
     href: 'https://www.finsweet.com/attributes/cms-filter',
@@ -56,7 +87,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmsload',
+    key: CMS_LOAD_ATTRIBUTE,
     title: 'CMS Load',
     description:
       'Set up powerful load functionality on Webflow CMS Collection Lists. Load items under, infinite scroll, pagination, and render all items.',
@@ -71,7 +102,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmsnest',
+    key: CMS_NEST_ATTRIBUTE,
     title: 'CMS Nest',
     description:
       'Option to have no limitations for Webflow CMS Nested Collections. Nest more than 5 items. Nest multiple Collections on a page.',
@@ -86,7 +117,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmsprevnext',
+    key: CMS_PREV_NEXT_ATTRIBUTE,
     title: 'CMS PrevNext',
     description: 'Add Previous and Next buttons in Collection Template Pages.',
     href: 'https://www.finsweet.com/attributes/cms-prevnext',
@@ -100,7 +131,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmsselect',
+    key: CMS_SELECT_ATTRIBUTE,
     title: 'CMS Select',
     description: 'Create dynamic Form Select element with Webflow CMS Collection List.',
     href: 'https://www.finsweet.com/attributes/cms-select',
@@ -114,7 +145,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmsslider',
+    key: CMS_SLIDER_ATTRIBUTE,
     title: 'CMS Slider',
     description: 'Create a CMS powered native Webflow Slider component with a Webflow CMS Collection List.',
     href: 'https://www.finsweet.com/attributes/cms-slider',
@@ -128,7 +159,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmssort',
+    key: CMS_SORT_ATTRIBUTE,
     title: 'CMS Sort',
     description: 'Create advanced and complex no-code sorting for Webflow CMS Collection List content.',
     href: 'https://www.finsweet.com/attributes/cms-sort',
@@ -142,7 +173,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'cmstabs',
+    key: CMS_TABS_ATTRIBUTE,
     title: 'CMS Tabs',
     description: 'Create a CMS powered native Webflow Tabs component with a Webflow CMS Collection List.',
     href: 'https://www.finsweet.com/attributes/cms-tabs',
@@ -156,7 +187,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'codehighlight',
+    key: CODE_HIGHLIGHT_ATTRIBUTE,
     title: 'Code Highlight',
     description: 'Display code with syntax highlighting.',
     href: 'https://www.finsweet.com/attributes/code-highlight',
@@ -170,7 +201,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'copyclip',
+    key: COPY_CLIP_ATTRIBUTE,
     title: 'Copy to clipboard',
     description: 'Set any element to copy a string value to the clipboard when clicking on it.',
     href: 'https://www.finsweet.com/attributes/copy-to-clipboard',
@@ -184,7 +215,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'formsubmit',
+    key: FORM_SUBMIT_ATTRIBUTE,
     title: 'Form Submit Actions',
     description: 'Run smart actions after Webflow forms submission.',
     href: 'https://www.finsweet.com/attributes/form-submit',
@@ -198,7 +229,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'scrolldisable',
+    key: SCROLL_DISABLE_ATTRIBUTE,
     title: 'Disable scrolling',
     description: 'Prevent the page from scrolling when a element is clicked or visible.',
     href: 'https://www.finsweet.com/attributes/disable-scrolling',
@@ -212,7 +243,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'selectcustom',
+    key: SELECT_CUSTOM_ATTRIBUTE,
     title: 'Custom Form Select',
     description: 'Use a Webflow Dropdown element as a Webflow Form <select> component.',
     href: 'https://www.finsweet.com/attributes/custom-form-select',
@@ -226,7 +257,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'sliderdots',
+    key: SLIDER_DOTS_ATTRIBUTE,
     title: 'Custom slider dots',
     description: 'Populate the native slider dots with any content.',
     href: 'https://www.finsweet.com/attributes/custom-slider-dots',
@@ -240,7 +271,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'linkblockedit',
+    key: LINK_BLOCK_EDIT_ATTRIBUTE,
     title: 'Link blocks in editor',
     description: 'Convert Div Blocks to accessible Link Blocks that can be edited in the Editor.',
     href: 'https://www.finsweet.com/attributes/edit-link-blocks-in-editor',
@@ -254,7 +285,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'mirrorclick',
+    key: MIRROR_CLICK_ATTRIBUTE,
     title: 'Mirror click events',
     description: 'Mirror click events between a trigger and a target.',
     href: 'https://www.finsweet.com/attributes/mirror-click-events',
@@ -268,7 +299,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'mirrorinput',
+    key: MIRROR_INPUT_ATTRIBUTE,
     title: 'Mirror input values',
     description: 'Mirror input events between a trigger and a target.',
     href: 'https://www.finsweet.com/attributes/mirror-input-values',
@@ -282,7 +313,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'rangeslider',
+    key: RANGE_SLIDER_ATTRIBUTE,
     title: 'Range Slider',
     description: 'Build a custom Range Slider Form component natively in Webflow.',
     href: 'https://www.finsweet.com/attributes/range-slider',
@@ -296,7 +327,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'richtext',
+    key: RICH_TEXT_ATTRIBUTE,
     title: 'Powerful Rich Text',
     description:
       'Add HTML to Rich Text elements, add components from the same page or from different pages, add classes, ids, attributes, and more.',
@@ -311,7 +342,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'smartlightbox',
+    key: SMART_LIGHTBOX_ATTRIBUTE,
     title: 'Smart Lightbox',
     description:
       'Change the position of an opened lightbox to prevent unwanted `z-index`, `fixed` positioning, and `transform` issues.',
@@ -326,7 +357,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'countitems',
+    key: COUNT_ITEMS_ATTRIBUTE,
     title: 'List item counter',
     description: 'Display the amount of children from an element.',
     href: 'https://www.finsweet.com/attributes/count-list-items',
@@ -340,7 +371,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'favcustom',
+    key: FAV_CUSTOM_ATTRIBUTE,
     title: 'Custom favicon by page',
     description: 'Customize the Favicon for a specific page.',
     href: 'https://www.finsweet.com/attributes/custom-fav-icon-by-page',
@@ -354,7 +385,7 @@ export const attributesData: AttributesData = [
     allowSupport: true,
   },
   {
-    key: 'toc',
+    key: TOC_ATTRIBUTE,
     title: 'Table of Contents',
     description:
       'Automatically generate a table of contents based on heading tags. Works with Webflow Rich Text, Webflow "Current" class, and anchor scroll. CMS, static, and all text elements are supported.',
@@ -367,5 +398,31 @@ export const attributesData: AttributesData = [
     changesetsSrc: 'changesets.json',
     readmeSrc: 'README.md',
     allowSupport: true,
+  },
+  {
+    key: SOCIAL_SHARE_ATTRIBUTE,
+    title: 'Social Share',
+    description: 'Share content to social media platforms. Works with Collection Lists, Templates, and static content.',
+    href: 'https://www.finsweet.com/attributes/social-share',
+    baseSrc: 'https://cdn.jsdelivr.net/npm/@finsweet/attributes-socialshare@1',
+    scriptSrc: 'socialshare.js',
+    examplesSrc: 'examples.json',
+    loadMode: 'defer',
+    changesetsSrc: 'changesets.json',
+    readmeSrc: 'README.md',
+    allowSupport: false,
+  },
+  {
+    key: QUERY_PARAM_ATTRIBUTE,
+    title: 'Query Param',
+    description: 'Use query parameter values to populate form inputs and text elements.',
+    href: 'https://www.finsweet.com/attributes/query-param',
+    baseSrc: 'https://cdn.jsdelivr.net/npm/@finsweet/attributes-queryparam@1',
+    scriptSrc: 'queryparam.js',
+    examplesSrc: 'examples.json',
+    loadMode: 'defer',
+    changesetsSrc: 'changesets.json',
+    readmeSrc: 'README.md',
+    allowSupport: false,
   },
 ];

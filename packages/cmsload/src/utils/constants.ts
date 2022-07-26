@@ -1,9 +1,8 @@
 import type { WebflowBreakpoint } from '@finsweet/ts-utils';
+import { CMS_LOAD_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmsload';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_LOAD_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const LOADER_ELEMENT_KEY = 'loader';

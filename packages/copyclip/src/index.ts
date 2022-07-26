@@ -1,8 +1,8 @@
+import { COPY_CLIP_ATTRIBUTE } from '@global/constants/attributes';
 import { assessScript } from '@global/factory/assess';
 import { initAttributes } from '@global/factory/init';
 
 import { version } from '../package.json';
-import { ATTRIBUTE } from './constants';
 import { init } from './init';
 
 /**
@@ -10,10 +10,10 @@ import { init } from './init';
  */
 initAttributes();
 
-window.fsAttributes[ATTRIBUTE] ||= {};
+window.fsAttributes[COPY_CLIP_ATTRIBUTE] ||= {};
 
 const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
+const attribute = window.fsAttributes[COPY_CLIP_ATTRIBUTE];
 
 attribute.version = version;
 

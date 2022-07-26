@@ -1,9 +1,9 @@
 import { importCMSCore } from '@finsweet/attributes-cmscore';
+import { CMS_NEST_ATTRIBUTE } from '@global/constants/attributes';
 import { assessScript, initAttributes } from '@global/factory';
 
 import { version } from '../package.json';
 import { init } from './init';
-import { ATTRIBUTE } from './utils/constants';
 
 /**
  * Init
@@ -11,10 +11,10 @@ import { ATTRIBUTE } from './utils/constants';
 initAttributes();
 importCMSCore();
 
-window.fsAttributes[ATTRIBUTE] ||= {};
+window.fsAttributes[CMS_NEST_ATTRIBUTE] ||= {};
 
 const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
+const attribute = window.fsAttributes[CMS_NEST_ATTRIBUTE];
 
 attribute.version = version;
 

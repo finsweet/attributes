@@ -1,7 +1,7 @@
-import { ATTRIBUTE as RICH_TEXT_ATTRIBUTE } from '@finsweet/attributes-richtext/src/utils/constants';
+import { CODE_HIGHLIGHT_ATTRIBUTE, RICH_TEXT_ATTRIBUTE } from '@global/constants/attributes';
 
 import { importHighlightJS, importHighlightJSTheme } from './actions/import';
-import { ATTRIBUTE, ATTRIBUTES, getSelector } from './utils/constants';
+import { ATTRIBUTES, getSelector } from './utils/constants';
 
 /**
  * Inits the attribute.
@@ -23,7 +23,7 @@ export const init = async (): Promise<(HTMLElement | undefined)[]> => {
 
   const codeElements = initHighlight(referenceElements);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(codeElements);
+  window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE].resolve?.(codeElements);
 
   return codeElements;
 };

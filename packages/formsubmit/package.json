@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-formsubmit",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "Smart actions after Webflow form submission.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

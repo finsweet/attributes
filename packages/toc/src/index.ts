@@ -1,18 +1,18 @@
+import { TOC_ATTRIBUTE } from '@global/constants/attributes';
 import { assessScript, initAttributes } from '@global/factory';
 
 import { version } from '../package.json';
 import { init } from './init';
-import { ATTRIBUTE } from './utils/constants';
 
 /**
  * Init
  */
 initAttributes();
 
-window.fsAttributes[ATTRIBUTE] ||= {};
+window.fsAttributes[TOC_ATTRIBUTE] ||= {};
 
 const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
+const attribute = window.fsAttributes[TOC_ATTRIBUTE];
 
 attribute.version = version;
 

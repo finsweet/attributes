@@ -29,9 +29,11 @@ export const generateSelectors = <
   type AttributesValuesKeys = keyof AttributesValues;
   type AttributeStaticParams = {
     operator?: AttributeOperator;
+    caseInsensitive?: boolean;
   };
   type AttributeDynamicParams = AttributeStaticParams & {
     instanceIndex?: number;
+    caseInsensitive?: boolean;
   };
 
   /**
@@ -61,15 +63,17 @@ export const generateSelectors = <
     if (typeof value === 'string') attributeValue = value;
     else attributeValue = value(params && 'instanceIndex' in params ? params.instanceIndex : undefined);
 
-    if (!params?.operator) return `[${attributeKey}="${attributeValue}"]`;
+    const caseInsensitive = params && 'caseInsensitive' in params && params.caseInsensitive ? 'i' : '';
+
+    if (!params?.operator) return `[${attributeKey}="${attributeValue}"${caseInsensitive}]`;
 
     switch (params.operator) {
       case 'prefixed':
-        return `[${attributeKey}^="${attributeValue}"]`;
+        return `[${attributeKey}^="${attributeValue}"${caseInsensitive}]`;
       case 'suffixed':
-        return `[${attributeKey}$="${attributeValue}"]`;
+        return `[${attributeKey}$="${attributeValue}"${caseInsensitive}]`;
       case 'contains':
-        return `[${attributeKey}*="${attributeValue}"]`;
+        return `[${attributeKey}*="${attributeValue}"${caseInsensitive}]`;
     }
   };
 

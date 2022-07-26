@@ -1,10 +1,11 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import { importCMSCore } from '@finsweet/attributes-cmscore';
 import { restartWebflow } from '@finsweet/ts-utils';
+import { CMS_TABS_ATTRIBUTE } from '@global/constants/attributes';
 
 import { collectPopulateData } from './actions/collect';
 import { populateTabsFromLists } from './actions/populate';
-import { ATTRIBUTE, getSelector } from './utils/constants';
+import { getSelector } from './utils/constants';
 
 /**
  * Inits the attribute.
@@ -43,7 +44,7 @@ export const init = async (): Promise<CMSList[]> => {
 
   await restartWebflow(modulesToRestart);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(listInstances);
+  window.fsAttributes[CMS_TABS_ATTRIBUTE].resolve?.(listInstances);
 
   return listInstances;
 };

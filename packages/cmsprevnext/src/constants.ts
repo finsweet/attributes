@@ -1,8 +1,7 @@
+import { CMS_PREV_NEXT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmsprevnext';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_PREV_NEXT_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const PREVIOUS_ELEMENT_KEY = 'previous';

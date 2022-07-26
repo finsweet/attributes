@@ -1,6 +1,8 @@
+import { SMART_LIGHTBOX_ATTRIBUTE } from '@global/constants/attributes';
+
 import { getLightboxElement } from './actions/collect';
 import { moveElementToBody } from './actions/move';
-import { ATTRIBUTE, ATTRIBUTES, getSelector } from './utils/constants';
+import { ATTRIBUTES, getSelector } from './utils/constants';
 
 // State
 let restoreUntransformedElement: (() => void) | undefined;
@@ -56,5 +58,5 @@ export const init = (): void => {
     }, timeout);
   });
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(undefined);
+  window.fsAttributes[SMART_LIGHTBOX_ATTRIBUTE].resolve?.(undefined);
 };

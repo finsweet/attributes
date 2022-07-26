@@ -1,8 +1,7 @@
+import { CODE_HIGHLIGHT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory/selectors';
 
-export const ATTRIBUTE = 'codehighlight';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CODE_HIGHLIGHT_ATTRIBUTE}`;
 
 export const CODE_ELEMENT_KEY = 'code';
 export const LANGUAGES_SETTING_KEY = 'languages';

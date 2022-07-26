@@ -1,8 +1,7 @@
+import { FAV_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'favcustom';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${FAV_CUSTOM_ATTRIBUTE}`;
 
 export const SRC_ELEMENT_KEY = 'src';
 export const SRC_SETTING_KEY = 'src';

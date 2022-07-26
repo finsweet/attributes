@@ -1,7 +1,7 @@
+import { FAV_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
 import { assessScript, initAttributes } from '@global/factory';
 
 import { version } from '../package.json';
-import { ATTRIBUTE } from './constants';
 import { init } from './init';
 
 /**
@@ -9,10 +9,10 @@ import { init } from './init';
  */
 initAttributes();
 
-window.fsAttributes[ATTRIBUTE] ||= {};
+window.fsAttributes[FAV_CUSTOM_ATTRIBUTE] ||= {};
 
 const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
+const attribute = window.fsAttributes[FAV_CUSTOM_ATTRIBUTE];
 
 attribute.version = version;
 

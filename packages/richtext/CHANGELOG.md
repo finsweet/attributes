@@ -1,5 +1,12 @@
 # @finsweet/attributes-richtext
 
+## 1.7.2
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.7.1
 
 ### Patch Changes

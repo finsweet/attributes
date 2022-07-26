@@ -1,8 +1,7 @@
+import { CMS_NEST_ATTRIBUTE } from '@global/constants/attributes';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmsnest';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_NEST_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const COLLECTION_SETTING_KEY = 'collection';

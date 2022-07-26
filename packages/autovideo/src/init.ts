@@ -1,6 +1,6 @@
 import { Debug } from '@finsweet/ts-utils';
+import { AUTO_VIDEO_ATTRIBUTE } from '@global/constants/attributes';
 
-import { ATTRIBUTE } from './constants';
 import type { VideoStore } from './types';
 
 /**
@@ -40,5 +40,5 @@ export const init = (): void => {
     observer.observe(video);
   }
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(videoStore);
+  window.fsAttributes[AUTO_VIDEO_ATTRIBUTE].resolve?.(videoStore);
 };

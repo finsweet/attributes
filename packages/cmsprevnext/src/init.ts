@@ -1,9 +1,10 @@
 import type { CMSItem, CMSList } from '@finsweet/attributes-cmscore';
 import { importCMSCore } from '@finsweet/attributes-cmscore';
 import { removeTrailingSlash } from '@finsweet/ts-utils';
+import { CMS_PREV_NEXT_ATTRIBUTE } from '@global/constants/attributes';
 
 import { collectElements } from './collect';
-import { ATTRIBUTE, getSelector } from './constants';
+import { getSelector } from './constants';
 
 /**
  * Inits the attribute.
@@ -83,7 +84,7 @@ export const init = async (): Promise<CMSList[]> => {
     listInstance.wrapper.style.display = 'none';
   }
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(listInstances);
+  window.fsAttributes[CMS_PREV_NEXT_ATTRIBUTE].resolve?.(listInstances);
 
   return listInstances;
 };

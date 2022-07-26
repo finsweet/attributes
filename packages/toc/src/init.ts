@@ -1,5 +1,5 @@
-import { ATTRIBUTE as RICH_TEXT_ATTRIBUTE } from '@finsweet/attributes-richtext/src/utils/constants';
 import { restartWebflow } from '@finsweet/ts-utils';
+import { TOC_ATTRIBUTE, RICH_TEXT_ATTRIBUTE } from '@global/constants/attributes';
 import { getInstanceIndex } from '@global/helpers';
 
 import { collectHeadingsData, collectLinksData } from './actions/collect';
@@ -8,7 +8,7 @@ import { populateLinks } from './actions/populate';
 import { prepareTOC } from './actions/prepare';
 import { scrollToAnchor, setScrollOffsets } from './actions/scroll';
 import { preventURLHash } from './actions/url';
-import { ATTRIBUTE, ATTRIBUTES, getSelector, queryElement } from './utils/constants';
+import { ATTRIBUTES, getSelector, queryElement } from './utils/constants';
 
 /**
  * Inits the attribute.
@@ -56,5 +56,5 @@ export const init = async (): Promise<void> => {
   await restartWebflow();
 
   // TODO: Finish API
-  window.fsAttributes[ATTRIBUTE].resolve?.(undefined);
+  window.fsAttributes[TOC_ATTRIBUTE].resolve?.(undefined);
 };

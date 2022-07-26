@@ -1,8 +1,7 @@
+import { CMS_COMBINE_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmscombine';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_COMBINE_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const ITEMS_COUNT_ELEMENT_KEY = 'items-count';

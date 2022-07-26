@@ -1,9 +1,10 @@
 import { restartWebflow, RICH_TEXT_BLOCK_CSS_CLASS } from '@finsweet/ts-utils';
 import type { RichTextBlockElement } from '@finsweet/ts-utils';
+import { RICH_TEXT_ATTRIBUTE } from '@global/constants/attributes';
 
 import { getValidTextElements } from './actions/collect';
 import { parseTextElement } from './actions/parse';
-import { ATTRIBUTE, ATTRIBUTES, getSelector } from './utils/constants';
+import { ATTRIBUTES, getSelector } from './utils/constants';
 
 // Constants
 const {
@@ -23,7 +24,7 @@ export const init = async (): Promise<HTMLDivElement[]> => {
 
   await Promise.all(rtbElements.map(initRtbElement));
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(rtbElements);
+  window.fsAttributes[RICH_TEXT_ATTRIBUTE].resolve?.(rtbElements);
 
   return rtbElements;
 };

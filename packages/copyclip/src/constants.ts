@@ -1,8 +1,7 @@
+import { COPY_CLIP_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'copyclip';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${COPY_CLIP_ATTRIBUTE}`;
 
 export const TRIGGER_ELEMENT_KEY = 'click';
 export const TARGET_ELEMENT_KEY = 'copy-this';

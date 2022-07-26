@@ -1,5 +1,16 @@
 # @finsweet/attributes-docs
 
+## 1.7.10
+
+### Patch Changes
+
+- 13c3e23: Added `fs-socialshare` Attribute
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+  - @finsweet/attributes-codehighlight@1.3.3
+  - @finsweet/attributes-copyclip@1.5.3
+  - @finsweet/attributes-toc@1.0.9
+
 ## 1.7.9
 
 ### Patch Changes

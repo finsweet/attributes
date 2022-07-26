@@ -1,8 +1,7 @@
+import { SMART_LIGHTBOX_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'smartlightbox';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${SMART_LIGHTBOX_ATTRIBUTE}`;
 
 export const TRIGGER_OPEN_ELEMENT_KEY = 'trigger-open';
 export const TRIGGER_CLOSE_ELEMENT_KEY = 'trigger-close';

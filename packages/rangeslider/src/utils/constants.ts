@@ -1,9 +1,8 @@
+import { RANGE_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
 import { ARROW_DOWN_KEY, ARROW_LEFT_KEY, ARROW_RIGHT_KEY, ARROW_UP_KEY } from '@global/constants/keyboard';
 import { generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'rangeslider';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}` as const;
+const ATTRIBUTES_PREFIX = `fs-${RANGE_SLIDER_ATTRIBUTE}` as const;
 
 export const WRAPPER_ELEMENT_KEY = 'wrapper';
 export const TRACK_ELEMENT_KEY = 'track';

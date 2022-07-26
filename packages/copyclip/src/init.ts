@@ -1,8 +1,9 @@
 import { findTextNode } from '@finsweet/ts-utils';
+import { COPY_CLIP_ATTRIBUTE } from '@global/constants/attributes';
 import { getInstanceIndex } from '@global/helpers';
 import type ClipboardJS from 'clipboard';
 
-import { ATTRIBUTES, DEFAULT_SUCCESS_DURATION, DEFAULT_SUCCESS_CSS_CLASS, getSelector, ATTRIBUTE } from './constants';
+import { ATTRIBUTES, DEFAULT_SUCCESS_DURATION, DEFAULT_SUCCESS_CSS_CLASS, getSelector } from './constants';
 import { createClipboardJsInstance } from './factory';
 
 // Constants destructuring
@@ -60,7 +61,7 @@ export const init = (): [NodeListOf<Element>, ClipboardJS['destroy'][]] => {
     );
   }
 
-  window.fsAttributes[ATTRIBUTE].resolve?.([copyTriggers, destroyCallbacks]);
+  window.fsAttributes[COPY_CLIP_ATTRIBUTE].resolve?.([copyTriggers, destroyCallbacks]);
 
   return [copyTriggers, destroyCallbacks];
 };

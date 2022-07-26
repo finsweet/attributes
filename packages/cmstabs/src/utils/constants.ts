@@ -1,8 +1,7 @@
+import { CMS_TABS_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmstabs';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_TABS_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const TABS_ELEMENT_KEY = 'tabs';

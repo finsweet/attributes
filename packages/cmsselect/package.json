@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsselect",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Populate Select elements based on a CMS source.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -44,7 +44,6 @@
   },
   "dependencies": {
     "@finsweet/attributes-cmscore": "workspace:*",
-    "@finsweet/attributes-cmsload": "workspace:*",
     "@global/constants": "workspace:*",
     "@global/factory": "workspace:*",
     "@global/helpers": "workspace:*",

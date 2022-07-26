@@ -1,6 +1,7 @@
+import { MIRROR_CLICK_ATTRIBUTE } from '@global/constants/attributes';
 import { getInstanceIndex } from '@global/helpers';
 
-import { ATTRIBUTE, ATTRIBUTES, getSelector } from './constants';
+import { ATTRIBUTES, getSelector } from './constants';
 
 // Constants  destructuring
 const {
@@ -34,5 +35,5 @@ export const init = (): void => {
     }
   });
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(undefined);
+  window.fsAttributes[MIRROR_CLICK_ATTRIBUTE].resolve?.(undefined);
 };

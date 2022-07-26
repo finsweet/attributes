@@ -1,8 +1,7 @@
+import { SLIDER_DOTS_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'sliderdots';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${SLIDER_DOTS_ATTRIBUTE}`;
 
 export const SLIDER_ELEMENT_KEY = 'slider';
 export const CONTENT_ELEMENT_KEY = 'content';

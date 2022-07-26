@@ -1,8 +1,7 @@
+import { CMS_SORT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'cmssort';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_SORT_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const TRIGGER_ELEMENT_KEY = 'trigger';

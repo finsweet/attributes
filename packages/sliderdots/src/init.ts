@@ -1,8 +1,9 @@
 import { isNotEmpty, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { SliderElement } from '@finsweet/ts-utils';
+import { SLIDER_DOTS_ATTRIBUTE } from '@global/constants/attributes';
 
 import { createSliderDots } from './factory';
-import { ATTRIBUTE, getSelector } from './utils/constants';
+import { getSelector } from './utils/constants';
 
 /**
  * Inits the custom slider dots.
@@ -16,7 +17,7 @@ export const init = async (): Promise<NonNullable<Awaited<ReturnType<typeof crea
 
   const slidersData = (await Promise.all(sliders.map(createSliderDots))).filter(isNotEmpty);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(slidersData);
+  window.fsAttributes[SLIDER_DOTS_ATTRIBUTE].resolve?.(slidersData);
 
   return slidersData;
 };

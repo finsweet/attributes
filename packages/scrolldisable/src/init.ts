@@ -1,5 +1,7 @@
+import { SCROLL_DISABLE_ATTRIBUTE } from '@global/constants/attributes';
+
 import { initClickTriggers } from './click';
-import { ATTRIBUTE, ATTRIBUTES, getSelector } from './constants';
+import { ATTRIBUTES, getSelector } from './constants';
 import { initDisplayTriggers } from './display';
 import { setReserveScrollBarGap } from './scroll';
 
@@ -25,5 +27,5 @@ export const init = (): void => {
   initClickTriggers(preserveScrollTargets);
   initDisplayTriggers(preserveScrollTargets);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(undefined);
+  window.fsAttributes[SCROLL_DISABLE_ATTRIBUTE].resolve?.(undefined);
 };

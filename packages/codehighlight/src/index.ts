@@ -1,9 +1,9 @@
+import { CODE_HIGHLIGHT_ATTRIBUTE } from '@global/constants/attributes';
 import { assessScript, initAttributes } from '@global/factory';
 
 import { version } from '../package.json';
 import { importHighlightJS } from './actions/import';
 import { init } from './init';
-import { ATTRIBUTE } from './utils/constants';
 
 /**
  * Init
@@ -11,9 +11,9 @@ import { ATTRIBUTE } from './utils/constants';
 initAttributes();
 importHighlightJS();
 
-window.fsAttributes[ATTRIBUTE] ||= {};
+window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE] ||= {};
 
-const attribute = window.fsAttributes[ATTRIBUTE];
+const attribute = window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE];
 const { preventsLoad } = assessScript();
 
 attribute.version = version;

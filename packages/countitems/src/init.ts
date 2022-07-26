@@ -1,7 +1,8 @@
 import { getCollectionElements } from '@finsweet/ts-utils';
+import { COUNT_ITEMS_ATTRIBUTE } from '@global/constants/attributes';
 import { getInstanceIndex } from '@global/helpers';
 
-import { ATTRIBUTE, ATTRIBUTES, getSelector, queryElement } from './constants';
+import { ATTRIBUTES, getSelector, queryElement } from './constants';
 
 /**
  * Inits list items count.
@@ -22,7 +23,7 @@ export const init = (): NodeListOf<Element> => {
     valueTarget.textContent = `${collectionItemsCount}`;
   }
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(listReferences);
+  window.fsAttributes[COUNT_ITEMS_ATTRIBUTE].resolve?.(listReferences);
 
   return listReferences;
 };

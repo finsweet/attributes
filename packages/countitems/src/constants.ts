@@ -1,8 +1,7 @@
+import { COUNT_ITEMS_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'countitems';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${COUNT_ITEMS_ATTRIBUTE}`;
 
 export const LIST_ELEMENT_KEY = 'list';
 export const VALUE_ELEMENT_KEY = 'value';

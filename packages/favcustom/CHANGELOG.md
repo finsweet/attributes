@@ -1,5 +1,12 @@
 # @finsweet/attributes-favcustom
 
+## 1.3.3
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.3.2
 
 ### Patch Changes

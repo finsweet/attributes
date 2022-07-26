@@ -1,8 +1,9 @@
 import { isNotEmpty } from '@finsweet/ts-utils';
+import { FORM_SUBMIT_ATTRIBUTE } from '@global/constants/attributes';
 
 import type { Form } from './components/Form';
 import { initFormInstance } from './factory';
-import { ATTRIBUTE, queryElement } from './utils/constants';
+import { queryElement } from './utils/constants';
 
 /**
  * Inits the attribute.
@@ -17,7 +18,7 @@ export const init = (): Form[] => {
 
   const formInstances = formElements.map(initFormInstance).filter(isNotEmpty);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(formInstances);
+  window.fsAttributes[FORM_SUBMIT_ATTRIBUTE].resolve?.(formInstances);
 
   return formInstances;
 };

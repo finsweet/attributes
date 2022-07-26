@@ -1,7 +1,7 @@
+import { LINK_BLOCK_EDIT_ATTRIBUTE } from '@global/constants/attributes';
 import { assessScript, initAttributes } from '@global/factory';
 
 import { version } from '../package.json';
-import { ATTRIBUTE } from './constants';
 import { init } from './init';
 
 /**
@@ -9,10 +9,10 @@ import { init } from './init';
  */
 initAttributes();
 
-window.fsAttributes[ATTRIBUTE] ||= {};
+window.fsAttributes[LINK_BLOCK_EDIT_ATTRIBUTE] ||= {};
 
 const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
+const attribute = window.fsAttributes[LINK_BLOCK_EDIT_ATTRIBUTE];
 
 attribute.version = version;
 

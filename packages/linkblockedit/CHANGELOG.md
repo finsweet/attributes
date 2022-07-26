@@ -1,5 +1,12 @@
 # @finsweet/attributes-linkblockedit
 
+## 1.3.2
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.3.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @finsweet/attributes-sliderdots
 
+## 1.6.3
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+  - @finsweet/attributes-cmsslider@1.5.3
+
 ## 1.6.2
 
 ### Patch Changes

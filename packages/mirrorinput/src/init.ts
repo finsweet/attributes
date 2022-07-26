@@ -1,7 +1,8 @@
 import { isFormField, setFormFieldValue } from '@finsweet/ts-utils';
+import { MIRROR_INPUT_ATTRIBUTE } from '@global/constants/attributes';
 import { getInstanceIndex } from '@global/helpers';
 
-import { ATTRIBUTE, ATTRIBUTES, getSelector, queryElement } from './constants';
+import { ATTRIBUTES, getSelector, queryElement } from './constants';
 
 /**
  * Inits click events mirroring.
@@ -34,5 +35,5 @@ export const init = (): void => {
     setFormFieldValue(mirrorTarget, mirrorTrigger.value);
   });
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(undefined);
+  window.fsAttributes[MIRROR_INPUT_ATTRIBUTE].resolve?.(undefined);
 };

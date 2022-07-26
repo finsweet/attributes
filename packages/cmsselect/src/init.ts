@@ -1,8 +1,8 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import { importCMSCore } from '@finsweet/attributes-cmscore';
-import { ATTRIBUTE as CMS_LOAD_ATTRIBUTE } from '@finsweet/attributes-cmsload/src/utils/constants';
+import { CMS_SELECT_ATTRIBUTE, CMS_LOAD_ATTRIBUTE } from '@global/constants/attributes';
 
-import { ATTRIBUTE, getSelector } from './constants';
+import { getSelector } from './constants';
 import { populateSelectElement } from './populate';
 
 /**
@@ -27,7 +27,7 @@ export const init = async (): Promise<CMSList[]> => {
   const listInstances = [...listInstancesSet];
 
   await window.fsAttributes[CMS_LOAD_ATTRIBUTE]?.loading;
-  window.fsAttributes[ATTRIBUTE].resolve?.(listInstances);
+  window.fsAttributes[CMS_SELECT_ATTRIBUTE].resolve?.(listInstances);
 
   return listInstances;
 };

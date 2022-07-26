@@ -1,5 +1,13 @@
 # @finsweet/attributes-toc
 
+## 1.0.9
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+  - @finsweet/attributes-richtext@1.7.2
+
 ## 1.0.8
 
 ### Patch Changes

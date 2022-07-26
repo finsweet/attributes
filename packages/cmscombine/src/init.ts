@@ -1,9 +1,10 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import { importCMSCore } from '@finsweet/attributes-cmscore';
+import { CMS_COMBINE_ATTRIBUTE } from '@global/constants/attributes';
 
 import { collectCombineData } from './collect';
 import { combineItemsToTarget } from './combine';
-import { ATTRIBUTE, getSelector, queryElement } from './constants';
+import { getSelector, queryElement } from './constants';
 import type { CombineData } from './types';
 
 /**
@@ -20,7 +21,7 @@ export const init = async (): Promise<CMSList[]> => {
   // Combine the lists
   const combineLists = await Promise.all(combineData.map(initListsCombine));
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(combineLists);
+  window.fsAttributes[CMS_COMBINE_ATTRIBUTE].resolve?.(combineLists);
 
   return combineLists;
 };

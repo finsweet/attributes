@@ -1,8 +1,7 @@
+import { FORM_SUBMIT_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'formsubmit';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${FORM_SUBMIT_ATTRIBUTE}`;
 
 export const FORM_ELEMENT_KEY = 'form';
 export const RESET_ELEMENT_KEY = 'reset';
@@ -21,6 +20,8 @@ export const REDIRECT_NEW_TAB_SETTING_KEY = 'redirectnewtab';
 export const REDIRECT_NEW_TAB_SETTING_VALUES = { true: 'true' };
 export const ENHANCE_SETTING_KEY = 'enhance';
 export const ENHANCE_SETTING_VALUES = { true: 'true' };
+export const DISABLE_SETTING_KEY = 'disable';
+export const DISABLE_SETTING_VALUES = { true: 'true' };
 
 export const ATTRIBUTES = {
   element: {
@@ -94,6 +95,14 @@ export const ATTRIBUTES = {
   redirectNewTab: {
     key: `${ATTRIBUTES_PREFIX}-${REDIRECT_NEW_TAB_SETTING_KEY}`,
     values: REDIRECT_NEW_TAB_SETTING_VALUES,
+  },
+
+  /**
+   * Defines if the form should be disabled, preventing all submissions.
+   */
+  disable: {
+    key: `${ATTRIBUTES_PREFIX}-${DISABLE_SETTING_KEY}`,
+    values: DISABLE_SETTING_VALUES,
   },
 
   /**

@@ -1,7 +1,5 @@
-import {
-  ATTRIBUTE as CODEHIGHLIGHT_ATTRIBUTE,
-  ATTRIBUTES as CODEHIGHLIGHT_ATTRIBUTES,
-} from '@finsweet/attributes-codehighlight/src/utils/constants';
+import { ATTRIBUTES as CODEHIGHLIGHT_ATTRIBUTES } from '@finsweet/attributes-codehighlight/src/utils/constants';
+import { CODE_HIGHLIGHT_ATTRIBUTE } from 'global/constants/attributes';
 
 import { queryElement } from '../utils/constants';
 
@@ -23,7 +21,7 @@ export const initCodeHighlight = (copyCode: string) => {
 
   codeElement.innerHTML = copyCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt');
 
-  window.fsAttributes[CODEHIGHLIGHT_ATTRIBUTE].init?.();
+  window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE].init?.();
 
   return codeElement;
 };

@@ -1,10 +1,10 @@
-import { ATTRIBUTE as CMS_SELECT_ATTRIBUTE } from '@finsweet/attributes-cmsselect/src/constants';
+import { CMS_SELECT_ATTRIBUTE, SELECT_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
 
 import { listenEvents } from './actions/events';
 import { observeElements } from './actions/observe';
 import { populateOptions } from './actions/populate';
 import { collectSettings } from './actions/settings';
-import { ATTRIBUTE, getSelector } from './utils/constants';
+import { getSelector } from './utils/constants';
 
 /**
  * Inits the attribute.
@@ -18,7 +18,7 @@ export const init = async (): Promise<NodeListOf<HTMLElement>> => {
 
   for (const referenceElement of referenceElements) initCustomSelect(referenceElement);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(referenceElements);
+  window.fsAttributes[SELECT_CUSTOM_ATTRIBUTE].resolve?.(referenceElements);
 
   return referenceElements;
 };

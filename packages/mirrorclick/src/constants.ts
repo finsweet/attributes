@@ -1,8 +1,7 @@
+import { MIRROR_CLICK_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'mirrorclick';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${MIRROR_CLICK_ATTRIBUTE}`;
 
 export const TRIGGER_ELEMENT_KEY = 'trigger';
 export const TARGET_ELEMENT_KEY = 'target';

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-sliderdots",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Create custom Slider Dots for a Slider.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -47,7 +47,6 @@
   "dependencies": {
     "@finsweet/ts-utils": "^0.33.1",
     "@global/constants": "workspace:*",
-    "@finsweet/attributes-cmsslider": "workspace:*",
     "@global/helpers": "workspace:*",
     "@global/factory": "workspace:*"
   }

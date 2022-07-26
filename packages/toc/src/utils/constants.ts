@@ -1,8 +1,7 @@
+import { TOC_ATTRIBUTE } from '@global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
 
-export const ATTRIBUTE = 'toc';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${TOC_ATTRIBUTE}`;
 
 export const CONTENTS_ELEMENT_KEY = 'contents';
 export const TABLE_ELEMENT_KEY = 'table';

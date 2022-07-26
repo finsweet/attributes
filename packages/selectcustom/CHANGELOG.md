@@ -1,5 +1,13 @@
 # @finsweet/attributes-selectcustom
 
+## 1.5.6
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+  - @finsweet/attributes-cmsselect@1.4.4
+
 ## 1.5.5
 
 ### Patch Changes

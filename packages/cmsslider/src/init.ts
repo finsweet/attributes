@@ -1,9 +1,10 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import { importCMSCore } from '@finsweet/attributes-cmscore';
 import { restartWebflow } from '@finsweet/ts-utils';
+import { CMS_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
 
 import { collectPopulateData } from './collect';
-import { ATTRIBUTE, getSelector } from './constants';
+import { getSelector } from './constants';
 import { populateSliderFromLists } from './populate';
 
 /**
@@ -44,7 +45,7 @@ export const init = async (): Promise<CMSList[]> => {
 
   await restartWebflow(modulesToRestart);
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(listInstances);
+  window.fsAttributes[CMS_SLIDER_ATTRIBUTE].resolve?.(listInstances);
 
   return listInstances;
 };

@@ -1,5 +1,12 @@
 # @finsweet/attributes-mirrorclick
 
+## 1.4.2
+
+### Patch Changes
+
+- Updated dependencies [13c3e23]
+  - @global/factory@1.1.1
+
 ## 1.4.1
 
 ### Patch Changes
