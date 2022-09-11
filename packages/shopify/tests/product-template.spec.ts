@@ -360,7 +360,6 @@ export const productRoute = (page: Page): Promise<void> =>
 
 test.beforeEach(async ({ page }) => {
   await productRoute(page);
-  await page.goto('tests/fixtures/product-template?id=6782381752381');
 });
 
 const expectedValues: { [key in ProductAttribute]: (_: Page) => Promise<void> } = {
@@ -426,30 +425,56 @@ const expectedValues: { [key in ProductAttribute]: (_: Page) => Promise<void> } 
   },
 };
 
-test.describe('Product Template', () => {
+const testProductAttribute = async (page: Page) => {
+  const keys = [
+    'title',
+    'description',
+    'handle',
+    'created',
+    'updated',
+    'published',
+    'image',
+    'sku',
+    'price',
+    'discountpercent',
+    'type',
+    'vendor',
+    'weight',
+  ];
+  for (let i = 0; i < keys.length; i++) {
+    await expectedValues[keys[i] as ProductAttribute](page);
+  }
+};
+
+const testLoader = async (page: Page) => {
+  const locator = page.locator(`css=[fs-shopify-element="loader"]`);
+  await expect(locator).not.toBeVisible();
+};
+
+test.describe('Default Product Template', () => {
+  //before each test
+  test.beforeEach(async ({ page }) => {
+    await page.goto('tests/fixtures/product-template?id=6782381752381');
+  });
   test('Product binding', async ({ page }) => {
-    const keys = [
-      'title',
-      'description',
-      'handle',
-      'created',
-      'updated',
-      'published',
-      'image',
-      'sku',
-      'price',
-      'discountpercent',
-      'type',
-      'vendor',
-      'weight',
-    ];
-    for (let i = 0; i < keys.length; i++) {
-      await expectedValues[keys[i] as ProductAttribute](page);
-    }
+    await testProductAttribute(page);
   });
 
   test('Loader is not shown', async ({ page }) => {
-    const locator = page.locator(`css=[fs-shopify-element="loader"]`);
-    await expect(locator).toBeHidden();
+    await testLoader(page);
+  });
+});
+
+test.describe('Custom slug with Product Template', () => {
+  //before each test
+  test.beforeEach(async ({ page }) => {
+    await page.goto('tests/fixtures/custom-product-slug?id=6782381752381');
+  });
+  test('Product binding', async ({ page }) => {
+    await testProductAttribute(page);
+  });
+
+  test('Loader is not shown', async ({ page }) => {
+    await testLoader(page);
   });
 });
