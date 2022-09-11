@@ -22,14 +22,15 @@ import type { SchemaSettings, SCHEMA_ITEM_TYPES } from '@src/types/Schema.types'
 export function createElementSelector(
   element: string,
   schemaSettings: SchemaSettings,
-  requiresInstance: boolean
+  requiresInstance: boolean,
+  caseInsensitive = false
 ): SchemaSelector {
   const { key, instance } = schemaSettings;
 
   const selectorAttr = `fs-${key}-element`;
   const selectorValue = instance > 1 && requiresInstance ? `${element}-${instance}` : element;
 
-  return new SchemaSelector(selectorAttr, selectorValue, instance === 1);
+  return new SchemaSelector(selectorAttr, selectorValue, instance === 1, caseInsensitive);
 }
 
 /**
@@ -96,19 +97,19 @@ export function getSchemaItem(
 export function createSchemaSelectorFromItem(
   schemaItem: AttributeElementSchema | AttributeSettingSchema | AttributeFieldSchema,
   schemaType: string,
-  schemaKey: string,
+  attributeKey: string,
   schemaSettings: SchemaSettings,
   option: string | null = null
 ) {
   switch (schemaType) {
     case 'elements': {
-      const { requiresInstance } = schemaItem as AttributeElementSchema;
-      return createElementSelector(schemaKey, schemaSettings, requiresInstance);
+      const { requiresInstance, caseInsensitive } = schemaItem as AttributeElementSchema;
+      return createElementSelector(attributeKey, schemaSettings, requiresInstance, caseInsensitive);
     }
 
     case 'settings':
     case 'fields': {
-      return createSettingSelector(schemaKey, option, schemaSettings.key);
+      return createSettingSelector(attributeKey, option, schemaSettings.key);
     }
 
     default: {
@@ -124,20 +125,20 @@ export function createSchemaSelectorFromItem(
 export function createSchemaSelectorFromSchema(
   schema: AttributeSchema,
   schemaType: 'elements' | 'settings' | 'fields',
-  schemaKey: string | undefined,
+  attributeKey: string | undefined,
   schemaSettings: SchemaSettings,
   option?: string | null
 ) {
-  if (!schemaKey) {
+  if (!attributeKey) {
     throw new Error('Missing schema Key');
   }
-  const schemaItem = getSchemaItem(schema, schemaType, schemaKey);
+  const schemaItem = getSchemaItem(schema, schemaType, attributeKey);
 
   if (!schemaItem) {
-    throw new Error(`Missing schema element ${schemaType} ${schemaKey}`);
+    throw new Error(`Missing schema element ${schemaType} ${attributeKey}`);
   }
 
-  return createSchemaSelectorFromItem(schemaItem, schemaType, schemaKey, schemaSettings, option);
+  return createSchemaSelectorFromItem(schemaItem, schemaType, attributeKey, schemaSettings, option);
 }
 
 /**

@@ -5,20 +5,13 @@ import {
   selectSettingOption,
   clickToggleSelector,
 } from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Element Conditions Has Link Errors`
-    .page`http://localhost:9000/scenarios/errors/element-condition-has-styles.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/element-condition-has-styles.html`;
 
-test('Element that required link failed due to miss link on page', async t => {
-
+test('Element that required link failed due to miss link on page', async (t) => {
   await selectAttribute('Range Slider');
 
   await clickRunCheck();

@@ -1,23 +1,12 @@
-import {
-  selectAttribute,
-  clickRunCheck
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { selectAttribute, clickRunCheck } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Element AppliedTo Errors`
-    .page`http://localhost:9000/scenarios/errors/element-not-applied-to.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/element-not-applied-to.html`;
 
-test('Element not applied to correct element', async t => {
-
+test('Element not applied to correct element', async (t) => {
   await selectAttribute('CMS Load');
-
 
   await clickRunCheck();
 

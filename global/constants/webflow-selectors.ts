@@ -86,6 +86,20 @@ export const CHECKBOX: DOMSelector = {
   selectors: ['label.w-checkbox input'],
 };
 
+export const ALL_INPUTS: DOMSelector = {
+  label: 'Any Form Element',
+  selectors: [
+    'label.w-checkbox',
+    'label.w-checkbox span',
+    'label.w-checkbox input',
+    'label.w-radio',
+    'label.w-radio span',
+    'label.w-radio input',
+    'input',
+    'textarea',
+  ],
+};
+
 export const RADIO_LABEL: DOMSelector = {
   label: 'Radio Label',
   selectors: ['label.w-radio span'],

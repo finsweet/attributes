@@ -41,14 +41,20 @@
 
   async function loadAttributes() {
     const request = await fetch('https://cdn.jsdelivr.net/npm/@finsweet/attributes-docs@1/attributes.json');
+    //const request = await fetch('http://localhost:3000/packages/docs/attributes.json');
     const data: AttributesData = await request.json();
 
     const attributesWithLoadPromises = data
       .filter((attribute) => attribute.allowSupport)
       .map(async (attribute): Promise<AttributeLoaded> => {
         const supportAttribute = attribute as SupportedAttributeData;
-        const schemaFile = `${supportAttribute.baseSrc}/${supportAttribute.schemaSrc}`;
-        const scriptFile = `${supportAttribute.baseSrc}/${supportAttribute.scriptSrc}`;
+
+        /// const { baseSrc, schemaSrc, scriptSrc, key } = supportAttribute;
+        const { baseSrc, schemaSrc, scriptSrc } = supportAttribute;
+
+        const schemaFile = `${baseSrc}/${schemaSrc}`;
+        // const schemaFile = `${baseSrc}/${schemaSrc}`.replace(baseSrc, `http://localhost:3000/packages/${key}`);
+        const scriptFile = `${baseSrc}/${scriptSrc}`;
 
         const loaded = isScriptLoaded(scriptFile);
 

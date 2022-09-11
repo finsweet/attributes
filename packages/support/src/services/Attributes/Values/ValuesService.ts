@@ -1,3 +1,4 @@
+import type { AttributeSettingValueOptions, AttributeValue } from '@global/types/schema';
 import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
 import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';
 import { booleanValidator } from '@src/services/Validators/Boolean/BooleanValidator';
@@ -14,15 +15,30 @@ import AttributeValueNotMatchExpectedError from './Errors/AttributeValueNotMatch
 // erros
 import AttributeValueNotMatchTypeError from './Errors/AttributeValueNotMatchTypeError';
 
-export function valueServiceV2(
+export function checkSettingValue(
+  element: HTMLElement,
+  settingSelector: SchemaSelector,
+  schemaValue: AttributeValue | AttributeValue[],
+  attributeValue: string
+) {
+  const attributeValueInDOM = element && element.getAttribute(settingSelector.getAttribute());
+
+  if (!element || !attributeValueInDOM) {
+    throw new Error('Unexpected error: Element not found for check value.');
+  }
+
+  validateSettingType(attributeValueInDOM, schemaValue, settingSelector);
+
+  validateSettingValue(attributeValue, attributeValueInDOM, settingSelector);
+}
+
+export function checkFieldSettingValue(
   elements: HTMLElement[],
   attribute: string,
-  schemaValue: { type: string; options?: { value: string; description: string }[] },
+  schemaValue: AttributeValue | AttributeValue[],
   attributeValue: string,
-  schemaSelector: SchemaSelector
+  settingSelector: SchemaSelector
 ) {
-  const { type, options } = schemaValue;
-
   const element =
     (elements.length <= 1 && elements[0]) ||
     elements.find((element: HTMLElement) => {
@@ -35,16 +51,9 @@ export function valueServiceV2(
     throw new Error('Unexpected error: Element not found for check value.');
   }
 
-  try {
-    validateValueType(type, attributeValueInDOM, options);
-  } catch (e: unknown) {
-    const error = e as ValueTypeError;
-    throw new AttributeValueNotMatchTypeError(schemaSelector, error.typeInputError);
-  }
+  validateSettingType(attributeValueInDOM, schemaValue, settingSelector);
 
-  if (attributeValue.toString() !== attributeValueInDOM) {
-    throw new AttributeValueNotMatchExpectedError(schemaSelector, attributeValueInDOM, attributeValue.toString());
-  }
+  validateSettingValue(attributeValue, attributeValueInDOM, settingSelector);
 
   return true;
 }
@@ -52,38 +61,34 @@ export function valueServiceV2(
 /**
  * Assert value is equal to expected value and the type is equal to expected type;
  *
- * @param schemaSelector
+ * @param settingSelector
  * @param schemaValue
  * @param attributeValue
  * @param appliedToSelectors
  * @returns
  */
-export default function valueService(
-  schemaSelector: SchemaSelector,
-  schemaValue: { type: string; options?: { value: string; description: string }[] },
+export default function checkElementSettingValue(
+  settingSelector: SchemaSelector,
+  schemaValue: AttributeValue | AttributeValue[],
   attributeValue: string,
   appliedToSelectors: SchemaSelector[]
 ) {
-  const { type, options } = schemaValue;
-
   // Find the attribute value in AppliedTo Elements
-  const elementAppliedTo =
-    appliedToSelectors &&
-    appliedToSelectors.find((appended) => {
-      try {
-        const apppliedSelector = appended
-          .getElementSelector()
-          .split(',')
-          .map((attributeSelector: string) => {
-            return `${attributeSelector}${schemaSelector.getAttributeSelector()}`;
-          })
-          .join(',');
+  const elementAppliedTo: SchemaSelector | undefined = appliedToSelectors.find((appended) => {
+    try {
+      const apppliedSelector = appended
+        .getElementSelector()
+        .split(',')
+        .map((attributeSelector: string) => {
+          return `${attributeSelector}${settingSelector.getAttributeSelector()}`;
+        })
+        .join(',');
 
-        return assertElementExistsOnPage(apppliedSelector);
-      } catch {
-        return false;
-      }
-    });
+      return assertElementExistsOnPage(apppliedSelector);
+    } catch {
+      return false;
+    }
+  });
 
   // If none is found, throw an error
   if (!elementAppliedTo && appliedToSelectors && appliedToSelectors.length > 0) {
@@ -91,28 +96,20 @@ export default function valueService(
   }
 
   const attributeElementSelector =
-    `${(elementAppliedTo && elementAppliedTo.getElementSelector()) || ''}` + schemaSelector.getAttributeSelector();
+    `${(elementAppliedTo && elementAppliedTo.getElementSelector()) || ''}` + settingSelector.getAttributeSelector();
 
-  let attributeValueInDOM;
+  let attributeValueInDOM: string;
 
   try {
-    attributeValueInDOM = queryAttributeValue(attributeElementSelector, schemaSelector.attribute);
+    attributeValueInDOM = queryAttributeValue(attributeElementSelector, settingSelector.attribute);
   } catch {
-    throw new AttributeValueNotFoundError(schemaSelector, appliedToSelectors[0]);
+    throw new AttributeValueNotFoundError(settingSelector, appliedToSelectors[0]);
   }
 
-  // validate html value type
-  try {
-    validateValueType(type, attributeValueInDOM, options);
-  } catch (e: unknown) {
-    const error = e as ValueTypeError;
-    throw new AttributeValueNotMatchTypeError(schemaSelector, error.typeInputError);
-  }
+  validateSettingType(attributeValueInDOM, schemaValue, settingSelector);
 
-  // validate html value match input
-  if (attributeValue.toString() !== attributeValueInDOM) {
-    throw new AttributeValueNotMatchExpectedError(schemaSelector, attributeValueInDOM, attributeValue.toString());
-  }
+  validateSettingValue(attributeValue, attributeValueInDOM, settingSelector);
+
   return true;
 }
 
@@ -141,5 +138,41 @@ function validateValueType(type: string, attributeValue: string, options?: { val
       return commaSeparatedFloatValidator(attributeValue);
     default:
       throw new Error(`Type validator ${type} not found`);
+  }
+}
+
+function validateSettingType(
+  attributeValueInDOM: string,
+  schemaValue: AttributeValue | AttributeValue[],
+  settingSelector: SchemaSelector
+): void {
+  if (Array.isArray(schemaValue)) {
+    const isValid = schemaValue.some((value) => {
+      const { type, options } = value as AttributeSettingValueOptions;
+      try {
+        validateValueType(type, attributeValueInDOM, options);
+        return true;
+      } catch (e: unknown) {
+        return false;
+      }
+    });
+
+    if (!isValid) {
+      throw new AttributeValueNotMatchTypeError(settingSelector, schemaValue.map((value) => value.type).join(', '));
+    }
+  } else {
+    const { type, options } = schemaValue as AttributeSettingValueOptions;
+    try {
+      validateValueType(type, attributeValueInDOM, options);
+    } catch (e: unknown) {
+      const error = e as ValueTypeError;
+      throw new AttributeValueNotMatchTypeError(settingSelector, error.typeInputError);
+    }
+  }
+}
+
+function validateSettingValue(attributeValue: string, attributeValueInDOM: string, settingSelector: SchemaSelector) {
+  if (attributeValue.toString() !== attributeValueInDOM) {
+    throw new AttributeValueNotMatchExpectedError(settingSelector, attributeValueInDOM, attributeValue.toString());
   }
 }

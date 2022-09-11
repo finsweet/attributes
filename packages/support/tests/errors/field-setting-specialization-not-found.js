@@ -7,21 +7,13 @@ import {
   clickToggleSelector,
   typeSettingOption,
 } from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from '../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from '../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Field Setting - Specialization`
-    .page`http://localhost:9000/scenarios/errors/field-settings-specialization-range.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/field-settings-specialization-range.html`;
 
-
-test('Field Setting - Specialization Range', async t => {
-
+test('Field Setting - Specialization Range', async (t) => {
   await selectAttribute('CMS Filter');
 
   await typeFieldIdentifier('field-field-field-1', 'products');

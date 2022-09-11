@@ -52,7 +52,7 @@
     }
 
     if (!isRequired) {
-      schemaFormActions.removeElement(value);
+      schemaFormActions.deleteElement(value);
       schemaFormActions.disableElementSettings(value);
       isChecked = false;
     }
@@ -65,7 +65,7 @@
     });
 
     if (localEnable === false && isChecked === true) {
-      schemaFormActions.removeElement(element.key);
+      schemaFormActions.deleteElement(element.key);
       isChecked = false;
     }
 
@@ -146,7 +146,7 @@
           <AttributeToggle isOpen={isOpenSelector} {toggleSelector} />
         </AttributeContainer>
         {#if isOpenSelector}
-          <AttributeSelector type="element" key={element.key} value={undefined} />
+          <AttributeSelector isActive={false} type="element" key={element.key} value={undefined} />
         {/if}
       </AttributeItemContainer>
     </AttributeItemHeader>

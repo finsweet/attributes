@@ -59,11 +59,13 @@ export interface ElementUI extends AttributeElementSchema {
 
 export interface FieldUI extends AttributeFieldSchema {
   settings: AttributeSettingSchema[];
+  elements: AttributeElementSchema[];
 }
 
 export interface SchemaUI {
   requiredElements: ElementUI[];
   fields: FieldUI[];
   notRequiredElements: ElementUI[];
+  settings: AttributeSettingSchema[];
   requiredInstance: boolean;
 }

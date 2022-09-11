@@ -3,8 +3,10 @@ import type { SchemaInput } from '@src/types/Input.types';
 import type { SchemaInputFieldSetting, InputChannel } from '@src/types/Input.types';
 import type { SchemaSettings } from '@src/types/Schema.types';
 
+import { validateSetting } from './Settings/SettingsService';
 import { validateElement } from './Elements/ElementsService';
 import { validateElementSetting } from './Elements/ElementsSettingsService';
+import { validateFieldElement } from './Fields/FieldsElementsService';
 import { validateField } from './Fields/FieldsService';
 import { validateFieldSetting } from './Fields/FieldsSettingsService';
 
@@ -28,9 +30,14 @@ export async function validateInputForm(
       input.key === schemaSettings.key
   );
 
+  const fieldElements = schemaInput.filter(
+    (input: SchemaInput) =>
+      input.type === 'fieldElement' && input.instance === schemaSettings.instance && input.key === schemaSettings.key
+  );
+
   const settings = schemaInput.filter(
     (input: SchemaInput) =>
-      (input.type === 'elementSetting' || input.type === 'fieldSetting') &&
+      (input.type === 'elementSetting' || input.type === 'fieldSetting' || input.type === 'setting') &&
       input.instance === schemaSettings.instance &&
       input.key === schemaSettings.key &&
       Object.prototype.hasOwnProperty.call(input, 'enable') &&
@@ -57,6 +64,28 @@ export async function validateInputForm(
   });
 
   const elementsAndFieldsChannel: InputChannel[] = await Promise.all(promisesElements);
+
+  const fieldsElementsChannel = fieldElements.map((input: SchemaInput) => {
+    if (input.type === 'fieldElement') {
+      const fieldChannel = elementsAndFieldsChannel.find(
+        (attributeChannel) =>
+          attributeChannel.input.type === 'field' &&
+          attributeChannel.input.field === input.field &&
+          attributeChannel.input.index === input.index
+      );
+
+      // if (fieldChannel?.input.validation?.status === false) {
+      //   return input;
+      // }
+
+      if (!fieldChannel) {
+        throw new Error('Input error, missing field channel');
+      }
+
+      return validateFieldElement(input, fieldChannel, schema, schemaSettings);
+    }
+    throw new Error('Type not found');
+  });
 
   const promisesSettings = settings.map(async (input: SchemaInput) => {
     if (input.type === 'elementSetting') {
@@ -87,6 +116,10 @@ export async function validateInputForm(
       return validateFieldSetting(input, fieldChannel, schema, schemaSettings);
     }
 
+    if (input.type === 'setting') {
+      return validateSetting(input, schema, schemaSettings);
+    }
+
     throw new Error('Type not found');
   });
 
@@ -94,6 +127,7 @@ export async function validateInputForm(
 
   const input = [
     ...elementsAndFieldsChannel.map((attribute: InputChannel) => attribute.input),
+    ...fieldsElementsChannel,
     ...settingsChannel,
     ...rest,
   ];

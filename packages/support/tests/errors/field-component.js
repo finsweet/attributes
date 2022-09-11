@@ -1,23 +1,10 @@
-import {
-  selectAttribute,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectFieldSpecialization,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { selectAttribute, clickRunCheck, typeFieldIdentifier, selectFieldSpecialization } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
-fixture`Field - Component`
-    .page`http://localhost:9000/scenarios/errors/field-component.html`;
+fixture`Field - Component`.page`http://localhost:3000/packages/support/public/scenarios/errors/field-component.html`;
 
-test('Field missing component on current page', async t => {
-
+test('Field missing component on current page', async (t) => {
   await selectAttribute('Powerful Rich Text');
 
   await typeFieldIdentifier('field-component-field-1', 'my-internal-component');
@@ -32,8 +19,7 @@ test('Field missing component on current page', async t => {
   await writeFileValidationMessage('Rich Text component not found on page', 'field-component-field-1');
 });
 
-test('Field link to another page not find page', async t => {
-
+test('Field link to another page not find page', async (t) => {
   await selectAttribute('Powerful Rich Text');
 
   await typeFieldIdentifier('field-component-field-1', 'my-external-component="/scenarios/errors/random.html"');
@@ -48,11 +34,13 @@ test('Field link to another page not find page', async t => {
   await writeFileValidationMessage('Link to external page not working - Rich Text', 'field-component-field-1');
 });
 
-
-test('Field - Component in external page not found', async t => {
+test('Field - Component in external page not found', async (t) => {
   await selectAttribute('Powerful Rich Text');
 
-  await typeFieldIdentifier('field-component-field-1', 'my-external-component="http://localhost:9000/scenarios/errors/field-external-component.html"');
+  await typeFieldIdentifier(
+    'field-component-field-1',
+    'my-external-component="http://localhost:3000/packages/support/public/scenarios/errors/field-external-component.html"'
+  );
 
   await clickRunCheck();
 
@@ -62,4 +50,4 @@ test('Field - Component in external page not found', async t => {
   await assertErrorIsOnAttribute('field-component-field-1', 'field-component-type-missing-external-component');
 
   await writeFileValidationMessage('Component on external page not found - Rich Text', 'field-component-field-1');
-})
+});

@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] Disable scrolling -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-scrolldisable@1/scrolldisable.js"></script>
+  </head>
 
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] Disable scrolling -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-scrolldisable@1/scrolldisable.js"></script>
-</head>
-
-<body>
-  <a class="w-button" fs-scrolldisable-element="disable" fs-scrolldisable-gap="false" fs-scrolldisable-media="(max-width: 478px)">Disable scroll</a>
-  <a class="w-button" fs-scrolldisable-element="enable">Enable scroll</a>
-  <a class="w-button" fs-scrolldisable-element="toggle" >Toggle scroll</a>
-  <a class="w-button" fs-scrolldisable-element="when-visible">When visible</a>
-  <a class="w-nav" fs-scrolldisable-element="smart-nav">Smart Nav</a>
-  <section fs-scrolldisable-element="preserve">Preserve</section>
-
-
-
-</body>
-
+  <body>
+    <a
+      class="w-button"
+      fs-scrolldisable-element="disable"
+      fs-scrolldisable-gap="false"
+      fs-scrolldisable-media="(max-width: 478px)"
+      >Disable scroll</a
+    >
+    <a class="w-button" fs-scrolldisable-element="enable">Enable scroll</a>
+    <a class="w-button" fs-scrolldisable-element="toggle">Toggle scroll</a>
+    <a class="w-button" fs-scrolldisable-element="when-visible">When visible</a>
+    <a class="w-nav" fs-scrolldisable-element="smart-nav">Smart Nav</a>
+    <section fs-scrolldisable-element="preserve">Preserve</section>
+  </body>
 </html>

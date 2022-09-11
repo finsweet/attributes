@@ -5,10 +5,10 @@ import type { SchemaSelector } from '@src/types/Schema.types';
 export default class AttributeNotFoundError extends AbstractSchemaError {
   type = 'attribute-not-found';
 
-  constructor(attribute: SchemaSelector, selectors: DOMSelector[], isSetting: boolean) {
+  constructor(attribute: SchemaSelector, selectors: DOMSelector[] | undefined, isSetting: boolean) {
     super();
 
-    const selectorsLabels = this.selectorsToLabels(selectors, 'or');
+    const selectorsLabels = (selectors && this.selectorsToLabels(selectors, 'or')) || 'page';
     const attributeId = this.toAttribute(attribute.getPrettierSelector());
     const isSettingLabel = isSetting ? ' option ' : ' ';
 

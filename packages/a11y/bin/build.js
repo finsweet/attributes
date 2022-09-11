@@ -1,21 +1,10 @@
-import esbuild from 'esbuild';
+import { generateChangesetsJSON, generateExamplesJSON, generateScript, generateSchemaJSON } from '@global/build';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const production = process.env.NODE_ENV === 'production';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/**
- * Default Settings
- * @type {esbuild.BuildOptions}
- */
-const defaultSettings = {
-  bundle: true,
-  minify: true,
-  sourcemap: false,
-  target: production ? 'es6' : 'esnext',
-};
-
-// Files building
-esbuild.build({
-  ...defaultSettings,
-  entryPoints: ['src/index.ts'],
-  outfile: `${production ? '' : process.env.CUSTOM_BUILD_DIRECTORY || ''}/a11y.js`,
-});
+generateScript('src/index.ts', 'a11y');
+generateExamplesJSON(__dirname);
+generateSchemaJSON(__dirname);
+generateChangesetsJSON(__dirname);

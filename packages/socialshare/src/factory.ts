@@ -1,114 +1,159 @@
-import type { FacebookSocialShare, PinterestSocialShare, SocialShare, TwitterSocialShare } from './utils/types';
+import { getInstanceIndex } from '@global/helpers';
 
-const FACEBOOK_URL = 'https://www.facebook.com/sharer/sharer.php';
-const TWITTER_URL = 'https://twitter.com/intent/tweet/';
-const PINTEREST_URL = 'https://www.pinterest.com/pin/create/button/';
-const REDDIT_URL = 'https://www.reddit.com/submit';
-const LINKEDIN_URL = 'https://www.linkedin.com//sharing/share-offsite';
-const TELEGRAM_URL = 'https://t.me/share';
+import { collectFacebookData, collectPinterestData, collectSocialData, collectTwitterData } from './actions/collect';
+import {
+  createFacebookShare,
+  createTwitterShare,
+  createPinterestShare,
+  createTelegramShare,
+  createLinkedinShare,
+  createRedditShare,
+} from './actions/share';
+import { ATTRIBUTES, queryElement, SOCIAL_SHARE_PLATFORMS } from './utils/constants';
+import { getCMSItemWrapper } from './utils/dom';
+import { stores } from './utils/stores';
+import type { SocialShareTypes } from './utils/types';
 
-export function socialShareFactory(
-  content: string,
-  url: string,
-  facebook: FacebookSocialShare | null,
-  twitter: TwitterSocialShare | null,
-  pinterest: PinterestSocialShare | null,
-  reddit: SocialShare | null,
-  telegram: SocialShare | null,
-  linkedin: SocialShare | null
-) {
-  if (facebook) {
-    createSocialShare(
-      facebook.button,
-      FACEBOOK_URL,
-      { u: url, hashtag: facebook.hashtags, quote: content },
-      facebook.width,
-      facebook.height
-    );
+const {
+  element: { key: elementKey },
+} = ATTRIBUTES;
+
+/**
+ * Creates a social share instance for all matching elements under a scope.
+ * @param scope Optional. Defaults to the document.
+ */
+export const createSocialShareInstances = (scope?: HTMLElement) => {
+  for (const key in SOCIAL_SHARE_PLATFORMS) {
+    const platform = key as SocialShareTypes;
+
+    const elements = queryElement<HTMLElement>(platform, {
+      scope,
+      operator: 'prefixed',
+      all: true,
+      caseInsensitive: true,
+    });
+
+    // fix leaking elements of different attributes when using the same prefix
+    const abovePrefixBounds = `${key}[-0-9]*[a-zA-Z]+`;
+    const socialShareButtons = [...elements].filter((element) => {
+      // if attribute is out of bounds, return false.
+      return !element.getAttribute(elementKey)?.toLocaleLowerCase().match(new RegExp(abovePrefixBounds));
+    });
+
+    const create = creators[platform];
+    socialShareButtons.forEach(create);
   }
+};
 
-  if (twitter) {
-    createSocialShare(
-      twitter.button,
-      TWITTER_URL,
-      {
-        text: content,
-        via: twitter.username,
-        hashtags: twitter.hashtags,
-        url,
-      },
-      twitter.width,
-      twitter.height
-    );
-  }
+/**
+ * Holds an instance creator for each platform.
+ */
+const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
+  /**
+   * Facebook creator.
+   * @param trigger
+   */
+  facebook(trigger) {
+    if (stores.facebook.has(trigger)) return;
 
-  if (pinterest) {
-    createSocialShare(
-      pinterest.button,
-      PINTEREST_URL,
-      {
-        url,
-        media: pinterest.image,
-        description: pinterest.description,
-      },
-      pinterest.width,
-      pinterest.height
-    );
-  }
+    const instanceIndex = getInstanceIndex(trigger, elementKey);
 
-  if (reddit) {
-    createSocialShare(
-      reddit.button,
-      REDDIT_URL,
-      {
-        url,
-        title: content,
-      },
-      reddit.width,
-      reddit.height
-    );
-  }
+    const cmsListItem = getCMSItemWrapper(trigger);
 
-  if (telegram) {
-    createSocialShare(
-      telegram.button,
-      TELEGRAM_URL,
-      {
-        text: content,
-        url,
-      },
-      telegram.width,
-      telegram.height
-    );
-  }
+    const facebook = collectFacebookData(trigger, instanceIndex, cmsListItem);
 
-  if (linkedin) {
-    createSocialShare(linkedin.button, LINKEDIN_URL, { url }, linkedin.width, linkedin.height);
-  }
-}
+    const shareData = createFacebookShare(facebook);
 
-function createSocialShare(
-  button: HTMLElement,
-  urlSocialMedia: string,
-  params: { [key: string]: string | null },
-  width: number,
-  height: number
-): void {
-  button.addEventListener('click', function () {
-    const shareUrl = new URL(urlSocialMedia);
-    const shareParams = Object.entries(params);
+    stores.facebook.set(trigger, shareData);
+  },
 
-    for (const [key, value] of shareParams) {
-      if (value) shareUrl.searchParams.append(key, value);
-    }
+  /**
+   * Twitter creator.
+   * @param trigger
+   */
+  twitter(trigger) {
+    if (stores.twitter.has(trigger)) return;
 
-    const left = window.innerWidth / 2 - width / 2 + window.screenX;
-    const top = window.innerHeight / 2 - height / 2 + window.screenY;
-    const popParams = `scrollbars=no, width=${width}, height=${height}, top=${top}, left=${left}`;
-    const newWindow = window.open(shareUrl, '', popParams);
+    const instanceIndex = getInstanceIndex(trigger, elementKey);
 
-    if (newWindow) {
-      newWindow.focus();
-    }
-  });
-}
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const twitter = collectTwitterData(trigger, instanceIndex, cmsListItem);
+
+    const shareData = createTwitterShare(twitter);
+
+    stores.twitter.set(trigger, shareData);
+  },
+
+  /**
+   * Pinterest creator.
+   * @param trigger
+   */
+  pinterest(trigger) {
+    if (stores.pinterest.has(trigger)) return;
+
+    const instanceIndex = getInstanceIndex(trigger, elementKey);
+
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const pinterest = collectPinterestData(trigger, instanceIndex, cmsListItem);
+
+    const shareData = createPinterestShare(pinterest);
+
+    stores.pinterest.set(trigger, shareData);
+  },
+
+  /**
+   * Telegram creator.
+   * @param trigger
+   */
+  telegram(trigger) {
+    if (stores.telegram.has(trigger)) return;
+
+    const instanceIndex = getInstanceIndex(trigger, elementKey);
+
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const telegram = collectSocialData(trigger, 'telegram', instanceIndex, cmsListItem);
+
+    const shareData = createTelegramShare(telegram);
+
+    stores.telegram.set(trigger, shareData);
+  },
+
+  /**
+   * Linkedin creator.
+   * @param trigger
+   */
+  linkedin(trigger) {
+    if (stores.linkedin.has(trigger)) return;
+
+    const instanceIndex = getInstanceIndex(trigger, elementKey);
+
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const linkedin = collectSocialData(trigger, 'linkedin', instanceIndex, cmsListItem);
+
+    const shareData = createLinkedinShare(linkedin);
+
+    stores.linkedin.set(trigger, shareData);
+  },
+
+  /**
+   * Reddit creator.
+   * @param trigger
+   */
+  reddit(trigger) {
+    if (stores.reddit.has(trigger)) return;
+
+    const instanceIndex = getInstanceIndex(trigger, elementKey);
+
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const reddit = collectSocialData(trigger, 'reddit', instanceIndex, cmsListItem);
+
+    const shareData = createRedditShare(reddit);
+
+    stores.reddit.set(trigger, shareData);
+  },
+};

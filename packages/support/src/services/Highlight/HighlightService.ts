@@ -83,6 +83,39 @@ function createElementSettingHighlight(
   };
 }
 
+function createSettingHighlight(key: string, schema: AttributeSchema): Highlight {
+  const schemaItem = getSchemaItem(schema, 'settings', key) as AttributeSettingSchema;
+
+  const { appliedTo } = schemaItem;
+
+  const { selectors } = appliedTo;
+
+  if (!selectors) {
+    return {
+      elements: [],
+      backupStyles: [],
+    };
+  }
+
+  const queryselectors: string[] = selectors
+    .map((value) => value.selectors)
+    .flat()
+    .filter((selector) => selector !== '*');
+
+  const htmlElements: HTMLElement[] = queryselectors
+    .map((selector) => {
+      const elements = document.querySelectorAll<HTMLElement>(selector);
+
+      return Array.from(elements);
+    })
+    .flat();
+
+  return {
+    elements: htmlElements,
+    backupStyles: [],
+  };
+}
+
 function createFieldHighlight(
   key: string,
   specializationKey: string | null,
@@ -122,10 +155,18 @@ function createFieldHighlight(
         return null;
       }
 
+      if (!selectors) {
+        return null;
+      }
+
       return selectors
         .map((domSelector: DOMSelector) => {
-          const elements: HTMLElement[] = domSelector.selectors
+          const elements: (HTMLElement | null)[] = domSelector.selectors
             .map((selector: string) => {
+              if (selector === '*') {
+                return null;
+              }
+
               if (parentElement) {
                 return Array.from(parentElement.querySelectorAll<HTMLElement>(selector));
               }
@@ -180,7 +221,10 @@ export function createHighlight(
 ): Highlight {
   switch (type) {
     case 'element':
+    case 'fieldElement':
       return createElementHighlight(key, schema);
+    case 'setting':
+      return createSettingHighlight(key, schema);
     case 'elementSetting':
       return createElementSettingHighlight(key, schema, schemaSettings);
     case 'field':
@@ -281,7 +325,15 @@ export function applyBackupChildrenOfSelectors(
   return styles;
 }
 
+export function isAttibutesSupport(element: HTMLElement) {
+  return element.hasAttribute('data-id') && element.getAttribute('data-id') === 'fs-attributes-support';
+}
+
 export function highlightElement(element: HTMLElement) {
+  if (element.hasAttribute('data-id') && element.getAttribute('data-id') === 'fs-attributes-support') {
+    return;
+  }
+
   Object.keys(highlightStyle).forEach((key) => {
     const { keyHyphenCase, value } = highlightStyle[key];
 
@@ -290,6 +342,10 @@ export function highlightElement(element: HTMLElement) {
 }
 
 export function rollbackStyleElement(element: HTMLElement, backupStyles: HighlightBackupStyle) {
+  if (element.hasAttribute('data-id') && element.getAttribute('data-id') === 'fs-attributes-support') {
+    return;
+  }
+
   Object.keys(backupStyles).forEach((keyCamelCase: string) => {
     const { keyHyphenCase, value } = backupStyles[keyCamelCase];
     element.style.setProperty(keyHyphenCase, value);

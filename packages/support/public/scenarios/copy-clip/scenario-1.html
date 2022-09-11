@@ -1,37 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] Copy to clipboard -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-copyclip@1/copyclip.js"></script>
+  </head>
 
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] Copy to clipboard -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-copyclip@1/copyclip.js"></script>
-</head>
+  <body>
+    <a
+      class="w-button"
+      fs-copyclip-element="click"
+      fs-copyclip-text="copy-me"
+      fs-copyclip-message="Copied successful!"
+      fs-copyclip-active="my-active-class"
+      fs-copyclip-duration="500"
+    ></a>
+    <p fs-copyclip-element="copy-this"></p>
 
-<body>
+    <div>
+      <a class="w-button" fs-copyclip-element="click-2"> </a>
 
-  <a class="w-button"
-    fs-copyclip-element="click"
-    fs-copyclip-text="copy-me"
-    fs-copyclip-message="Copied successful!"
-    fs-copyclip-active="my-active-class"
-    fs-copyclip-duration="500"
-  ></a>
-  <p fs-copyclip-element="copy-this"></p>
-
-
-  <div>
-  <a class="w-button"
-    fs-copyclip-element="click-2"
-  >
-  </a>
-
-  <p fs-copyclip-element="copy-this-2"></p>
-  <p fs-copyclip-element="copy-sibling"></p>
-  </div>
-</body>
-
+      <p fs-copyclip-element="copy-this-2"></p>
+      <p fs-copyclip-element="copy-sibling"></p>
+    </div>
+  </body>
 </html>

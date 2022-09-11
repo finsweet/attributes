@@ -52,7 +52,7 @@ const initRangeSlider = (wrapperElement: HTMLElement) => {
   const calculateNewValue = (clientX: number) => {
     const value = minRange + ((clientX - trackLeft) * totalRange) / trackWidth;
 
-    const adjustedValue = adjustValueToStep(value, step, precision);
+    const adjustedValue = adjustValueToStep(value, step, precision, minRange);
 
     return adjustedValue;
   };

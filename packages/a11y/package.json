@@ -1,16 +1,25 @@
 {
   "name": "@finsweet/attributes-a11y",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Accessibility JS solutions for Webflow.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
   "main": "a11y.js",
   "files": [
-    "a11y.js"
+    "a11y.js",
+    "examples.json",
+    "schema.json",
+    "changesets.json"
   ],
-  "type": "module",
-  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js"
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
   },
   "repository": {
     "type": "git",
@@ -18,8 +27,8 @@
   },
   "keywords": [
     "webflow",
-    "copy",
-    "clipboard",
+    "mirror",
+    "click",
     "attributes",
     "no code"
   ],
@@ -30,5 +39,15 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "homepage": "https://www.finsweet.com/attributes"
+  "devDependencies": {
+    "@global/build": "workspace:*",
+    "@global/tests": "workspace:*",
+    "@global/types": "workspace:*"
+  },
+  "dependencies": {
+    "@finsweet/ts-utils": "^0.33.1",
+    "@global/constants": "workspace:*",
+    "@global/factory": "workspace:*",
+    "just-debounce": "^1.1.0"
+  }
 }

@@ -268,14 +268,16 @@ It can be `childOf`, to have elements `childOf` Filter UI and `childOf` Collecti
 
 - `cmsfilter` → It will not validate if there are more than one form with input elements. It will only check for first form existence.
 
-- `cmsfilter` → Will not validate start checked for checkbox.
+- `cmsfilter` → It will not validate start checked for checkbox.
 
-- `cmsfilter` → Will not validate start checked for radio
+- `cmsfilter` → It will not validate start checked for radio
 
-- `cmsfilter` → Will not validate submit button.
+- `cmsfilter` → It will not validate submit button.
 
-- `cmsfilter` → Will not validate multiples reset buttons.
+- `cmsfilter` → It will not validate multiples reset elements.
 
-- `cmsfilter` → Will not validate settings for second reset button.
+- `cmsfilter` → It will not validate settings for second reset button.
 
-- `cmsload` → Will not validate native webflow validation enabled.
+- `cmsload` → It will not validate native webflow validation enabled.
+
+- `cmsstatic` → It will not validate multiples static item elements.

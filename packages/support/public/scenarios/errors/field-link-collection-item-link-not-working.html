@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsnest@1/cmsnest.js"></script>
-</head>
-<body>
-  <div class="w-dyn-list">
-    <div fs-cmsnest-element="list" class="w-dyn-items">
-      <div class="w-dyn-item">
-        <a href="http://localhost:9000/scenarios/errors/collection-item-link-not-working.html">
-          <div fs-cmsnest-collection="attraction-categories">
-            <a href="/categories/my-category">My Category</a>
-          </div>
-        </a>
-      </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsnest@1/cmsnest.js"></script>
+  </head>
+  <body>
+    <div class="w-dyn-list">
+      <div fs-cmsnest-element="list" class="w-dyn-items">
+        <div class="w-dyn-item">
+          <a
+            href="http://localhost:3000/packages/support/public/scenarios/errors/collection-item-link-not-working.html"
+          >
+            <div fs-cmsnest-collection="attraction-categories">
+              <a href="/categories/my-category">My Category</a>
+            </div>
+          </a>
+        </div>
 
-      <div class="w-dyn-item">
-        <a href="http://localhost:9000/scenarios/errors/collection-item-link-not-working.html">
-          <div fs-cmsnest-collection="attraction-categories">
-            <a href="/categories/my-category">My Category</a>
-          </div>
-        </a>
+        <div class="w-dyn-item">
+          <a
+            href="http://localhost:3000/packages/support/public/scenarios/errors/collection-item-link-not-working.html"
+          >
+            <div fs-cmsnest-collection="attraction-categories">
+              <a href="/categories/my-category">My Category</a>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

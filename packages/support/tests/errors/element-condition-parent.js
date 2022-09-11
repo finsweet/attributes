@@ -5,20 +5,13 @@ import {
   selectSettingOption,
   clickToggleSelector,
 } from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Element Conditions ChildOf Errors`
-    .page`http://localhost:9000/scenarios/errors/element-condition-parent.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/element-condition-parent.html`;
 
-test('Element not child of selector', async t => {
-
+test('Element not child of selector', async (t) => {
   await selectAttribute('Custom Form Select');
 
   await clickRunCheck();

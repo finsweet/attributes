@@ -3,24 +3,15 @@ import {
   selectItem,
   clickRunCheck,
   typeFieldIdentifier,
-  clickToggleSelector,
-  selectSettingOption,
-  typeSettingOption,
   selectFieldSpecialization,
-  addField,
   selectItemAndInputSetting,
-  selectItemAndSelectSetting
+  selectItemAndSelectSetting,
 } from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertSuccess,
-} from './../helpers/assertions';
+import { assertErrorsCountOnReport, assertSuccessReport } from './../helpers/assertions';
 
+fixture`CMS Filter`.page`http://localhost:3000/packages/support/public/scenarios/cms-filter/scenario-2.html`;
 
-fixture`CMS Filter`
-    .page`http://localhost:9000/scenarios/cms-filter/scenario-2.html`;
-
-test('CMS Filter - Validate field settings for checkbox', async t => {
+test('CMS Filter - Validate field settings for checkbox', async (t) => {
   await selectAttribute('CMS Filter');
 
   await typeFieldIdentifier('field-field-field-1', 'element-checkbox');
@@ -35,14 +26,12 @@ test('CMS Filter - Validate field settings for checkbox', async t => {
   await selectItemAndInputSetting('field-setting-field-field-1-debounce', '1000');
   await selectItem('field-setting-field-field-1-highlight');
 
-
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
-
 });
 
-test('CMS Filter - Validate field settings for input date', async t => {
+test('CMS Filter - Validate field settings for input date', async (t) => {
   await selectAttribute('CMS Filter');
 
   await typeFieldIdentifier('field-field-field-1', 'element-date');
@@ -55,9 +44,7 @@ test('CMS Filter - Validate field settings for input date', async t => {
   await selectItem('field-setting-field-field-1-type');
   await selectItem('field-setting-field-field-1-range');
 
-
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
-
 });

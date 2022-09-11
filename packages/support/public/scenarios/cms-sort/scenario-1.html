@@ -1,93 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] CMS Sort -->
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmssort@1/cmssort.js"></script>
+  </head>
 
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] CMS Sort -->
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmssort@1/cmssort.js"></script>
-</head>
-
-<body>
-
-  <!-- Select -->
-  <div fs-cmssort-element="list" fs-cmssort-duration="200" class="w-dyn-items" style="width: 100px; height: 100px;">
-    <div class="w-dyn-item">
-      <div fs-cmssort-field="sort-select"></div>
-    </div>
-  </div>
-  <form id="wf-form-Filter-cms" name="wf-form-Filter-cms" data-name="Filter cms" method="get"
-    fs-cmsfilter-element="filters-3" class="fs-filtercms_form" aria-label="Filter cms">
-    <div class="fs-filtercms_filters-wrapper">
-      <div class="fs-filtercms_filter-block">
-        <div class="fs-filtercms_header">
-          <div class="fs-filtercms_label">Sort by:</div>
-        </div><select id="field" name="field" data-name="field" fs-cmssort-element="trigger"
-          class="fs-cms_select w-select">
-          <option value="sort-select-asc">Name (A-Z)</option>
-          <option value="sort-select-desc">Name (Z-A)</option>
-          <option value="update-date-asc">Update Date (Asc)</option>
-          <option value="update-date-desc">Update Date (Desc)</option>
-        </select>
+  <body>
+    <!-- Select -->
+    <div fs-cmssort-element="list" fs-cmssort-duration="200" class="w-dyn-items" style="width: 100px; height: 100px">
+      <div class="w-dyn-item">
+        <div fs-cmssort-field="sort-select"></div>
       </div>
     </div>
-  </form>
-  <!-- Buttons-->
-  <div fs-cmssort-element="list-2" fs-cmssort-duration="300" class="w-dyn-items" style="width: 100px; height: 100px;">
-    <div fs-cmssort-field="sort-button"></div>
-  </div>
-  <div class="fs-cmssort_buttons">
-    <div class="fs-filtercms_label">Sort by:</div>
-    <a fs-cmssort-field="sort-button" fs-cmssort-asc="is-asc" fs-cmssort-desc="is-desc" fs-cmssort-element="trigger-2" href="#"
-      class="fs-cmssort_button w-button" role="columnheader" tabindex="0" aria-sort="none">
-      Name
-    </a>
-    <a fs-cmssort-field="update-date" fs-cmssort-asc="is-asc" fs-cmssort-desc="is-desc" fs-cmssort-element="trigger-2"
-      href="#" class="fs-cmssort_button w-button" role="columnheader" tabindex="0" aria-sort="none">
-      Update Date
-    </a>
-    <div class="fs-filtercms_header"></div>
-  </div>
-
-  <!-- Dropdown -->
-  <div fs-cmssort-element="list-3" class="w-dyn-items" style="width: 100px; height: 100px;">
-    <div fs-cmssort-field="sort-dropdown"></div>
-  </div>
-  <form id="wf-form-Filter-cms" name="wf-form-Filter-cms" data-name="Filter cms" method="get"
-    fs-cmsfilter-element="filters-3" class="fs-filtercms_form" aria-label="Filter cms">
-    <div class="fs-filtercms_filters-wrapper">
-      <div class="fs-filtercms_filter-block">
-        <div data-hover="false" data-delay="0" fs-cmssort-element="trigger-3" class="fs-cmssort_dropdown w-dropdown">
-          <div class="fs-cmssort_dropdown-toggle w-dropdown-toggle" id="w-dropdown-toggle-0"
-            aria-controls="w-dropdown-list-0" aria-haspopup="listbox" aria-expanded="false" role="button" tabindex="0">
-            <div class="w-icon-dropdown-toggle" aria-hidden="true"></div>
-            <div fs-cmssort-element="dropdown-label" class="fs-cmssort_dropdown-label">Sort By</div>
+    <form
+      id="wf-form-Filter-cms"
+      name="wf-form-Filter-cms"
+      data-name="Filter cms"
+      method="get"
+      fs-cmsfilter-element="filters-3"
+      class="fs-filtercms_form"
+      aria-label="Filter cms"
+    >
+      <div class="fs-filtercms_filters-wrapper">
+        <div class="fs-filtercms_filter-block">
+          <div class="fs-filtercms_header">
+            <div class="fs-filtercms_label">Sort by:</div>
           </div>
-          <nav class="fs-cmssort_dropdown-list w-dropdown-list" id="w-dropdown-list-0"
-            aria-labelledby="w-dropdown-toggle-0" role="listbox" aria-multiselectable="false"><a
-              href="https://www.finsweet.com/attributes/cms-sort" fs-cmssort-field="sort-dropdown-asc" aria-current="page"
-              class="fs-cmssort_option w-inline-block w--current" tabindex="0" role="option">
-              <div class="fs-cmssort_option-text">Name (A-Z)</div>
-              <div class="fs-cmssort_icon w-embed"></div>
-            </a><a fs-cmssort-field="sort-dropdown-desc" href="#" class="fs-cmssort_option w-inline-block" tabindex="0"
-              role="option">
-              <div class="fs-cmssort_option-text">Name (Z-A)</div>
-              <div class="fs-cmssort_icon w-embed"></div>
-            </a><a fs-cmssort-field="date" href="#" class="fs-cmssort_option w-inline-block" tabindex="0" role="option">
-              <div class="fs-cmssort_option-text">Date (Asc)</div>
-              <div class="fs-cmssort_icon w-embed"></div>
-            </a><a fs-cmssort-field="date-desc" href="#" class="fs-cmssort_option w-inline-block" tabindex="0"
-              role="option">
-              <div class="fs-cmssort_option-text">Date (Desc)</div>
-              <div class="fs-cmssort_icon w-embed"></div>
-            </a></nav>
+          <select id="field" name="field" data-name="field" fs-cmssort-element="trigger" class="fs-cms_select w-select">
+            <option value="sort-select-asc">Name (A-Z)</option>
+            <option value="sort-select-desc">Name (Z-A)</option>
+            <option value="update-date-asc">Update Date (Asc)</option>
+            <option value="update-date-desc">Update Date (Desc)</option>
+          </select>
         </div>
       </div>
+    </form>
+    <!-- Buttons-->
+    <div fs-cmssort-element="list-2" fs-cmssort-duration="300" class="w-dyn-items" style="width: 100px; height: 100px">
+      <div fs-cmssort-field="sort-button"></div>
     </div>
-  </form>
-</body>
+    <div class="fs-cmssort_buttons">
+      <div class="fs-filtercms_label">Sort by:</div>
+      <a
+        fs-cmssort-field="sort-button"
+        fs-cmssort-asc="is-asc"
+        fs-cmssort-desc="is-desc"
+        fs-cmssort-element="trigger-2"
+        href="#"
+        class="fs-cmssort_button w-button"
+        role="columnheader"
+        tabindex="0"
+        aria-sort="none"
+      >
+        Name
+      </a>
+      <a
+        fs-cmssort-field="update-date"
+        fs-cmssort-asc="is-asc"
+        fs-cmssort-desc="is-desc"
+        fs-cmssort-element="trigger-2"
+        href="#"
+        class="fs-cmssort_button w-button"
+        role="columnheader"
+        tabindex="0"
+        aria-sort="none"
+      >
+        Update Date
+      </a>
+      <div class="fs-filtercms_header"></div>
+    </div>
 
+    <!-- Dropdown -->
+    <div fs-cmssort-element="list-3" class="w-dyn-items" style="width: 100px; height: 100px">
+      <div fs-cmssort-field="sort-dropdown"></div>
+    </div>
+    <form
+      id="wf-form-Filter-cms"
+      name="wf-form-Filter-cms"
+      data-name="Filter cms"
+      method="get"
+      fs-cmsfilter-element="filters-3"
+      class="fs-filtercms_form"
+      aria-label="Filter cms"
+    >
+      <div class="fs-filtercms_filters-wrapper">
+        <div class="fs-filtercms_filter-block">
+          <div data-hover="false" data-delay="0" fs-cmssort-element="trigger-3" class="fs-cmssort_dropdown w-dropdown">
+            <div
+              class="fs-cmssort_dropdown-toggle w-dropdown-toggle"
+              id="w-dropdown-toggle-0"
+              aria-controls="w-dropdown-list-0"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              role="button"
+              tabindex="0"
+            >
+              <div class="w-icon-dropdown-toggle" aria-hidden="true"></div>
+              <div fs-cmssort-element="dropdown-label" class="fs-cmssort_dropdown-label">Sort By</div>
+            </div>
+            <nav
+              class="fs-cmssort_dropdown-list w-dropdown-list"
+              id="w-dropdown-list-0"
+              aria-labelledby="w-dropdown-toggle-0"
+              role="listbox"
+              aria-multiselectable="false"
+            >
+              <a
+                href="https://www.finsweet.com/attributes/cms-sort"
+                fs-cmssort-field="sort-dropdown-asc"
+                aria-current="page"
+                class="fs-cmssort_option w-inline-block w--current"
+                tabindex="0"
+                role="option"
+              >
+                <div class="fs-cmssort_option-text">Name (A-Z)</div>
+                <div class="fs-cmssort_icon w-embed"></div> </a
+              ><a
+                fs-cmssort-field="sort-dropdown-desc"
+                href="#"
+                class="fs-cmssort_option w-inline-block"
+                tabindex="0"
+                role="option"
+              >
+                <div class="fs-cmssort_option-text">Name (Z-A)</div>
+                <div class="fs-cmssort_icon w-embed"></div> </a
+              ><a fs-cmssort-field="date" href="#" class="fs-cmssort_option w-inline-block" tabindex="0" role="option">
+                <div class="fs-cmssort_option-text">Date (Asc)</div>
+                <div class="fs-cmssort_icon w-embed"></div> </a
+              ><a
+                fs-cmssort-field="date-desc"
+                href="#"
+                class="fs-cmssort_option w-inline-block"
+                tabindex="0"
+                role="option"
+              >
+                <div class="fs-cmssort_option-text">Date (Desc)</div>
+                <div class="fs-cmssort_icon w-embed"></div>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
 </html>

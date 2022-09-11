@@ -25,6 +25,7 @@
   } from '@src/types/Input.types';
 
   import { schemaFormActions, schemaForm, toggleAttributeSelector } from '@src/stores';
+  import FieldElement from '@src/components/Schema/FieldElement.svelte';
 
   export let addField: (event: Event) => void;
   export let deleteField: (fieldIndex: string) => void;
@@ -37,6 +38,7 @@
   export let changeFieldElement: FieldChangeIdentifier;
 
   let hasSettings = field?.settings?.length > 0 || false;
+  let hasElements = field?.elements?.length > 0 || false;
 
   let isOpen = selectedField === fieldInput.index;
 
@@ -77,13 +79,17 @@
 
   $: {
     if (fieldInput) {
+      if (field.specializations.length === 1 && !fieldInput.specialization) {
+        schemaFormActions.setFieldSpecialization(field.key, fieldInput.index, field.specializations[0].key);
+      }
+
       isOpen = selectedField === fieldInput.index;
     }
   }
 </script>
 
 <Attribute>
-  <FieldHeader {toggleFields} {addField} {deleteField} {fieldInput} {isOpen} />
+  <FieldHeader {toggleFields} {addField} {deleteField} {fieldInput} {isOpen} id={selectorId} />
   <FieldWrapper isOpen={selectedField === fieldInput.index}>
     <AttributeItem id={selectorId} checked={isChecked} status={fieldStatus}>
       <AttributeItemHeader>
@@ -105,6 +111,7 @@
           </AttributeContainer>
           {#if isOpenSelector}
             <AttributeSelector
+              isActive={true}
               type="field"
               key={field.key}
               value={fieldInput.identifier}
@@ -137,6 +144,11 @@
           {setting}
           identifier={fieldInput.identifier}
         />
+      {/each}
+    {/if}
+    {#if hasElements}
+      {#each field.elements as element}
+        <FieldElement fieldKey={field.key} fieldIndex={fieldInput.index} {element} />
       {/each}
     {/if}
   </FieldWrapper>

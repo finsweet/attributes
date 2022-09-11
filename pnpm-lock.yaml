@@ -98,6 +98,25 @@ importers:
     dependencies:
       '@finsweet/ts-utils': 0.33.1
 
+  packages/a11y:
+    specifiers:
+      '@finsweet/ts-utils': ^0.33.1
+      '@global/build': workspace:*
+      '@global/constants': workspace:*
+      '@global/factory': workspace:*
+      '@global/tests': workspace:*
+      '@global/types': workspace:*
+      just-debounce: ^1.1.0
+    dependencies:
+      '@finsweet/ts-utils': 0.33.1
+      '@global/constants': link:../../global/constants
+      '@global/factory': link:../../global/factory
+      just-debounce: 1.1.0
+    devDependencies:
+      '@global/build': link:../../global/build
+      '@global/tests': link:../../global/tests
+      '@global/types': link:../../global/types
+
   packages/animation:
     specifiers:
       '@global/build': workspace:*
@@ -492,6 +511,27 @@ importers:
       '@global/tests': link:../../global/tests
       '@global/types': link:../../global/types
 
+  packages/greenhouse:
+    specifiers:
+      '@finsweet/attributes-cmscore': workspace:*
+      '@finsweet/ts-utils': ^0.33.1
+      '@global/build': workspace:*
+      '@global/constants': workspace:*
+      '@global/factory': workspace:*
+      '@global/tests': workspace:*
+      '@global/types': workspace:*
+      slugify: ^1.6.5
+    dependencies:
+      '@finsweet/attributes-cmscore': link:../cmscore
+      '@finsweet/ts-utils': 0.33.1
+      '@global/constants': link:../../global/constants
+      '@global/factory': link:../../global/factory
+      slugify: 1.6.5
+    devDependencies:
+      '@global/build': link:../../global/build
+      '@global/tests': link:../../global/tests
+      '@global/types': link:../../global/types
+
   packages/linkblockedit:
     specifiers:
       '@global/build': workspace:*
@@ -574,6 +614,21 @@ importers:
       '@global/constants': link:../../global/constants
       '@global/factory': link:../../global/factory
       just-debounce: 1.1.0
+    devDependencies:
+      '@global/build': link:../../global/build
+      '@global/tests': link:../../global/tests
+      '@global/types': link:../../global/types
+
+  packages/readtime:
+    specifiers:
+      '@global/build': workspace:*
+      '@global/constants': workspace:*
+      '@global/factory': workspace:*
+      '@global/tests': workspace:*
+      '@global/types': workspace:*
+    dependencies:
+      '@global/constants': link:../../global/constants
+      '@global/factory': link:../../global/factory
     devDependencies:
       '@global/build': link:../../global/build
       '@global/tests': link:../../global/tests
@@ -699,6 +754,7 @@ importers:
 
   packages/socialshare:
     specifiers:
+      '@finsweet/attributes-cmscore': workspace:*
       '@finsweet/ts-utils': ^0.33.1
       '@global/build': workspace:*
       '@global/constants': workspace:*
@@ -712,6 +768,7 @@ importers:
       '@global/factory': link:../../global/factory
       '@global/helpers': link:../../global/helpers
     devDependencies:
+      '@finsweet/attributes-cmscore': link:../cmscore
       '@global/build': link:../../global/build
       '@global/tests': link:../../global/tests
       '@global/types': link:../../global/types
@@ -15159,6 +15216,7 @@ packages:
   /unified/9.2.0:
     resolution: {integrity: sha512-vx2Z0vY+a3YoTj8+pttM3tiJHCwY5UFbYdiWrwBEbHmK8pvsPj2rtAX2BFfgXen8T39CJWblWRDT4L5WGXtDdg==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-buffer: 2.0.5

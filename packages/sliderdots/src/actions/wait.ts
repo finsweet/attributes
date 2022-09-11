@@ -9,8 +9,6 @@ import { SliderNavElement, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
  */
 export const waitSliderReady = (sliderNav: SliderNavElement) => {
   return new Promise((resolve) => {
-    window.setTimeout(resolve, 500);
-
     const callback: MutationCallback = (mutations) => {
       for (const { addedNodes } of mutations) {
         for (const addedNode of addedNodes) {
@@ -19,7 +17,7 @@ export const waitSliderReady = (sliderNav: SliderNavElement) => {
 
           resolve(undefined);
           observer.disconnect();
-          break;
+          return;
         }
       }
     };

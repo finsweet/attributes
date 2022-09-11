@@ -6,15 +6,13 @@ import type {
   AttributeValue,
 } from '@global/types/schema';
 import { elementsSameNode } from '@src/services/Attributes/AppliedTo/AppliedToService';
-// import existsService from '@src/services/Attributes/Exists/ExistsService';
-// import appliedToService from '@src/services/Attributes/AppliedTo/AppliedToService';
 import conditionsService from '@src/services/Attributes/Conditions/ConditionsService';
 import {
   getSchemaItem,
   createSchemaSelectorFromItem,
   createSchemaSelectorFromSchema,
 } from '@src/services/Attributes/Schema/SchemaService';
-import { valueServiceV2 } from '@src/services/Attributes/Values/ValuesService';
+import { checkFieldSettingValue } from '@src/services/Attributes/Values/ValuesService';
 import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
 import type {
   SchemaInput,
@@ -32,6 +30,14 @@ interface InstanceConfig {
   isDefault: boolean;
 }
 
+function isDefaultValue(settingOption: string, values: AttributeValue | AttributeValue[]) {
+  if (Array.isArray(values)) {
+    return values.some((value) => value.default === settingOption && settingOption != '');
+  }
+
+  return values.default === settingOption && settingOption != '';
+}
+
 export function validateFieldSetting(
   inputSetting: SchemaInputFieldSetting,
   field: InputChannel,
@@ -45,9 +51,7 @@ export function validateFieldSetting(
     specializations.map((specialization: SettingSpecialization) => ({
       value: specialization.value,
       isDefault: false,
-    }))) || [
-    { value: inputSetting.option, isDefault: value.default === inputSetting.option && inputSetting.option != '' },
-  ];
+    }))) || [{ value: inputSetting.option, isDefault: isDefaultValue(inputSetting.option, value) }];
 
   const validations = instances.map((instanceConfig: InstanceConfig) => {
     const settingSelector = createSchemaSelectorFromItem(
@@ -138,7 +142,7 @@ function validateCustomSetting(
   field: InputChannel,
   instanceConfig: InstanceConfig,
   conditions: AttributeSchemaConditions,
-  value: AttributeValue,
+  value: AttributeValue | AttributeValue[],
   schema: AttributeSchema,
   schemaSettings: SchemaSettings
 ) {
@@ -159,7 +163,7 @@ function validateCustomSetting(
     conditionsService(settingSelector, conditions, schema, schemaSettings);
   }
 
-  valueServiceV2(elements, settingSelector.getAttribute(), value, instanceConfig.value, settingSelector);
+  checkFieldSettingValue(elements, settingSelector.getAttribute(), value, instanceConfig.value, settingSelector);
 }
 
 //function findMatchedElements()
@@ -170,7 +174,7 @@ function validateDefaultSetting(
   field: InputChannel,
   instanceConfig: InstanceConfig,
   conditions: AttributeSchemaConditions,
-  value: AttributeValue,
+  value: AttributeValue | AttributeValue[],
   schema: AttributeSchema,
   schemaSettings: SchemaSettings
 ) {
@@ -201,5 +205,5 @@ function validateDefaultSetting(
   }
 
   isElementFound &&
-    valueServiceV2(elements, settingSelector.getAttribute(), value, instanceConfig.value, settingSelector);
+    checkFieldSettingValue(elements, settingSelector.getAttribute(), value, instanceConfig.value, settingSelector);
 }

@@ -9,14 +9,14 @@ class Selector implements SchemaSelector {
   attribute: string;
   value: string;
   initial: boolean;
+  caseInsensitive: boolean;
   elements: HTMLElement[];
-  // attributeSchema: AttributeElementSchema | AttributeFieldSchema | AttributeSettingSchema;
-  // attributeType: SCHEMA_ITEM_TYPES;
 
-  constructor(attribute: string, value: string, initial = false) {
+  constructor(attribute: string, value: string, initial = false, caseInsensitive = false) {
     this.attribute = attribute;
     this.value = value;
     this.initial = initial;
+    this.caseInsensitive = caseInsensitive;
     this.elements = [];
   }
 
@@ -29,6 +29,10 @@ class Selector implements SchemaSelector {
       .split('-')
       .map((innerValue: string) => innerValue.replace(/[a-z]/g, (match) => match.toUpperCase()))
       .join(' ');
+  }
+
+  getCaseIncensitiveFlag() {
+    return this.caseInsensitive ? 'i' : '';
   }
 
   setAttribute(attribute: string) {
@@ -67,13 +71,15 @@ class Selector implements SchemaSelector {
     }
 
     if (this.initial) {
-      return `[${this.attribute}="${this.value}"],[${this.attribute}="${this.value}-1"]`;
+      return `[${this.attribute}="${this.value}"${this.getCaseIncensitiveFlag()}],[${this.attribute}="${
+        this.value
+      }-1"${this.getCaseIncensitiveFlag()}]`;
     }
 
-    return `[${this.attribute}="${this.value}"]`;
+    return `[${this.attribute}="${this.value}"${this.getCaseIncensitiveFlag()}]`;
   }
 
-  getSelectors(selectors: string[]): string {
+  getSelectors(selectors: string[], separator = ' '): string {
     if (!this.value) {
       throw new Error('Missing required selector value to multiple selectors');
     }
@@ -82,7 +88,7 @@ class Selector implements SchemaSelector {
 
     return elementSelectors
       .map((elementSelector: string) => {
-        return selectors.map((selector: string) => `${elementSelector} ${selector}`);
+        return selectors.map((selector: string) => `${elementSelector}${separator}${selector}`);
       })
       .flat()
       .join(',');

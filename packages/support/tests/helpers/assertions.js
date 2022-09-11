@@ -11,8 +11,12 @@ import {
   getSelectorInputValue,
   getSelectorSelectValue,
   getAttribute,
+  headerSuccess,
 } from './pageObject';
 
+export async function assertSuccessReport() {
+  await t.expect(headerSuccess.visible).ok();
+}
 
 export async function assertAttributeSelected(attribute) {
   await t.expect(attributesDisplay.innerText).eql(attribute);
@@ -31,27 +35,25 @@ export async function assertHeaderTitle(attribute, instance) {
 }
 
 export async function assertErrorsCountOnReport(count) {
-  await t.expect(reportItems.count).eql(count, 'check errors count', { timeout: 5000});
+  await t.expect(reportItems.count).eql(count, 'check errors count', { timeout: 5000 });
 }
 
-
 export async function assertErrorIsOnReport(attributeId, errorType, index = 1) {
-  await t.expect(
-    getReportError(attributeId, index).getAttribute('data-error')
-  ).eql(errorType, `check error ${attributeId}=${errorType}`, { timeout: 5000});
+  await t
+    .expect(getReportError(attributeId, index).getAttribute('data-error'))
+    .eql(errorType, `check error ${attributeId}=${errorType}`, { timeout: 5000 });
 }
 
 export async function assertErrorIsOnAttribute(attributeId, errorType, index = 1) {
-  await t.expect(
-    getAttributeError(attributeId, index).getAttribute('data-error')
-  ).eql(errorType, `check error ${attributeId}=${errorType}`, { timeout: 5000});
+  await t
+    .expect(getAttributeError(attributeId, index).getAttribute('data-error'))
+    .eql(errorType, `check error ${attributeId}=${errorType}`, { timeout: 5000 });
 }
 
-
 export async function assertSuccess(attributeId, index = 1) {
-  await t.expect(
-    getAttributeError(attributeId, index).getAttribute('data-error')
-  ).eql('success', `check success ${attributeId}`, { timeout: 5000});
+  await t
+    .expect(getAttributeError(attributeId, index).getAttribute('data-error'))
+    .eql('success', `check success ${attributeId}`, { timeout: 5000 });
 }
 
 export async function assertSelectorName(attributeId, value) {

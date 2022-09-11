@@ -26,27 +26,27 @@ export const ATTRIBUTES = {
     key: `${ATTRIBUTES_PREFIX}-element`,
     values: {
       /**
-       * Defines an Facebook social button
+       * Defines a Facebook social button
        */
       facebook: generateDynamicAttibuteValue(FACEBOOK_ELEMENT_KEY),
       /**
-       * Defines an Twitter social button
+       * Defines a Twitter social button
        */
       twitter: generateDynamicAttibuteValue(TWITTER_ELEMENT_KEY),
       /**
-       * Defines an Pinterest social button
+       * Defines a Pinterest social button
        */
       pinterest: generateDynamicAttibuteValue(PINTEREST_ELEMENT_KEY),
       /**
-       * Defines an Linked In social button
+       * Defines a Linked In social button
        */
       linkedin: generateDynamicAttibuteValue(LINKEDIN_ELEMENT_KEY),
       /**
-       * Defines an Telegram social button
+       * Defines a Telegram social button
        */
       telegram: generateDynamicAttibuteValue(TELEGRAM_ELEMENT_KEY),
       /**
-       * Defines an Reddit social button
+       * Defines a Reddit social button
        */
       reddit: generateDynamicAttibuteValue(REDDIT_ELEMENT_KEY),
       /**
@@ -81,13 +81,15 @@ export const ATTRIBUTES = {
   },
 
   /**
-   * Defines a setting example definition.
+   * Defines the width of popup window.
    */
-
   width: {
     key: `${ATTRIBUTES_PREFIX}-${HEIGHT_SETTING_KEY}`,
     default: DEFAULT_WIDTH_SETTING_KEY,
   },
+  /**
+   * Defines the height of popup window.
+   */
   height: {
     key: `${ATTRIBUTES_PREFIX}-${WIDTH_SETTING_KEY}`,
     default: DEFAULT_HEIGHT_SETTING_KEY,
@@ -95,3 +97,12 @@ export const ATTRIBUTES = {
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
+
+export const SOCIAL_SHARE_PLATFORMS = {
+  facebook: 'https://www.facebook.com/sharer/sharer.php',
+  twitter: 'https://twitter.com/intent/tweet/',
+  pinterest: 'https://www.pinterest.com/pin/create/trigger/',
+  reddit: 'https://www.reddit.com/submit',
+  linkedin: 'https://www.linkedin.com//sharing/share-offsite',
+  telegram: 'https://t.me/share',
+} as const;

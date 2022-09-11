@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] CMS Select -->
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsselect@1/cmsselect.js"></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] CMS Select -->
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsselect@1/cmsselect.js"></script>
+  </head>
+  <body>
+    <div class="w-dyn-items" fs-cmsprevnext-element="list">
+      <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
+      <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
+      <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
+      <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
+    </div>
 
-  <div class="w-dyn-items" fs-cmsprevnext-element="list">
-    <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
-    <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
-    <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
-    <div class="w-dyn-item" fs-cmsselect-element="text-value"></div>
-  </div>
-
-  <select class="w-select" fs-cmsselect-element="select"></select>
-
-</body>
+    <select class="w-select" fs-cmsselect-element="select"></select>
+  </body>
 </html>

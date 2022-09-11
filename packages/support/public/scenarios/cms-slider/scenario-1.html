@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] CMS Slider -->
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsslider@1/cmsslider.js"></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] CMS Slider -->
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsslider@1/cmsslider.js"></script>
+  </head>
+  <body>
+    <div class="w-dyn-items" fs-cmsslider-element="list">
+      <div class="w-dyn-item"></div>
+      <div class="w-dyn-item"></div>
+      <div class="w-dyn-item"></div>
+      <div class="w-dyn-item"></div>
+    </div>
 
-  <div class="w-dyn-items" fs-cmsslider-element="list">
-    <div class="w-dyn-item"></div>
-    <div class="w-dyn-item"></div>
-    <div class="w-dyn-item"></div>
-    <div class="w-dyn-item"></div>
-  </div>
-
-  <div class="w-slider" fs-cmsslider-element="slider" fs-cmsslider-resetix="true"></div>
-
-</body>
+    <div class="w-slider" fs-cmsslider-element="slider" fs-cmsslider-resetix="true"></div>
+  </body>
 </html>

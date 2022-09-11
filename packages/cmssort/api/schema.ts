@@ -75,14 +75,14 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: null,
               selectors: [SELECT],
               key: 'element',
               value: TRIGGER_ELEMENT_KEY,
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -92,7 +92,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [SELECT_OPTION],
-              type: 'element',
+              type: 'default',
               value: `$FIELD-asc`,
             },
             {
@@ -103,7 +103,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [SELECT_OPTION],
-              type: 'element',
+              type: 'default',
               value: `$FIELD-desc`,
             },
           ],
@@ -120,14 +120,14 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: null,
               selectors: [BUTTON, TEXT_LINK, LINK_BLOCK],
               key: 'element',
               value: TRIGGER_ELEMENT_KEY,
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -143,14 +143,14 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: null,
               selectors: [DROPDOWN],
               key: 'element',
               value: TRIGGER_ELEMENT_KEY,
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -161,7 +161,7 @@ export const schema: AttributeSchema = {
               ],
               selectors: [DROPDOWN_ITEM],
               value: `$FIELD-asc`,
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -172,7 +172,7 @@ export const schema: AttributeSchema = {
               ],
               selectors: [DROPDOWN_ITEM],
               value: `$FIELD-desc`,
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -198,16 +198,6 @@ export const schema: AttributeSchema = {
         default: 'date',
       },
     },
-    // {
-    //   key: EASING_SETTING_KEY,
-    //   description: 'Defines the easing function of the list animation.',
-    //   appliedTo: {},
-    //   conditions: [],
-    //   value: {
-    //     type: 'string',
-    //     default: '',
-    //   },
-    // },
     {
       key: DURATION_SETTING_KEY,
       description: 'Defines the duration of the list animation.',

@@ -1,36 +1,58 @@
 import type { SupportedAttributeData } from '@finsweet/attributes-docs/src/utils/types';
 import type { AttributeSchema, AttributeElementSchema } from '@global/types/schema';
+import { findInvalidAttributes, findValidAttributes } from '@src/services/SchemaInput/ValidateInputService';
+
+import { addElement, deleteElement, findElement } from '@src/services/SchemaInput/ElementInputService';
+
 import {
-  // elements
-  addElement,
-  deleteElement,
-  findElement, // elements ettings
   addElementSetting,
   enableElementSetting,
   disableElementSetting,
   disableElementSettings,
-  getFieldSettingOption,
   setElementSettingOption,
-  getElementSettingOption,
+  // getElementSettingOption,
   findElementSetting,
-  findElementSettingIndex, // fields
+  findElementSettingIndex,
+} from '@src/services/SchemaInput/ElementSettingInputService';
+
+import {
   addField,
   getFields,
   deleteField,
   findField,
-  getLastIndexField, // field settings
-  setFieldidentifier,
+  getLastIndexField,
+  setFieldIdentifier,
   setFieldSpecialization,
+} from '@src/services/SchemaInput/FieldInputService';
+
+import {
+  getFieldSettingOption,
   addFieldSetting,
   enableFieldSetting,
   disableFieldSetting,
   disableFieldSettings,
   setFieldSettingOption,
   findFieldSetting,
-  findFieldSettingIndex, // usability
-  findInvalidAttributes,
-  findValidAttributes,
-} from '@src/services/SchemaInput/SchemaInputService';
+  findFieldSettingIndex,
+} from '@src/services/SchemaInput/FieldSettingInputService';
+
+import {
+  addFieldElement,
+  deleteFieldElement,
+  deleteFieldElements,
+  findFieldElement,
+} from '@src/services/SchemaInput/FieldElementInputService';
+
+import {
+  // getSettingOption,
+  addSetting,
+  enableSetting,
+  disableSetting,
+  setSettingOption,
+  findSetting,
+  findSettingIndex,
+} from '@src/services/SchemaInput/SettingInputService';
+
 import { persistStore, loadStore } from '@src/services/Store/Store.service';
 import type { AttributeLoaded, SchemaUI } from '@src/types/Schema.types';
 import { writable, derived, get } from 'svelte/store';
@@ -210,7 +232,7 @@ export const schemaFormActions = {
     schemaForm.subscribe((id) => (values = id));
     schemaForm.set(addElement(values, value, getSchemaInputConfig()));
   },
-  removeElement: function (value: string) {
+  deleteElement: function (value: string) {
     let values: SchemaInput[] = [];
     schemaForm.subscribe((id) => (values = id));
     schemaForm.set(deleteElement(values, value, getSchemaInputConfig()));
@@ -243,11 +265,11 @@ export const schemaFormActions = {
     schemaForm.subscribe((id) => (values = id));
     schemaForm.set(disableElementSettings(values, parent, getSchemaInputConfig()));
   },
-  getElementSettingOption: function (parent: string, setting: string) {
-    let values: SchemaInput[] = [];
-    schemaForm.subscribe((id) => (values = id));
-    return getElementSettingOption(values, parent, setting, getSchemaInputConfig());
-  },
+  // getElementSettingOption: function (parent: string, setting: string) {
+  //   let values: SchemaInput[] = [];
+  //   schemaForm.subscribe((id) => (values = id));
+  //   return getElementSettingOption(values, parent, setting, getSchemaInputConfig());
+  // },
   setElementSettingOption: function (parent: string, setting: string, option: string) {
     let values: SchemaInput[] = [];
     schemaForm.subscribe((id) => (values = id));
@@ -281,7 +303,7 @@ export const schemaFormActions = {
   setFieldValue: function (fieldKey: string, fieldIndex: string, value: string) {
     let values: SchemaInput[] = [];
     schemaForm.subscribe((id) => (values = id));
-    schemaForm.set(setFieldidentifier(values, fieldKey, fieldIndex, value, getSchemaInputConfig()));
+    schemaForm.set(setFieldIdentifier(values, fieldKey, fieldIndex, value, getSchemaInputConfig()));
   },
   setFieldSpecialization: function (fieldKey: string, fieldIndex: string, value: string) {
     let values: SchemaInput[] = [];
@@ -342,6 +364,67 @@ export const schemaFormActions = {
     schemaForm.subscribe((id) => (values = id));
     return findFieldSettingIndex(values, fieldKey, fieldIndex, setting, getSchemaInputConfig());
   },
+  /** Field elements */
+  addFieldElement: function (fieldKey: string, fieldIndex: string, element: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(addFieldElement(values, fieldKey, fieldIndex, element, getSchemaInputConfig()));
+  },
+
+  deleteFieldElement: function (fieldKey: string, fieldIndex: string, element: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(deleteFieldElement(values, fieldKey, fieldIndex, element, getSchemaInputConfig()));
+  },
+
+  deleteFieldElements: function (fieldKey: string, fieldIndex: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(deleteFieldElements(values, fieldKey, fieldIndex, getSchemaInputConfig()));
+  },
+
+  findFieldElement: function (fieldKey: string, fieldIndex: string, element: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    return findFieldElement(values, fieldKey, fieldIndex, element, getSchemaInputConfig());
+  },
+
+  /** Settings */
+  addSetting: function (setting: string, value: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(addSetting(values, setting, value, getSchemaInputConfig()));
+  },
+  enableSetting: function (setting: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(enableSetting(values, setting, getSchemaInputConfig()));
+  },
+  disableSetting: function (setting: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(disableSetting(values, setting, getSchemaInputConfig()));
+  },
+
+  findSetting: function (setting: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    return findSetting(values, setting, getSchemaInputConfig());
+  },
+  findSettingIndex: function (setting: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    return findSettingIndex(values, setting, getSchemaInputConfig());
+  },
+  setSettingOption: function (setting: string, option: string) {
+    let values: SchemaInput[] = [];
+    schemaForm.subscribe((id) => (values = id));
+    schemaForm.set(setSettingOption(values, setting, option, getSchemaInputConfig()));
+  },
+
+  // findSettingIndex: function () {},
+
+  // findFieldElement: function (fieldKey: string, fieldIndex: string, element: string) {},
   /**
    * Usability
    */

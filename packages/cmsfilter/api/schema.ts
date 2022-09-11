@@ -241,7 +241,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -251,7 +251,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [CHECKBOX_LABEL],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -267,7 +267,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -277,7 +277,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [RADIO_LABEL],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -293,7 +293,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -303,7 +303,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [INPUT],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -319,7 +319,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -329,7 +329,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [SELECT],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -345,7 +345,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [TEXT_INPUT_FIELD],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -361,7 +361,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [EMBED_CODE],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -371,7 +371,7 @@ export const schema: AttributeSchema = {
                 },
               ],
               selectors: [CHECKBOX],
-              type: 'element',
+              type: 'default',
             },
           ],
         },

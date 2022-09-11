@@ -197,7 +197,7 @@ interface CMSList {
    * @param removeElements Defines if the {@link CMSItem.element} nodes should be removed from the DOM.
    * Defaults to `true`.
    */
-  clearItems(removeElements?: boolean): void;
+  clearItems(removeElements?: boolean): Promise<void>;
 
   /**
    * Recalculates the list object model based on the current props of the items

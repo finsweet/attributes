@@ -4,6 +4,7 @@
 
   export let isCopied = false;
   export let selector: string;
+  export let top = false;
 
   let internalSelector = selector;
 
@@ -23,7 +24,7 @@
   }
 </script>
 
-<button on:click={() => copyToClipboard(selector)} class="copy-button" class:copied={isCopied}>
+<button on:click={() => copyToClipboard(selector)} class="copy-button" class:copied={isCopied} class:top>
   {#if isCopied}
     <CopiedLogo />
   {:else}
@@ -52,6 +53,10 @@
     width: 2rem;
     min-width: 2rem;
     box-sizing: border-box;
+  }
+
+  .copy-button {
+    align-self: flex-start;
   }
 
   .copy-button:hover {

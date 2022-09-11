@@ -1,5 +1,32 @@
 # @finsweet/attributes-cmsload
 
+## 1.7.8
+
+### Patch Changes
+
+- Updated dependencies [299fd136]
+  - @finsweet/attributes-cmscore@1.6.10
+
+## 1.7.7
+
+### Patch Changes
+
+- Updated dependencies [7542dcdb]
+  - @global/constants@1.0.2
+  - @global/factory@1.1.3
+  - @global/import@1.0.2
+  - @finsweet/attributes-cmscore@1.6.9
+
+## 1.7.6
+
+### Patch Changes
+
+- Updated dependencies [bdd1a78]
+  - @global/constants@1.0.1
+  - @global/factory@1.1.2
+  - @global/import@1.0.1
+  - @finsweet/attributes-cmscore@1.6.8
+
 ## 1.7.5
 
 ### Patch Changes

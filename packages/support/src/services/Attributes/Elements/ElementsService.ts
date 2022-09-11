@@ -24,9 +24,16 @@ export function validateElement(
   const elementSchema = getSchemaItem(schema, 'elements', inputElement.element) as AttributeElementSchema;
   const elementSelector = createSchemaSelectorFromItem(elementSchema, 'elements', inputElement.element, schemaSettings);
 
-  const { appliedTo, conditions } = elementSchema;
+  const { appliedTo, conditions, scope } = elementSchema;
 
-  const htmlElements = queryAllElements(elementSelector.getElementSelector());
+  const selector =
+    (scope &&
+      `${scope.selectors.join(
+        ','
+      )} ${elementSelector.getElementSelector()}, ${elementSelector.getElementSelector()}`) ||
+    elementSelector.getElementSelector();
+
+  const htmlElements = queryAllElements(selector);
 
   try {
     domElementExists(elementSelector, appliedTo);
@@ -36,7 +43,7 @@ export function validateElement(
       (elementSchema as AttributeElementSchema).requiresInstance === true &&
       (elementSchema as AttributeElementSchema).multiplesInInstance === false
     ) {
-      elementDuplicated(htmlElements, elementSelector);
+      elementDuplicated((scope && [htmlElements[0]]) || htmlElements, elementSelector);
     }
 
     elementSelector.setElements(Array.from(htmlElements));

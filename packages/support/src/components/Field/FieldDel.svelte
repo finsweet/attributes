@@ -2,9 +2,10 @@
   import FieldDelete from '@src/components/Layout/Icons/field-delete.svg';
 
   export let deleteField: () => void;
+  export let id: string;
 </script>
 
-<button class="field_delete" on:click={deleteField}>
+<button class="field_delete" on:click={deleteField} data-testid={`${id}-delete`}>
   <FieldDelete />
 </button>
 

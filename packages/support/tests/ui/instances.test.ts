@@ -22,12 +22,9 @@ import {
   assertStatusError,
 } from './../helpers/assertions';
 
+fixture`UI - Instances`.page`http://localhost:3000/packages/support/public/scenarios/ui/instances.html`;
 
-fixture`UI - Instances`
-    .page`http://localhost:9000/scenarios/ui/instances.html`;
-
-test('Input states are isolated by instances', async t => {
-
+test('Input states are isolated by instances', async (t) => {
   await selectAttribute('CMS Load');
 
   await assertStatusEmpty('element-list');
@@ -42,9 +39,7 @@ test('Input states are isolated by instances', async t => {
 
   await assertStatusEmpty('element-list');
 
-
   // assert no status
-
 
   await clickRunCheck();
   await assertErrorsCountOnReport(0);
@@ -55,10 +50,8 @@ test('Input states are isolated by instances', async t => {
 
   await clickRunCheck();
   await assertErrorsCountOnReport(0);
-
 });
 
 // test('States/Messages are reseted when change instance', async t => {
-
 
 // });

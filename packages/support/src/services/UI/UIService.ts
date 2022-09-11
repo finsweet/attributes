@@ -3,16 +3,25 @@ import type {
   AttributeElementSchema,
   AttributeFieldSchema,
   AttributeSettingSchema,
+  AttributeValue,
   AttributeSchemaCondition,
   AttributeSettingCondition,
   AttributeSettingConditionSetting,
 } from '@global/types/schema';
 import type { SchemaUI } from '@src/types/Schema.types';
 
-function isAppliedTo(setting: AttributeSettingSchema, key: string) {
+function isSettingAppliedTo(setting: AttributeSettingSchema, key: string) {
   return (
     (setting.appliedTo && setting.appliedTo.elements && setting.appliedTo.elements.includes(key)) ||
     (setting.appliedTo && setting.appliedTo.fields && setting.appliedTo.fields.includes(key))
+  );
+}
+
+function isElementAppliedTo(elementKey: string, field: AttributeFieldSchema) {
+  const { specializations } = field;
+
+  return specializations.some((specialization) =>
+    specialization.appliedTo.some((appliedTo) => appliedTo.element === elementKey)
   );
 }
 
@@ -52,19 +61,46 @@ function getSettingsThatDependOnSetting(settings: AttributeSettingSchema[], sett
   });
 }
 
-function getElements(elements: AttributeElementSchema[], settings: AttributeSettingSchema[], required: boolean) {
+function getOptions(values: AttributeValue | AttributeValue[]) {
+  if (Array.isArray(values)) {
+    const valueOptions = values.find((value) => value.type === 'options');
+    return (valueOptions && valueOptions.type === 'options' && valueOptions.options) || [];
+  }
+
+  return (values.type == 'options' && values.options) || [];
+}
+
+function getElements(
+  elements: AttributeElementSchema[],
+  fields: AttributeFieldSchema[] | undefined,
+  settings: AttributeSettingSchema[],
+  required: boolean
+) {
   return elements
     .filter((item: AttributeElementSchema) => {
       return item.required === required;
     })
+    .filter((item) => {
+      if (fields === undefined) {
+        return true;
+      }
+
+      return !fields.some((field) =>
+        field.specializations.some((specialization) =>
+          specialization.appliedTo.some((appliedTo) => appliedTo.element === item.key)
+        )
+      );
+    })
     .map((item: AttributeElementSchema) => {
       const elementSettings = settings
         .filter((setting: AttributeSettingSchema) => {
-          return isAppliedTo(setting, item.key);
+          return isSettingAppliedTo(setting, item.key);
           //&& setting.conditions.filter((settingCondition: AttributeConditions) => settingCondition.type === 'settings').length <= 0;
         })
         .map((setting: AttributeSettingSchema) => {
-          const options = (setting.value.type == 'options' && setting.value.options) || [];
+          const { value } = setting;
+
+          const options = getOptions(value);
 
           const elementsDependedOnSetting = getElementsThatDependsOnSetting(elements, setting.key);
 
@@ -86,15 +122,24 @@ function getElements(elements: AttributeElementSchema[], settings: AttributeSett
     });
 }
 
-function getFields(fields: AttributeFieldSchema[], settings: AttributeSettingSchema[]) {
+function getFields(
+  fields: AttributeFieldSchema[],
+  elements: AttributeElementSchema[],
+  settings: AttributeSettingSchema[]
+) {
   const fieldsList = fields.map((field: AttributeFieldSchema) => {
     const fieldSettings = settings.filter((setting: AttributeSettingSchema) => {
-      return isAppliedTo(setting, field.key);
+      return isSettingAppliedTo(setting, field.key);
+    });
+
+    const fieldElements = elements.filter((element: AttributeElementSchema) => {
+      return isElementAppliedTo(element.key, field);
     });
 
     return {
       ...field,
       settings: fieldSettings || [],
+      elements: fieldElements || [],
     };
   });
 
@@ -105,15 +150,20 @@ function getRequiredInstance(elements: AttributeElementSchema[]) {
   return elements.filter((element: AttributeElementSchema) => element.requiresInstance).length > 0;
 }
 
+function getSettings(settings: AttributeSettingSchema[]) {
+  return settings.filter((setting) => !setting.appliedTo.elements && !setting.appliedTo.fields);
+}
+
 export default function uiService(title: string, schema: AttributeSchema): SchemaUI | null {
   if (title === 'Auto Video' && schema.elements.length === 0 && schema.settings.length === 0) {
     return null;
   }
 
   const ui: SchemaUI = {
-    requiredElements: getElements(schema.elements, schema.settings, true),
-    fields: (schema.fields && getFields(schema.fields, schema.settings)) || [],
-    notRequiredElements: getElements(schema.elements, schema.settings, false),
+    requiredElements: getElements(schema.elements, schema.fields, schema.settings, true),
+    fields: (schema.fields && getFields(schema.fields, schema.elements, schema.settings)) || [],
+    notRequiredElements: getElements(schema.elements, schema.fields, schema.settings, false),
+    settings: getSettings(schema.settings),
     requiredInstance: getRequiredInstance(schema.elements),
   };
 

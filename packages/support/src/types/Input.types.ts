@@ -9,6 +9,14 @@ export interface SchemaInputElement extends SchemaInputConfig {
   validation: SchemaInputValidation | null;
 }
 
+export interface SchemaInputSetting extends SchemaInputConfig {
+  enable: boolean;
+  type: 'setting';
+  setting: string;
+  option: string;
+  validation: SchemaInputValidation | null;
+}
+
 export interface SchemaInputElementSetting extends SchemaInputConfig {
   element: string;
   enable: boolean;
@@ -37,7 +45,21 @@ export interface SchemaInputFieldSetting extends SchemaInputConfig {
   validation: SchemaInputValidation | null;
 }
 
-export type SchemaInput = SchemaInputElement | SchemaInputField | SchemaInputElementSetting | SchemaInputFieldSetting;
+export interface SchemaInputFieldElement extends SchemaInputConfig {
+  field: string;
+  index: string;
+  element: string;
+  type: 'fieldElement';
+  validation: SchemaInputValidation | null;
+}
+
+export type SchemaInput =
+  | SchemaInputElement
+  | SchemaInputField
+  | SchemaInputElementSetting
+  | SchemaInputFieldSetting
+  | SchemaInputFieldElement
+  | SchemaInputSetting;
 
 export type SchemaForm = SchemaInput[];
 
@@ -57,7 +79,9 @@ export type SchemaInputType =
   | SchemaInputElement['type']
   | SchemaInputElementSetting['type']
   | SchemaInputField['type']
-  | SchemaInputFieldSetting['type'];
+  | SchemaInputFieldSetting['type']
+  | SchemaInputFieldElement['type']
+  | SchemaInputSetting['type'];
 
 export interface InputChannel {
   input: SchemaInput;

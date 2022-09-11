@@ -6,11 +6,19 @@
   import { schemaFormActions, schemaForm, schemaSettingsKey, schemaSettingsInstance, appError } from '@src/stores';
 
   let invalidAttributes = schemaFormActions.findInvalidAttributes();
+
+  let errors = invalidAttributes
+    .map((attribute) => attribute.validation?.messages.length || 0)
+    .reduce((totalErrors, messages) => totalErrors + messages, 0);
   let validAttributes = schemaFormActions.findValidAttributes();
 
   $: if ($schemaForm && $schemaSettingsInstance && $schemaSettingsKey) {
     invalidAttributes = schemaFormActions.findInvalidAttributes();
     validAttributes = schemaFormActions.findValidAttributes();
+
+    errors = invalidAttributes
+      .map((attribute) => attribute.validation?.messages.length || 0)
+      .reduce((totalErrors, messages) => totalErrors + messages, 0);
   }
 
   const finsweetProUrl = 'https://www.finsweet.com/fin-pro';
@@ -24,7 +32,7 @@
 <div class="tool_results">
   {#if validAttributes.length > 0 && invalidAttributes.length === 0 && !$appError}
     <Header>
-      <div class="status">
+      <div class="status" data-testid="success">
         <StatusIcon status={true} /> Nice Job! Everything is ok!
       </div>
     </Header>
@@ -33,8 +41,8 @@
     <Header>
       <div class="status">
         <StatusIcon status={false} />
-        {invalidAttributes.length}
-        {invalidAttributes.length > 1 ? 'errors' : 'error'} found:
+        {errors}
+        {errors > 1 ? 'errors' : 'error'} found:
       </div>
     </Header>
     <div class="tool_results-list">

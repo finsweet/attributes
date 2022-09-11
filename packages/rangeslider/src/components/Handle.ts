@@ -117,7 +117,7 @@ export class Handle {
     const numericValue = parseFloat(value);
 
     if (numericValue) {
-      this.setValue(adjustValueToStep(numericValue, step, precision));
+      this.setValue(adjustValueToStep(numericValue, step, precision, minRange));
 
       return;
     }

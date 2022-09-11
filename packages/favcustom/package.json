@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-favcustom",
-  "version": "1.3.3",
+  "version": "1.3.5",
   "description": "Customize the Favicon for a specific page.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

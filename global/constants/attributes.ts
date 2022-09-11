@@ -1,5 +1,7 @@
 export const ATTRIBUTES_PREFIX = 'fs-attributes';
 
+export const A11Y_ATTRIBUTE = 'a11y';
+
 export const AUTO_VIDEO_ATTRIBUTE = 'autovideo';
 
 export const CMS_CORE = 'cmscore';
@@ -12,7 +14,7 @@ export const CMS_LOAD_ATTRIBUTE = 'cmsload';
 
 export const CMS_NEST_ATTRIBUTE = 'cmsnest';
 
-export const CMS_PREV_NEXT_ATTRIBUTE = 'cmsprevnex';
+export const CMS_PREV_NEXT_ATTRIBUTE = 'cmsprevnext';
 
 export const CMS_SELECT_ATTRIBUTE = 'cmsselect';
 
@@ -33,6 +35,8 @@ export const DOCS_ATTRIBUTE = 'docs';
 export const FAV_CUSTOM_ATTRIBUTE = 'favcustom';
 
 export const FORM_SUBMIT_ATTRIBUTE = 'formsubmit';
+
+export const GREENHOUSE_ATTRIBUTE = 'greenhouse';
 
 export const LINK_BLOCK_EDIT_ATTRIBUTE = 'linkblockedit';
 

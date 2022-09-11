@@ -4,14 +4,14 @@
   import SelectorButton from './SelectorButton.svelte';
   import SelectorValue from './SelectorValue.svelte';
   import SelectorFields from './SelectorFields.svelte';
-  import type { AttributeSettingValuePrimitive, AttributeSettingValueOptions } from '@global/types/schema';
+  import type { AttributeValue } from '@global/types/schema';
 
   export let label: 'Name' | 'Value';
 
   export let option: string;
   export let isActive: boolean;
 
-  export let valueType: AttributeSettingValueOptions | AttributeSettingValuePrimitive;
+  export let valueType: AttributeValue | AttributeValue[];
 </script>
 
 <SelectorAttribute>
@@ -19,7 +19,7 @@
 </SelectorAttribute>
 <SelectorValueWrapper>
   <SelectorValue>
-    <SelectorFields on:change {isActive} id="selector" value={valueType} {option} />
+    <SelectorFields on:change {isActive} id="selector" value={valueType} bind:option />
   </SelectorValue>
-  <SelectorButton selector={option} />
+  <SelectorButton selector={option} top={Array.isArray(option)} />
 </SelectorValueWrapper>

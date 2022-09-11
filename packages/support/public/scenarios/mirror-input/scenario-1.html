@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] Mirror input values -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-mirrorinput@1/mirrorinput.js"></script>
+  </head>
 
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] Mirror input values -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-mirrorinput@1/mirrorinput.js"></script>
-</head>
-
-<body>
-  <input class="w-input" fs-mirrorinput-element="trigger"/>
-  <input class="w-input" fs-mirrorinput-element="target"/>
-
-
-</body>
-
+  <body>
+    <input class="w-input" fs-mirrorinput-element="trigger" />
+    <input class="w-input" fs-mirrorinput-element="target" />
+  </body>
 </html>

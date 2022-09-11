@@ -20,6 +20,7 @@
 
 <style>
   .attribute_item {
+    box-sizing: border-box;
     position: relative;
     border-bottom: 1px solid #000;
   }

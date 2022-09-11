@@ -1,29 +1,14 @@
-import {
-  selectAttribute,
-  selectItem,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectItemAndInputSetting,
-  selectMultipleInstances,
-  selectFieldSpecialization,
-  selectInstance,
-  selectItemAndSelectSetting,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-} from './../helpers/assertions';
+import { selectAttribute, clickRunCheck, selectItemAndInputSetting } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertSuccessReport } from './../helpers/assertions';
 
+fixture`Smart Lightbox`.page`http://localhost:3000/packages/support/public/scenarios/smart-lightbox/scenario-1.html`;
 
-fixture`Smart Lightbox`
-    .page`http://localhost:9000/scenarios/smart-lightbox/scenario-1.html`;
-
-test('Smart Lightbox - Default', async t => {
+test('Smart Lightbox - Default', async (t) => {
   await selectAttribute('Smart Lightbox');
 
-  await selectItemAndInputSetting('element-setting-wait', '200');
-
+  await selectItemAndInputSetting('element-lightbox-wait', '200');
 
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });

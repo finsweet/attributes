@@ -1,3 +1,4 @@
+import type { AttributeValue } from '@global/types/schema';
 import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
 //mocks
 import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';
@@ -8,7 +9,7 @@ import type { ItemError } from '@src/types/Error.types';
 
 import AttributeValueNotMatchExpectedError from './Errors/AttributeValueNotMatchExpectedError';
 import AttributeValueNotMatchTypeError from './Errors/AttributeValueNotMatchTypeError';
-import valueService from './ValuesService';
+import checkElementSettingValue from './ValuesService';
 
 jest.mock('@src/services/DOM/Queries/QueriesService', () => {
   return {
@@ -44,7 +45,7 @@ describe('Validate attribute values - float', () => {
 
     const appliedSelector = [new SchemaSelector('fs-cmsload-element', 'list-1')];
 
-    const schemaValues = {
+    const schemaValues: AttributeValue = {
       type: 'float',
       default: '-20',
     };
@@ -53,7 +54,7 @@ describe('Validate attribute values - float', () => {
     mockQueryAttributeValue.mockReturnValue('-200');
     mockFloatValidator.mockReturnValue(true);
 
-    const response = valueService(elementSelector, schemaValues, '-200', appliedSelector);
+    const response = checkElementSettingValue(elementSelector, schemaValues, '-200', appliedSelector);
     expect(response).toBe(true);
 
     expect(mockAssertElementExistsOnPage).toHaveBeenCalledTimes(1);
@@ -75,7 +76,7 @@ describe('Validate attribute values - float', () => {
 
       const appliedSelector = [new SchemaSelector('fs-cmsload-element', 'list-2')];
 
-      const schemaValues = {
+      const schemaValues: AttributeValue = {
         type: 'float',
         default: '-20',
       };
@@ -86,7 +87,7 @@ describe('Validate attribute values - float', () => {
         throw new ValueTypeValidatorError('', 'float');
       });
 
-      valueService(elementSelector, schemaValues, '-200', appliedSelector);
+      checkElementSettingValue(elementSelector, schemaValues, '-200', appliedSelector);
 
       expect(false).toBe(true);
     } catch (e) {
@@ -113,7 +114,7 @@ describe('Validate attribute values - float', () => {
 
       const appliedSelector = new SchemaSelector('fs-cmsload-element', 'list-1');
 
-      const schemaValues = {
+      const schemaValues: AttributeValue = {
         type: 'float',
         default: '-20',
       };
@@ -122,7 +123,7 @@ describe('Validate attribute values - float', () => {
       mockQueryAttributeValue.mockReturnValue('-20');
       mockFloatValidator.mockReturnValue(true);
 
-      valueService(elementSelector, schemaValues, '-200', [appliedSelector]);
+      checkElementSettingValue(elementSelector, schemaValues, '-200', [appliedSelector]);
 
       expect(false).toBe(true);
     } catch (e) {
@@ -150,7 +151,7 @@ describe('Validate attribute values - comma separated floats', () => {
     mockCommaSeparatedFloatValidator.mockClear();
   });
 
-  const schemaValues = {
+  const schemaValues: AttributeValue = {
     type: 'commaSeparatedFloat',
     default: '1',
   };
@@ -164,7 +165,7 @@ describe('Validate attribute values - comma separated floats', () => {
     mockQueryAttributeValue.mockReturnValue('1,2,3');
     mockCommaSeparatedFloatValidator.mockReturnValue(true);
 
-    const response = valueService(elementSelector, schemaValues, '1,2,3', appliedSelector);
+    const response = checkElementSettingValue(elementSelector, schemaValues, '1,2,3', appliedSelector);
 
     expect(response).toBe(true);
     expect(mockAssertElementExistsOnPage).toHaveBeenCalledTimes(1);
@@ -192,7 +193,7 @@ describe('Validate attribute values - comma separated floats', () => {
         throw new ValueTypeValidatorError('', 'comma separated float');
       });
 
-      valueService(elementSelector, schemaValues, '1,2,3', appliedSelector);
+      checkElementSettingValue(elementSelector, schemaValues, '1,2,3', appliedSelector);
 
       expect(false).toBe(true);
     } catch (e) {
@@ -222,7 +223,7 @@ describe('Validate attribute values - comma separated floats', () => {
       mockQueryAttributeValue.mockReturnValue('1,2,3,4');
       mockCommaSeparatedFloatValidator.mockReturnValue(true);
 
-      valueService(elementSelector, schemaValues, '1,2,3', appliedSelector);
+      checkElementSettingValue(elementSelector, schemaValues, '1,2,3', appliedSelector);
 
       expect(false).toBe(true);
     } catch (e) {

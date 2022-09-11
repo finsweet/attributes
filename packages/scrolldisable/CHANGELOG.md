@@ -31,6 +31,20 @@ It can be used like:
 
 - Created `changesets.json` API.
 
+## 1.1.11
+
+### Patch Changes
+
+- Updated `Example 3: When Visible` data.
+- Updated `README.md`.
+
+## 1.1.10
+
+### Minor Changes
+
+- Added a [temporary fix](https://github.com/willmcpo/body-scroll-lock/issues/237#issuecomment-954804479) to prevent Safari on `iOS 15` from jumping to the top of the page.
+  This temporary patch will be removed once [body-scroll-lock](https://github.com/willmcpo/body-scroll-lock) releases an official update that addresses this issue.
+
 ## 1.1.9
 
 ### Patch Changes
@@ -61,20 +75,6 @@ It can be used like:
 
 - Fixed `currentScript` vs `params` distinction.
 - Created `CHANGELOG.md`.
-
-## 1.1.11
-
-### Patch Changes
-
-- Updated `Example 3: When Visible` data.
-- Updated `README.md`.
-
-## 1.1.10
-
-### Minor Changes
-
-- Added a [temporary fix](https://github.com/willmcpo/body-scroll-lock/issues/237#issuecomment-954804479) to prevent Safari on `iOS 15` from jumping to the top of the page.
-  This temporary patch will be removed once [body-scroll-lock](https://github.com/willmcpo/body-scroll-lock) releases an official update that addresses this issue.
 
 ## 1.0.0
 

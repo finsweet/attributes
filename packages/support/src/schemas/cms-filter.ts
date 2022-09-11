@@ -306,7 +306,7 @@ export default {
                   selectors: ['a'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -321,7 +321,7 @@ export default {
                   selectors: ['label.w-checkbox span'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -354,7 +354,7 @@ export default {
                   selectors: ['a'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -369,7 +369,7 @@ export default {
                   selectors: ['label.w-radio span'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -402,7 +402,7 @@ export default {
                   selectors: ['a'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -417,7 +417,7 @@ export default {
                   selectors: ['input'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -450,7 +450,7 @@ export default {
                   selectors: ['a'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -465,7 +465,7 @@ export default {
                   selectors: ['select.w-select'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -486,7 +486,7 @@ export default {
                   selectors: ['input.w-input'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
           ],
         },
@@ -507,7 +507,7 @@ export default {
                   selectors: ['div.w-embed'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
             {
               parent: [
@@ -522,7 +522,7 @@ export default {
                   selectors: ['label.w-checkbox input'],
                 },
               ],
-              type: 'element',
+              type: 'default',
             },
           ],
         },

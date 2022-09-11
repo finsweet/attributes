@@ -269,11 +269,12 @@ export class CMSList extends Emittery<CMSListEvents> {
    * @param removeElements Defines if the {@link CMSItem.element} nodes should be removed from the DOM.
    * Defaults to `true`.
    */
-  public clearItems(removeElements = true) {
+  public async clearItems(removeElements = true) {
     if (removeElements) for (const { element } of this.items) element.remove();
 
     this.items = [];
     this.originalItemsOrder = [];
+    await this.renderItems(false, false);
   }
 
   /**

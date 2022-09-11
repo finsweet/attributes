@@ -1,37 +1,23 @@
-import {
-  selectAttribute,
-  selectItem,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectItemAndInputSetting,
-  selectMultipleInstances,
-  selectFieldSpecialization,
-  selectInstance,
-  addField,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-} from './../helpers/assertions';
+import { selectAttribute, selectItem, clickRunCheck, typeFieldIdentifier, addField } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertSuccessReport } from './../helpers/assertions';
 
+fixture`Rich Text`.page`http://localhost:3000/packages/support/public/scenarios/rich-text/scenario-1.html`;
 
-fixture`Rich Text`
-    .page`http://localhost:9000/scenarios/rich-text/scenario-1.html`;
-
-test('Rich Text - Default', async t => {
+test('Rich Text - Default', async (t) => {
   await selectAttribute('Powerful Rich Text');
 
-
-  await selectItem('element-setting-sanitize');
-  await selectItem('element-setting-resetix');
+  await selectItem('element-rich-text-sanitize');
+  await selectItem('element-rich-text-resetix');
 
   await typeFieldIdentifier('field-component-field-1', 'page-component');
 
-
   await addField();
-  await typeFieldIdentifier('field-component-field-2', 'external-component=/scenarios/rich-text/component.html');
-
+  await typeFieldIdentifier(
+    'field-component-field-2',
+    'external-component=/packages/support/public/scenarios/rich-text/component.html'
+  );
 
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });

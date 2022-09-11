@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import ExternalLink from '@src/components/Layout/Icons/external-link.svg';
-  import Selector from './SelectorStatic.svelte';
-  import CustomizableSelector from './SelectorEditable.svelte';
+  import SelectorStatic from './SelectorStatic.svelte';
+  import SelectorEditable from './SelectorEditable.svelte';
   import { schemaSettingsKey, schemaSettingsInstance, schemaSelected, schemaData } from '@src/stores';
   import { createHighlight, enableHighlight, disableHighlight } from '@src/services/Highlight/HighlightService';
 
@@ -17,14 +17,18 @@
   export let value = '';
 
   export let type: SchemaInputType;
-  export let isActive: boolean | undefined = undefined;
+  export let isActive: boolean;
 
-  export let valueType: AttributeValue | undefined = undefined;
+  export let valueType: AttributeValue | AttributeValue[] | undefined = undefined;
   export let forceStatic = false;
 
   let selectorName: string;
   let selectorValue: string;
   let highlight: Highlight;
+
+  let staticBoolean = !Array.isArray(valueType) && valueType?.type === 'boolean';
+
+  let isEditable = (type === 'fieldSetting' || type === 'elementSetting') && !forceStatic && !staticBoolean;
 
   let docs: string = ($schemaSelected && `${$schemaSelected.href}#${key}`) || '';
 
@@ -49,6 +53,7 @@
         selectorName = `fs-${$schemaSettingsKey}-${key}`;
         selectorValue = value;
         break;
+      case 'setting':
       case 'elementSetting':
       case 'fieldSetting':
         selectorName = `fs-${$schemaSettingsKey}-${key}`;
@@ -57,7 +62,7 @@
           selectorValue = value;
         }
 
-        if (valueType?.type === 'boolean') {
+        if (!Array.isArray(valueType) && valueType?.type === 'boolean') {
           selectorValue = 'true';
         }
         break;
@@ -108,13 +113,13 @@
 <div class="attribute-selector-container" on:mouseenter|self={onMouseEnter} on:mouseleave={onMouseLeave}>
   <div class="attribute-selector-interface">
     <div class="attribute-selector-block" data-testid="name">
-      <Selector label="Name" selector={selectorName} />
+      <SelectorStatic label="Name" selector={selectorName} />
     </div>
     <div class="attribute-selector-block" data-testid="value">
-      {#if (type === 'fieldSetting' || type === 'elementSetting') && !forceStatic && valueType !== undefined && valueType.type !== 'boolean' && isActive !== undefined}
-        <CustomizableSelector {valueType} on:change label="Value" {isActive} option={value} />
+      {#if isEditable && valueType !== undefined}
+        <SelectorEditable {valueType} on:change label="Value" {isActive} bind:option={value} />
       {:else}
-        <Selector label="Value" selector={selectorValue} />
+        <SelectorStatic label="Value" selector={selectorValue} />
       {/if}
     </div>
     <a class="attribute-selector-docs" target="_blank" href={docs}>

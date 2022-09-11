@@ -5,8 +5,17 @@ import type { SchemaSelector, ElementItemSelector } from '@src/types/Schema.type
 
 import AttributeNotMatchAppliedToError from './Errors/AttributeNotMatchAppliedToError';
 
-export function elementAppliedTo(elements: HTMLElement[], appliedTo: DOMSelector[], elementSelector: SchemaSelector) {
-  let status = false;
+// export function settingsAppliedTo(elementSettings: HTMLElement[], appliedTo: DOMSelector[]) {}
+
+export function elementAppliedTo(
+  elements: HTMLElement[],
+  appliedTo: DOMSelector[] | undefined,
+  elementSelector: SchemaSelector
+): HTMLElement | null {
+  if (appliedTo === undefined) {
+    return null;
+  }
+  let appliedToElement = null;
 
   elements.forEach((element: HTMLElement) => {
     appliedTo.forEach((domSelector: DOMSelector) => {
@@ -14,19 +23,19 @@ export function elementAppliedTo(elements: HTMLElement[], appliedTo: DOMSelector
 
       selectors.forEach((selector: string) => {
         if (selector === '*') {
-          status = true;
+          appliedToElement = element;
           return;
         }
 
         // validate classnames
         if (selector.match(/^\./) && element.classList.contains(selector.replace(/^\./, ''))) {
-          status = true;
+          appliedToElement = element;
           return;
         }
 
         // validate tags
         if (!selector.match(/^\./) && element.tagName.toLowerCase() === selector) {
-          status = true;
+          appliedToElement = element;
           return;
         }
 
@@ -34,7 +43,7 @@ export function elementAppliedTo(elements: HTMLElement[], appliedTo: DOMSelector
         if (selector.includes('.')) {
           const [tagName, classNames] = selector.split('.');
           if (element.classList.contains(classNames) && element.tagName.toLowerCase() === tagName) {
-            status = true;
+            appliedToElement = element;
             return;
           }
         }
@@ -42,11 +51,11 @@ export function elementAppliedTo(elements: HTMLElement[], appliedTo: DOMSelector
     });
   });
 
-  if (!status) {
+  if (!appliedToElement) {
     throw new AttributeNotMatchAppliedToError(elementSelector, appliedTo);
   }
 
-  return true;
+  return appliedToElement;
 }
 
 export function elementSettingAppliedTo(elementSelector: SchemaSelector, appliedTo: ElementItemSelector[]) {

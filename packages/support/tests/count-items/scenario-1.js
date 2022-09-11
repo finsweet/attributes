@@ -1,25 +1,12 @@
-import {
-  selectAttribute,
-  selectItem,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectItemAndInputSetting,
-  selectMultipleInstances,
-  selectFieldSpecialization,
-  selectInstance,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-} from './../helpers/assertions';
+import { selectAttribute, clickRunCheck } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertSuccessReport } from './../helpers/assertions';
 
+fixture`Count Items`.page`http://localhost:3000/packages/support/public/scenarios/count-items/scenario-1.html`;
 
-fixture`Count Items`
-    .page`http://localhost:9000/scenarios/count-items/scenario-1.html`;
-
-test('Count Items - Default', async t => {
+test('Count Items - Default', async (t) => {
   await selectAttribute('List item counter');
 
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });

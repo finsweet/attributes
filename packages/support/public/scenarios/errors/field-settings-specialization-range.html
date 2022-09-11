@@ -1,62 +1,42 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Attributes Support</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsfilter@1/cmsfilter.js"></script>
+    <title>Attributes Support</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsfilter@1/cmsfilter.js"></script>
+  </head>
 
-</head>
-
-<body>
-  <div fs-cmsfilter-element="list" class="w-dyn-items">
-
-    <div class="w-dyn-item">
-
-      <span>Store 1</span>
-      <div fs-cmsfilter-field="products" fs-cmsfilter-active="my-wrong-class">
-        Jets
-      </div>
-      <div fs-cmsfilter-field="price">
-        2500
-      </div>
-      <div class="w-embed">
-        <div fs-cmsfilter-field="is-open">
-          true
+  <body>
+    <div fs-cmsfilter-element="list" class="w-dyn-items">
+      <div class="w-dyn-item">
+        <span>Store 1</span>
+        <div fs-cmsfilter-field="products" fs-cmsfilter-active="my-wrong-class">Jets</div>
+        <div fs-cmsfilter-field="price">2500</div>
+        <div class="w-embed">
+          <div fs-cmsfilter-field="is-open">true</div>
         </div>
       </div>
 
-    </div>
+      <div class="w-dyn-item">
+        <span>Store 2</span>
 
-    <div class="w-dyn-item">
-      <span>Store 2</span>
-
-      <div fs-cmsfilter-field="products">
-        Cars
-      </div>
-      <div fs-cmsfilter-field="price">
-        1500
-      </div>
-      <div class="w-embed">
-        <div fs-cmsfilter-field="is-open"  fs-cmsfilter-match="all">
-          close
+        <div fs-cmsfilter-field="products">Cars</div>
+        <div fs-cmsfilter-field="price">1500</div>
+        <div class="w-embed">
+          <div fs-cmsfilter-field="is-open" fs-cmsfilter-match="all">close</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <form fs-cmsfilter-element="filters">
-
-
-    <input fs-cmsfilter-field="products"/>
-    <input fs-cmsfilter-field="is-open" type="checkbox" fs-cmsfilter-active="my-field-class"/>
-    <input fs-cmsfilter-element="price" fs-cmsfilter-range="from">
-    <input fs-cmsfilter-element="price" fs-cmsfilter-range="to">
-
-  </form>
-</body>
+    <form fs-cmsfilter-element="filters">
+      <input fs-cmsfilter-field="products" />
+      <input fs-cmsfilter-field="is-open" type="checkbox" fs-cmsfilter-active="my-field-class" />
+      <input fs-cmsfilter-element="price" fs-cmsfilter-range="from" />
+      <input fs-cmsfilter-element="price" fs-cmsfilter-range="to" />
+    </form>
+  </body>
 </html>

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-codehighlight",
-  "version": "1.3.3",
+  "version": "1.3.5",
   "description": "Syntax highlighting for your Webflow sites.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

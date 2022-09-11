@@ -12,8 +12,27 @@ import {
   assertElementIsParentOfElements,
 } from '@src/services/DOM/Assertions/AssertionsService';
 import type { SchemaSelector, SchemaSettings } from '@src/types/Schema.types';
+import { getConditionsSelectors } from '../Helper/ConditionsHelper';
 
 import AttributeIsNotParentOfError from './Errors/AttributeIsNotParentOfError';
+
+export function isElementParentOf(
+  elements: HTMLElement[],
+  conditions: AttributeSchemaConditions,
+  schema: AttributeSchema,
+  schemaSettings: SchemaSettings
+) {
+  const flatSelectors: string[] = getConditionsSelectors(conditions, schema, schemaSettings);
+
+  let isValid = true;
+  try {
+    assertElementIsParentOfElements(elements, flatSelectors);
+  } catch (e) {
+    isValid = false;
+  }
+
+  return isValid;
+}
 
 export function isParentOf(
   elementSelector: SchemaSelector,
@@ -21,34 +40,7 @@ export function isParentOf(
   schema: AttributeSchema,
   schemaSettings: SchemaSettings
 ) {
-  const selectors: (string | string[])[] = conditions.map((condition: AttributeSchemaCondition) => {
-    const typeCondition = condition as AttributeMainCondition;
-
-    if (typeCondition.type === 'element') {
-      const conditionSchemaSelector = createSchemaSelectorFromSchema(
-        schema,
-        'elements',
-        typeCondition.element,
-        schemaSettings
-      );
-      return conditionSchemaSelector.getElementSelector();
-    }
-
-    if (typeCondition.type === 'selector') {
-      return typeCondition.selector.map((domSelector: DOMSelector) => domSelector.selectors.join(','));
-    }
-
-    throw new Error(`Error in bounds of condition`);
-  });
-
-  const flatSelectors: string[] = selectors.flat();
-
-  let isValid = true;
-  try {
-    assertElementIsParentOfElements(elementSelector.elements, flatSelectors);
-  } catch (e) {
-    isValid = false;
-  }
+  const isValid = isElementParentOf(elementSelector.elements, conditions, schema, schemaSettings);
 
   if (!isValid) {
     const isParentOfConditions: AttributeSchemaCondition[] = conditions.filter(

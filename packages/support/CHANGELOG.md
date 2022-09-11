@@ -1,5 +1,11 @@
 # @finsweet/attributes-support
 
+## 1.1.0
+
+### Minor Changes
+
+- 070fb82e: Added case insensitive, scope, relationship between fields and elements, standalone settings, enabled multiple options and minor UI improvements.
+
 ## 1.0.9
 
 ### Patch Changes

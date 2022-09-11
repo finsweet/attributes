@@ -1,107 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] CMS Tabs -->
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmstabs@1/cmstabs.js"></script>
+  </head>
+  <style>
+    img {
+      display: none;
+    }
+  </style>
 
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] CMS Tabs -->
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmstabs@1/cmstabs.js"></script>
-</head>
-
-<body>
-  <div class="w-dyn-list" style="display: none;">
-    <div fs-cmstabs-element="list" role="list" class="fs-cmstabs_list w-dyn-items"></div>
-  </div>
-  <div fs-cmstabs-resetix="true" data-duration-in="300" data-duration-out="100" fs-cmstabs-element="tabs" data-current="Tab 1" data-easing="ease"
-    class="fs-cmstabs_tab w-tabs">
-    <div class="fs-cmstabs_menu w-tab-menu" role="tablist">
-      <div class="fs-cmstabs_link w-inline-block w-tab-link w--current" data-w-tab="Tab 0" id="w-tabs-0-data-w-tab-0"
-        role="tab" aria-controls="w-tabs-0-data-w-pane-0" aria-selected="true">
-        <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
-          <div class="fs-cmstabs_title">Sagrada Família</div>
-        </div>
-      </div>
-      <div class="fs-cmstabs_link w-inline-block w-tab-link" data-w-tab="Tab 1" tabindex="-1" id="w-tabs-0-data-w-tab-1"
-        role="tab" aria-controls="w-tabs-0-data-w-pane-1" aria-selected="false">
-        <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
-          <div class="fs-cmstabs_title">Trevi Fountain</div>
-        </div>
-      </div>
-      <div class="fs-cmstabs_link w-inline-block w-tab-link" data-w-tab="Tab 2" tabindex="-1" id="w-tabs-0-data-w-tab-2"
-        role="tab" aria-controls="w-tabs-0-data-w-pane-2" aria-selected="false">
-        <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
-          <div class="fs-cmstabs_title">Golden Gate Bridge</div>
-        </div>
-      </div>
-      <div class="fs-cmstabs_link w-inline-block w-tab-link" data-w-tab="Tab 3" tabindex="-1" id="w-tabs-0-data-w-tab-3"
-        role="tab" aria-controls="w-tabs-0-data-w-pane-3" aria-selected="false">
-        <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
-          <div class="fs-cmstabs_title">Iguazu Falls</div>
-        </div>
-      </div>
-      <div class="fs-cmstabs_link w-inline-block w-tab-link" data-w-tab="Tab 4" tabindex="-1" id="w-tabs-0-data-w-tab-4"
-        role="tab" aria-controls="w-tabs-0-data-w-pane-4" aria-selected="false">
-        <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
-          <div class="fs-cmstabs_title">Statue of Unity</div>
-        </div>
-      </div>
-      <div class="fs-cmstabs_link w-inline-block w-tab-link" data-w-tab="Tab 5" tabindex="-1" id="w-tabs-0-data-w-tab-5"
-        role="tab" aria-controls="w-tabs-0-data-w-pane-5" aria-selected="false">
-        <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
-          <div class="fs-cmstabs_title">Torre Eiffel</div>
-        </div>
-      </div>
+  <body>
+    <div class="w-dyn-list" style="display: none">
+      <div fs-cmstabs-element="list" role="list" class="fs-cmstabs_list w-dyn-items"></div>
     </div>
-    <div class="fs-cmstabs_content w-tab-content">
-      <div class="fs-cmstabs_panel w-tab-pane w--tab-active" data-w-tab="Tab 0" id="w-tabs-0-data-w-pane-0"
-        role="tabpanel" aria-labelledby="w-tabs-0-data-w-tab-0">
-        <div role="listitem" class="w-dyn-item">
-          <div class="fs-cmstabs_card"><img
-              src="https://assets-global.website-files.com/6132770a5e2efb56eab6828c/616d4a9ea81280f5cddcc537_sagrada-familia.png"
-              loading="lazy" alt="Sagrada Família" class="fs-filtercms_card-image">
-            <div class="fs-filtercms_card-content">
-              <div class="fs-filtercms_card-header">
-                <div class="fs-filtercms_card-info">
-                  <div fs-cmsfilter-field="cities" class="fs-filtercms_card-text">Barcelona</div>
-                  <div class="fs-filtercms_info-bar">/</div>
-                  <div fs-cmsfilter-field="countries" class="fs-filtercms_card-text">Spain</div>
+    <div
+      fs-cmstabs-resetix="true"
+      data-duration-in="300"
+      data-duration-out="100"
+      fs-cmstabs-element="tabs"
+      data-current="Tab 1"
+      data-easing="ease"
+      class="fs-cmstabs_tab w-tabs"
+    >
+      <div class="fs-cmstabs_menu w-tab-menu" role="tablist">
+        <div
+          class="fs-cmstabs_link w-inline-block w-tab-link w--current"
+          data-w-tab="Tab 0"
+          id="w-tabs-0-data-w-tab-0"
+          role="tab"
+          aria-controls="w-tabs-0-data-w-pane-0"
+          aria-selected="true"
+        >
+          <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
+            <div class="fs-cmstabs_title">Sagrada Família</div>
+          </div>
+        </div>
+        <div
+          class="fs-cmstabs_link w-inline-block w-tab-link"
+          data-w-tab="Tab 1"
+          tabindex="-1"
+          id="w-tabs-0-data-w-tab-1"
+          role="tab"
+          aria-controls="w-tabs-0-data-w-pane-1"
+          aria-selected="false"
+        >
+          <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
+            <div class="fs-cmstabs_title">Trevi Fountain</div>
+          </div>
+        </div>
+        <div
+          class="fs-cmstabs_link w-inline-block w-tab-link"
+          data-w-tab="Tab 2"
+          tabindex="-1"
+          id="w-tabs-0-data-w-tab-2"
+          role="tab"
+          aria-controls="w-tabs-0-data-w-pane-2"
+          aria-selected="false"
+        >
+          <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
+            <div class="fs-cmstabs_title">Golden Gate Bridge</div>
+          </div>
+        </div>
+        <div
+          class="fs-cmstabs_link w-inline-block w-tab-link"
+          data-w-tab="Tab 3"
+          tabindex="-1"
+          id="w-tabs-0-data-w-tab-3"
+          role="tab"
+          aria-controls="w-tabs-0-data-w-pane-3"
+          aria-selected="false"
+        >
+          <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
+            <div class="fs-cmstabs_title">Iguazu Falls</div>
+          </div>
+        </div>
+        <div
+          class="fs-cmstabs_link w-inline-block w-tab-link"
+          data-w-tab="Tab 4"
+          tabindex="-1"
+          id="w-tabs-0-data-w-tab-4"
+          role="tab"
+          aria-controls="w-tabs-0-data-w-pane-4"
+          aria-selected="false"
+        >
+          <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
+            <div class="fs-cmstabs_title">Statue of Unity</div>
+          </div>
+        </div>
+        <div
+          class="fs-cmstabs_link w-inline-block w-tab-link"
+          data-w-tab="Tab 5"
+          tabindex="-1"
+          id="w-tabs-0-data-w-tab-5"
+          role="tab"
+          aria-controls="w-tabs-0-data-w-pane-5"
+          aria-selected="false"
+        >
+          <div fs-cmstabs-element="tab-link" class="fs-cmstabs_block">
+            <div class="fs-cmstabs_title">Torre Eiffel</div>
+          </div>
+        </div>
+      </div>
+      <div class="fs-cmstabs_content w-tab-content">
+        <div
+          class="fs-cmstabs_panel w-tab-pane w--tab-active"
+          data-w-tab="Tab 0"
+          id="w-tabs-0-data-w-pane-0"
+          role="tabpanel"
+          aria-labelledby="w-tabs-0-data-w-tab-0"
+        >
+          <div role="listitem" class="w-dyn-item">
+            <div class="fs-cmstabs_card">
+              <img
+                src="https://assets-global.website-files.com/6132770a5e2efb56eab6828c/616d4a9ea81280f5cddcc537_sagrada-familia.png"
+                loading="lazy"
+                alt="Sagrada Família"
+                class="fs-filtercms_card-image"
+              />
+              <div class="fs-filtercms_card-content">
+                <div class="fs-filtercms_card-header">
+                  <div class="fs-filtercms_card-info">
+                    <div fs-cmsfilter-field="cities" class="fs-filtercms_card-text">Barcelona</div>
+                    <div class="fs-filtercms_info-bar">/</div>
+                    <div fs-cmsfilter-field="countries" class="fs-filtercms_card-text">Spain</div>
+                  </div>
+                  <div class="fs-filtercms_card-title">Sagrada Família</div>
                 </div>
-                <div class="fs-filtercms_card-title">Sagrada Família</div>
+                <p class="fs-filtercms_card-desc">
+                  Is a large unfinished Roman Catholic minor basilica in the Eixample district of Barcelona.
+                </p>
               </div>
-              <p class="fs-filtercms_card-desc">Is a large unfinished Roman Catholic minor basilica in the Eixample
-                district of Barcelona.</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="fs-cmstabs_panel w-tab-pane"
+          data-w-tab="Tab 1"
+          id="w-tabs-0-data-w-pane-1"
+          role="tabpanel"
+          aria-labelledby="w-tabs-0-data-w-tab-1"
+        >
+          <div role="listitem" class="w-dyn-item">
+            <div class="fs-cmstabs_card">
+              <img
+                src="https://assets-global.website-files.com/6132770a5e2efb56eab6828c/616d4db241e1f4a035b94f7d_trevi-fountain.png"
+                loading="lazy"
+                alt="Trevi Fountain"
+                class="fs-filtercms_card-image"
+              />
+              <div class="fs-filtercms_card-content">
+                <div class="fs-filtercms_card-header">
+                  <div class="fs-filtercms_card-info">
+                    <div fs-cmsfilter-field="cities" class="fs-filtercms_card-text">Rome</div>
+                    <div class="fs-filtercms_info-bar">/</div>
+                    <div fs-cmsfilter-field="countries" class="fs-filtercms_card-text">Italy</div>
+                  </div>
+                  <div class="fs-filtercms_card-title">Trevi Fountain</div>
+                </div>
+                <p class="fs-filtercms_card-desc">
+                  The Trevi Fountain is a fountain in the Trevi district in Rome, Italy.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="fs-cmstabs_panel w-tab-pane" data-w-tab="Tab 1" id="w-tabs-0-data-w-pane-1" role="tabpanel"
-        aria-labelledby="w-tabs-0-data-w-tab-1">
-        <div role="listitem" class="w-dyn-item">
-          <div class="fs-cmstabs_card"><img
-              src="https://assets-global.website-files.com/6132770a5e2efb56eab6828c/616d4db241e1f4a035b94f7d_trevi-fountain.png"
-              loading="lazy" alt="Trevi Fountain" class="fs-filtercms_card-image">
-            <div class="fs-filtercms_card-content">
-              <div class="fs-filtercms_card-header">
-                <div class="fs-filtercms_card-info">
-                  <div fs-cmsfilter-field="cities" class="fs-filtercms_card-text">Rome</div>
-                  <div class="fs-filtercms_info-bar">/</div>
-                  <div fs-cmsfilter-field="countries" class="fs-filtercms_card-text">Italy</div>
-                </div>
-                <div class="fs-filtercms_card-title">Trevi Fountain</div>
-              </div>
-              <p class="fs-filtercms_card-desc">The Trevi Fountain is a fountain in the Trevi district in Rome, Italy.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </div>
-
-</body>
-
+  </body>
 </html>

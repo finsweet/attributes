@@ -7,7 +7,6 @@
   },
   "include": ["./packages/**/*.ts", "./global/**/*.ts"],
   "exclude": [
-    "./packages/a11y/**/*.ts",
     "./packages/components/**/*.ts",
     "./packages/cmssave/**/*.ts",
     "./packages/template/**/*.ts",

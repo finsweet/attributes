@@ -2,9 +2,9 @@ import type { AttributeSchema, AttributeSchemaCondition, AttributeSchemaConditio
 import type { SchemaSelector, SchemaSettings } from '@src/types/Schema.types';
 
 import { exists } from './Exists/ExistsService';
-import { isChildOf } from './IsChildOf/IsChildOfService';
-import { isParentOf } from './IsParentOf/isParentOfService';
-import { isSiblingOf } from './IsSiblingOf/IsSiblingOfService';
+import { isChildOf, isElementChildOf } from './IsChildOf/IsChildOfService';
+import { isElementParentOf, isParentOf } from './IsParentOf/isParentOfService';
+import { isElementSiblingOf, isSiblingOf } from './IsSiblingOf/IsSiblingOfService';
 import { hasLink } from './Link/LinkService';
 import { hasSettings } from './Settings/SettingsService';
 import { hasStyle } from './Style/StyleService';
@@ -87,6 +87,46 @@ export default function conditionsService(
   return true;
 }
 
-// export function elementConditions() {
+export function filterElementsByConditions(
+  elements: HTMLElement[],
+  conditions: AttributeSchemaConditions,
+  schema: AttributeSchema,
+  schemaSettings: SchemaSettings
+) {
+  let filteredElements: HTMLElement[] = elements;
 
-// }
+  conditions.forEach((condition) => {
+    if (
+      condition.condition === 'settings' ||
+      condition.condition === 'hasStyle' ||
+      condition.condition === 'hasLink' ||
+      condition.condition === 'exists'
+    ) {
+      return;
+    }
+
+    switch (condition.condition) {
+      case 'isChildOf':
+        filteredElements = filteredElements.filter((element) => {
+          return isElementChildOf([element], [condition], schema, schemaSettings);
+        });
+        break;
+
+      case 'isParentOf':
+        filteredElements = filteredElements.filter((element) => {
+          return isElementParentOf([element], [condition], schema, schemaSettings);
+        });
+
+        break;
+      case 'isSiblingOf':
+        filteredElements = filteredElements.filter((element) => {
+          return isElementSiblingOf([element], [condition], schema, schemaSettings);
+        });
+
+        break;
+      default:
+        throw new Error(`Unexpected error: Filter element by condition ${condition.condition} not available.`);
+    }
+  });
+  return filteredElements;
+}

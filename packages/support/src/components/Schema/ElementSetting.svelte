@@ -36,8 +36,6 @@
     const input = event.target as HTMLInputElement;
     const { checked } = input;
     if (checked) {
-      let checkedOption: string = option || setting.value.default || '';
-
       const element = schemaFormActions.findElement(parent);
       if (!element) {
         schemaFormActions.addElement(parent);
@@ -46,6 +44,11 @@
       let index = schemaFormActions.findElementSettingIndex(parent, setting.key);
 
       if (index === null) {
+        const checkedOption: string =
+          option ||
+          (Array.isArray(setting.value) && setting.value[0].default) ||
+          (!Array.isArray(setting.value) && setting.value.default) ||
+          '';
         schemaFormActions.addElementSetting(parent, setting.key, checkedOption);
         return;
       }
@@ -81,7 +84,7 @@
     return validation.status;
   }
 
-  let selectorId = `element-setting-${setting.key}`;
+  let selectorId = `element-${parent}-${setting.key}`;
   let isOpenSelector = $toggleAttributeSelector === selectorId;
 
   function toggleSelector() {
@@ -126,7 +129,7 @@
 </script>
 
 <AttributeItem id={selectorId} disabled={!isEnable} checked={isChecked} status={elementSettingStatus}>
-  <AttributeItemHeader>
+  <AttributeItemHeader isChild>
     <AttributeCheckbox
       {onCheck}
       {isChecked}

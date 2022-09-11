@@ -19,6 +19,7 @@
 
   function onInput(event: Event) {
     const input = event.target as HTMLInputElement;
+
     dispatch('change', input.value);
   }
 </script>
@@ -61,7 +62,7 @@
   } */
 
   input {
-    padding: 0.2rem 1rem 0.25rem 0.75rem;
+    padding: 0.2rem 0.25rem 0.25rem 0.5rem;
     border-style: solid;
     border-width: 1px;
     border-color: #000;

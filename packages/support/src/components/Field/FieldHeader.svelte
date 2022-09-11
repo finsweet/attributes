@@ -5,6 +5,7 @@
   import AttributeFieldToggle from '@src/components/Field/FieldToggle.svelte';
   import type { SchemaInputField } from '@src/types/Input.types';
 
+  export let id: string;
   export let isOpen: boolean;
   export let fieldInput: SchemaInputField;
   export let deleteField: (fieldIndex: string) => void;
@@ -30,7 +31,7 @@
       <AttributeFieldToggle {isOpen} />
       <AttributeFieldAdd {addField} />
       {#if fieldInput && fieldInput.index !== 'field-1'}
-        <AttributeFieldDel deleteField={() => deleteField((fieldInput && fieldInput.index) || '')} />
+        <AttributeFieldDel {id} deleteField={() => deleteField((fieldInput && fieldInput.index) || '')} />
       {/if}
     </div>
   </Header>

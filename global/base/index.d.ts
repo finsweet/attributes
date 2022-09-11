@@ -29,7 +29,8 @@ type FsAttributesBase = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface FsAttributeInit<T = any> {
   version?: string;
-  init?: () => T | Promise<T>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  init?: (...args: any[]) => T | Promise<T>;
   loading?: Promise<T>;
   resolve?: (value: T) => void;
 }

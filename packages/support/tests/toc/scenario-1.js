@@ -1,37 +1,18 @@
-import {
-  selectAttribute,
-  selectItem,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectItemAndInputSetting,
-  selectMultipleInstances,
-  selectFieldSpecialization,
-  selectInstance,
-  selectItemAndSelectSetting,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-} from './../helpers/assertions';
+import { selectAttribute, selectItem, clickRunCheck, selectItemAndInputSetting } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertSuccessReport } from './../helpers/assertions';
 
+fixture`Table of contents`.page`http://localhost:3000/packages/support/public/scenarios/toc/scenario-1.html`;
 
-fixture`Table of contents`
-    .page`http://localhost:9000/scenarios/toc/scenario-1.html`;
-
-test('Table of contents - Default', async t => {
+test('Table of contents - Default', async (t) => {
   await selectAttribute('Table of Contents');
 
-
-  await selectItemAndInputSetting('element-setting-offsettop', '100');
-  await selectItemAndInputSetting('element-setting-offsetbottom', '150');
-  await selectItem('element-setting-hideurlhash');
+  await selectItemAndInputSetting('element-contents-offsettop', '100');
+  await selectItemAndInputSetting('element-contents-offsetbottom', '150');
+  await selectItem('element-contents-hideurlhash');
   await selectItem('element-table');
   await selectItem('element-ix-trigger');
 
-
-  //await selectItemAndInputSetting('element-setting-wait', '200');
-
-
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });

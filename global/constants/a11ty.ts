@@ -20,6 +20,7 @@ export const ARIA_CURRENT_KEY = 'aria-current';
 export const ARIA_ACTIVEDESCENDANT_KEY = 'aria-activedescendant';
 export const ARIA_PRESSED_KEY = 'aria-pressed';
 export const ARIA_SORT_KEY = 'aria-sort';
+export const ARIA_CONTROLS = 'aria-controls';
 export const ARIA_SORT_VALUES = {
   ascending: 'ascending',
   descending: 'descending',

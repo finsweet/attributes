@@ -5,38 +5,28 @@ import {
   clickToggleSelector,
   selectSettingOption,
 } from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Element Setting Condition Setting`
-    .page`http://localhost:9000/scenarios/errors/element-setting-condition-setting.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/element-setting-condition-setting.html`;
 
-test('Element setting not found required setting condition', async t => {
-
+test('Element setting - not found required setting condition', async (t) => {
   await selectAttribute('CMS Load');
 
+  await selectItem('element-list-mode');
+  await clickToggleSelector('element-list-mode');
 
-  await selectItem('element-setting-mode');
-  await clickToggleSelector('element-setting-mode');
+  await selectSettingOption('element-list-mode', 'infinite');
 
-  await selectSettingOption('element-setting-mode', 'infinite');
-
-
-  await selectItem('element-setting-threshold');
-
+  await selectItem('element-list-threshold');
 
   await clickRunCheck();
 
   await assertErrorsCountOnReport(2);
 
-  await assertErrorIsOnReport('element-setting-threshold', 'conditions-settings');
-  await assertErrorIsOnAttribute('element-setting-threshold', 'conditions-settings');
+  await assertErrorIsOnReport('element-list-threshold', 'conditions-settings');
+  await assertErrorIsOnAttribute('element-list-threshold', 'conditions-settings');
 
-  await writeFileValidationMessage('Option attribute missing a required option attribute', 'element-setting-threshold');
+  await writeFileValidationMessage('Option attribute missing a required option attribute', 'element-list-threshold');
 });

@@ -46,7 +46,7 @@ export interface SettingSpecialization {
   value: string;
 }
 
-type FieldSpecializationTypes = 'element' | 'link' | 'component';
+type FieldSpecializationTypes = 'default' | 'element' | 'link' | 'component';
 
 /**
  * Defines the model for set field specialization in one place of html
@@ -55,7 +55,9 @@ export interface InstanceFieldSpecializationAppliedTo {
   /** Expected parent where the field belong */
   parent: ParentSelector | null;
   /** Expected selectors where the field can belong */
-  selectors: DOMSelector[];
+  selectors?: DOMSelector[];
+  /** Elements used in field */
+  element?: string;
   /** Expected custom key for field */
   key?: string;
   /** Expected custom value for field */
@@ -107,6 +109,16 @@ export interface AttributeElementSchema {
   multiplesInInstance: boolean;
 
   /**
+   *  Defines if selector is case insensitive
+   */
+  caseInsensitive?: boolean;
+
+  /**
+   * Defines which scopes should validate for multiples instances
+   */
+  scope?: DOMSelector;
+
+  /**
    * Defines the conditions that this element must match to be valid.
    */
   conditions: AttributeSchemaConditions;
@@ -137,6 +149,11 @@ export interface AttributeSchemaSettingAppliedTo {
    * Defines applied to specificy specialization
    */
   specializations?: string[];
+
+  /**
+   * Defines selectors
+   */
+  selectors?: DOMSelector[];
 }
 
 /**
@@ -161,7 +178,7 @@ export interface AttributeSettingSchema {
   /**
    * The possible SETTING_VALUEs to define.
    */
-  value: AttributeValue;
+  value: AttributeValue | AttributeValue[];
 
   /**
    * Possible behaviors to apply to this setting.

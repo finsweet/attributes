@@ -1,9 +1,9 @@
-<div class="selector-value" data-testid="selector-value">
+<div class="selector__value" data-testid="selector-value">
   <slot />
 </div>
 
 <style>
-  .selector-value {
+  .selector__value {
     display: inline-block;
     margin-left: 1rem;
     font-size: 0.875rem;

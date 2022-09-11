@@ -29,7 +29,7 @@ export const createHandleInstances = ({
         handleElement.getAttribute(ATTRIBUTES.start.key) || `${index === 0 ? minRange : maxRange}`
       );
 
-      let startValue = adjustValueToStep(rawStartValue, step, precision);
+      let startValue = adjustValueToStep(rawStartValue, step, precision, minRange);
 
       const inputElement = inputElements[index];
       const displayValueElement = displayValueElements[index];

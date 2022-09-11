@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-docs",
-  "version": "1.7.10",
+  "version": "1.7.13",
   "description": "Attributes documentation custom code.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

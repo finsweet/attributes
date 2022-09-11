@@ -48,11 +48,14 @@
     const input = event.target as HTMLInputElement;
     const { checked } = input;
     if (checked) {
-      let checkedOption: string = option || setting.value.default || '';
-
       let index = schemaFormActions.findFieldSettingIndex(fieldKey, fieldIndex, setting.key);
 
       if (index === null) {
+        const checkedOption: string =
+          option ||
+          (Array.isArray(setting.value) && setting.value[0].default) ||
+          (!Array.isArray(setting.value) && setting.value.default) ||
+          '';
         schemaFormActions.addFieldSetting(fieldKey, fieldIndex, setting.key, checkedOption);
         return;
       }

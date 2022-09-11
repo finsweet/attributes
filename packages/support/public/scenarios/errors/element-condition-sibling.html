@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-copyclip@1/copyclip.js"></script>
-</head>
-<body>
-
-  <div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-copyclip@1/copyclip.js"></script>
+  </head>
+  <body>
     <div>
-      <a class="w-button" fs-copyclip-element="click"></a>
+      <div>
+        <a class="w-button" fs-copyclip-element="click"></a>
+      </div>
+      <div fs-copyclip-element="copy-this"></div>
     </div>
-    <div fs-copyclip-element="copy-this"></div>
-  </div>
 
-  <div>
-    <p fs-copyclip-element="copy-sibling">
-    </p>
-  </div>
-</body>
+    <div>
+      <p fs-copyclip-element="copy-sibling"></p>
+    </div>
+  </body>
 </html>

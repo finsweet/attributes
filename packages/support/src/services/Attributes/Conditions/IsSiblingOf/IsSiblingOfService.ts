@@ -16,8 +16,27 @@ import {
   assertElementIsSiblingOfElements,
 } from '@src/services/DOM/Assertions/AssertionsService';
 import type { SchemaSelector, SchemaSettings, ElementItemSelector } from '@src/types/Schema.types';
+import { getConditionsSelectors } from '../Helper/ConditionsHelper';
 
 import AttributeIsNotSiblingOfError from './Errors/AttributeIsNotSiblingOfError';
+
+export function isElementSiblingOf(
+  elements: HTMLElement[],
+  conditions: AttributeSchemaConditions,
+  schema: AttributeSchema,
+  schemaSettings: SchemaSettings
+) {
+  const flatSelectors: string[] = getConditionsSelectors(conditions, schema, schemaSettings);
+
+  let isValid = true;
+  try {
+    assertElementIsSiblingOfElements(elements, flatSelectors);
+  } catch (e) {
+    isValid = false;
+  }
+
+  return isValid;
+}
 
 export function isSiblingOf(
   elementSelector: SchemaSelector,
@@ -25,34 +44,7 @@ export function isSiblingOf(
   schema: AttributeSchema,
   schemaSettings: SchemaSettings
 ) {
-  const selectors: (string | string[])[] = conditions.map((condition: AttributeSchemaCondition) => {
-    const typeCondition = condition as AttributeMainCondition;
-
-    if (typeCondition.type === 'element') {
-      const conditionSchemaSelector = createSchemaSelectorFromSchema(
-        schema,
-        'elements',
-        typeCondition.element,
-        schemaSettings
-      );
-      return conditionSchemaSelector.getElementSelector();
-    }
-
-    if (typeCondition.type === 'selector') {
-      return typeCondition.selector.map((domSelector: DOMSelector) => domSelector.selectors.join(','));
-    }
-
-    throw new Error(`Error in bounds of condition`);
-  });
-
-  const flatSelectors: string[] = selectors.flat();
-
-  let isValid = true;
-  try {
-    assertElementIsSiblingOfElements(elementSelector.elements, flatSelectors);
-  } catch (e) {
-    isValid = false;
-  }
+  const isValid = isElementSiblingOf(elementSelector.elements, conditions, schema, schemaSettings);
 
   if (!isValid) {
     const notSiblingOfConditions: AttributeSchemaCondition[] = conditions.filter(

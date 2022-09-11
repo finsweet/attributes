@@ -5,28 +5,19 @@ import {
   selectSettingOption,
   clickToggleSelector,
 } from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Element Conditions Settings Errors`
-    .page`http://localhost:9000/scenarios/errors/element-condition-setting.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/element-condition-setting.html`;
 
-test('Element setting not match required element setting', async t => {
-
+test('Element setting not match required element setting', async (t) => {
   await selectAttribute('CMS Load');
 
+  await selectItem('element-list-mode');
+  await clickToggleSelector('element-list-mode');
 
-  await selectItem('element-setting-mode');
-  await clickToggleSelector('element-setting-mode');
-
-  await selectSettingOption('element-setting-mode', 'pagination');
-
+  await selectSettingOption('element-list-mode', 'pagination');
 
   await selectItem('element-page-button');
 

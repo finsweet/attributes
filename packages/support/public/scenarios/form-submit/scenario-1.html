@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] Link blocks in editor -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-formsubmit@1/formsubmit.js"></script>
+  </head>
+
+  <body>
+    <form
+      fs-formsubmit-element="form"
+      fs-formsubmit-reset="true"
+      fs-formsubmit-reload="true"
+      fs-formsubmit-redirect="true"
+      fs-formsubmit-redirecturl="https://finsweet.com"
+      fs-formsubmit-redirectnewtab="true"
+      fs-formsubmit-disable="true"
+      fs-formsubmit-enhance="true"
+    >
+      <input type="text" fs-formsubmit-preventreset="true" />
+      <input type="text" fs-formsubmit-preventreset="true" />
+      <!-- <input type="text" fs-formsubmit-preventreset="true" /> -->
+      <input type="text" />
+      <a class="w-button" fs-formsubmit-element="reset"></a>
+    </form>
+
+    <a class="w-button" fs-formsubmit-element="ix-trigger"></a>
+
+    <!-- <input type="text" fs-formsubmit-preventreset="true" /> -->
+    <form
+      fs-formsubmit-element="form-2"
+      fs-formsubmit-reset="2000"
+      fs-formsubmit-reload="3000"
+      fs-formsubmit-redirect="4000"
+      fs-formsubmit-redirecturl="https://finsweet.com/attributes"
+    >
+      <input type="text" />
+      <input type="text" fs-formsubmit-preventreset="1" />
+      <a class="w-button" fs-formsubmit-element="reset-2"></a>
+    </form>
+
+    <a class="w-button" fs-formsubmit-element="ix-trigger-2"></a>
+  </body>
+</html>

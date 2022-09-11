@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsfilter@1/cmsfilter.js"></script>
-</head>
-<body>
-  <div fs-cmsfilter-element="list" class="w-dyn-list">
-    <div fs-cmsfilter-field="element-selector"></div>
-    <div fs-cmsfilter-field="element-class-selector"></div>
-    <div fs-cmsfilter-field="element-type-selector" class="w-embed"></div>
-
-  </div>
-  <form fs-cmsfilter-element="filters">
-    <div fs-cmsfilter-field="element-selector"></div>
-    <label class="w-checkbox">
-      <input type="checkbox" fs-cmsfilter-field="element-class-selector">
-      <span ></span>
-    </label>
-    <input type="radio" fs-cmsfilter-field="element-type-selector">
-  </form>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsfilter@1/cmsfilter.js"></script>
+  </head>
+  <body>
+    <div fs-cmsfilter-element="list" class="w-dyn-list">
+      <div fs-cmsfilter-field="element-selector"></div>
+      <div fs-cmsfilter-field="element-class-selector"></div>
+      <div fs-cmsfilter-field="element-type-selector" class="w-embed"></div>
+    </div>
+    <form fs-cmsfilter-element="filters">
+      <div fs-cmsfilter-field="element-selector"></div>
+      <label class="w-checkbox">
+        <input type="checkbox" fs-cmsfilter-field="element-class-selector" />
+        <span></span>
+      </label>
+      <input type="radio" fs-cmsfilter-field="element-type-selector" />
+    </form>
+  </body>
 </html>

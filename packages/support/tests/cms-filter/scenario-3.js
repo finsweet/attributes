@@ -12,15 +12,13 @@ import {
   assertErrorsCountOnReport,
   assertErrorIsOnReport,
   assertErrorIsOnAttribute,
+  assertSuccessReport,
 } from './../helpers/assertions';
 
 fixture`CMS Filter - Default values for fields settings`
-    .page`http://localhost:9000/scenarios/cms-filter/scenario-3.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/cms-filter/scenario-3.html`;
 
-
-
-test('CMS Filter - Validate default - without attribute - ok', async t => {
-
+test('CMS Filter - Validate default - without attribute - ok', async (t) => {
   await selectAttribute('CMS Filter');
 
   await selectMultipleInstances(3);
@@ -31,14 +29,12 @@ test('CMS Filter - Validate default - without attribute - ok', async t => {
 
   await selectItem('field-setting-field-field-1-active');
 
-
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });
 
-test('CMS Filter - Validate default - with other attribute set - notOk', async t => {
-
+test('CMS Filter - Validate default - with other attribute set - notOk', async (t) => {
   await selectAttribute('CMS Filter');
 
   await selectMultipleInstances(3);
@@ -53,13 +49,11 @@ test('CMS Filter - Validate default - with other attribute set - notOk', async t
 
   await assertErrorsCountOnReport(1);
 
-
   await assertErrorIsOnReport('field-setting-field-field-1-active', 'setting-value-not-match');
   await assertErrorIsOnAttribute('field-setting-field-field-1-active', 'setting-value-not-match');
 });
 
-test('CMS Filter - Validate default - Not default value - ok', async t => {
-
+test('CMS Filter - Validate default - Not default value - ok', async (t) => {
   await selectAttribute('CMS Filter');
 
   await selectMultipleInstances(3);
@@ -71,12 +65,12 @@ test('CMS Filter - Validate default - Not default value - ok', async t => {
   await selectItemAndInputSetting('field-setting-field-field-1-active', 'custom-class');
 
   await clickRunCheck();
-
+  await assertSuccessReport();
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });
 
-test('CMS Filter - Validate default - with attribute - ok', async t => {
-
+test('CMS Filter - Validate default - with attribute - ok', async (t) => {
   await selectAttribute('CMS Filter');
 
   await selectMultipleInstances(4);
@@ -88,6 +82,6 @@ test('CMS Filter - Validate default - with attribute - ok', async t => {
   await selectItem('field-setting-field-field-1-active');
 
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });

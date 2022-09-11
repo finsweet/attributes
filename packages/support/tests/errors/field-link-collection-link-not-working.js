@@ -1,23 +1,11 @@
-import {
-  selectAttribute,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectFieldSpecialization,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-  assertErrorIsOnReport,
-  assertErrorIsOnAttribute,
-} from './../helpers/assertions';
-import {
-  writeFileValidationMessage
-} from './../helpers/logs';
+import { selectAttribute, clickRunCheck, typeFieldIdentifier, selectFieldSpecialization } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertErrorIsOnReport, assertErrorIsOnAttribute } from './../helpers/assertions';
+import { writeFileValidationMessage } from './../helpers/logs';
 
 fixture`Field - Link`
-    .page`http://localhost:9000/scenarios/errors/field-link-collection-link-not-working.html`;
+  .page`http://localhost:3000/packages/support/public/scenarios/errors/field-link-collection-link-not-working.html`;
 
-test('Field Link - Find collection and link but not working', async t => {
-
+test('Field Link - Find collection and link but not working', async (t) => {
   await selectAttribute('CMS Nest');
 
   await typeFieldIdentifier('field-collection-field-1', 'attraction-categories');

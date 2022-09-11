@@ -19,6 +19,14 @@ import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
 import type { SchemaInputElementSetting, InputChannel } from '@src/types/Input.types';
 import type { SchemaSettings, ElementItemSelector, SchemaSelector } from '@src/types/Schema.types';
 
+function isDefaultValue(settingOption: string, values: AttributeValue | AttributeValue[]) {
+  if (Array.isArray(values)) {
+    return values.some((value) => value.default === settingOption && settingOption != '');
+  }
+
+  return values.default === settingOption && settingOption != '';
+}
+
 /**
  * Run assertions on item of type Settings to check if it meets expectations.
  */
@@ -30,7 +38,6 @@ export function validateElementSetting(
 ): SchemaInputElementSetting {
   const settingSchema = getSchemaItem(schema, 'settings', inputSetting.setting) as AttributeSettingSchema;
 
-  // console.log('validate setting');
   const { appliedTo, conditions, value } = settingSchema;
 
   const settingSelector = createSchemaSelectorFromItem(
@@ -41,7 +48,7 @@ export function validateElementSetting(
     inputSetting.option
   );
 
-  const isDefault = value.default === inputSetting.option && inputSetting.option != '';
+  const isDefault = isDefaultValue(inputSetting.option, value);
 
   try {
     const elementsSelectors: ElementItemSelector[] = appliedToSelectors(
@@ -151,7 +158,7 @@ export function validateCustomSetting(
   elementsSelectors: ElementItemSelector[],
   appliedTo: AttributeSchemaSettingAppliedTo,
   conditions: AttributeSchemaConditions,
-  value: AttributeValue,
+  value: AttributeValue | AttributeValue[],
   schema: AttributeSchema,
   schemaSettings: SchemaSettings
 ) {
@@ -184,7 +191,7 @@ export function validateDefaultSetting(
   elementsSelectors: ElementItemSelector[],
   appliedTo: AttributeSchemaSettingAppliedTo,
   conditions: AttributeSchemaConditions,
-  value: AttributeValue,
+  value: AttributeValue | AttributeValue[],
   schema: AttributeSchema,
   schemaSettings: SchemaSettings
 ) {

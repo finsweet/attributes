@@ -36,9 +36,11 @@ const setDecimalPrecision = (value: number, precision: number) => {
  * @param step The increment step.
  * @returns The adjusted value.
  */
-export const adjustValueToStep = (value: number, step: number, precision: number) => {
+export const adjustValueToStep = (value: number, step: number, precision: number, minRange: number) => {
+  const offset = minRange > 1 ? minRange % step : 0;
+
   const remainder = value % step;
-  const floor = value - remainder;
+  const floor = offset + value - remainder;
 
   if (remainder > step / 2) return setDecimalPrecision(floor + step, precision);
 
@@ -56,6 +58,7 @@ export const getClosestValidHandle = (adjustedValue: number, [handle1, handle2]:
   const handle2Value = handle2?.getValue();
 
   const closestValue = getClosestValue(adjustedValue, [handle1Value, handle2Value]);
+
   if (typeof closestValue !== 'number') return;
 
   const [handle1MinValue, handle1MaxValue] = handle1.getConstraints();

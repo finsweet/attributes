@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-animation",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Web Animations API for Attributes.",
   "main": "animation.js",
   "files": [

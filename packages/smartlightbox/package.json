@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-smartlightbox",
-  "version": "1.6.2",
+  "version": "1.6.4",
   "description": "Change the position of an opened lightbox to prevent unwanted `z-index`, `fixed` positioning, and `transform` issues.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

@@ -1,25 +1,12 @@
-import {
-  selectAttribute,
-  selectItem,
-  clickRunCheck,
-  typeFieldIdentifier,
-  selectItemAndInputSetting,
-  selectMultipleInstances,
-  selectFieldSpecialization,
-  selectInstance,
-} from './../helpers/actions';
-import {
-  assertErrorsCountOnReport,
-} from './../helpers/assertions';
+import { selectAttribute, clickRunCheck } from './../helpers/actions';
+import { assertErrorsCountOnReport, assertSuccessReport } from './../helpers/assertions';
 
+fixture`Mirror Click`.page`http://localhost:3000/packages/support/public/scenarios/mirror-click/scenario-1.html`;
 
-fixture`Mirror Click`
-    .page`http://localhost:9000/scenarios/mirror-click/scenario-1.html`;
-
-test('Mirror Click - Default', async t => {
+test('Mirror Click - Default', async (t) => {
   await selectAttribute('Mirror click');
 
   await clickRunCheck();
-
+  await assertSuccessReport();
   await assertErrorsCountOnReport(0);
 });

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-mirrorinput",
-  "version": "1.3.2",
+  "version": "1.3.4",
   "description": "Mirrors input events between two elements.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

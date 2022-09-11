@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-support",
-  "version": "1.0.11",
+  "version": "1.1.0",
   "files": [
     "support.js"
   ],
@@ -9,11 +9,9 @@
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "test": "pnpm test:unit && pnpm test:e2e",
-    "live-server": "live-server public --port=9000 --no-browser",
-    "live-server:browser": "live-server public --port=9000",
     "test:unit": "jest",
-    "test:e2e": "testcafe \"chrome:headless '--window-size=1920,1080'\" tests --app 'live-server public --port=9000 --no-browser'",
-    "test:e2e:browser": "testcafe \"chrome '--window-size=1920,1080'\" tests --app 'live-server public --port=9000 --no-browser'",
+    "test:e2e": "testcafe \"chrome:headless '--window-size=1920,1080'\" tests ",
+    "test:e2e:browser": "testcafe \"chrome '--window-size=1920,1080'\" tests",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",

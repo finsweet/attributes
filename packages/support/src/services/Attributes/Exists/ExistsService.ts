@@ -5,6 +5,16 @@ import AttributeDuplicateError from './Errors/AttributeDuplicatedError';
 import AttributeNotFoundError from './Errors/AttributeNotFoundError';
 import DOMForAttributeNotFound from './Errors/DOMForAttributeNotFound';
 
+export function settingExists(settingSelector: SchemaSelector, appliedTo: DOMSelector[] | undefined): HTMLElement[] {
+  const domElement = document.querySelectorAll<HTMLElement>(settingSelector.getAttributeSelector());
+
+  if (!domElement || domElement.length === 0) {
+    throw new AttributeNotFoundError(settingSelector, appliedTo, false);
+  }
+
+  return Array.from(domElement);
+}
+
 export function elementSettingExists(
   htmlElements: HTMLElement[] | null,
   elementSelector: SchemaSelector,

@@ -1,5 +1,30 @@
 # @finsweet/attributes-cmsslider
 
+## 1.5.6
+
+### Patch Changes
+
+- Updated dependencies [299fd136]
+  - @finsweet/attributes-cmscore@1.6.10
+
+## 1.5.5
+
+### Patch Changes
+
+- Updated dependencies [7542dcdb]
+  - @global/constants@1.0.2
+  - @global/factory@1.1.3
+  - @finsweet/attributes-cmscore@1.6.9
+
+## 1.5.4
+
+### Patch Changes
+
+- Updated dependencies [bdd1a78]
+  - @global/constants@1.0.1
+  - @global/factory@1.1.2
+  - @finsweet/attributes-cmscore@1.6.8
+
 ## 1.5.3
 
 ### Patch Changes

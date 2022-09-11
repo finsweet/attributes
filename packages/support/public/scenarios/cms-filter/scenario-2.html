@@ -1,135 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>CMS Filter - Scenario 1</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] CMS Filter -->
-  <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsfilter@1/cmsfilter.js"></script>
-</head>
-<body>
-  <div class="instance-1">
-    <div
-      fs-cmsfilter-element="list"
-      class="w-dyn-items"
-      fs-cmsfilter-active="active-class"
-      fs-cmsfilter-showquery="true"
-      fs-cmsfilter-tagformat="category"
-      fs-cmsfilter-debounce="250"
-      fs-cmsfilter-highlightclass="highlight-class"
-      fs-cmsfilter-easing="ease-out"
-      fs-cmsfilter-duration="500"
-    >
-      <div class="w-dyn-item">
-        <div fs-cmsfilter-field="element-checkbox">United States</div>
-        <div fs-cmsfilter-field="element-radio">United States</div>
-        <div fs-cmsfilter-field="element-select">Most visited</div>
-        <div class="w-embed" fs-cmsfilter-field="element-toggle">true</div>
-        <div><strong class="bold-text">Update date:</strong></div>
-        <div
-          fs-cmsfilter-field="element-date"
-          fs-cmsfilter-type="date"
-          fs-cmsfilter-active="element-date-active"
-          fs-cmsfilter-match="all"
-        >
-          October 12, 2021
-        </div>
-      </div>
-    </div>
-
-
-    <div class="w-form" fs-cmsfilter-element="filters">
-      <form>
-        <!-- checkbox -->
-        <div role="listitem" class="w-dyn-item">
-          <label class="w-checkbox fs-filtercms_checkbox">
-            <input type="checkbox" id="checkbox-2-1" name="checkbox-2" data-name="Checkbox 2" class="w-checkbox-input fs-filtercms-check">
-            <span
-              fs-cmsfilter-match="any"
-              fs-cmsfilter-active="element-checkbox-active"
-              fs-cmsfilter-field="element-checkbox"
-              fs-cmsfilter-tagcategory="Search for:"
-              fs-cmsfilter-tagformat="category"
-              fs-cmsfilter-debounce="1000"
-              fs-cmsfilter-highlight="true"
-              class="fs-filtercms_check-label w-form-label"
-              for="checkbox-2"
-            >
-              United States
-            </span>
-        </label>
-        </div>
-        <div role="listitem" class="w-dyn-item">
-          <label class="w-checkbox fs-filtercms_checkbox">
-            <input type="checkbox" id="checkbox-2-1" name="checkbox-2" data-name="Checkbox 2" class="w-checkbox-input fs-filtercms-check">
-            <span fs-cmsfilter-match="any" fs-cmsfilter-active="element-checkbox-active" fs-cmsfilter-field="element-checkbox" class="fs-filtercms_check-label w-form-label" for="checkbox-2">Brazil</span>
-        </label>
-        </div>
-        <!-- radiobox -->
-        <div role="listitem" class="w-dyn-item">
-          <label class="fs-filtercms_radio w-radio">
-            <div class="w-form-formradioinput w-form-formradioinput--inputType-custom fs-filtercms-radio-button w-radio-input"></div>
-            <input type="radio" data-name="Radio" id="radio-0" name="radio" value="Radio" style="opacity:0;position:absolute;z-index:-1">
-            <span fs-cmsfilter-match="all" fs-cmsfilter-active="element-radio-active" fs-cmsfilter-field="element-radio" class="fs-filtercms_radio-label w-form-label" for="radio">United States</span>
-          </label>
-        </div>
-        <div role="listitem" class="w-dyn-item">
-          <label class="fs-filtercms_radio w-radio">
-            <div class="w-form-formradioinput w-form-formradioinput--inputType-custom fs-filtercms-radio-button w-radio-input"></div>
-            <input type="radio" data-name="Radio" id="radio-1" name="radio" value="Radio" style="opacity:0;position:absolute;z-index:-1">
-            <span fs-cmsfilter-match="all" fs-cmsfilter-active="element-radio-active" fs-cmsfilter-field="element-radio"  class="fs-filtercms_radio-label w-form-label" for="radio">India</span>
-          </label>
-        </div>
-        <!-- select -->
-        <div class="fs-filtercms_filter-block">
-          <select id="field" name="field" data-name="field" fs-cmsfilter-field="element-select" class="fs-cms_select w-select fs-cmsfilter_active">
-            <option value="">Select one...</option>
-            <option value="Most visited">Most visited</option>
-            <option value="Most rated">Most rated</option>
-          </select>
-        </div>
-        <!-- search field -->
-        <input type="text" class="fs-filtercms_field w-input" maxlength="256" name="name" fs-cmsfilter-field="element-select, element-checkbox, element-radio" data-name="Name" placeholder="Find a tourist place here..." id="name">
-        <!-- toggle -->
-        <div class="fs-filtercms_filter-block">
-          <div class="fs-filtercms_header">
-            <div class="fs-filtercms_label">Featured:</div>
-            <label class="w-checkbox fs-checkbox_toggle">
-              <div class="fs-checkbox_dot"></div>
-              <input type="checkbox" id="Featured" name="Featured" data-name="Featured" fs-cmsfilter-field="element-toggle" class="w-checkbox-input fs-checkbox-field">
-              <span for="Featured" class="fs-checkbox_label w-form-label">Prime Video</span>
-            </label>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CMS Filter - Scenario 1</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] CMS Filter -->
+    <script async src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsfilter@1/cmsfilter.js"></script>
+  </head>
+  <body>
+    <div class="instance-1">
+      <div
+        fs-cmsfilter-element="list"
+        class="w-dyn-items"
+        fs-cmsfilter-active="active-class"
+        fs-cmsfilter-showquery="true"
+        fs-cmsfilter-tagformat="category"
+        fs-cmsfilter-debounce="250"
+        fs-cmsfilter-highlightclass="highlight-class"
+        fs-cmsfilter-easing="ease-out"
+        fs-cmsfilter-duration="500"
+      >
+        <div class="w-dyn-item">
+          <div fs-cmsfilter-field="element-checkbox">United States</div>
+          <div fs-cmsfilter-field="element-radio">United States</div>
+          <div fs-cmsfilter-field="element-select">Most visited</div>
+          <div class="w-embed" fs-cmsfilter-field="element-toggle">true</div>
+          <div><strong class="bold-text">Update date:</strong></div>
+          <div
+            fs-cmsfilter-field="element-date"
+            fs-cmsfilter-type="date"
+            fs-cmsfilter-active="element-date-active"
+            fs-cmsfilter-match="all"
+          >
+            October 12, 2021
           </div>
         </div>
+      </div>
 
-        <!-- date -->
-        <div class="fs-cmsfilter_filters">
-          <div class="fs-cmsfilter_label">From:</div>
-          <div class="w-embed"><input type="date" fs-cmsfilter-field="element-date" fs-cmsfilter-range="from"></div>
-        </div>
-        <div class="fs-cmsfilter_filters">
-          <div class="fs-cmsfilter_label">To:</div>
-          <div class="w-embed"><input type="date" fs-cmsfilter-field="element-date" fs-cmsfilter-range="to"></div>
-        </div>
-        <!-- reset button -->
+      <div class="w-form" fs-cmsfilter-element="filters">
+        <form>
+          <!-- checkbox -->
+          <div role="listitem" class="w-dyn-item">
+            <label class="w-checkbox fs-filtercms_checkbox">
+              <input
+                type="checkbox"
+                id="checkbox-2-1"
+                name="checkbox-2"
+                data-name="Checkbox 2"
+                class="w-checkbox-input fs-filtercms-check"
+              />
+              <span
+                fs-cmsfilter-match="any"
+                fs-cmsfilter-active="element-checkbox-active"
+                fs-cmsfilter-field="element-checkbox"
+                fs-cmsfilter-tagcategory="Search for:"
+                fs-cmsfilter-tagformat="category"
+                fs-cmsfilter-debounce="1000"
+                fs-cmsfilter-highlight="true"
+                class="fs-filtercms_check-label w-form-label"
+                for="checkbox-2"
+              >
+                United States
+              </span>
+            </label>
+          </div>
+          <div role="listitem" class="w-dyn-item">
+            <label class="w-checkbox fs-filtercms_checkbox">
+              <input
+                type="checkbox"
+                id="checkbox-2-1"
+                name="checkbox-2"
+                data-name="Checkbox 2"
+                class="w-checkbox-input fs-filtercms-check"
+              />
+              <span
+                fs-cmsfilter-match="any"
+                fs-cmsfilter-active="element-checkbox-active"
+                fs-cmsfilter-field="element-checkbox"
+                class="fs-filtercms_check-label w-form-label"
+                for="checkbox-2"
+                >Brazil</span
+              >
+            </label>
+          </div>
+          <!-- radiobox -->
+          <div role="listitem" class="w-dyn-item">
+            <label class="fs-filtercms_radio w-radio">
+              <div
+                class="w-form-formradioinput w-form-formradioinput--inputType-custom fs-filtercms-radio-button w-radio-input"
+              ></div>
+              <input
+                type="radio"
+                data-name="Radio"
+                id="radio-0"
+                name="radio"
+                value="Radio"
+                style="opacity: 0; position: absolute; z-index: -1"
+              />
+              <span
+                fs-cmsfilter-match="all"
+                fs-cmsfilter-active="element-radio-active"
+                fs-cmsfilter-field="element-radio"
+                class="fs-filtercms_radio-label w-form-label"
+                for="radio"
+                >United States</span
+              >
+            </label>
+          </div>
+          <div role="listitem" class="w-dyn-item">
+            <label class="fs-filtercms_radio w-radio">
+              <div
+                class="w-form-formradioinput w-form-formradioinput--inputType-custom fs-filtercms-radio-button w-radio-input"
+              ></div>
+              <input
+                type="radio"
+                data-name="Radio"
+                id="radio-1"
+                name="radio"
+                value="Radio"
+                style="opacity: 0; position: absolute; z-index: -1"
+              />
+              <span
+                fs-cmsfilter-match="all"
+                fs-cmsfilter-active="element-radio-active"
+                fs-cmsfilter-field="element-radio"
+                class="fs-filtercms_radio-label w-form-label"
+                for="radio"
+                >India</span
+              >
+            </label>
+          </div>
+          <!-- select -->
+          <div class="fs-filtercms_filter-block">
+            <select
+              id="field"
+              name="field"
+              data-name="field"
+              fs-cmsfilter-field="element-select"
+              class="fs-cms_select w-select fs-cmsfilter_active"
+            >
+              <option value="">Select one...</option>
+              <option value="Most visited">Most visited</option>
+              <option value="Most rated">Most rated</option>
+            </select>
+          </div>
+          <!-- search field -->
+          <input
+            type="text"
+            class="fs-filtercms_field w-input"
+            maxlength="256"
+            name="name"
+            fs-cmsfilter-field="element-select, element-checkbox, element-radio"
+            data-name="Name"
+            placeholder="Find a tourist place here..."
+            id="name"
+          />
+          <!-- toggle -->
+          <div class="fs-filtercms_filter-block">
+            <div class="fs-filtercms_header">
+              <div class="fs-filtercms_label">Featured:</div>
+              <label class="w-checkbox fs-checkbox_toggle">
+                <div class="fs-checkbox_dot"></div>
+                <input
+                  type="checkbox"
+                  id="Featured"
+                  name="Featured"
+                  data-name="Featured"
+                  fs-cmsfilter-field="element-toggle"
+                  class="w-checkbox-input fs-checkbox-field"
+                />
+                <span for="Featured" class="fs-checkbox_label w-form-label">Prime Video</span>
+              </label>
+            </div>
+          </div>
 
-      </form>
+          <!-- date -->
+          <div class="fs-cmsfilter_filters">
+            <div class="fs-cmsfilter_label">From:</div>
+            <div class="w-embed"><input type="date" fs-cmsfilter-field="element-date" fs-cmsfilter-range="from" /></div>
+          </div>
+          <div class="fs-cmsfilter_filters">
+            <div class="fs-cmsfilter_label">To:</div>
+            <div class="w-embed"><input type="date" fs-cmsfilter-field="element-date" fs-cmsfilter-range="to" /></div>
+          </div>
+          <!-- reset button -->
+        </form>
+      </div>
 
+      <div fs-cmsfilter-element="items-count"></div>
+      <div fs-cmsfilter-element="results-count"></div>
+      <div fs-cmsfilter-element="empty"></div>
+      <div fs-cmsfilter-element="initial"></div>
+      <div fs-cmsfilter-element="scroll-anchor"></div>
+      <div fs-cmsfilter-element="tag-template">
+        <div fs-cmsfilter-element="tag-text"></div>
+        <div fs-cmsfilter-element="tag-remove"></div>
+      </div>
+      <a class="w-button" fs-cmsfilter-element="reset" fs-cmsfilter-reset="element-radio, element-checkbox"></a>
     </div>
-
-    <div fs-cmsfilter-element="items-count"></div>
-    <div fs-cmsfilter-element="results-count"></div>
-    <div fs-cmsfilter-element="empty"></div>
-    <div fs-cmsfilter-element="initial"></div>
-    <div fs-cmsfilter-element="scroll-anchor"></div>
-    <div fs-cmsfilter-element="tag-template">
-      <div fs-cmsfilter-element="tag-text"></div>
-      <div fs-cmsfilter-element="tag-remove"></div>
-    </div>
-    <a class="w-button" fs-cmsfilter-element="reset" fs-cmsfilter-reset="element-radio, element-checkbox"></a>
-  </div>
-
-</body>
+  </body>
 </html>

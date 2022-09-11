@@ -20,11 +20,6 @@
     }
     const lastIndex = schemaFormActions.addField(field.key);
     selectedField = lastIndex;
-
-    if (field.specializations.length === 1) {
-      schemaFormActions.setFieldSpecialization(field.key, lastIndex, field.specializations[0].key);
-    }
-
     fields = schemaFormActions.getFields();
 
     if (fields.length > 1) {
@@ -35,6 +30,8 @@
   function deleteField(fieldIndex: string) {
     schemaFormActions.deleteField(field.key, fieldIndex);
     schemaFormActions.disableFieldSettings(field.key, fieldIndex);
+    schemaFormActions.deleteFieldElements(field.key, fieldIndex);
+
     fields = schemaFormActions.getFields();
 
     if (selectedField === fieldIndex) {

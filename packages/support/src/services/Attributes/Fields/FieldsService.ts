@@ -30,12 +30,15 @@ import FieldLinkNestedCollectionLinkNotWorkingError from './Errors/Link/FieldLin
 // links
 import FieldLinkNotFoundError from './Errors/Link/LinkFieldNotFoundError';
 import MissingFieldAppliedTagError from './Errors/MissingFieldAppliedTagError';
+// elements
+import ElementFieldNotFoundError from './Errors/Element/ElementFieldNotFoundError';
 // field errors
 import MissingFieldError from './Errors/MissingFieldError';
 // ui errors
 import MissingFieldIdentifierError from './Errors/UI/MissingFieldIdentifierError';
 import MissingFieldSpecializationError from './Errors/UI/MissingFieldSpecializationError';
 import { validateDOMSelectors } from './SpecializationService';
+import Selector from '@src/services/Selector/SchemaSelector';
 
 type FieldValidatorResponse = HTMLElement | InputValidationMessage | null;
 
@@ -75,13 +78,14 @@ export async function validateField(
 
     const appliedPromises = appliedTo.map(
       async (applied: InstanceFieldSpecializationAppliedTo): Promise<FieldValidatorResponse> => {
-        const { parent, selectors, key, value, type } = applied;
+        const { parent, selectors, key, value, type, element } = applied;
 
         try {
           return await validateSpecializationApplyTo(
             fieldSelector,
             parent,
             selectors,
+            element,
             key,
             value,
             type,
@@ -218,7 +222,8 @@ function findElement(parentElement: HTMLElement | null, selector: string): HTMLE
 export async function validateSpecializationApplyTo(
   field: SchemaSelector,
   parent: ParentSelector | null,
-  selectors: DOMSelector[],
+  selectors: DOMSelector[] | undefined,
+  elements: string | undefined,
   key: string | undefined,
   value: string | undefined,
   type: string | undefined,
@@ -259,37 +264,47 @@ export async function validateSpecializationApplyTo(
   }
 
   let valueSelector = null;
+  let elementSelector = null;
+
+  if (elements) {
+    elementSelector = new Selector(`fs-${settings.key}-element`, elements);
+    valueSelector = elementSelector.getElementSelector() + instanceField.getElementSelector();
+  }
 
   if (!key && value) {
     const searchValue = value.replace('$FIELD', field.getValue());
     valueSelector = `[value="${searchValue}"],[${instanceField.getAttribute()}="${searchValue}"]`;
   }
 
-  const element = findElement(parentSelectors, valueSelector || instanceField.getElementSelector());
+  const domElement = findElement(parentSelectors, valueSelector || instanceField.getElementSelector());
 
-  if (element === null) {
+  if (domElement === null) {
     switch (type) {
       case 'link':
         throw new FieldLinkNotFoundError(instanceField);
       case 'component':
         throw new ComponentFieldNotFoundError(instanceField);
-      case 'element':
+      case 'default':
         throw new MissingFieldError(instanceField, parent);
+      case 'element':
+        throw new ElementFieldNotFoundError(instanceField, elementSelector);
       default:
         throw new MissingFieldError(instanceField, parent);
     }
   }
 
-  if (selectors.length >= 1) {
-    if (!validateDOMSelectors(element, selectors)) {
-      throw new MissingFieldAppliedTagError(instanceField, selectors);
+  if (selectors) {
+    if (selectors.length >= 1) {
+      if (!validateDOMSelectors(domElement, selectors)) {
+        throw new MissingFieldAppliedTagError(instanceField, selectors);
+      }
     }
   }
 
   if (type && type === 'link') {
     // check internal cms list item
 
-    const item = element.closest('.w-dyn-item');
+    const item = domElement.closest('.w-dyn-item');
     const itemLink = item?.querySelector('a');
 
     if (!itemLink || itemLink.closest(field.getElementSelector())) {
@@ -329,5 +344,5 @@ export async function validateSpecializationApplyTo(
     }
   }
 
-  return element;
+  return domElement;
 }

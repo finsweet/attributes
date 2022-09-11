@@ -1,5 +1,24 @@
 # @finsweet/attributes-cmscore
 
+## 1.6.10
+
+### Patch Changes
+
+- 299fd136: Trigger a list re-render after `CMSList.clearItems()`.
+  This will ensure that the `emptyElement` is displayed correctly when there are no items on the list.
+
+## 1.6.9
+
+### Patch Changes
+
+- @global/import@1.0.2
+
+## 1.6.8
+
+### Patch Changes
+
+- @global/import@1.0.1
+
 ## 1.6.7
 
 ### Patch Changes

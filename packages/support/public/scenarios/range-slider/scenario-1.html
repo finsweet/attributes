@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Svelte app</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script defer src="/packages/support/public/build/support.js"></script>
+    <!-- [Attributes by Finsweet] Range Slider -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-rangeslider@1/rangeslider.js"></script>
+  </head>
 
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>Svelte app</title>
-  <link rel='icon' type='image/png' href='/favicon.png'>
-  <script defer src='/build/support.js'></script>
-  <!-- [Attributes by Finsweet] Range Slider -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-rangeslider@1/rangeslider.js"></script>
-</head>
-
-<body>
-  <div
-    fs-rangeslider-element="wrapper"
-    fs-rangeslider-min="0"
-    fs-rangeslider-max="1000"
-    fs-rangeslider-step="20"
-    fs-rangeslider-formatdisplay="true"
-    fs-rangeslider-update="release"
-  >
-    <div fs-rangeslider-element="track" style="position:relative">
-      <div fs-rangeslider-element="fill" style="position:absolute"></div>
-      <div fs-rangeslider-element="handle" fs-rangeslider-start="500" style="position:absolute"></div>
+  <body>
+    <div
+      fs-rangeslider-element="wrapper"
+      fs-rangeslider-min="0"
+      fs-rangeslider-max="1000"
+      fs-rangeslider-step="20"
+      fs-rangeslider-formatdisplay="true"
+      fs-rangeslider-update="release"
+    >
+      <div fs-rangeslider-element="track" style="position: relative">
+        <div fs-rangeslider-element="fill" style="position: absolute"></div>
+        <div fs-rangeslider-element="handle" fs-rangeslider-start="500" style="position: absolute"></div>
+      </div>
     </div>
-  </div>
 
-  <div fs-rangeslider-element="display-value"></div>
-
-</body>
-
+    <div fs-rangeslider-element="display-value"></div>
+  </body>
 </html>
