@@ -1,7 +1,7 @@
 import type { GlobalAttributeParams } from '@global/factory/types';
 
 export interface ShopifyAttributeParams {
-  globalAttributeParams: GlobalAttributeParams;
+  globalAttributeParams: GlobalAttributeParams<Record<string, string>>;
 
   /**
    * Defines the storefrontAccessToken provided by Shopify
