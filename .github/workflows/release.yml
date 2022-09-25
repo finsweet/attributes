@@ -5,10 +5,6 @@ on:
     branches:
       - master
       - main
-env:
-  # https://github.com/directus/directus/discussions/14348#discussioncomment-3112522
-  NODE_OPTIONS: --max_old_space_size=8192
-
 jobs:
   release:
     uses: finsweet/workflow-release/.github/workflows/release.yml@main
