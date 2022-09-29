@@ -6,7 +6,7 @@
   import { schemaSettingsKey, schemaSettingsInstance, schemaSelected, schemaData } from '@src/stores';
   import { createHighlight, enableHighlight, disableHighlight } from '@src/services/Highlight/HighlightService';
 
-  import type { AttributeValue } from '@global/types/schema';
+  import type { AttributeValue } from '$global/types/schema';
   import type { Highlight } from '@src/types/Highlight.types';
   import type { SchemaInputType } from '@src/types/Input.types';
 

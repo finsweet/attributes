@@ -1,5 +1,5 @@
-import { MIRROR_CLICK_ATTRIBUTE } from '@global/constants/attributes';
-import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
+import { MIRROR_CLICK_ATTRIBUTE } from '$global/constants/attributes';
+import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${MIRROR_CLICK_ATTRIBUTE}`;
 

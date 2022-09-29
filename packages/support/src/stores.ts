@@ -1,5 +1,5 @@
-import type { SupportedAttributeData } from '@finsweet/attributes-docs/src/utils/types';
-import type { AttributeSchema, AttributeElementSchema } from '@global/types/schema';
+import type { SupportedAttributeData } from '$packages/docs/src/utils/types';
+import type { AttributeSchema, AttributeElementSchema } from '$global/types/schema';
 import { findInvalidAttributes, findValidAttributes } from '@src/services/SchemaInput/ValidateInputService';
 
 import { addElement, deleteElement, findElement } from '@src/services/SchemaInput/ElementInputService';

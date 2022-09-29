@@ -2,7 +2,7 @@
   import ElementSpecialization from './ElementSpecialization.svelte';
   import IdentifierSpecialization from './IdentifierSpecialization.svelte';
   import type { FieldChangeSpecialization, FieldChangeIdentifier, SchemaInputField } from '@src/types/Input.types';
-  import type { FieldSpecialization } from '@global/types/schema';
+  import type { FieldSpecialization } from '$global/types/schema';
 
   export let specializations: FieldSpecialization[];
   export let changeFieldIdentifier: FieldChangeIdentifier;

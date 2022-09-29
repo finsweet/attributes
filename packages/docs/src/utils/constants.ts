@@ -1,5 +1,5 @@
-import { DOCS_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory';
+import { DOCS_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory';
 
 export const ATTRIBUTES_PREFIX = `fs-${DOCS_ATTRIBUTE}`;
 

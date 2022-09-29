@@ -3,7 +3,7 @@ import type {
   AttributeSchemaCondition,
   AttributeStyleCondition,
   AttributeStyleConditionStyles,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import type { SchemaSelector } from '@src/types/Schema.types';
 
 import AttributeNotHasStyleError from './Errors/AttributeNotHasStyleError';

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-animation",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "Web Animations API for Attributes.",
   "main": "animation.js",
   "files": [
@@ -36,13 +36,10 @@
   },
   "homepage": "https://www.finsweet.com/attributes",
   "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/types": "workspace:*",
     "@motionone/dom": "^10.10.0",
     "@motionone/types": "^10.9.0"
   },
   "dependencies": {
-    "@global/factory": "workspace:*",
     "motion": "^10.10.0"
   }
 }

@@ -1,5 +1,5 @@
-import { COUNT_ITEMS_ATTRIBUTE } from '@global/constants/attributes';
-import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
+import { COUNT_ITEMS_ATTRIBUTE } from '$global/constants/attributes';
+import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${COUNT_ITEMS_ATTRIBUTE}`;
 

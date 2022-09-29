@@ -1,4 +1,4 @@
-import { getInstanceIndex } from '@global/helpers';
+import { getInstanceIndex } from '$global/helpers';
 
 import { collectFacebookData, collectPinterestData, collectSocialData, collectTwitterData } from './actions/collect';
 import {

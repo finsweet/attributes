@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-selectcustom",
-  "version": "1.5.8",
+  "version": "1.6.1",
   "description": "Create custom Select Dropdown components inside Webflow.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -37,16 +37,7 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
   "dependencies": {
-    "@finsweet/ts-utils": "^0.33.1",
-    "@global/constants": "workspace:*",
-    "@global/factory": "workspace:*",
-    "@global/helpers": "workspace:*",
     "just-debounce": "^1.1.0"
   }
 }

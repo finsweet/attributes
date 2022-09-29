@@ -1,4 +1,4 @@
-import type { AttributeSchema, AttributeSchemaCondition, AttributeSchemaConditions } from '@global/types/schema';
+import type { AttributeSchema, AttributeSchemaCondition, AttributeSchemaConditions } from '$global/types/schema';
 import type { SchemaSelector, SchemaSettings } from '@src/types/Schema.types';
 
 import { exists } from './Exists/ExistsService';

@@ -1,5 +1,6 @@
 import type { DropdownToggle, DropdownList } from '@finsweet/ts-utils';
-import { ARIA_HASPOPUP_KEY, ARIA_MULTISELECTABLE_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES } from '@global/constants/a11ty';
+
+import { ARIA_HASPOPUP_KEY, ARIA_MULTISELECTABLE_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES } from '$global/constants/a11ty';
 
 import type { OptionData } from '../utils/types';
 

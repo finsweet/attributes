@@ -1,8 +1,9 @@
-import type { AnimationImport } from '@finsweet/attributes-animation/src/types';
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import type { CMSCoreImport } from '@finsweet/attributes-cmscore/src/utils/types';
-import type { CMSFilters } from '@finsweet/attributes-cmsfilter/src/components/CMSFilters';
 import type { CollectionListWrapperElement } from '@finsweet/ts-utils';
+
+import type { AnimationImport } from '$packages/animation/src/types';
+import type { CMSList } from '$packages/cmscore';
+import type { CMSCoreImport } from '$packages/cmscore/src/utils/types';
+import type { CMSFilters } from '$packages/cmsfilter/src/components/CMSFilters';
 
 type FsAttributesCallback =
   | [

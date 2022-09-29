@@ -1,5 +1,5 @@
-import { AUTO_VIDEO_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory/selectors';
+import { AUTO_VIDEO_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory/selectors';
 
 const ATTRIBUTES_PREFIX = `fs-${AUTO_VIDEO_ATTRIBUTE}`;
 

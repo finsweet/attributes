@@ -5,7 +5,7 @@ import type {
   AttributeSchemaCondition,
   DOMSelector,
   AttributeElementSchema,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import ConditionalNotExistsError from '@src/services/Attributes/Conditions/Exists/Errors/ConditionalNotExistsError';
 import { createSchemaSelectorFromItem, getSchemaItem } from '@src/services/Attributes/Schema/SchemaService';
 import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';

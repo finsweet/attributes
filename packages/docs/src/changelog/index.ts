@@ -1,4 +1,4 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
+import type { CMSList } from '$packages/cmscore';
 
 import { attributesData } from '../../api/attributes';
 import { createChangesetElement } from './dom';

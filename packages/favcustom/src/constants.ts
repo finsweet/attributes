@@ -1,5 +1,5 @@
-import { FAV_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory';
+import { FAV_CUSTOM_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${FAV_CUSTOM_ATTRIBUTE}`;
 

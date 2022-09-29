@@ -1,4 +1,4 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
+import type { CMSList } from '$packages/cmscore';
 
 import { ATTRIBUTES } from './constants';
 import type { CombineData } from './types';

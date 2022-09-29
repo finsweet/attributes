@@ -8,9 +8,9 @@
   import Loading from '@src/components/Loading.svelte';
   import Minimize from '@src/components/Minimize.svelte';
   import Initial from '@src/components/Initial.svelte';
-  import type { AttributeSchema } from '@global/types/schema';
+  import type { AttributeSchema } from '$global/types/schema';
   import type { AttributeLoaded } from '@src/types/Schema.types';
-  import type { AttributesData, SupportedAttributeData } from '@finsweet/attributes-docs/src/utils/types';
+  import type { AttributesData, SupportedAttributeData } from '$packages/docs/src/utils/types';
   import { isScriptLoaded } from '@src/services/Attributes/Script/ScriptService';
 
   import {

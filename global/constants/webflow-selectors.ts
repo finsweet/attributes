@@ -1,5 +1,6 @@
 import { CMS_CSS_CLASSES, SLIDER_CSS_CLASSES, DROPDOWN_CSS_CLASSES, TABS_CSS_CLASSES } from '@finsweet/ts-utils';
-import type { DOMSelector } from '@global/types/schema';
+
+import type { DOMSelector } from '$global/types/schema';
 
 export const COLLECTION_LIST: DOMSelector = {
   label: 'Collection List',

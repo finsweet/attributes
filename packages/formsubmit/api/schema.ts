@@ -1,4 +1,3 @@
-import type { AttributeSchema } from '@global/types/schema';
 import {
   ANY_ELEMENT,
   BUTTON,
@@ -10,6 +9,8 @@ import {
   LINK_BLOCK,
   TEXT_BLOCK,
 } from 'global/constants/webflow-selectors';
+
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   FORM_ELEMENT_KEY,

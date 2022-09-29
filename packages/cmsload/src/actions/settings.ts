@@ -1,6 +1,7 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import { extractCommaSeparatedValues, getCurrentBreakpoint } from '@finsweet/ts-utils';
 import type { PaginationWrapperElement } from '@finsweet/ts-utils';
+
+import type { CMSList } from '$packages/cmscore';
 
 import {
   ATTRIBUTES,

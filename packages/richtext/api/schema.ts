@@ -1,5 +1,5 @@
-import { ANY_ELEMENT, RICH_TEXT_BLOCK } from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+import { ANY_ELEMENT, RICH_TEXT_BLOCK } from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   RICH_TEXT_ELEMENT_KEY,

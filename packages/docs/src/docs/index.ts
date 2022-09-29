@@ -1,4 +1,4 @@
-import type { AttributeExamples } from '@global/types/examples';
+import type { AttributeExamples } from '$global/types/examples';
 
 import { attributesData } from '../../api/attributes';
 import { ATTRIBUTES } from '../utils/constants';

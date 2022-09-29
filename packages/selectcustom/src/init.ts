@@ -1,4 +1,4 @@
-import { CMS_SELECT_ATTRIBUTE, SELECT_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_SELECT_ATTRIBUTE, SELECT_CUSTOM_ATTRIBUTE } from '$global/constants/attributes';
 
 import { listenEvents } from './actions/events';
 import { observeElements } from './actions/observe';
@@ -10,6 +10,7 @@ import { getSelector } from './utils/constants';
  * Inits the attribute.
  */
 export const init = async (): Promise<NodeListOf<HTMLElement>> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
   await window.fsAttributes[CMS_SELECT_ATTRIBUTE]?.loading;
 
   const referenceElements = document.querySelectorAll<HTMLElement>(

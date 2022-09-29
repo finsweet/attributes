@@ -1,5 +1,6 @@
-import type { CMSList, CMSCore } from '@finsweet/attributes-cmscore';
 import { Debug } from '@finsweet/ts-utils';
+
+import type { CMSList, CMSCore } from '$packages/cmscore';
 
 import { getNestSources } from './actions/collect';
 import { listenListEvents } from './actions/events';

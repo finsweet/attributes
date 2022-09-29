@@ -4,7 +4,7 @@ import type {
   AttributeSchemaConditions,
   AttributeValue,
   DOMSelector,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import { elementAppliedTo } from '@src/services/Attributes/AppliedTo/AppliedToService';
 import conditionsService, { filterElementsByConditions } from '@src/services/Attributes/Conditions/ConditionsService';
 import { settingExists } from '@src/services/Attributes/Exists/ExistsService';

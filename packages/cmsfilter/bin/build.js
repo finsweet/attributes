@@ -1,6 +1,12 @@
-import { generateChangesetsJSON, generateExamplesJSON, generateScript, generateSchemaJSON } from '@global/build';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
+import {
+  generateChangesetsJSON,
+  generateExamplesJSON,
+  generateScript,
+  generateSchemaJSON,
+} from '../../../global/build/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

@@ -1,4 +1,4 @@
-import { SCROLL_DISABLE_ATTRIBUTE } from '@global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, SCROLL_DISABLE_ATTRIBUTE } from '$global/constants/attributes';
 
 import { initClickTriggers } from './click';
 import { ATTRIBUTES, getSelector } from './constants';
@@ -13,7 +13,9 @@ const {
 /**
  * Inits the scrolldisable functionalities.
  */
-export const init = (): void => {
+export const init = async () => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const preserveScrollTargets = document.querySelectorAll(getSelector('element', 'preserve'));
 
   let reserveScrollbarGap = true;

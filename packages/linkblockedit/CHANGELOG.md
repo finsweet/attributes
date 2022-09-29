@@ -1,5 +1,25 @@
 # @finsweet/attributes-linkblockedit
 
+## 1.4.1
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @global/factory@1.1.5
+
+## 1.4.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+
 ## 1.3.4
 
 ### Patch Changes
@@ -47,11 +67,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "linkblockedit",
-    elements => {
-      console.log("Attribute has successfully loaded!");
+    'linkblockedit',
+    (elements) => {
+      console.log('Attribute has successfully loaded!');
       console.log(elements);
-    }
+    },
   ]);
 </script>
 ```

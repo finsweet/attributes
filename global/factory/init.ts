@@ -1,4 +1,4 @@
-import { importSupport } from '@global/import';
+import { importSupport } from '$global/import';
 
 import { ATTRIBUTES, getSelector } from './constants';
 

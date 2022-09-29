@@ -1,3 +1,3 @@
-import config from '@global/tests';
+import config from '$global/tests';
 
 export default config;

@@ -1,5 +1,25 @@
 # @finsweet/attributes-displayvalues
 
+## 1.3.1
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @global/factory@1.1.5
+
+## 1.3.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+
 ## 1.2.4
 
 ### Patch Changes
@@ -41,11 +61,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "displayvalues",
-    sourceElements => {
-      console.log("Attribute has successfully loaded!");
+    'displayvalues',
+    (sourceElements) => {
+      console.log('Attribute has successfully loaded!');
       console.log(sourceElements);
-    }
+    },
   ]);
 </script>
 ```

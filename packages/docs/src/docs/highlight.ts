@@ -1,5 +1,6 @@
-import { ATTRIBUTES as CODEHIGHLIGHT_ATTRIBUTES } from '@finsweet/attributes-codehighlight/src/utils/constants';
 import { CODE_HIGHLIGHT_ATTRIBUTE } from 'global/constants/attributes';
+
+import { ATTRIBUTES as CODEHIGHLIGHT_ATTRIBUTES } from '$packages/codehighlight/src/utils/constants';
 
 import { queryElement } from '../utils/constants';
 

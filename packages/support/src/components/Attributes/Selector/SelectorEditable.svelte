@@ -4,7 +4,7 @@
   import SelectorButton from './SelectorButton.svelte';
   import SelectorValue from './SelectorValue.svelte';
   import SelectorFields from './SelectorFields.svelte';
-  import type { AttributeValue } from '@global/types/schema';
+  import type { AttributeValue } from '$global/types/schema';
 
   export let label: 'Name' | 'Value';
 

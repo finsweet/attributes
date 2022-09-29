@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-mirrorclick",
-  "version": "1.4.4",
+  "version": "1.4.6",
   "description": "Mirrors click events between two elements.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -38,15 +38,5 @@
   },
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
-  },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
-  "dependencies": {
-    "@global/factory": "workspace:*",
-    "@global/helpers": "workspace:*",
-    "@global/constants": "workspace:*"
   }
 }

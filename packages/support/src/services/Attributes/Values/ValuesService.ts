@@ -1,4 +1,4 @@
-import type { AttributeSettingValueOptions, AttributeValue } from '@global/types/schema';
+import type { AttributeSettingValueOptions, AttributeValue } from '$global/types/schema';
 import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
 import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';
 import { booleanValidator } from '@src/services/Validators/Boolean/BooleanValidator';

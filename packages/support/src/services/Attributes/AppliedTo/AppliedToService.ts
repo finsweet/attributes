@@ -1,4 +1,4 @@
-import type { DOMSelector } from '@global/types/schema';
+import type { DOMSelector } from '$global/types/schema';
 import { assertAttributeIsAppliedToElement } from '@src/services/DOM/Assertions/AssertionsService';
 import { queryElementWithAttribute } from '@src/services/DOM/Queries/QueriesService';
 import type { SchemaSelector, ElementItemSelector } from '@src/types/Schema.types';

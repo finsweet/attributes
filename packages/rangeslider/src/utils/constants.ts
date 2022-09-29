@@ -1,6 +1,6 @@
-import { RANGE_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
-import { ARROW_DOWN_KEY, ARROW_LEFT_KEY, ARROW_RIGHT_KEY, ARROW_UP_KEY } from '@global/constants/keyboard';
-import { generateSelectors } from '@global/factory';
+import { RANGE_SLIDER_ATTRIBUTE } from '$global/constants/attributes';
+import { ARROW_DOWN_KEY, ARROW_LEFT_KEY, ARROW_RIGHT_KEY, ARROW_UP_KEY } from '$global/constants/keyboard';
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${RANGE_SLIDER_ATTRIBUTE}` as const;
 

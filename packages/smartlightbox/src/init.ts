@@ -1,4 +1,4 @@
-import { SMART_LIGHTBOX_ATTRIBUTE } from '@global/constants/attributes';
+import { SMART_LIGHTBOX_ATTRIBUTE } from '$global/constants/attributes';
 
 import { getLightboxElement } from './actions/collect';
 import { moveElementToBody } from './actions/move';

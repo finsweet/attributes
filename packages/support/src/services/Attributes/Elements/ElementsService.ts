@@ -1,4 +1,4 @@
-import type { AttributeSchema, AttributeElementSchema } from '@global/types/schema';
+import type { AttributeSchema, AttributeElementSchema } from '$global/types/schema';
 import { elementAppliedTo } from '@src/services/Attributes/AppliedTo/AppliedToService';
 import useElementsConditions from '@src/services/Attributes/Conditions/ConditionsService';
 import { elementExists, elementDuplicated, domElementExists } from '@src/services/Attributes/Exists/ExistsService';

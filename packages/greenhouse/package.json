@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-greenhouse",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Attributes integration for Greenhouse",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -37,16 +37,7 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
   "dependencies": {
-    "@global/factory": "workspace:*",
-    "@global/constants": "workspace:*",
-    "@finsweet/attributes-cmscore": "workspace:*",
-    "@finsweet/ts-utils": "^0.33.1",
     "slugify": "^1.6.5"
   }
 }

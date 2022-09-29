@@ -1,4 +1,4 @@
-import type { AttributeElementSchema } from '@global/types/schema';
+import type { AttributeElementSchema } from '$global/types/schema';
 import CMS_PREV_NEXT from '@src/schemas/cms-previous-next';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 

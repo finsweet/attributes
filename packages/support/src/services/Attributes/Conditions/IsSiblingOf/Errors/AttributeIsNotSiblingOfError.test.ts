@@ -1,4 +1,4 @@
-import type { AttributeElementSchema, DOMSelector } from '@global/types/schema';
+import type { AttributeElementSchema, DOMSelector } from '$global/types/schema';
 import COPY_CLIP from '@src/schemas/copy-clip';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type { ElementItemSelector } from '@src/types/Schema.types';

@@ -21,7 +21,7 @@
     toggleAttributeSelector,
   } from '@src/stores';
   import type { SchemaInput, SchemaInputValidation } from '@src/types/Input.types';
-  import type { AttributeElementSchema } from '@global/types/schema';
+  import type { AttributeElementSchema } from '$global/types/schema';
 
   // attribute config
   export let element: AttributeElementSchema;

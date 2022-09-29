@@ -1,5 +1,5 @@
-import { COPY_CLIP_ATTRIBUTE } from '@global/constants/attributes';
-import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
+import { COPY_CLIP_ATTRIBUTE } from '$global/constants/attributes';
+import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${COPY_CLIP_ATTRIBUTE}`;
 

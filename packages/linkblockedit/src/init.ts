@@ -1,12 +1,14 @@
-import { ARIA_LABEL_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES, TABINDEX_KEY } from '@global/constants/a11ty';
-import { LINK_BLOCK_EDIT_ATTRIBUTE } from '@global/constants/attributes';
+import { ARIA_LABEL_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES, TABINDEX_KEY } from '$global/constants/a11ty';
+import { CMS_ATTRIBUTE_ATTRIBUTE, LINK_BLOCK_EDIT_ATTRIBUTE } from '$global/constants/attributes';
 
 import { getSelector } from './constants';
 
 /**
  * Inits editor friendly link blocks.
  */
-export const init = (): NodeListOf<HTMLElement> => {
+export const init = async (): Promise<NodeListOf<HTMLElement>> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const elements = document.querySelectorAll<HTMLElement>(getSelector('element', 'parent'));
 
   // Make the elements accessible

@@ -5,8 +5,8 @@ import {
   LINK_BLOCK,
   RICH_TEXT_BLOCK,
   TEXT_BLOCK,
-} from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+} from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   CONTENTS_ELEMENT_KEY,

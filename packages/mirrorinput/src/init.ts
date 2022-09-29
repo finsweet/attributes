@@ -1,6 +1,7 @@
 import { isFormField, setFormFieldValue } from '@finsweet/ts-utils';
-import { MIRROR_INPUT_ATTRIBUTE } from '@global/constants/attributes';
-import { getInstanceIndex } from '@global/helpers';
+
+import { MIRROR_INPUT_ATTRIBUTE } from '$global/constants/attributes';
+import { getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, getSelector, queryElement } from './constants';
 

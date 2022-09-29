@@ -1,4 +1,4 @@
-import type { AttributeElementSchema, AttributeSchemaCondition } from '@global/types/schema';
+import type { AttributeElementSchema, AttributeSchemaCondition } from '$global/types/schema';
 import CMS_LOAD from '@src/schemas/cms-load';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type { ItemError } from '@src/types/Error.types';

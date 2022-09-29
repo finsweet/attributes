@@ -1,5 +1,5 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { fetchPageDocument } from '@finsweet/attributes-cmscore';
+import type { CMSList } from '$packages/cmscore';
+import { fetchPageDocument } from '$packages/cmscore';
 
 import { readPaginationCount } from './pagination';
 import { parseLoadedPage } from './parse';

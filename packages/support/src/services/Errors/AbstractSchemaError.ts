@@ -1,4 +1,4 @@
-import type { DOMSelector, ElementSelector, ParentSelector, SelectorSelector } from '@global/types/schema';
+import type { DOMSelector, ElementSelector, ParentSelector, SelectorSelector } from '$global/types/schema';
 import type { ItemError } from '@src/types/Error.types';
 
 export default class AbstractSchemaError extends Error implements ItemError {

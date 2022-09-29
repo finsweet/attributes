@@ -1,5 +1,5 @@
-import { COLLECTION_LIST, SLIDER } from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+import { COLLECTION_LIST, SLIDER } from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import { LIST_ELEMENT_KEY, SLIDER_ELEMENT_KEY, RESET_IX_SETTING_KEY } from './../src/constants';
 

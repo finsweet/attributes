@@ -1,7 +1,8 @@
 import { SliderNavElement, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { SliderElement } from '@finsweet/ts-utils';
-import { CMS_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
-import { getInstanceIndex } from '@global/helpers';
+
+import { CMS_SLIDER_ATTRIBUTE } from '$global/constants/attributes';
+import { getInstanceIndex } from '$global/helpers';
 
 import { listenClickEvents } from './actions/events';
 import { observeSliderNav } from './actions/observe';

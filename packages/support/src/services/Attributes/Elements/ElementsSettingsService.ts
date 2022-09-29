@@ -5,7 +5,7 @@ import type {
   AttributeSchemaSettingAppliedTo,
   AttributeSchemaConditions,
   AttributeValue,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import { elementSettingAppliedTo, elementsSameNode } from '@src/services/Attributes/AppliedTo/AppliedToService';
 import conditionsService from '@src/services/Attributes/Conditions/ConditionsService';
 import { elementSettingExists } from '@src/services/Attributes/Exists/ExistsService';

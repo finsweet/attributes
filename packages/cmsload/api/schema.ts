@@ -11,8 +11,8 @@ import {
   TEXT_LINK,
   TEXT_ELEMENT,
   BUTTON,
-} from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+} from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   ANIMATION_SETTING_KEY,
@@ -34,6 +34,8 @@ import {
   STAGGER_SETTING_KEY,
   THRESHOLD_SETTING_KEY,
   EMPTY_ELEMENT_KEY,
+  VISIBLE_COUNT_FROM_ELEMENT_KEY,
+  VISIBLE_COUNT_TO_ELEMENT_KEY,
 } from '../src/utils/constants';
 
 export const schema: AttributeSchema = {
@@ -80,6 +82,36 @@ export const schema: AttributeSchema = {
     {
       key: VISIBLE_COUNT_ELEMENT_KEY,
       description: 'Defines an element where to display the amount of visible items.',
+      required: false,
+      appliedTo: [TEXT_BLOCK],
+      multiplesInInstance: false,
+      requiresInstance: true,
+      conditions: [
+        {
+          condition: 'exists',
+          type: 'element',
+          element: LIST_ELEMENT_KEY,
+        },
+      ],
+    },
+    {
+      key: VISIBLE_COUNT_FROM_ELEMENT_KEY,
+      description: 'Defines an element where to display the lower range of visible items.',
+      required: false,
+      appliedTo: [TEXT_BLOCK],
+      multiplesInInstance: false,
+      requiresInstance: true,
+      conditions: [
+        {
+          condition: 'exists',
+          type: 'element',
+          element: LIST_ELEMENT_KEY,
+        },
+      ],
+    },
+    {
+      key: VISIBLE_COUNT_TO_ELEMENT_KEY,
+      description: 'Defines an element where to display the upper range of visible items.',
       required: false,
       appliedTo: [TEXT_BLOCK],
       multiplesInInstance: false,

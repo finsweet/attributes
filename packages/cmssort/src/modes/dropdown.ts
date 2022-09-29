@@ -1,15 +1,16 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { normalizePropKey } from '@finsweet/attributes-cmscore';
 import { CURRENT_CSS_CLASS, Debug, DROPDOWN_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { Dropdown, DropdownToggle, DropdownList } from '@finsweet/ts-utils';
+
 import {
   ARIA_HASPOPUP_KEY,
   ARIA_MULTISELECTABLE_KEY,
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
   ARIA_SELECTED_KEY,
-} from '@global/constants/a11ty';
-import { closeDropdown } from '@global/helpers';
+} from '$global/constants/a11ty';
+import { closeDropdown } from '$global/helpers';
+import type { CMSList } from '$packages/cmscore';
+import { normalizePropKey } from '$packages/cmscore';
 
 import { sortListItems } from '../actions/sort';
 import { ATTRIBUTES, queryElement } from '../utils/constants';

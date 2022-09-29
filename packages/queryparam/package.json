@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-queryparam",
-  "version": "1.0.2",
+  "version": "1.1.1",
   "description": "Use query parameter values to populate form inputs and text elements.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -36,15 +36,5 @@
   },
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
-  },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
-  "dependencies": {
-    "@global/factory": "workspace:*",
-    "@global/constants": "workspace:*",
-    "@finsweet/ts-utils": "^0.33.1"
   }
 }

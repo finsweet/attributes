@@ -1,6 +1,6 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { importCMSCore } from '@finsweet/attributes-cmscore';
-import { CMS_SELECT_ATTRIBUTE, CMS_LOAD_ATTRIBUTE } from '@global/constants/attributes';
+import { CMS_SELECT_ATTRIBUTE, CMS_LOAD_ATTRIBUTE, CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import type { CMSList } from '$packages/cmscore';
+import { importCMSCore } from '$packages/cmscore';
 
 import { getSelector } from './constants';
 import { populateSelectElement } from './populate';
@@ -11,6 +11,8 @@ import { populateSelectElement } from './populate';
 export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
+
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
 
   const targetElements = [...document.querySelectorAll(getSelector('element', 'select', { operator: 'prefixed' }))];
 

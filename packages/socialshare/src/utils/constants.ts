@@ -1,5 +1,5 @@
-import { SOCIAL_SHARE_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors, generateDynamicAttibuteValue } from '@global/factory';
+import { SOCIAL_SHARE_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors, generateDynamicAttibuteValue } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${SOCIAL_SHARE_ATTRIBUTE}`;
 

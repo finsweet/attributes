@@ -1,6 +1,7 @@
 import { restartWebflow, RICH_TEXT_BLOCK_CSS_CLASS } from '@finsweet/ts-utils';
 import type { RichTextBlockElement } from '@finsweet/ts-utils';
-import { RICH_TEXT_ATTRIBUTE } from '@global/constants/attributes';
+
+import { CMS_ATTRIBUTE_ATTRIBUTE, RICH_TEXT_ATTRIBUTE } from '$global/constants/attributes';
 
 import { getValidTextElements } from './actions/collect';
 import { parseTextElement } from './actions/parse';
@@ -16,6 +17,8 @@ const {
  * Inits the attribute.
  */
 export const init = async (): Promise<HTMLDivElement[]> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const rtbElements = [
     ...document.querySelectorAll<RichTextBlockElement>(
       `.${RICH_TEXT_BLOCK_CSS_CLASS}${getSelector('element', 'richText', { operator: 'prefixed' })}`

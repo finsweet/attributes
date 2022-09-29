@@ -1,5 +1,25 @@
 # @finsweet/attributes-copyclip
 
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @global/factory@1.1.5
+
+## 1.6.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+
 ## 1.5.5
 
 ### Patch Changes
@@ -59,11 +79,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "copyclip",
+    'copyclip',
     ([copyTriggers, destroyCallbacks]) => {
-      console.log("Attribute has successfully loaded!");
+      console.log('Attribute has successfully loaded!');
       console.log([copyTriggers, destroyCallbacks]);
-    }
+    },
   ]);
 </script>
 ```

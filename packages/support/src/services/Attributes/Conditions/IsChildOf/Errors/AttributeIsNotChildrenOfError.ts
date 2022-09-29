@@ -1,4 +1,4 @@
-import type { DOMSelector } from '@global/types/schema';
+import type { DOMSelector } from '$global/types/schema';
 import AbstractSchemaError from '@src/services/Errors/AbstractSchemaError';
 import type { SchemaSelector } from '@src/types/Schema.types';
 

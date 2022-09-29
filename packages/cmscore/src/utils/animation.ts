@@ -1,5 +1,6 @@
 import { getObjectKeys, isKeyOf } from '@finsweet/ts-utils';
-import { importAnimations } from '@global/import';
+
+import { importAnimations } from '$global/import';
 
 import type { CMSList } from '..';
 import { DEFAULT_LIST_ANIMATION_DURATION } from './constants';

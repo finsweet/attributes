@@ -1,5 +1,5 @@
-import { COLLECTION_ITEM, TEXT_ELEMENT, SELECT } from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+import { COLLECTION_ITEM, TEXT_ELEMENT, SELECT } from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import { TEXT_VALUE_ELEMENT_KEY, SELECT_ELEMENT_KEY } from '../src/constants';
 

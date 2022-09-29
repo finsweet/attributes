@@ -1,7 +1,8 @@
-import { addListAnimation } from '@finsweet/attributes-cmscore';
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import { isKeyOf, FORM_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
+
+import { addListAnimation } from '$packages/cmscore';
+import type { CMSList } from '$packages/cmscore';
 
 import { CMSFilters } from './components/CMSFilters';
 import { CMSTags } from './components/CMSTags';

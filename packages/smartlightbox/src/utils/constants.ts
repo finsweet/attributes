@@ -1,5 +1,5 @@
-import { SMART_LIGHTBOX_ATTRIBUTE } from '@global/constants/attributes';
-import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
+import { SMART_LIGHTBOX_ATTRIBUTE } from '$global/constants/attributes';
+import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${SMART_LIGHTBOX_ATTRIBUTE}`;
 

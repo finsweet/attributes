@@ -1,5 +1,5 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { importCMSCore } from '@finsweet/attributes-cmscore';
+import type { CMSList } from '$packages/cmscore';
+import { importCMSCore } from '$packages/cmscore';
 
 import { initSaveSourceInstance } from './factory';
 import { ATTRIBUTE, getSelector } from './utils/constants';
@@ -10,6 +10,8 @@ import { ATTRIBUTE, getSelector } from './utils/constants';
 export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
+
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
 
   // Create the list instances
   const sourceListInstances = cmsCore.createCMSListInstances([

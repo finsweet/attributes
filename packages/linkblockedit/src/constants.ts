@@ -1,5 +1,5 @@
-import { LINK_BLOCK_EDIT_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory';
+import { LINK_BLOCK_EDIT_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${LINK_BLOCK_EDIT_ATTRIBUTE}`;
 

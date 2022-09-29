@@ -1,4 +1,4 @@
-import type { CMSList, CMSCore } from '@finsweet/attributes-cmscore';
+import type { CMSList, CMSCore } from '$packages/cmscore';
 
 import type { NestSources } from '../utils/types';
 import { populateNestedCollections } from './populate';

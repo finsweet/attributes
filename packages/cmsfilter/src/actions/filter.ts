@@ -1,7 +1,6 @@
-import type { CMSItem } from '@finsweet/attributes-cmscore';
+import { normalizeDate, normalizeNumber } from '$global/helpers';
+import type { CMSItem } from '$packages/cmscore';
 
-import { normalizeDate } from '../utils/dates';
-import { normalizeNumber } from '../utils/numbers';
 import type { FiltersData } from '../utils/types';
 import { restartHighlight } from './highlight';
 
@@ -43,6 +42,10 @@ const checkFilterValidity = (
     elements: filterElements,
   }: FiltersData[number]
 ) => {
+  if (typeof item.staticIndex === 'number') {
+    return true;
+  }
+
   const filterValues = [...values];
   if (!filterValues.length) return true;
 

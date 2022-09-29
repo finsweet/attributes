@@ -1,4 +1,4 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
+import type { CMSList } from '$packages/cmscore';
 
 import { ATTRIBUTES } from '../utils/constants';
 import type { SortItemsCallback } from '../utils/types';

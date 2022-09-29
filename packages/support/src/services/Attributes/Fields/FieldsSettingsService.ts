@@ -1,10 +1,10 @@
-import type { AttributeSchema } from '@global/types/schema';
+import type { AttributeSchema } from '$global/types/schema';
 import type {
   AttributeSettingSchema,
   SettingSpecialization,
   AttributeSchemaConditions,
   AttributeValue,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import { elementsSameNode } from '@src/services/Attributes/AppliedTo/AppliedToService';
 import conditionsService from '@src/services/Attributes/Conditions/ConditionsService';
 import {

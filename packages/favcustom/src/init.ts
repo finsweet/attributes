@@ -1,11 +1,13 @@
-import { FAV_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, FAV_CUSTOM_ATTRIBUTE } from '$global/constants/attributes';
 
 import { queryElement } from './constants';
 
 /**
  * Inits setting a custom favicon to the current page.
  */
-export const init = (): string | undefined => {
+export const init = async (): Promise<string | undefined> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   // Get the element's src, if existing.
   const srcElement = queryElement('src');
   const elementSrc = srcElement instanceof HTMLImageElement ? srcElement.src : undefined;

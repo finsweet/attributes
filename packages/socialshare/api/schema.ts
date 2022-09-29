@@ -1,4 +1,3 @@
-import type { AttributeSchema } from '@global/types/schema';
 import {
   BUTTON,
   COLLECTION_ITEM,
@@ -11,6 +10,8 @@ import {
   TEXT_ELEMENT,
   TEXT_LINK,
 } from 'global/constants/webflow-selectors';
+
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   FACEBOOK_ELEMENT_KEY,

@@ -1,8 +1,9 @@
-import { defaultBuildSettings, generateChangesetsJSON, generateScript } from '@global/build';
 import esbuild from 'esbuild';
 import { writeFileSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+
+import { defaultBuildSettings, generateChangesetsJSON, generateScript } from '../../../global/build/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

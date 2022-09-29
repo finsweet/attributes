@@ -1,5 +1,48 @@
 # @finsweet/attributes-cmsfilter
 
+## 1.14.0
+
+### Minor Changes
+
+- 4792998a: Created new `fs-cmsstatic` Attribute.
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @finsweet/attributes-cmscore@1.8.0
+  - @global/factory@1.1.5
+  - @global/import@1.0.4
+
+## 1.13.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+  - @global/import@1.0.3
+  - @finsweet/attributes-cmscore@1.7.2
+
+## 1.12.9
+
+### Patch Changes
+
+- Updated dependencies [d8a4bf6f]
+  - @finsweet/attributes-cmscore@1.7.1
+
+## 1.12.8
+
+### Patch Changes
+
+- Updated dependencies [ef56d454]
+  - @finsweet/attributes-cmscore@1.7.0
+
 ## 1.12.7
 
 ### Patch Changes
@@ -101,11 +144,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "cmsfilter",
-    cmsFilters => {
-      console.log("Attribute has successfully loaded!");
+    'cmsfilter',
+    (cmsFilters) => {
+      console.log('Attribute has successfully loaded!');
       console.log(cmsFilters);
-    }
+    },
   ]);
 </script>
 ```

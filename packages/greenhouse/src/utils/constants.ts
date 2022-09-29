@@ -1,5 +1,6 @@
-import { generateSelectors } from '@global/factory';
 import { GREENHOUSE_ATTRIBUTE } from 'global/constants/attributes';
+
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${GREENHOUSE_ATTRIBUTE}`;
 

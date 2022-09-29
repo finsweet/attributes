@@ -4,12 +4,13 @@ import { ATTRIBUTES, queryElement } from '../utils/constants';
 
 export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | undefined, queryParam: string | null) {
   // link
-
   if (queryParam) {
     const linkElements = queryElement<HTMLLinkElement>(ATTRIBUTES.element.values.link, { scope, all: true });
 
     for (const linkElement of linkElements) {
-      linkElement.href = `${linkElement.href}?${queryParam}=${job.id}`;
+      const url = new URL(linkElement.href);
+      url.searchParams.set(queryParam, job.id.toString());
+      linkElement.href = url.toString();
     }
   }
 
@@ -24,6 +25,7 @@ export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | u
   if (job.hasOwnProperty('office') || job.hasOwnProperty('departments') || job.hasOwnProperty('content')) {
     const { offices, departments, content } = job as JobWithContent;
 
+    // offices
     if (offices[0] && offices[0].name) {
       const officeElements = queryElement(ATTRIBUTES.element.values.office, { scope, all: true });
 
@@ -32,6 +34,7 @@ export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | u
       });
     }
 
+    // departments
     if (departments[0] && departments[0].name) {
       const departmentElements = queryElement(ATTRIBUTES.element.values.department, { scope, all: true });
 
@@ -40,6 +43,7 @@ export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | u
       });
     }
 
+    // description
     const descriptionElements = queryElement<HTMLElement>(ATTRIBUTES.element.values.description, { scope, all: true });
 
     descriptionElements.forEach((description) => {
@@ -49,6 +53,7 @@ export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | u
     });
   }
 
+  // apply elements
   const applyElements = queryElement<HTMLLinkElement>(ATTRIBUTES.element.values.apply, { scope, all: true });
 
   for (const applyElement of applyElements) {

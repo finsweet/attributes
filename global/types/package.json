@@ -1,9 +1,0 @@
-{
-  "name": "@global/types",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "@finsweet/ts-utils": "^0.33.1"
-  }
-}

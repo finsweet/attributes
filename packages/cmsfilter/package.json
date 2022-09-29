@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsfilter",
-  "version": "1.12.7",
+  "version": "1.14.0",
   "description": "Filter items from Webflow CMS dynamic collection list.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -38,17 +38,7 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
   "dependencies": {
-    "@finsweet/attributes-cmscore": "workspace:*",
-    "@finsweet/ts-utils": "^0.33.1",
-    "@global/constants": "workspace:*",
-    "@global/factory": "workspace:*",
-    "@global/import": "workspace:*",
     "just-debounce": "^1.1.0"
   }
 }

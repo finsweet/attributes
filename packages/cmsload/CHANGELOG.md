@@ -1,5 +1,44 @@
 # @finsweet/attributes-cmsload
 
+## 1.8.3
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @finsweet/attributes-cmscore@1.8.0
+  - @global/factory@1.1.5
+  - @global/import@1.0.4
+
+## 1.8.2
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+  - @global/import@1.0.3
+  - @finsweet/attributes-cmscore@1.7.2
+
+## 1.8.1
+
+### Patch Changes
+
+- Updated dependencies [d8a4bf6f]
+  - @finsweet/attributes-cmscore@1.7.1
+
+## 1.8.0
+
+### Minor Changes
+
+- ef56d454: Added new `fs-cmsload-element="visible-count-from"` and `fs-cmsload-element="visible-count-to"` Attributes.
+
+### Patch Changes
+
+- Updated dependencies [ef56d454]
+  - @finsweet/attributes-cmscore@1.7.0
+
 ## 1.7.8
 
 ### Patch Changes
@@ -106,11 +145,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "cmsload",
-    cmsLists => {
-      console.log("Attribute has successfully loaded!");
+    'cmsload',
+    (cmsLists) => {
+      console.log('Attribute has successfully loaded!');
       console.log(cmsLists);
-    }
+    },
   ]);
 </script>
 ```

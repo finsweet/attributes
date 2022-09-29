@@ -1,5 +1,34 @@
 # @finsweet/attributes-cmscore
 
+## 1.8.0
+
+### Minor Changes
+
+- 4792998a: Added new `CMSList.addStaticItems()` and `CMSList.staticItems` to support `fs-cmsstatic` Attribute
+  Added new `CMSItem.staticIndex` to support `fs-cmsstatic` Attribute.
+
+### Patch Changes
+
+- @global/import@1.0.4
+
+## 1.7.2
+
+### Patch Changes
+
+- @global/import@1.0.3
+
+## 1.7.1
+
+### Patch Changes
+
+- d8a4bf6f: Fixed invalid visibleCountFrom when there are no valid items
+
+## 1.7.0
+
+### Minor Changes
+
+- ef56d454: Added support for new `CMSList.visibleCountFrom` and `CMSList.visibleCountTo`.
+
 ## 1.6.10
 
 ### Patch Changes

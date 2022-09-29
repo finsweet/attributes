@@ -1,4 +1,4 @@
-import type { DOMSelector } from '@global/types/schema';
+import type { DOMSelector } from '$global/types/schema';
 
 import { validateDOMSelectors } from './SpecializationService';
 

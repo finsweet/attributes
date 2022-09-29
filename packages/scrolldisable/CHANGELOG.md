@@ -1,5 +1,11 @@
 # @finsweet/attributes-scrolldisable
 
+## 1.5.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
 ## 1.4.0
 
 ### Minor Changes

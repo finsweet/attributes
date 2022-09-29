@@ -1,4 +1,3 @@
-import type { AttributeSchema } from '@global/types/schema';
 import {
   COLLECTION_LIST,
   FORM_INPUT,
@@ -7,6 +6,8 @@ import {
   TEXT_BLOCK,
   TEXT_LINK,
 } from 'global/constants/webflow-selectors';
+
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   LIST_ELEMENT_KEY,

@@ -12,9 +12,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ],
+      "$global/*": ["../../global/*"],
+      "$packages/*": ["../../packages/*"],
+      "@src/*": ["./src/*"]
     }
   }
 }

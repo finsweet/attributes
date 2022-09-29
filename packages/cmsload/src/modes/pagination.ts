@@ -1,6 +1,7 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import { cloneNode, CMS_CSS_CLASSES, CURRENT_CSS_CLASS, isNotEmpty } from '@finsweet/ts-utils';
 import debounce from 'just-debounce';
+
+import type { CMSList } from '$packages/cmscore';
 
 import { loadPaginatedItems } from '../actions/load';
 import { handlePaginationButtons, updatePaginationCount } from '../actions/pagination';

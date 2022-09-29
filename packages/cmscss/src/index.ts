@@ -1,5 +1,5 @@
-import { importCMSCore } from '@finsweet/attributes-cmscore';
-import { assessScript, initAttributes } from '@global/factory';
+import { assessScript, initAttributes } from '$global/factory';
+import { importCMSCore } from '$packages/cmscore';
 
 import { version } from '../package.json';
 import { ATTRIBUTE } from './constants';

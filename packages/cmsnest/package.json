@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsnest",
-  "version": "1.6.8",
+  "version": "1.7.1",
   "description": "Nest CMS collections easily on Webflow.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -36,16 +36,5 @@
   },
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
-  },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
-  "dependencies": {
-    "@finsweet/attributes-cmscore": "workspace:*",
-    "@finsweet/ts-utils": "^0.33.1",
-    "@global/constants": "workspace:*",
-    "@global/factory": "workspace:*"
   }
 }

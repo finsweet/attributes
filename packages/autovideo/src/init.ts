@@ -1,12 +1,15 @@
 import { Debug } from '@finsweet/ts-utils';
-import { AUTO_VIDEO_ATTRIBUTE } from '@global/constants/attributes';
+
+import { AUTO_VIDEO_ATTRIBUTE, CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
 
 import type { VideoStore } from './types';
 
 /**
  * Inits the attribute.
  */
-export const init = (): void => {
+export const init = async () => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const videos = document.querySelectorAll('video');
 
   if (!videos.length) {

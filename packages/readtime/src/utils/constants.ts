@@ -1,8 +1,7 @@
-import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
+import { READ_TIME_ATTRIBUTE } from '$global/constants/attributes';
+import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
-export const ATTRIBUTE = 'readtime';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${READ_TIME_ATTRIBUTE}`;
 
 export const CONTENTS_ELEMENT_KEY = 'contents';
 export const TIME_ELEMENT_KEY = 'time';

@@ -1,4 +1,4 @@
-import type { AttributeElementSchema, AttributeSchemaCondition } from '@global/types/schema';
+import type { AttributeElementSchema, AttributeSchemaCondition } from '$global/types/schema';
 import COPY_CLIP from '@src/schemas/copy-clip';
 import { isSiblingOf } from '@src/services/Attributes/Conditions/IsSiblingOf/IsSiblingOfService';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';

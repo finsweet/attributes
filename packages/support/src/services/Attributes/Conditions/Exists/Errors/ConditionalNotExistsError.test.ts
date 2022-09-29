@@ -1,4 +1,4 @@
-import type { AttributeElementSchema } from '@global/types/schema';
+import type { AttributeElementSchema } from '$global/types/schema';
 import CMS_LOAD from '@src/schemas/cms-load';
 import MIRROR_CLICK from '@src/schemas/mirror-click';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';

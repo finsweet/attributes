@@ -69,3 +69,9 @@ export interface DemographicResponse {
 export interface ComplianceResponse {
   gdpr_consent_given: boolean;
 }
+
+type JobFilterType = 'offices' | 'departments';
+
+export type JobsFilters = {
+  [key in JobFilterType]: string[];
+};

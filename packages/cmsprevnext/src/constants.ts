@@ -1,5 +1,5 @@
-import { CMS_PREV_NEXT_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory';
+import { CMS_PREV_NEXT_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${CMS_PREV_NEXT_ATTRIBUTE}`;
 

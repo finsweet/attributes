@@ -6,8 +6,8 @@ import {
   LIST,
   PARAGRAPH,
   HEADING,
-} from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+} from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import { LIST_ELEMENT_KEY, VALUE_ELEMENT_KEY } from './../src/constants';
 

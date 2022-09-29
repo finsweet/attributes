@@ -1,7 +1,7 @@
 {
   "name": "@finsweet/attributes-readtime",
-  "version": "1.0.1",
-  "description": "Display the read time of an article.",
+  "version": "1.1.1",
+  "description": "Calculate and display the estimated read time of Rich Text content based on word count.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
   "type": "module",
@@ -36,14 +36,5 @@
   },
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
-  },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
-  "dependencies": {
-    "@global/factory": "workspace:*",
-    "@global/constants": "workspace:*"
   }
 }

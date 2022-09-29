@@ -1,8 +1,9 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import { FORM_CSS_CLASSES, isFormField, isVisible, sameValues } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
-import { importAnimations } from '@global/import';
 import debounce from 'just-debounce';
+
+import { importAnimations } from '$global/import';
+import type { CMSList } from '$packages/cmscore';
 
 import { clearFilterData } from '../actions/clear';
 import { collectFiltersData, collectFiltersElements } from '../actions/collect';

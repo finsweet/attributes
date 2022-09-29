@@ -6,7 +6,7 @@ import type {
   FieldSpecialization,
   InstanceFieldSpecializationAppliedTo,
   DOMSelector,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import { getParentElement } from '@src/services/Attributes/Fields/FieldsService';
 import {
   getSchemaItem,

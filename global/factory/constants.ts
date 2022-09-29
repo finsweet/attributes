@@ -1,4 +1,4 @@
-import { ATTRIBUTES_PREFIX } from '@global/constants/attributes';
+import { ATTRIBUTES_PREFIX } from '$global/constants/attributes';
 
 import { generateSelectors } from './selectors';
 

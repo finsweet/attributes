@@ -1,4 +1,4 @@
-import type { AttributeSchema, AttributeElementSchema } from '@global/types/schema';
+import type { AttributeSchema, AttributeElementSchema } from '$global/types/schema';
 import type { SchemaInput } from '@src/types/Input.types';
 import type { SchemaInputFieldSetting, InputChannel } from '@src/types/Input.types';
 import type { SchemaSettings } from '@src/types/Schema.types';

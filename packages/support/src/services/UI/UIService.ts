@@ -7,7 +7,7 @@ import type {
   AttributeSchemaCondition,
   AttributeSettingCondition,
   AttributeSettingConditionSetting,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import type { SchemaUI } from '@src/types/Schema.types';
 
 function isSettingAppliedTo(setting: AttributeSettingSchema, key: string) {

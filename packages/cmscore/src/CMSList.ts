@@ -1,4 +1,3 @@
-import type { Animation } from '@finsweet/attributes-animation/src/types';
 import { getCollectionElements } from '@finsweet/ts-utils';
 import type {
   CollectionListWrapperElement,
@@ -8,8 +7,10 @@ import type {
   PaginationWrapperElement,
   PageCountElement,
 } from '@finsweet/ts-utils';
-import { getInstanceIndex } from '@global/helpers';
 import Emittery from 'emittery';
+
+import { getInstanceIndex } from '$global/helpers';
+import type { Animation } from '$packages/animation/src/types';
 
 import { CMSItem } from './CMSItem';
 import { updateItemsCount } from './utils/items';
@@ -60,6 +61,16 @@ export class CMSList extends Emittery<CMSListEvents> {
    * An element that displays the amount of visible items.
    */
   public visibleCount?: HTMLElement;
+
+  /**
+   * An element that displays the lower range of visible items.
+   */
+  public visibleCountFrom?: HTMLElement;
+
+  /**
+   * An element that displays the upper range of visible items.
+   */
+  public visibleCountTo?: HTMLElement;
 
   /**
    * A custom `Initial State` element.
@@ -132,6 +143,11 @@ export class CMSList extends Emittery<CMSListEvents> {
    * Defines the original amount of items per page.
    */
   public originalItemsPerPage: number;
+
+  /**
+   * An array holding all static {@link CMSItem} instances of the list.
+   */
+  public staticItems: CMSItem[] = [];
 
   /**
    * An array holding all valid {@link CMSItem} instances of the list.
@@ -244,7 +260,49 @@ export class CMSList extends Emittery<CMSListEvents> {
 
     const newItems = itemElements.map((item) => new CMSItem(item, list));
 
-    for (const array of [items, originalItemsOrder]) array[method](...newItems);
+    for (const array of [items, originalItemsOrder]) {
+      array[method](...newItems);
+    }
+
+    await this.emit('shouldnest', newItems);
+    await this.emit('shouldcollectprops', newItems);
+    await this.emit('shouldsort', newItems);
+    await this.emit('shouldfilter');
+
+    await this.renderItems(true);
+
+    await this.emit('additems', newItems);
+  }
+
+  /**
+   * Adds a static item to the Collection Instance.
+   * @param itemsData An array of static items data.
+   * @param itemsData.itemElement The new item to store.
+   * @param itemsData.targetIndex The index where to place the new item.
+   * @param itemsData.interactive Defines if the item will be interactive or not.
+   */
+  public async addStaticItems(
+    itemsData: Array<{ itemElement: HTMLDivElement; targetIndex: number; interactive: boolean }>
+  ): Promise<void> {
+    const { items, staticItems, list, originalItemsOrder } = this;
+
+    if (!list) return;
+
+    const newItems = itemsData.map(({ itemElement, targetIndex, interactive }) => {
+      const staticIndex = !interactive ? targetIndex : undefined;
+
+      const newItem = new CMSItem(itemElement, list, undefined, staticIndex);
+
+      for (const array of [items, originalItemsOrder]) {
+        array.splice(targetIndex, 0, newItem);
+      }
+
+      if (!interactive) {
+        staticItems.push(newItem);
+      }
+
+      return newItem;
+    });
 
     await this.emit('shouldnest', newItems);
     await this.emit('shouldcollectprops', newItems);
@@ -270,10 +328,14 @@ export class CMSList extends Emittery<CMSListEvents> {
    * Defaults to `true`.
    */
   public async clearItems(removeElements = true) {
-    if (removeElements) for (const { element } of this.items) element.remove();
+    if (removeElements) {
+      for (const { element } of this.items) element.remove();
+    }
 
     this.items = [];
+    this.staticItems = [];
     this.originalItemsOrder = [];
+
     await this.renderItems(false, false);
   }
 
@@ -435,18 +497,57 @@ export class CMSList extends Emittery<CMSListEvents> {
   }
 
   /**
-   * Adds a `Visible Count` element to the list.
-   * @param element The element to add.
+   * Adds `Visible Count` elements to the list.
+   * @param totalElement The `total` element to add.
+   * @param fromElement The `from` element to add.
+   * @param toElement The `to` element to add.
    */
-  public addVisibleCount(element: HTMLElement) {
-    if (this.visibleCount) return;
+  public addVisibleCount(
+    totalElement?: HTMLElement | null,
+    fromElement?: HTMLElement | null,
+    toElement?: HTMLElement | null
+  ) {
+    if (totalElement && !this.visibleCount) {
+      this.visibleCount = totalElement;
 
-    this.visibleCount = element;
+      const updateTotal = () => {
+        const visibleCountTotal = Math.min(this.itemsPerPage, this.validItems.length);
 
-    const update = () => updateItemsCount(element, Math.min(this.itemsPerPage, this.validItems.length));
+        updateItemsCount(totalElement, visibleCountTotal);
+      };
 
-    update();
-    this.on('renderitems', update);
+      updateTotal();
+      this.on('renderitems', updateTotal);
+    }
+
+    if (fromElement && !this.visibleCountFrom) {
+      this.visibleCountFrom = fromElement;
+
+      const updateFrom = () => {
+        const visibleCountFrom = Math.min(
+          this.itemsPerPage * (this.currentPage || 1) - (this.itemsPerPage - 1),
+          this.validItems.length
+        );
+
+        updateItemsCount(fromElement, visibleCountFrom);
+      };
+
+      updateFrom();
+      this.on('renderitems', updateFrom);
+    }
+
+    if (toElement && !this.visibleCountTo) {
+      this.visibleCountTo = toElement;
+
+      const updateTo = () => {
+        const visibleCountTo = Math.min(this.itemsPerPage * (this.currentPage || 1), this.validItems.length);
+
+        updateItemsCount(toElement, visibleCountTo);
+      };
+
+      updateTo();
+      this.on('renderitems', updateTo);
+    }
   }
 
   /**

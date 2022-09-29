@@ -1,13 +1,14 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { normalizePropKey } from '@finsweet/attributes-cmscore';
 import type { MapEntries } from '@finsweet/ts-utils';
+
 import {
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
   ARIA_SORT_KEY,
   ARIA_SORT_VALUES,
   TABINDEX_KEY,
-} from '@global/constants/a11ty';
+} from '$global/constants/a11ty';
+import type { CMSList } from '$packages/cmscore';
+import { normalizePropKey } from '$packages/cmscore';
 
 import { sortListItems } from '../actions/sort';
 import { ATTRIBUTES } from '../utils/constants';

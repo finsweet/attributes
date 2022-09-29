@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AttributeValue } from '@global/types/schema';
+  import type { AttributeValue } from '$global/types/schema';
   import { createEventDispatcher } from 'svelte';
 
   export let checked: boolean;

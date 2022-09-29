@@ -1,12 +1,13 @@
 {
   "name": "@finsweet/attributes-cmscore",
-  "version": "1.6.10",
+  "version": "1.8.0",
   "description": "Core functionalities of all cms Attributes.",
   "main": "./src/index.ts",
   "type": "module",
   "files": [
     "cmscore.js",
-    "changesets.json"
+    "changesets.json",
+    "types"
   ],
   "sideEffects": false,
   "scripts": {
@@ -35,16 +36,7 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "homepage": "https://www.finsweet.com/attributes",
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*",
-    "@finsweet/attributes-animation": "workspace:*"
-  },
   "dependencies": {
-    "@global/helpers": "workspace:*",
-    "@global/import": "workspace:*",
-    "@finsweet/ts-utils": "^0.33.1",
     "emittery": "^0.11.0"
   }
 }

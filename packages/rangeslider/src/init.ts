@@ -1,6 +1,7 @@
 import { getHiddenParent, isNotEmpty, isVisible } from '@finsweet/ts-utils';
-import { RANGE_SLIDER_ATTRIBUTE } from '@global/constants/attributes';
 import debounce from 'just-debounce';
+
+import { CMS_ATTRIBUTE_ATTRIBUTE, RANGE_SLIDER_ATTRIBUTE } from '$global/constants/attributes';
 
 import { getClientX } from './actions/events';
 import { getSettings } from './actions/settings';
@@ -13,7 +14,9 @@ import type { HandleInstances } from './utils/types';
 /**
  * Inits the attribute.
  */
-export const init = (): HandleInstances[] => {
+export const init = async (): Promise<HandleInstances[]> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const wrapperElements = [
     ...document.querySelectorAll<HTMLElement>(getSelector('element', 'wrapper', { operator: 'prefixed' })),
   ];

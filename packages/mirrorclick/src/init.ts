@@ -1,5 +1,5 @@
-import { MIRROR_CLICK_ATTRIBUTE } from '@global/constants/attributes';
-import { getInstanceIndex } from '@global/helpers';
+import { MIRROR_CLICK_ATTRIBUTE } from '$global/constants/attributes';
+import { getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, getSelector } from './constants';
 

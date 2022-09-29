@@ -14,6 +14,13 @@ export const defaultBuildSettings = {
   sourcemap: !production,
   target: production ? 'es2017' : 'esnext',
   watch: !production,
+  define: {
+    CMS_CORE_SOURCE: JSON.stringify(
+      production
+        ? 'https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmscore@1/cmscore.js'
+        : 'http://localhost:3000/packages/cmscore/cmscore.js'
+    ),
+  },
 };
 
 /**

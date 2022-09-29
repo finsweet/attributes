@@ -3,7 +3,11 @@
   "compilerOptions": {
     "target": "ES2019",
     "rootDir": ".",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "$global/*": ["./global/*"],
+      "$packages/*": ["./packages/*"]
+    }
   },
   "include": ["./packages/**/*.ts", "./global/**/*.ts"],
   "exclude": [

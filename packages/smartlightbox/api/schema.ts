@@ -1,5 +1,5 @@
-import { DIV_BLOCK, LIGHTBOX, LINK_BLOCK, TEXT_LINK, BUTTON } from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+import { DIV_BLOCK, LIGHTBOX, LINK_BLOCK, TEXT_LINK, BUTTON } from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   TRIGGER_OPEN_ELEMENT_KEY,

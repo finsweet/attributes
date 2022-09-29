@@ -1,5 +1,6 @@
 import { setFormFieldValue } from '@finsweet/ts-utils';
-import { ARIA_VALUEMAX_KEY, ARIA_VALUEMIN_KEY, ARIA_VALUENOW_KEY } from '@global/constants/a11ty';
+
+import { ARIA_VALUEMAX_KEY, ARIA_VALUEMIN_KEY, ARIA_VALUENOW_KEY } from '$global/constants/a11ty';
 
 import { setHandleA11ty } from '../actions/a11ty';
 import { setHandleStyles } from '../actions/styles';

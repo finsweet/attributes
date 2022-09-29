@@ -1,4 +1,4 @@
-import { CMS_FILTER_ATTRIBUTE, QUERY_PARAM_ATTRIBUTE } from '@global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_FILTER_ATTRIBUTE, QUERY_PARAM_ATTRIBUTE } from '$global/constants/attributes';
 
 import { queryParamFactory } from './factory';
 import { ATTRIBUTES } from './utils/constants';
@@ -7,6 +7,8 @@ import { ATTRIBUTES } from './utils/constants';
  * Inits the attribute.
  */
 export const init = async (): Promise<void> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const url = new URL(window.location.href);
 
   for (const [paramKey, paramValue] of [...url.searchParams]) {

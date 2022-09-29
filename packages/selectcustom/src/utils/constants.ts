@@ -1,6 +1,6 @@
-import { SELECT_CUSTOM_ATTRIBUTE } from '@global/constants/attributes';
-import { ARROW_DOWN_KEY, ARROW_UP_KEY, SPACE_KEY, TAB_KEY } from '@global/constants/keyboard';
-import { generateSelectors } from '@global/factory';
+import { SELECT_CUSTOM_ATTRIBUTE } from '$global/constants/attributes';
+import { ARROW_DOWN_KEY, ARROW_UP_KEY, SPACE_KEY, TAB_KEY } from '$global/constants/keyboard';
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${SELECT_CUSTOM_ATTRIBUTE}`;
 

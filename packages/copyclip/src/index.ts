@@ -1,6 +1,6 @@
-import { COPY_CLIP_ATTRIBUTE } from '@global/constants/attributes';
-import { assessScript } from '@global/factory/assess';
-import { initAttributes } from '@global/factory/init';
+import { COPY_CLIP_ATTRIBUTE } from '$global/constants/attributes';
+import { assessScript } from '$global/factory/assess';
+import { initAttributes } from '$global/factory/init';
 
 import { version } from '../package.json';
 import { init } from './init';

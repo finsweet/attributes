@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-copyclip",
-  "version": "1.5.5",
+  "version": "1.6.1",
   "description": "Set any element to copy a string value to the clipboard when clicking on it.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -39,16 +39,7 @@
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
   },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*"
-  },
   "dependencies": {
-    "@finsweet/ts-utils": "^0.33.1",
-    "@global/constants": "workspace:*",
-    "@global/factory": "workspace:*",
-    "@global/helpers": "workspace:*",
     "clipboard": "^2.0.10"
   }
 }

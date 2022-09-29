@@ -1,5 +1,6 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import throttle from 'just-throttle';
+
+import type { CMSList } from '$packages/cmscore';
 
 import { loadPaginatedItems } from '../actions/load';
 import { incrementItemsPerPage } from '../actions/pagination';

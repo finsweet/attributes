@@ -4,7 +4,7 @@ import type {
   AttributeSchemaConditions,
   AttributeSettingCondition,
   AttributeSettingConditionSetting,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import SettingNotMatchError from '@src/services/Attributes/Conditions/Settings/Errors/SettingNotMatchError';
 import { createSchemaSelectorFromSchema } from '@src/services/Attributes/Schema/SchemaService';
 import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';

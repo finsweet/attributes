@@ -7,8 +7,8 @@ import {
   PARAGRAPH,
   HEADING,
   FORM_INPUT,
-} from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+} from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   TRIGGER_ELEMENT_KEY,

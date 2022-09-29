@@ -137,6 +137,11 @@ interface CMSList {
   originalItemsPerPage: number;
 
   /**
+   * An array holding all static {@link CMSItem} instances of the list.
+   */
+  staticItems: CMSItem[];
+
+  /**
    * An array holding all valid {@link CMSItem} instances of the list.
    * Items are set to valid/invalid by `cmsfilter` when performing any filter query.
    */
@@ -187,6 +192,17 @@ interface CMSList {
   addItems(itemElements: HTMLElement[], method?: 'unshift' | 'push'): Promise<void>;
 
   /**
+   * Adds a static item to the Collection Instance.
+   * @param itemsData An array of static items data.
+   * @param itemsData.itemElement The new item to store.
+   * @param itemsData.targetIndex The index where to place the new item.
+   * @param itemsData.interactive Defines if the item will be interactive or not.
+   */
+  addStaticItems(
+    itemsData: Array<{ itemElement: HTMLDivElement; targetIndex: number; interactive: boolean }>
+  ): Promise<void>;
+
+  /**
    * Restores the original items order.
    */
   restoreItemsOrder(): void;
@@ -230,6 +246,36 @@ interface CMSList {
     show?: boolean,
     animate?: boolean
   ): Promise<void>;
+
+  /**
+   * Adds an `Empty State` element to the list.
+   * @param element The element to add.
+   */
+  addEmptyElement(element: HTMLElement): void;
+
+  /**
+   * Adds a `Loader` element to the list.
+   * @param element The element to add.
+   */
+  addLoader(element: HTMLElement): void;
+
+  /**
+   * Adds an `Items Count` element to the list.
+   * @param element The element to add.
+   */
+  addItemsCount(element: HTMLElement): void;
+
+  /**
+   * Adds `Visible Count` elements to the list.
+   * @param totalElement The `total` element to add.
+   * @param fromElement The `from` element to add.
+   * @param toElement The `to` element to add.
+   */
+  addVisibleCount(
+    totalElement?: HTMLElement | null,
+    fromElement?: HTMLElement | null,
+    toElement?: HTMLElement | null
+  ): void;
 
   /**
    * Switches the current page.
@@ -334,6 +380,13 @@ interface CMSItem {
    * The element's current index in the rendered list.
    */
   currentIndex?: number;
+
+  /**
+   * The element's static place.
+   * If defined, it will convert the item to non-interactive.
+   * Meaning that it can't be sorted, nor filtered. It will always stay at the same place.
+   */
+  staticIndex?: number;
 
   /**
    * The URL of the item's `Template Page`.

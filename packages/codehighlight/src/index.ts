@@ -1,5 +1,5 @@
-import { CODE_HIGHLIGHT_ATTRIBUTE } from '@global/constants/attributes';
-import { assessScript, initAttributes } from '@global/factory';
+import { CODE_HIGHLIGHT_ATTRIBUTE } from '$global/constants/attributes';
+import { assessScript, initAttributes } from '$global/factory';
 
 import { version } from '../package.json';
 import { importHighlightJS } from './actions/import';

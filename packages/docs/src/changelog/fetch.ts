@@ -1,4 +1,4 @@
-import type { AttributeChangesets } from '@global/types/changesets';
+import type { AttributeChangesets } from '$global/types/changesets';
 
 import type { AttributesData } from '../utils/types';
 

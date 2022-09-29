@@ -1,11 +1,11 @@
-import type { SupportedAttributeData } from '@finsweet/attributes-docs/src/utils/types';
+import type { SupportedAttributeData } from '$packages/docs/src/utils/types';
 import type {
   AttributeSchemaCondition,
   DOMSelector,
   AttributeElementSchema,
   AttributeSettingSchema,
   AttributeFieldSchema,
-} from '@global/types/schema';
+} from '$global/types/schema';
 
 export type SCHEMA_ITEM_TYPES = 'settings' | 'elements' | 'fields';
 

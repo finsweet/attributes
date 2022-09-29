@@ -1,5 +1,5 @@
-import { SLIDER_DOTS_ATTRIBUTE } from '@global/constants/attributes';
-import { generateDynamicAttibuteValue, generateSelectors } from '@global/factory';
+import { SLIDER_DOTS_ATTRIBUTE } from '$global/constants/attributes';
+import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${SLIDER_DOTS_ATTRIBUTE}`;
 

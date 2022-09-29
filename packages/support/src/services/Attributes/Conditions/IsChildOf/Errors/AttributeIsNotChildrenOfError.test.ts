@@ -3,7 +3,7 @@ import type {
   AttributeSchemaCondition,
   AttributeMainCondition,
   AttributeSelectorCondition,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import CMS_LOAD from '@src/schemas/cms-load';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 

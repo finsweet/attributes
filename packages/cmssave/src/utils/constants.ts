@@ -1,4 +1,4 @@
-import { generateSelectors } from '@global/factory';
+import { generateSelectors } from '$global/factory';
 
 export const ATTRIBUTE = 'cmssave';
 

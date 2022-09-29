@@ -1,4 +1,4 @@
-import type { AttributeValue } from '@global/types/schema';
+import type { AttributeValue } from '$global/types/schema';
 import { assertElementExistsOnPage } from '@src/services/DOM/Assertions/AssertionsService';
 //mocks
 import { queryAttributeValue } from '@src/services/DOM/Queries/QueriesService';

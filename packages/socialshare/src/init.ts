@@ -1,4 +1,4 @@
-import { CMS_LOAD_ATTRIBUTE, SOCIAL_SHARE_ATTRIBUTE } from 'global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_LOAD_ATTRIBUTE, SOCIAL_SHARE_ATTRIBUTE } from 'global/constants/attributes';
 import type { CMSList } from 'packages/cmscore/src';
 
 import { listenTriggerClicks } from './actions/trigger';
@@ -9,6 +9,8 @@ import { stores } from './utils/stores';
  * Inits the attribute.
  */
 export const init = async (): Promise<void> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   // Init global click listener
   listenTriggerClicks();
 

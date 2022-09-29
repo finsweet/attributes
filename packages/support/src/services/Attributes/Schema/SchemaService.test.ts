@@ -1,4 +1,4 @@
-import type { AttributeElementSchema, AttributeSchema, AttributeSettingSchema } from '@global/types/schema';
+import type { AttributeElementSchema, AttributeSchema, AttributeSettingSchema } from '$global/types/schema';
 import CMS_LOAD from '@src/schemas/cms-load';
 import type { SchemaInput } from '@src/types/Input.types';
 import type { SchemaSelector } from '@src/types/Schema.types';

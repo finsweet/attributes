@@ -1,6 +1,6 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { importCMSCore } from '@finsweet/attributes-cmscore';
-import { CMS_COMBINE_ATTRIBUTE } from '@global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_COMBINE_ATTRIBUTE } from '$global/constants/attributes';
+import type { CMSList } from '$packages/cmscore';
+import { importCMSCore } from '$packages/cmscore';
 
 import { collectCombineData } from './collect';
 import { combineItemsToTarget } from './combine';
@@ -13,6 +13,8 @@ import type { CombineData } from './types';
 export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
+
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
 
   const listInstances = cmsCore.createCMSListInstances([getSelector('element', 'list', { operator: 'prefixed' })]);
 

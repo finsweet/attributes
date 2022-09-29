@@ -1,5 +1,5 @@
-import { SCROLL_DISABLE_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory';
+import { SCROLL_DISABLE_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${SCROLL_DISABLE_ATTRIBUTE}`;
 

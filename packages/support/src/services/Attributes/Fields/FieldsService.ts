@@ -8,7 +8,7 @@ import type {
   AttributeFieldSchema,
   FieldSpecialization,
   InstanceFieldSpecializationAppliedTo,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import {
   getSchemaItem,
   createSchemaSelectorFromItem,

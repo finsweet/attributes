@@ -1,5 +1,55 @@
 # @finsweet/attributes-cmssort
 
+## 1.11.1
+
+### Patch Changes
+
+- 7b72713e: Fixed `fs-cmssort-type="number"` sorting.
+  Now the numbers will be normalized before sorting, meaning that values that contain alphanumeric symbols like `$20,000.00` will be converted to a valid float like `20000.00` to sort them correctly.
+
+## 1.11.0
+
+### Minor Changes
+
+- 4792998a: Created new `fs-cmsstatic` Attribute.
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @finsweet/attributes-cmscore@1.8.0
+  - @global/factory@1.1.5
+  - @global/import@1.0.4
+
+## 1.10.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+  - @global/import@1.0.3
+  - @finsweet/attributes-cmscore@1.7.2
+
+## 1.9.8
+
+### Patch Changes
+
+- Updated dependencies [d8a4bf6f]
+  - @finsweet/attributes-cmscore@1.7.1
+
+## 1.9.7
+
+### Patch Changes
+
+- Updated dependencies [ef56d454]
+  - @finsweet/attributes-cmscore@1.7.0
+
 ## 1.9.6
 
 ### Patch Changes
@@ -84,11 +134,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "cmssort",
-    cmsLists => {
-      console.log("Attribute has successfully loaded!");
+    'cmssort',
+    (cmsLists) => {
+      console.log('Attribute has successfully loaded!');
       console.log(cmsLists);
-    }
+    },
   ]);
 </script>
 ```

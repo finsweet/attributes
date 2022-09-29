@@ -1,4 +1,4 @@
-import type { DOMSelector } from '@global/types/schema';
+import type { DOMSelector } from '$global/types/schema';
 import type { SchemaSelector, ElementItemSelector } from '@src/types/Schema.types';
 
 import AttributeDuplicateError from './Errors/AttributeDuplicatedError';

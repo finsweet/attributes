@@ -6,6 +6,8 @@ export const AUTO_VIDEO_ATTRIBUTE = 'autovideo';
 
 export const CMS_CORE = 'cmscore';
 
+export const CMS_ATTRIBUTE_ATTRIBUTE = 'cmsattribute';
+
 export const CMS_COMBINE_ATTRIBUTE = 'cmscombine';
 
 export const CMS_FILTER_ATTRIBUTE = 'cmsfilter';
@@ -15,6 +17,8 @@ export const CMS_LOAD_ATTRIBUTE = 'cmsload';
 export const CMS_NEST_ATTRIBUTE = 'cmsnest';
 
 export const CMS_PREV_NEXT_ATTRIBUTE = 'cmsprevnext';
+
+export const CMS_STATIC_ATTRIBUTE = 'cmsstatic';
 
 export const CMS_SELECT_ATTRIBUTE = 'cmsselect';
 
@@ -61,3 +65,5 @@ export const SMART_LIGHTBOX_ATTRIBUTE = 'smartlightbox';
 export const SOCIAL_SHARE_ATTRIBUTE = 'socialshare';
 
 export const TOC_ATTRIBUTE = 'toc';
+
+export const READ_TIME_ATTRIBUTE = 'readtime';

@@ -1,5 +1,5 @@
-import { RICH_TEXT_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory/selectors';
+import { RICH_TEXT_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory/selectors';
 
 const ATTRIBUTES_PREFIX = `fs-${RICH_TEXT_ATTRIBUTE}`;
 

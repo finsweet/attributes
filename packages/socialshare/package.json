@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-socialshare",
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "Share content to social media platforms. Works with Collection Lists, Templates, and static content.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -36,17 +36,5 @@
   },
   "bugs": {
     "url": "https://sweetjs.finsweet.com/"
-  },
-  "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*",
-    "@finsweet/attributes-cmscore": "workspace:*"
-  },
-  "dependencies": {
-    "@finsweet/ts-utils": "^0.33.1",
-    "@global/helpers": "workspace:*",
-    "@global/factory": "workspace:*",
-    "@global/constants": "workspace:*"
   }
 }

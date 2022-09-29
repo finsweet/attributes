@@ -1,19 +1,19 @@
-import { cloneNode, FormField, Greenhouse } from '@finsweet/ts-utils';
-import { DROPDOWN_CSS_CLASSES, FORM_CSS_CLASSES } from '@finsweet/ts-utils';
-import type { Job, JobWithContent } from '@finsweet/ts-utils/dist/types/apis/Greenhouse';
+import { DROPDOWN_CSS_CLASSES, FORM_CSS_CLASSES, cloneNode, FormField } from '@finsweet/ts-utils';
+import type { JobWithContent } from '@finsweet/ts-utils/dist/types/apis/Greenhouse';
 import type { CMSFilters } from 'packages/cmsfilter/src/components/CMSFilters';
 import type { FiltersData } from 'packages/cmsfilter/src/utils/types';
 
-import { ATTRIBUTES, GH_DEPARTMENT, GH_OFFICE, queryElement } from '../utils/constants';
-import { fetchDepartments, fetchOffices } from '../utils/fetch';
-import { appendJobsNestedList, getNestedKey } from './jobs';
+import type { JobsFilters } from '../types';
+import { ATTRIBUTES, GH_DEPARTMENT, GH_OFFICE } from '../utils/constants';
+import { filterJobs, getDepartmentsOrOfficesFromJobs } from '../utils/jobs';
+import { appendNestedJobsToCMSItems } from '../utils/lists';
+import { getNestedKey } from './jobs';
 
 export async function createFilters(
-  boardId: string,
   queryParam: string,
   filtersInstances: CMSFilters[],
   filtersElements: FormField[],
-  jobs: (Job | JobWithContent)[]
+  jobs: JobWithContent[]
 ) {
   if (filtersElements.length <= 0) {
     return;
@@ -27,7 +27,7 @@ export async function createFilters(
         continue;
       }
 
-      const filterEntries = await fetchFilterData(boardId, filterKey);
+      const filterEntries = await getDepartmentsOrOfficesFromJobs(jobs, filterKey);
 
       if (!filterEntries || filterEntries.length <= 0) {
         continue;
@@ -55,14 +55,16 @@ export async function createFilters(
         const deparmentsFilter = filtersData.find((filterData) => filterData.filterKeys.includes(GH_DEPARTMENT));
         const officesFilter = filtersData.find((filterData) => filterData.filterKeys.includes(GH_OFFICE));
 
-        const departmentValues = (deparmentsFilter && [...deparmentsFilter.values]) || null;
-        const officeValues = (officesFilter && [...officesFilter.values]) || null;
+        const jobFilters: JobsFilters = {
+          departments: (deparmentsFilter && [...deparmentsFilter.values]) || [],
+          offices: (officesFilter && [...officesFilter.values]) || [],
+        };
 
-        const filteredJobs = await filterJobs(jobs, departmentValues, officeValues);
+        const filteredJobs = await filterJobs(jobs, jobFilters);
 
         listInstance.wrapper.innerHTML = '';
 
-        appendJobsNestedList(listInstance, filteredJobs, queryParam, groupByKey);
+        appendNestedJobsToCMSItems(listInstance, filteredJobs, queryParam, groupByKey);
       }
     });
   }
@@ -71,44 +73,6 @@ export async function createFilters(
     filterInstance.storeFiltersData();
     filterInstance.resetFilters();
   }
-}
-
-async function filterJobs(
-  allJobs: (Job | JobWithContent)[],
-  departmentValues: string[] | null,
-  officeValues: string[] | null
-) {
-  const jobsDeparments =
-    (departmentValues &&
-      departmentValues.length > 0 &&
-      allJobs.filter((job: Greenhouse.Job | Greenhouse.JobWithContent) => {
-        if (!job.hasOwnProperty('departments')) {
-          return false;
-        }
-
-        const departments = (job as Greenhouse.JobWithContent).departments.map((department) => department.name);
-
-        return departments.some((department) =>
-          departmentValues.some((deparmentValue) => deparmentValue === department)
-        );
-      })) ||
-    allJobs;
-
-  const jobs =
-    (officeValues &&
-      officeValues.length > 0 &&
-      jobsDeparments.filter((job: Greenhouse.Job | Greenhouse.JobWithContent) => {
-        if (!job.hasOwnProperty('offices')) {
-          return false;
-        }
-
-        const offices = (job as Greenhouse.JobWithContent).offices.map((office) => office.name);
-
-        return offices.some((office) => officeValues.some((officeValue) => officeValue === office));
-      })) ||
-    jobsDeparments;
-
-  return jobs;
 }
 
 function displayFilterValues(
@@ -192,16 +156,5 @@ export function createFilterFactory(fieldElement: FormField, category: string[])
     });
 
     dropdownItem.remove();
-  }
-}
-
-export async function fetchFilterData(boardId: string, filterKey: string): Promise<string[]> {
-  switch (filterKey) {
-    case GH_DEPARTMENT:
-      return fetchDepartments(boardId);
-    case GH_OFFICE:
-      return fetchOffices(boardId);
-    default:
-      return [];
   }
 }

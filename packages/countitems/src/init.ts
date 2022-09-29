@@ -1,13 +1,16 @@
 import { getCollectionElements } from '@finsweet/ts-utils';
-import { COUNT_ITEMS_ATTRIBUTE } from '@global/constants/attributes';
-import { getInstanceIndex } from '@global/helpers';
+
+import { CMS_ATTRIBUTE_ATTRIBUTE, COUNT_ITEMS_ATTRIBUTE } from '$global/constants/attributes';
+import { getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, getSelector, queryElement } from './constants';
 
 /**
  * Inits list items count.
  */
-export const init = (): NodeListOf<Element> => {
+export const init = async (): Promise<NodeListOf<Element>> => {
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+
   const listReferences = document.querySelectorAll(getSelector('element', 'list', { operator: 'prefixed' }));
 
   for (const listReference of listReferences) {

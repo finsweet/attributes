@@ -4,7 +4,7 @@ import type {
   AttributeMainCondition,
   DOMSelector,
   AttributeSchema,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import type { SchemaSettings } from '@src/types/Schema.types';
 import { createSchemaSelectorFromSchema } from '@src/services/Attributes/Schema/SchemaService';
 

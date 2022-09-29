@@ -19,7 +19,7 @@
     toggleAttributeSelector,
     schemaSettingsKey,
   } from '@src/stores';
-  import type { AttributeSettingSchema } from '@global/types/schema';
+  import type { AttributeSettingSchema } from '$global/types/schema';
   import type { SchemaInput, SchemaInputValidation } from '@src/types/Input.types';
 
   export let setting: AttributeSettingSchema;

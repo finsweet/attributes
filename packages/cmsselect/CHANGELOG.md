@@ -1,5 +1,42 @@
 # @finsweet/attributes-cmsselect
 
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [4792998a]
+- Updated dependencies [4792998a]
+  - @global/constants@1.2.0
+  - @finsweet/attributes-cmscore@1.8.0
+  - @global/factory@1.1.5
+
+## 1.5.0
+
+### Minor Changes
+
+- 07f32375: Created `fs-cmsattribute` Attribute
+
+### Patch Changes
+
+- Updated dependencies [07f32375]
+  - @global/constants@1.1.0
+  - @global/factory@1.1.4
+  - @finsweet/attributes-cmscore@1.7.2
+
+## 1.4.9
+
+### Patch Changes
+
+- Updated dependencies [d8a4bf6f]
+  - @finsweet/attributes-cmscore@1.7.1
+
+## 1.4.8
+
+### Patch Changes
+
+- Updated dependencies [ef56d454]
+  - @finsweet/attributes-cmscore@1.7.0
+
 ## 1.4.7
 
 ### Patch Changes
@@ -88,11 +125,11 @@ It can be used like:
 <script>
   window.fsAttributes = window.fsAttributes || [];
   window.fsAttributes.push([
-    "cmsselect",
-    elements => {
-      console.log("Attribute has successfully loaded!");
+    'cmsselect',
+    (elements) => {
+      console.log('Attribute has successfully loaded!');
       console.log(elements);
-    }
+    },
   ]);
 </script>
 ```

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-richtext",
-  "version": "1.7.4",
+  "version": "1.8.1",
   "description": "Add HTML to Rich Text elements, add components from the same page or from different pages, add classes, ids, attributes, and more.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -40,14 +40,6 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "devDependencies": {
-    "@global/build": "workspace:*",
-    "@global/tests": "workspace:*",
-    "@global/types": "workspace:*",
     "@types/dompurify": "^2.3.1"
-  },
-  "dependencies": {
-    "@finsweet/ts-utils": "^0.33.1",
-    "@global/constants": "workspace:*",
-    "@global/factory": "workspace:*"
   }
 }

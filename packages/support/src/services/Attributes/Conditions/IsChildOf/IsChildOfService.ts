@@ -5,7 +5,7 @@ import type {
   AttributeMainCondition,
   DOMSelector,
   AttributeElementSchema,
-} from '@global/types/schema';
+} from '$global/types/schema';
 import { createSchemaSelectorFromSchema, getSchemaItem } from '@src/services/Attributes/Schema/SchemaService';
 import {
   assertElementIsChildOfElement,

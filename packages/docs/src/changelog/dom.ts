@@ -1,6 +1,7 @@
 import { cloneNode } from '@finsweet/ts-utils';
-import type { AttributeChangesets } from '@global/types/changesets';
 import { marked } from 'marked';
+
+import type { AttributeChangesets } from '$global/types/changesets';
 
 import { queryElement } from '../utils/constants';
 import type { AttributesData } from '../utils/types';

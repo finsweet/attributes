@@ -1,5 +1,6 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import { cloneNode, Debug } from '@finsweet/ts-utils';
+
+import type { CMSList } from '$packages/cmscore';
 
 import { hasRemoveTrigger, updateTagText } from '../actions/tags';
 import { ATTRIBUTES, getSelector, queryElement } from '../utils/constants';

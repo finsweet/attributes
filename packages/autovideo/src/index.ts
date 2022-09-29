@@ -1,5 +1,5 @@
-import { AUTO_VIDEO_ATTRIBUTE } from '@global/constants/attributes';
-import { assessScript, initAttributes } from '@global/factory';
+import { AUTO_VIDEO_ATTRIBUTE } from '$global/constants/attributes';
+import { assessScript, initAttributes } from '$global/factory';
 
 import { version } from '../package.json';
 import { init } from './init';

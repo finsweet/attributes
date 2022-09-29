@@ -13,7 +13,7 @@ import type {
   FormElementsTemplate,
   FormTemplate,
 } from '../types';
-import { ATTRIBUTES, getSelector, GH_API_BASE, GH_API_JOBS, queryElement } from '../utils/constants';
+import { ATTRIBUTES, getSelector, queryElement } from '../utils/constants';
 import { insertAfter } from '../utils/dom';
 import {
   createInputHidden,
@@ -21,18 +21,13 @@ import {
   createMultiSelectElement,
   createSingleSelectElement,
   createTextAreaElement,
-} from '../utils/form';
+} from '../utils/forms';
 
 const GDPR_CONSENT_GIVEN_KEY = 'gdpr_consent_given';
 const DEMOGRAPHIC_ANSWERS_PREFIX = 'demographic_answers';
 
-export async function createJobForm(form: HTMLFormElement, jobId: string, boardId: string) {
-  const jobsRequest = await fetch(`${GH_API_BASE}/${boardId}/${GH_API_JOBS}/${jobId}?questions=true`);
-  const job: JobWithQuestions = await jobsRequest.json();
-
+export async function createJobForm(job: JobWithQuestions, jobId: string, boardId: string, form: HTMLFormElement) {
   const templates = getTemplates(form);
-  console.log(job, templates);
-
   if (templates === null) {
     return;
   }

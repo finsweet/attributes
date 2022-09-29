@@ -1,5 +1,5 @@
-import { CODE_HIGHLIGHT_ATTRIBUTE } from '@global/constants/attributes';
-import { generateSelectors } from '@global/factory/selectors';
+import { CODE_HIGHLIGHT_ATTRIBUTE } from '$global/constants/attributes';
+import { generateSelectors } from '$global/factory/selectors';
 
 const ATTRIBUTES_PREFIX = `fs-${CODE_HIGHLIGHT_ATTRIBUTE}`;
 

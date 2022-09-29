@@ -1,4 +1,4 @@
-import type { AttributeElementSchema, AttributeSchemaCondition } from '@global/types/schema';
+import type { AttributeElementSchema, AttributeSchemaCondition } from '$global/types/schema';
 import CUSTOM_SELECT from '@src/schemas/custom-select';
 import SchemaSelector from '@src/services/Selector/SchemaSelector';
 import type { ItemError } from '@src/types/Error.types';

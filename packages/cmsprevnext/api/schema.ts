@@ -5,8 +5,8 @@ import {
   TEXT_ELEMENT,
   TEXT_LINK,
   BUTTON,
-} from '@global/constants/webflow-selectors';
-import type { AttributeSchema } from '@global/types/schema';
+} from '$global/constants/webflow-selectors';
+import type { AttributeSchema } from '$global/types/schema';
 
 import {
   LIST_ELEMENT_KEY,

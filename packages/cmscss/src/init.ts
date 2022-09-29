@@ -1,5 +1,6 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-import { importCMSCore } from '@finsweet/attributes-cmscore';
+import { CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import type { CMSList } from '$packages/cmscore';
+import { importCMSCore } from '$packages/cmscore';
 
 import { addCSSClasses } from './classes';
 import { ATTRIBUTE, getSelector } from './constants';
@@ -10,6 +11,8 @@ import { ATTRIBUTE, getSelector } from './constants';
 export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
+
+  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
 
   const listInstances = cmsCore.createCMSListInstances([getSelector('element', 'list', { operator: 'prefixed' })]);
 

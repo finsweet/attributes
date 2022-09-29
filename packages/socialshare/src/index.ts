@@ -1,5 +1,5 @@
-import { SOCIAL_SHARE_ATTRIBUTE } from '@global/constants/attributes';
-import { assessScript, initAttributes } from '@global/factory';
+import { SOCIAL_SHARE_ATTRIBUTE } from '$global/constants/attributes';
+import { assessScript, initAttributes } from '$global/factory';
 
 import { version } from '../package.json';
 import { init } from './init';

@@ -1,5 +1,6 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import type { SliderElement } from '@finsweet/ts-utils';
+
+import type { CMSList } from '$packages/cmscore';
 
 export interface PopulateData {
   listInstances: CMSList[];

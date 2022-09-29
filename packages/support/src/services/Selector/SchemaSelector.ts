@@ -3,7 +3,7 @@ import type {
   /*, SCHEMA_ITEM_TYPES*/
 } from '@src/types/Schema.types';
 
-// import type { AttributeElementSchema, AttributeFieldSchema, AttributeSettingSchema } from '@global/types/schema';
+// import type { AttributeElementSchema, AttributeFieldSchema, AttributeSettingSchema } from '$global/types/schema';
 
 class Selector implements SchemaSelector {
   attribute: string;

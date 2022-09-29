@@ -1,4 +1,4 @@
-import type { CMSItem, CMSList } from '@finsweet/attributes-cmscore';
+import type { CMSItem, CMSList } from '$packages/cmscore';
 
 import type { CMSFilters } from '../components/CMSFilters';
 import { ATTRIBUTES } from '../utils/constants';

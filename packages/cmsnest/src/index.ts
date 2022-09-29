@@ -1,6 +1,6 @@
-import { importCMSCore } from '@finsweet/attributes-cmscore';
-import { CMS_NEST_ATTRIBUTE } from '@global/constants/attributes';
-import { assessScript, initAttributes } from '@global/factory';
+import { CMS_NEST_ATTRIBUTE } from '$global/constants/attributes';
+import { assessScript, initAttributes } from '$global/factory';
+import { importCMSCore } from '$packages/cmscore';
 
 import { version } from '../package.json';
 import { init } from './init';
