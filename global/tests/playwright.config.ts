@@ -10,7 +10,7 @@ declare const process: {
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-const config: PlaywrightTestConfig = {
+export const config: PlaywrightTestConfig = {
   testDir: './tests',
 
   /* Maximum time one test can run for. */
@@ -79,5 +79,3 @@ const config: PlaywrightTestConfig = {
     port: 3000,
   },
 };
-
-export default config;
