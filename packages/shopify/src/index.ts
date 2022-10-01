@@ -1,4 +1,4 @@
-import { initAttributes } from '@global/factory';
+import { initAttributes } from '$global/factory';
 
 import { version } from '../package.json';
 import { assessScriptAttributes, init } from './init';

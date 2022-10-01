@@ -199,21 +199,13 @@ importers:
 
   packages/shopify:
     specifiers:
-      '@global/build': workspace:*
-      '@global/constants': workspace:*
-      '@global/factory': workspace:*
-      '@global/tests': workspace:*
-      '@global/types': workspace:*
+      '@playwright/test': ^1.22.2
       '@types/shopify-buy': ^2.10.10
       shopify-buy: ^2.15.1
     dependencies:
-      '@global/constants': link:../../global/constants
-      '@global/factory': link:../../global/factory
       shopify-buy: 2.15.1
     devDependencies:
-      '@global/build': link:../../global/build
-      '@global/tests': link:../../global/tests
-      '@global/types': link:../../global/types
+      '@playwright/test': 1.26.0
       '@types/shopify-buy': 2.10.10
 
   packages/sliderdots:
