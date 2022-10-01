@@ -31,3 +31,5 @@ temp/
 packages/**/changesets.json
 packages/**/examples.json
 packages/**/schema.json
+
+.idea
