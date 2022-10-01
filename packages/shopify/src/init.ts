@@ -1,4 +1,4 @@
-import { assessScript } from '@global/factory';
+import { assessScript } from '$global/factory';
 
 import { initializeShopifyClient } from './actions/shopifyClient';
 import { ATTRIBUTES } from './utils/constants';

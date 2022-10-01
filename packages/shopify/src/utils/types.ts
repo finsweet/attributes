@@ -1,4 +1,4 @@
-import type { GlobalAttributeParams } from '@global/factory/types';
+import type { GlobalAttributeParams } from '$global/factory/types';
 
 export interface ShopifyAttributeParams {
   globalAttributeParams: GlobalAttributeParams<Record<string, string>>;
