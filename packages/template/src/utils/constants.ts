@@ -1,8 +1,7 @@
+import { EXAMPLE_ATTRIBUTE } from '$global/constants/attributes';
 import { generateSelectors } from '$global/factory';
 
-export const ATTRIBUTE = 'ATTRIBUTE_KEY';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${EXAMPLE_ATTRIBUTE}`;
 
 export const EXAMPLE_ELEMENT_KEY = 'example';
 export const EXAMPLE_SETTING_KEY = 'example';

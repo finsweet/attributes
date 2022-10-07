@@ -1,3 +1,7 @@
 import type { PartialAttributeChangesets } from '$global/types/changesets';
 
-export const changesets: PartialAttributeChangesets = [{ version: 'v1.0.0', date: '1 January 1970' }];
+/**
+ * @deprecated All changesets are now managed using the `@changesets/cli`.
+ * For more info, read the `Continuous Deployment` section in the root `README.md`.
+ */
+export const changesets: PartialAttributeChangesets = [];
