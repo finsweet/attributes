@@ -16,7 +16,7 @@ import type { AttributesData } from '../utils/types';
  */
 export const createChangesetElement = (
   { title, key, href }: AttributesData[number],
-  { date, version, markdown }: AttributeChangesets[number],
+  { version, markdown }: AttributeChangesets[number],
   templateElement: HTMLDivElement
 ) => {
   const newElement = cloneNode(templateElement);
@@ -26,17 +26,11 @@ export const createChangesetElement = (
   const keyElement = queryElement('attributeKey', { scope: newElement }) as HTMLElement;
   const versionElement = queryElement('attributeVersion', { scope: newElement }) as HTMLElement;
   const changesetElement = queryElement('attributeChangeset', { scope: newElement }) as HTMLElement;
-  const dateElement = queryElement('attributeDate', { scope: newElement }) as HTMLElement;
 
   titleElement.textContent = title;
   keyElement.textContent = key;
   versionElement.textContent = version;
   changesetElement.innerHTML = marked.parse(markdown);
-  dateElement.textContent = new Date(date).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
   // Change the card element to be a `<a>`
   const linkCardElement = document.createElement('a');

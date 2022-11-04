@@ -1,4 +1,4 @@
-import type { SliderNavElement } from '@finsweet/ts-utils';
+import { isHTMLElement, SliderNavElement } from '@finsweet/ts-utils';
 
 import type { DotsRelationship } from '../utils/types';
 import { syncDotsProperties } from './sync';
@@ -8,6 +8,8 @@ import { syncDotsProperties } from './sync';
  * @param sliderNav The original `Slider Nav`.
  * @param dotsRelationship A {@link DotsRelationship} array.
  * @param activeCSSClass The CSS class used for the `active` state.
+ *
+ * @returns The MutationObserver.
  */
 export const observeSliderNav = (
   sliderNav: SliderNavElement,
@@ -16,7 +18,7 @@ export const observeSliderNav = (
 ) => {
   const callback: MutationCallback = (mutations) => {
     for (const { target } of mutations) {
-      if (!(target instanceof HTMLElement)) continue;
+      if (!isHTMLElement(target)) continue;
 
       const relationshipData = dotsRelationship.find(({ dot }) => dot === target);
       if (!relationshipData) continue;
@@ -33,4 +35,6 @@ export const observeSliderNav = (
 
   const observer = new MutationObserver(callback);
   observer.observe(sliderNav, options);
+
+  return observer;
 };

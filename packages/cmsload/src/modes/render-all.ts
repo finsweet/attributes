@@ -7,7 +7,7 @@ import { loadPaginatedItems } from '../actions/load';
  * @param listInstance The `CMSList` instance.
  * @param loadingText The text to display while loading.
  */
-export const initRenderAllMode = async (listInstance: CMSList): Promise<void> => {
+export const initRenderAllMode = async (listInstance: CMSList) => {
   const { paginationNext, paginationPrevious, paginationCount } = listInstance;
 
   if (!paginationNext) return;

@@ -1,18 +1,15 @@
 import { test, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
 
-/**
- * These are some demo tests to showcase Playwright.
- * You can run the tests by running `pnpm dev`.
- * If you need more info about writing tests, please visit {@link https://playwright.dev/}.
- */
+test.beforeEach(async ({ page }) => {
+  await page.goto('http://fs-attributes.webflow.io/copyclip');
+});
 
-// test.beforeEach(async ({ page }) => {
-//   await page.goto('https://demo.playwright.dev/todomvc');
-// });
+test.describe('copyclip', () => {
+  test('Displays copied message and adds .fs-copyclip_active class', async ({ page }) => {
+    const button = page.getByTestId('button-1');
+    await button.click();
 
-test.describe('Example', () => {
-  test('Example', async ({ page }) => {
-    //
+    await expect(button).toHaveText('Copied!');
+    await expect(button).toHaveClass(/fs-copyclip_active/);
   });
 });

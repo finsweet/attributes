@@ -1,4 +1,4 @@
-import { CURRENT_CSS_CLASS, Debug, DROPDOWN_CSS_CLASSES } from '@finsweet/ts-utils';
+import { addListener, CURRENT_CSS_CLASS, Debug, DROPDOWN_CSS_CLASSES, isElement } from '@finsweet/ts-utils';
 import type { Dropdown, DropdownToggle, DropdownList } from '@finsweet/ts-utils';
 
 import {
@@ -7,10 +7,9 @@ import {
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
   ARIA_SELECTED_KEY,
-} from '$global/constants/a11ty';
-import { closeDropdown } from '$global/helpers';
+} from '$global/constants/a11y';
+import { closeDropdown, normalizePropKey } from '$global/helpers';
 import type { CMSList } from '$packages/cmscore';
-import { normalizePropKey } from '$packages/cmscore';
 
 import { sortListItems } from '../actions/sort';
 import { ATTRIBUTES, queryElement } from '../utils/constants';
@@ -62,7 +61,7 @@ export const initDropdown = (dropdown: Dropdown, listInstance: CMSList) => {
   };
 
   // Listen events
-  dropdownList.addEventListener('click', async (e) => {
+  const clickCleanup = addListener(dropdownList, 'click', async (e) => {
     e.preventDefault();
 
     if (sorting) return;
@@ -71,7 +70,7 @@ export const initDropdown = (dropdown: Dropdown, listInstance: CMSList) => {
 
     const { target } = e;
 
-    if (!(target instanceof Element)) {
+    if (!isElement(target)) {
       sorting = false;
       return;
     }
@@ -106,7 +105,12 @@ export const initDropdown = (dropdown: Dropdown, listInstance: CMSList) => {
     sorting = false;
   });
 
-  return sortItems;
+  return {
+    sortItems,
+    cleanup: () => {
+      clickCleanup();
+    },
+  };
 };
 
 /**
@@ -177,7 +181,7 @@ const collectDropdownLabelData = (dropdownToggle: DropdownToggle): DropdownLabel
 };
 
 /**
- * Adds `a11ty` attributes to the Dropdown elements.
+ * Adds `a11y` attributes to the Dropdown elements.
  * @param dropdownToggle The {@link DropdownToggle} element.
  * @param dropdownList The {@link DropdownList} element.
  */

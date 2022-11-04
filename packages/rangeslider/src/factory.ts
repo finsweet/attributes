@@ -1,6 +1,7 @@
 import { Debug, isNotEmpty } from '@finsweet/ts-utils';
 
-import { adjustValueToStep } from './actions/values';
+import { adjustValueToStep } from '$global/helpers';
+
 import { Fill } from './components/Fill';
 import { Handle } from './components/Handle';
 import { ATTRIBUTES } from './utils/constants';

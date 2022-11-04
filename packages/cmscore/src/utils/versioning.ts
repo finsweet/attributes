@@ -16,15 +16,15 @@
  * @returns `true` when the comparison is valid.
  */
 export const checkCMSCoreVersion = (operator: '>=' | '<=', targetVersion: string): boolean => {
-  const { coreVersion } = window.fsAttributes.cms;
-  if (!coreVersion) return false;
+  const { version } = window.fsAttributes.cmscore || {};
+  if (!version) return false;
 
   const collatorOptions: Intl.CollatorOptions = {
     numeric: true,
     sensitivity: 'base',
   };
 
-  const result = targetVersion.localeCompare(coreVersion, undefined, collatorOptions);
+  const result = targetVersion.localeCompare(version, undefined, collatorOptions);
 
   return result === 0 || (operator === '>=' ? result < 0 : result > 0);
 };

@@ -1,3 +1,5 @@
+import { addListener, isElement } from '@finsweet/ts-utils';
+
 import { ARROW_DOWN_KEY, ARROW_UP_KEY, SPACE_KEY, TAB_KEY } from '$global/constants/keyboard';
 import { closeDropdown } from '$global/helpers';
 
@@ -16,7 +18,7 @@ import { updateOptionsState } from './state';
 const getClickedOptionData = (e: Event, { optionsStore }: Settings) => {
   const { target } = e;
 
-  if (!(target instanceof Element)) return;
+  if (!isElement(target)) return;
 
   const optionElement = target.closest('a');
   if (!optionElement) return;
@@ -129,16 +131,24 @@ const handleSelectChangeEvents = (settings: Settings) => {
 /**
  * Listens for click events on the custom elements.
  * @param settings The instance {@link Settings}.
+ *
+ * @returns A callback to remove all event listeners.
  */
 export const listenEvents = (settings: Settings) => {
   const { dropdownToggle, dropdownList, selectElement } = settings;
 
-  dropdownToggle.addEventListener('keydown', (e) => handleDropdownToggleArrowKeyEvents(e, settings));
+  const cleanups = [
+    addListener(dropdownToggle, 'keydown', (e) => handleDropdownToggleArrowKeyEvents(e, settings)),
 
-  dropdownList.addEventListener('click', (e) => handleDropdownListClickEvents(e, settings));
-  dropdownList.addEventListener('keydown', (e) => handleDropdownListKeydownEvents(e, settings));
-  dropdownList.addEventListener('focusin', (e) => handleDropdownListFocusEvents(e, true, settings));
-  dropdownList.addEventListener('focusout', (e) => handleDropdownListFocusEvents(e, false, settings));
+    addListener(dropdownList, 'click', (e) => handleDropdownListClickEvents(e, settings)),
+    addListener(dropdownList, 'keydown', (e) => handleDropdownListKeydownEvents(e, settings)),
+    addListener(dropdownList, 'focusin', (e) => handleDropdownListFocusEvents(e, true, settings)),
+    addListener(dropdownList, 'focusout', (e) => handleDropdownListFocusEvents(e, false, settings)),
 
-  selectElement.addEventListener('change', () => handleSelectChangeEvents(settings));
+    addListener(selectElement, 'change', () => handleSelectChangeEvents(settings)),
+  ];
+
+  return () => {
+    for (const cleanup of cleanups) cleanup();
+  };
 };

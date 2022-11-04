@@ -1,4 +1,5 @@
-import { CMS_ATTRIBUTE_ATTRIBUTE, GREENHOUSE_ATTRIBUTE } from 'global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, GREENHOUSE_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { initJob, initJobsList } from './factory';
 import { ATTRIBUTES, GH_DEPARTMENT, GH_OFFICE } from './utils/constants';
@@ -13,7 +14,7 @@ export const init = async ({
   board: string | null;
   queryParam?: string | null;
 }): Promise<void> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   // init params
   queryParam ??= ATTRIBUTES.queryparam.default;
@@ -38,5 +39,6 @@ export const init = async ({
   // init job list
   await initJobsList(board, queryParam, office, department);
 
-  window.fsAttributes[GREENHOUSE_ATTRIBUTE].resolve?.(undefined);
+  // TODO: Create destroy method
+  return finalizeAttribute(GREENHOUSE_ATTRIBUTE, undefined);
 };

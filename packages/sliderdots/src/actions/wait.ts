@@ -1,4 +1,4 @@
-import { SliderNavElement, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
+import { isElement, SliderNavElement, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 
 /**
  * Returns a Promise that resolves when all slider dots have been initially populated.
@@ -12,7 +12,7 @@ export const waitSliderReady = (sliderNav: SliderNavElement) => {
     const callback: MutationCallback = (mutations) => {
       for (const { addedNodes } of mutations) {
         for (const addedNode of addedNodes) {
-          const isSliderDot = addedNode instanceof Element && addedNode.closest(`.${SLIDER_CSS_CLASSES.sliderDot}`);
+          const isSliderDot = isElement(addedNode) && addedNode.closest(`.${SLIDER_CSS_CLASSES.sliderDot}`);
           if (!isSliderDot) continue;
 
           resolve(undefined);

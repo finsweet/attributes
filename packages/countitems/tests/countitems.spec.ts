@@ -1,18 +1,15 @@
 import { test, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
 
-/**
- * These are some demo tests to showcase Playwright.
- * You can run the tests by running `pnpm dev`.
- * If you need more info about writing tests, please visit {@link https://playwright.dev/}.
- */
+test.beforeEach(async ({ page }) => {
+  await page.goto('http://fs-attributes.webflow.io/countitems');
+});
 
-// test.beforeEach(async ({ page }) => {
-//   await page.goto('https://demo.playwright.dev/todomvc');
-// });
+test.describe('countitems', () => {
+  test('Displays the items count', async ({ page }) => {
+    const value1 = page.getByTestId('value-1');
+    const value2 = page.getByTestId('value-2');
 
-test.describe('Example', () => {
-  test('Example', async ({ page }) => {
-    //
+    await expect(value1).toHaveText('35');
+    await expect(value2).toHaveText('6');
   });
 });

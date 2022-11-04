@@ -1,18 +1,18 @@
 import { test, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
 
-/**
- * These are some demo tests to showcase Playwright.
- * You can run the tests by running `pnpm dev`.
- * If you need more info about writing tests, please visit {@link https://playwright.dev/}.
- */
+test.beforeEach(async ({ page }) => {
+  await page.goto('http://fs-attributes.webflow.io/mirrorclick');
+});
 
-// test.beforeEach(async ({ page }) => {
-//   await page.goto('https://demo.playwright.dev/todomvc');
-// });
+test.describe('mirrorclick', () => {
+  test('Button mirrors clicks on slider', async ({ page }) => {
+    const dots = page.locator('[data-testid="slider"] .w-slider-dot');
 
-test.describe('Example', () => {
-  test('Example', async ({ page }) => {
-    //
+    await expect(dots.first()).toHaveClass(/w-active/);
+
+    const richArrorMirrorButton = page.locator('[fs-mirrorclick-element="trigger-2"]');
+    await richArrorMirrorButton.click();
+
+    await expect(dots.nth(1)).toHaveClass(/w-active/);
   });
 });

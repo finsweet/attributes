@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style>
+      [fs-launchdarkly-cloak] {
+        display: none;
+      }
+    </style>
+    <script src="http://localhost:3000/packages/launchdarkly/tests/scripts/testExports.js"></script>
+  </head>
+  <body>
+    <div>
+      <h1 data-test-id="title1" fs-launchdarkly-showif="value1" fs-launchdarkly-flag="testing" fs-launchdarkly-cloak>
+        LaunchDarkly Test
+      </h1>
+
+      <h1
+        data-test-id="title2"
+        fs-launchdarkly-showif="value1,value2"
+        fs-launchdarkly-flag="testing"
+        fs-launchdarkly-cloak
+      >
+        LaunchDarkly Test
+      </h1>
+
+      <h1
+        data-test-id="title-boolean"
+        fs-launchdarkly-showif="false"
+        fs-launchdarkly-flag="testing"
+        fs-launchdarkly-cloak
+      >
+        LaunchDarkly Test
+      </h1>
+    </div>
+  </body>
+</html>

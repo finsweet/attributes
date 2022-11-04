@@ -1,4 +1,4 @@
-import { wait } from '@finsweet/ts-utils';
+import { isNumber, wait } from '@finsweet/ts-utils';
 
 import type { CMSItem, CMSList } from '..';
 import { restartWebflowModules } from './webflow';
@@ -24,7 +24,7 @@ export const renderListItems = async (listInstance: CMSList, animateItems = fals
 
   for (const item of items) {
     const { valid, currentIndex } = item;
-    const rendered = typeof currentIndex === 'number';
+    const rendered = isNumber(currentIndex);
 
     if (valid) {
       validItems.push(item);
@@ -124,7 +124,7 @@ const showItems = (itemsToAnchor: AnchorData[], { list, itemsAnimation }: CMSLis
 
         const anchorElement = anchor?.element || null;
 
-        if (typeof currentIndex !== 'number' && animateItems && itemsAnimation) {
+        if (!isNumber(currentIndex) && animateItems && itemsAnimation) {
           const { prepareIn, animateIn, options } = itemsAnimation;
           const { stagger, ...animationOptions } = options || {};
 

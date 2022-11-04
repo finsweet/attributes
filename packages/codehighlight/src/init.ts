@@ -1,4 +1,5 @@
 import { CMS_ATTRIBUTE_ATTRIBUTE, CODE_HIGHLIGHT_ATTRIBUTE, RICH_TEXT_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { importHighlightJS, importHighlightJSTheme } from './actions/import';
 import { ATTRIBUTES, getSelector } from './utils/constants';
@@ -6,9 +7,8 @@ import { ATTRIBUTES, getSelector } from './utils/constants';
 /**
  * Inits the attribute.
  */
-export const init = async (): Promise<(HTMLElement | undefined)[]> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
-  await window.fsAttributes[RICH_TEXT_ATTRIBUTE]?.loading;
+export const init = async (): Promise<HTMLElement[]> => {
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE, RICH_TEXT_ATTRIBUTE);
 
   const referenceElements = [
     ...document.querySelectorAll<HTMLElement>(getSelector('element', 'code', { operator: 'prefixed' })),
@@ -19,14 +19,13 @@ export const init = async (): Promise<(HTMLElement | undefined)[]> => {
     return theme;
   }, null);
 
-  importHighlightJSTheme(theme);
-  await importHighlightJS();
+  const [destroyHighlightJSThemeImport] = await Promise.all([importHighlightJSTheme(theme), importHighlightJS()]);
 
   const codeElements = initHighlight(referenceElements);
 
-  window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE].resolve?.(codeElements);
-
-  return codeElements;
+  return finalizeAttribute(CODE_HIGHLIGHT_ATTRIBUTE, codeElements, () => {
+    destroyHighlightJSThemeImport?.();
+  });
 };
 
 /**

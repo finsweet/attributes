@@ -1,7 +1,6 @@
 import { COMMERCE_CSS_CLASSES, LIGHTBOX_CSS_CLASSES } from '@finsweet/ts-utils';
 
-import { checkCMSCoreVersion, CMSList } from '$packages/cmscore';
-import { addItemsAnimation, addListAnimation } from '$packages/cmscore';
+import type { CMSCore, CMSList } from '$packages/cmscore';
 
 import { initDefaultMode } from './modes/default';
 import { initInfiniteMode } from './modes/infinite';
@@ -28,15 +27,15 @@ const {
  * @param listInstance The {@link CMSList} instance.
  * @returns The same instance.
  */
-export const initLoadInstance = async (listInstance: CMSList) => {
+export const initLoadInstance = async (listInstance: CMSList, cmsCore: CMSCore) => {
   const instanceIndex = listInstance.getInstanceIndex(elementKey);
   const { items } = listInstance;
   const { Webflow } = window;
   const webflowReady = !!Webflow && 'require' in Webflow;
 
   // Get animation config
-  addItemsAnimation(listInstance, { animationKey, durationKey, easingKey, staggerKey });
-  addListAnimation(listInstance, { durationKey, easingKey });
+  cmsCore.addItemsAnimation(listInstance, { animationKey, durationKey, easingKey, staggerKey });
+  cmsCore.addListAnimation(listInstance, { durationKey, easingKey });
 
   // Get commerce config
   const restartCommerce =
@@ -78,12 +77,7 @@ export const initLoadInstance = async (listInstance: CMSList) => {
     const visibleCountFrom = queryElement<HTMLElement>('visibleCountFrom', { instanceIndex });
     const visibleCountTo = queryElement<HTMLElement>('visibleCountTo', { instanceIndex });
 
-    // TODO: Remove this check after cmscore v1.7.0 has rolled out
-    if (checkCMSCoreVersion('>=', '1.7.0')) {
-      listInstance.addVisibleCount(visibleCountTotal, visibleCountFrom, visibleCountTo);
-    } else if (visibleCountTotal) {
-      listInstance.addVisibleCount(visibleCountTotal);
-    }
+    listInstance.addVisibleCount(visibleCountTotal, visibleCountFrom, visibleCountTo);
   }
 
   // Get scroll anchor
@@ -95,10 +89,14 @@ export const initLoadInstance = async (listInstance: CMSList) => {
   // Init mode
   const mode = listInstance.getAttribute(modeKey);
 
-  if (mode === renderAll) await initRenderAllMode(listInstance);
-  else if (mode === infinite) await initInfiniteMode(listInstance);
-  else if (mode === pagination) await initPaginationMode(listInstance);
-  else await initDefaultMode(listInstance);
+  const cleanup =
+    mode === renderAll
+      ? await initRenderAllMode(listInstance)
+      : mode === infinite
+      ? await initInfiniteMode(listInstance)
+      : mode === pagination
+      ? await initPaginationMode(listInstance)
+      : await initDefaultMode(listInstance);
 
-  return listInstance;
+  return cleanup;
 };

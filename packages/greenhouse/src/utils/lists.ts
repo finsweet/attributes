@@ -1,6 +1,7 @@
-import { CMS_CSS_CLASSES, isNotEmpty } from '@finsweet/ts-utils';
+import { isNotEmpty } from '@finsweet/ts-utils';
 import type { JobWithContent } from '@finsweet/ts-utils/dist/types/apis/Greenhouse';
 
+import { getCMSElementSelector } from '$global/helpers';
 import { CMSItem, CMSList } from '$packages/cmscore';
 
 import { ATTRIBUTES } from '../utils/constants';
@@ -35,7 +36,7 @@ export function addNestedJobsToCMSItems(
 
     setMainGroup(mainItem, groupBy, jobGroup);
 
-    const jobsWrapper = mainItem.querySelector<HTMLDivElement>(`.${CMS_CSS_CLASSES.wrapper}`);
+    const jobsWrapper = mainItem.querySelector<HTMLDivElement>(getCMSElementSelector('wrapper'));
 
     if (!jobsWrapper) {
       return mainItem;
@@ -77,7 +78,7 @@ export function appendNestedJobsToCMSItems(
 
     setMainGroup(mainItem, groupBy, jobGroup);
 
-    const jobsWrapper = mainItem.querySelector<HTMLDivElement>(`.${CMS_CSS_CLASSES.wrapper}`);
+    const jobsWrapper = mainItem.querySelector<HTMLDivElement>(getCMSElementSelector('wrapper'));
 
     if (!jobsWrapper) {
       return;

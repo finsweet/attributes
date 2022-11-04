@@ -11,6 +11,7 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 generateScript('src/index.ts', 'animation');
+generateScript('src/esm.ts', 'animation.esm', 'esm');
 generateScript('src/functions.ts', 'functions', 'esm');
 generateExamplesJSON(__dirname);
 generateSchemaJSON(__dirname);

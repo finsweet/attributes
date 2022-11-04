@@ -1,4 +1,4 @@
-import type { FormField } from '@finsweet/ts-utils';
+import { FormField, isHTMLInputElement } from '@finsweet/ts-utils';
 
 import type { Form } from '../components/Form';
 import { getSelector } from '../utils/constants';
@@ -13,7 +13,7 @@ export const resetForm = ({ form, successMessage, errorMessage }: Form, preventR
 
   for (const { element, value, checked } of preventResetFields) {
     element.value = value;
-    if (element instanceof HTMLInputElement && checked) element.checked = checked;
+    if (isHTMLInputElement(element) && checked) element.checked = checked;
   }
 
   successMessage.style.display = 'none';
@@ -34,7 +34,7 @@ export const collectPreventResetFields = (form: HTMLFormElement) => {
     if (!shouldPreventReset) return acc;
 
     const { value } = element;
-    const checked = element instanceof HTMLInputElement ? element.checked : undefined;
+    const checked = isHTMLInputElement(element) ? element.checked : undefined;
 
     acc.push({
       element,

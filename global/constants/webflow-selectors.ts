@@ -1,15 +1,16 @@
-import { CMS_CSS_CLASSES, SLIDER_CSS_CLASSES, DROPDOWN_CSS_CLASSES, TABS_CSS_CLASSES } from '@finsweet/ts-utils';
+import { SLIDER_CSS_CLASSES, DROPDOWN_CSS_CLASSES, TABS_CSS_CLASSES } from '@finsweet/ts-utils';
 
+import { getCMSElementSelector } from '$global/helpers';
 import type { DOMSelector } from '$global/types/schema';
 
 export const COLLECTION_LIST: DOMSelector = {
   label: 'Collection List',
-  selectors: [`.${CMS_CSS_CLASSES.list}`, `.${CMS_CSS_CLASSES.wrapper}`],
+  selectors: [getCMSElementSelector('list'), getCMSElementSelector('wrapper')],
 };
 
 export const COLLECTION_ITEM: DOMSelector = {
   label: 'Collection Item',
-  selectors: [`.${CMS_CSS_CLASSES.item}`],
+  selectors: [getCMSElementSelector('item')],
 };
 
 export const FORM: DOMSelector = {
@@ -142,7 +143,7 @@ export const LOTTIE_ANIMATION: DOMSelector = {
 
 export const PAGINATION_WRAPPER: DOMSelector = {
   label: 'Pagination Wrapper',
-  selectors: [`.${CMS_CSS_CLASSES.paginationWrapper}`],
+  selectors: [getCMSElementSelector('paginationWrapper')],
 };
 
 export const SLIDER: DOMSelector = {

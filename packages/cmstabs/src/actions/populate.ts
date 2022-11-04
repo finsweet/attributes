@@ -1,7 +1,7 @@
 import { TABS_CSS_CLASSES, CURRENT_CSS_CLASS } from '@finsweet/ts-utils';
 import type { TabsMenuElement, TabsContentElement, TabLinkElement, TabPaneElement } from '@finsweet/ts-utils';
 
-import { ARIA_ROLE_KEY } from '$global/constants/a11ty';
+import { ARIA_ROLE_KEY } from '$global/constants/a11y';
 import type { CMSItem } from '$packages/cmscore';
 
 import { getSelector, queryElement } from '../utils/constants';

@@ -18,6 +18,7 @@ import { createHeadingWrapper } from './create';
  */
 export const collectHeadingsData = ({ children }: HTMLElement) => {
   const headingsData: HeadingData[] = [];
+
   for (let i = children.length - 1; i >= 0; i--) {
     const child = children[i];
     const headingElement = child.closest<HTMLParagraphElement>(ALLOWED_HEADINGS_SELECTOR);
@@ -80,6 +81,7 @@ export const collectHeadingsData = ({ children }: HTMLElement) => {
       id,
     });
   }
+
   return headingsData;
 };
 

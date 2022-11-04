@@ -35,7 +35,7 @@ export const createSocialShareInstances = (scope?: HTMLElement) => {
 
     // fix leaking elements of different attributes when using the same prefix
     const abovePrefixBounds = `${key}[-0-9]*[a-zA-Z]+`;
-    const socialShareButtons = [...elements].filter((element) => {
+    const socialShareButtons = elements.filter((element) => {
       // if attribute is out of bounds, return false.
       return !element.getAttribute(elementKey)?.toLocaleLowerCase().match(new RegExp(abovePrefixBounds));
     });

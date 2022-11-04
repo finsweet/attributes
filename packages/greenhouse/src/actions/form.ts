@@ -1,4 +1,4 @@
-import { cloneNode, FORM_CSS_CLASSES } from '@finsweet/ts-utils';
+import { cloneNode, FORM_CSS_CLASSES, isFile } from '@finsweet/ts-utils';
 import type { JobWithQuestions, Question } from '@finsweet/ts-utils/dist/types/apis/Greenhouse';
 import slugify from 'slugify';
 
@@ -331,11 +331,11 @@ const handleFormSubmissions = (form: HTMLFormElement) => {
     > = {};
 
     for (const [key, value] of formData.entries()) {
-      if (!value || (value instanceof File && !value.size)) {
+      if (!value || (isFile(value) && !value.size)) {
         continue;
       }
 
-      if (value instanceof File) {
+      if (isFile(value)) {
         if (!value.size) {
           data[key] = '';
           continue;

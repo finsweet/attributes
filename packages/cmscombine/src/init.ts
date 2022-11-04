@@ -1,6 +1,7 @@
 import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_COMBINE_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { importCMSCore } from '$global/import';
 import type { CMSList } from '$packages/cmscore';
-import { importCMSCore } from '$packages/cmscore';
 
 import { collectCombineData } from './collect';
 import { combineItemsToTarget } from './combine';
@@ -14,7 +15,7 @@ export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
 
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const listInstances = cmsCore.createCMSListInstances([getSelector('element', 'list', { operator: 'prefixed' })]);
 
@@ -23,9 +24,10 @@ export const init = async (): Promise<CMSList[]> => {
   // Combine the lists
   const combineLists = await Promise.all(combineData.map(initListsCombine));
 
-  window.fsAttributes[CMS_COMBINE_ATTRIBUTE].resolve?.(combineLists);
-
-  return combineLists;
+  return finalizeAttribute(CMS_COMBINE_ATTRIBUTE, combineLists, () => {
+    // TODO: Remove optional chaining after cmscore@1.9.0 has rolled out
+    for (const listInstance of listInstances) listInstance.destroy?.();
+  });
 };
 
 /**

@@ -15,12 +15,12 @@ export const createAnimation = ({ initialStyles, keyframes }: AnimationProps): A
    * @param options.insertAfter A child of the target. If defined, the element will be appended right after this anchor element.
    */
   const prepareIn: AnimationFunctions['prepareIn'] = (elements, options = {}) => {
-    const { target, insertAfter } = options;
+    const { target, insertAfter, display = '' } = options;
 
     if (!Array.isArray(elements)) elements = [elements];
 
     for (const element of elements) {
-      element.style.display = '';
+      element.style.display = display;
       Object.assign(element.style, initialStyles);
 
       if (target && insertAfter !== undefined) {
@@ -41,7 +41,8 @@ export const createAnimation = ({ initialStyles, keyframes }: AnimationProps): A
    * @returns An awaitable promise.
    */
   const animateIn: AnimationFunctions['animateIn'] = async (elements, options = {}) => {
-    const { prepared, stagger, ...animationOptions } = options;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { prepared, stagger, display, ...animationOptions } = options;
 
     if (!prepared) prepareIn(elements, options);
 
@@ -62,7 +63,7 @@ export const createAnimation = ({ initialStyles, keyframes }: AnimationProps): A
    * @returns An awaitable promise.
    */
   const animateOut: AnimationFunctions['animateOut'] = async (elements, options = {}) => {
-    const { remove, stagger, ...animationOptions } = options;
+    const { remove, stagger, target, insertAfter, display = 'none', ...animationOptions } = options;
 
     if (!Array.isArray(elements)) elements = [elements];
 
@@ -77,8 +78,13 @@ export const createAnimation = ({ initialStyles, keyframes }: AnimationProps): A
     await finished;
 
     for (const element of elements) {
+      if (target && insertAfter !== undefined) {
+        if (insertAfter) target.insertBefore(element, insertAfter.nextSibling);
+        else target.prepend(element);
+      } else if (target) target.appendChild(element);
+
       if (remove) element.remove();
-      else element.style.display = 'none';
+      else element.style.display = display;
     }
   };
 

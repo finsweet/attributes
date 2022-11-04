@@ -1,4 +1,3 @@
-import { getCollectionElements } from '@finsweet/ts-utils';
 import type {
   CollectionListWrapperElement,
   CollectionListElement,
@@ -9,7 +8,7 @@ import type {
 } from '@finsweet/ts-utils';
 import Emittery from 'emittery';
 
-import { getInstanceIndex } from '$global/helpers';
+import { getInstanceIndex, getCollectionElements } from '$global/helpers';
 import type { Animation } from '$packages/animation/src/types';
 
 import { CMSItem } from './CMSItem';
@@ -235,7 +234,9 @@ export class CMSList extends Emittery<CMSListEvents> {
     // Items
     const items: CMSItem[] = [];
 
-    if (list) items.push(...collectionItems.map((element, index) => new CMSItem(element, list, index)));
+    if (list) {
+      items.push(...collectionItems.map((element, index) => new CMSItem(element, list, index)));
+    }
 
     this.items = items;
     this.validItems = items;
@@ -581,5 +582,13 @@ export class CMSList extends Emittery<CMSListEvents> {
     const { wrapper, list } = this;
 
     return getInstanceIndex(wrapper, key) || (list ? getInstanceIndex(list, key) : undefined);
+  }
+
+  /**
+   * Destroys the instance.
+   */
+  public destroy() {
+    this.clearListeners();
+    window.fsAttributes.cmscore?.listInstances?.delete(this.wrapper);
   }
 }

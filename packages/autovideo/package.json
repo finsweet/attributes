@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-autovideo",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Auto-play videos only in viewport.",
   "homepage": "https://www.finsweet.com/attributes",
   "main": "autovideo.js",
@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
     "check": "tsc --noEmit",

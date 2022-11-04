@@ -1,3 +1,5 @@
+import { addListener } from '@finsweet/ts-utils';
+
 import type { CMSList } from '$packages/cmscore';
 
 import { loadPaginatedItems } from '../actions/load';
@@ -6,8 +8,10 @@ import { incrementItemsPerPage } from '../actions/pagination';
 /**
  * Inits the default mode.
  * @param listInstance The `CMSList` instance.
+ *
+ * @returns A callback to remove event listeners.
  */
-export const initDefaultMode = async (listInstance: CMSList): Promise<void> => {
+export const initDefaultMode = async (listInstance: CMSList) => {
   const { paginationNext, paginationPrevious, paginationCount, itemsPerPage: originalItemsPerPage } = listInstance;
 
   if (!paginationNext) return;
@@ -25,8 +29,7 @@ export const initDefaultMode = async (listInstance: CMSList): Promise<void> => {
     const { validItems, items, itemsPerPage: currentItemsPerPage } = listInstance;
 
     if (!isLoading && items.length === currentItemsPerPage) {
-      conclude();
-      return;
+      return conclude();
     }
 
     paginationNext.style.display = validItems.length > currentItemsPerPage ? '' : 'none';
@@ -48,18 +51,21 @@ export const initDefaultMode = async (listInstance: CMSList): Promise<void> => {
     isHandling = false;
   };
 
+  // Init
+  const clickCleanup = addListener(paginationNext, 'click', handleClicks);
+
   /**
    * Destroys the `Pagination Next` button..
    */
   const conclude = () => {
-    paginationNext.removeEventListener('click', handleClicks);
+    clickCleanup();
     paginationNext.style.display = 'none';
   };
-
-  // Init
-  paginationNext.addEventListener('click', handleClicks);
 
   await loadPaginatedItems(listInstance);
 
   isLoading = false;
+
+  // Destroy callback
+  return conclude;
 };

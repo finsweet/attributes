@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmssort",
-  "version": "1.11.1",
+  "version": "1.13.1",
   "description": "Create advanced and complex no-code sorting for Webflow CMS Collection List content.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
     "check": "tsc --noEmit",

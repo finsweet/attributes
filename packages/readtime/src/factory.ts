@@ -1,4 +1,4 @@
-import { getInstanceIndex } from 'global/helpers';
+import { getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, DEFAULT_DECIMALS, DEFAULT_WPM, queryElement } from './utils/constants';
 

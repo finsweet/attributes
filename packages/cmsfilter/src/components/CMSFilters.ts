@@ -1,4 +1,4 @@
-import { FORM_CSS_CLASSES, isFormField, isVisible, sameValues } from '@finsweet/ts-utils';
+import { addListener, FORM_CSS_CLASSES, isFormField, isVisible, sameValues } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
 import debounce from 'just-debounce';
 
@@ -66,6 +66,11 @@ export class CMSFilters {
    * Defines if any filter element must highlight its matching results.
    */
   public highlightResults!: boolean;
+
+  /**
+   * Destroys the instance's listeners.
+   */
+  public destroy;
 
   /**
    * The debounced `applyFilters` action, based on the user's debouncing settings.
@@ -164,11 +169,19 @@ export class CMSFilters {
     this.highlightCSSClass = highlightCSSClass;
     this.submitButtonVisible = !!submitButton && isVisible(submitButton);
 
-    this.init();
+    // Init
+    const cleanupPromise = this.init();
+
+    this.destroy = async () => {
+      const cleanup = await cleanupPromise;
+      cleanup();
+    };
   }
 
   /**
    * Inits the instance.
+   *
+   * @returns A cleanup callback.
    */
   private async init() {
     const { listInstance, hideEmptyFilters, showFilterResults } = this;
@@ -191,22 +204,27 @@ export class CMSFilters {
 
     this.applyFilters();
 
-    this.listenEvents();
+    return this.listenEvents();
   }
 
   /**
    * Listens for internal events.
+   *
+   * @returns A callback to destroy all event listeners.
    */
   private async listenEvents() {
     const { form, resetButtonsData, submitButton } = this;
 
     // Form
-    form.addEventListener('submit', (e) => this.handleSubmit(e));
-    form.addEventListener('input', (e) => this.handleInputEvents(e));
+    const submitCleanup = addListener(form, 'submit', (e) => this.handleSubmit(e));
+    const inputCleanup = addListener(form, 'input', (e) => this.handleInputEvents(e));
 
     // Reset buttons
+    const resetButtonsCleanups: (() => void)[] = [];
+
     for (const [resetButton, filterKeys] of resetButtonsData) {
-      resetButton.addEventListener('click', () => this.resetFilters(filterKeys));
+      const clickCleanup = addListener(resetButton, 'click', () => this.resetFilters(filterKeys));
+      resetButtonsCleanups.push(clickCleanup);
 
       const radioField = resetButton.closest(`.${FORM_CSS_CLASSES.radioField}`);
       if (!radioField) continue;
@@ -214,20 +232,32 @@ export class CMSFilters {
       const radio = radioField.querySelector('input');
       if (!radio) continue;
 
-      radio.addEventListener('input', () => {
+      const radioCleanup = addListener(radio, 'input', () => {
         if (radio.checked) this.resetFilters(filterKeys);
       });
+      resetButtonsCleanups.push(radioCleanup);
     }
 
     // Submit button visibility
+    let windowResizeCleanup: () => void;
+
     if (submitButton) {
-      window.addEventListener(
+      windowResizeCleanup = addListener(
+        window,
         'resize',
         debounce(() => {
           this.submitButtonVisible = isVisible(submitButton);
         }, 50)
       );
     }
+
+    // Destroy callback.
+    return () => {
+      submitCleanup();
+      inputCleanup();
+      windowResizeCleanup?.();
+      for (const cleanup of resetButtonsCleanups) cleanup();
+    };
   }
 
   /**
@@ -353,7 +383,7 @@ export class CMSFilters {
 
   /**
    * Resets the active filters.
-   * @param filterKey If passed, only this filter key will be resetted.
+   * @param filterKeys If passed, only this filter key will be resetted.
    * @param value If passed, only that specific value and the elements that hold it will be cleared.
    */
   public async resetFilters(filterKeys?: string[], value?: string): Promise<void> {

@@ -1,25 +1,14 @@
-import { assessScript, initAttributes } from '$global/factory';
-import { importCMSCore } from '$packages/cmscore';
+import { CMS_CSS_ATTRIBUTE } from '$global/constants/attributes';
+import { initAttribute } from '$global/factory';
 
 import { version } from '../package.json';
-import { ATTRIBUTE } from './constants';
 import { init } from './init';
 
 /**
  * Init
  */
-initAttributes();
-importCMSCore();
-
-window.fsAttributes[ATTRIBUTE] ||= {};
-
-const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
-
-attribute.version = version;
-
-if (preventsLoad) attribute.init = init;
-else {
-  window.Webflow ||= [];
-  window.Webflow.push(init);
-}
+initAttribute({
+  init,
+  version,
+  attributeKey: CMS_CSS_ATTRIBUTE,
+});

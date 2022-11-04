@@ -9,8 +9,10 @@ import { getInfiniteThreshold } from '../actions/settings';
 /**
  * Inits the infinite mode.
  * @param listInstance The `CMSList` instance.
+ *
+ * @returns A callback to remove all event listeners.
  */
-export const initInfiniteMode = async (listInstance: CMSList): Promise<void> => {
+export const initInfiniteMode = async (listInstance: CMSList) => {
   const {
     list,
     paginationNext,
@@ -97,4 +99,6 @@ export const initInfiniteMode = async (listInstance: CMSList): Promise<void> => 
   await loadPaginatedItems(listInstance);
 
   isLoading = false;
+
+  return conclude;
 };

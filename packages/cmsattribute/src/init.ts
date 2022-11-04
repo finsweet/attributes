@@ -1,6 +1,7 @@
-import { CMS_CSS_CLASSES } from '@finsweet/ts-utils';
-import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_LOAD_ATTRIBUTE } from 'global/constants/attributes';
-import type { CMSList } from 'packages/cmscore/src';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_LOAD_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { getCMSElementSelector } from '$global/helpers';
+import type { CMSList } from '$packages/cmscore/src';
 
 import { createCMSAttribute } from './factory';
 import { getSelector } from './utils/constants';
@@ -12,12 +13,12 @@ export const init = async (): Promise<void> => {
   const targets = document.querySelectorAll<HTMLElement>(getSelector('target'));
 
   for (const targetElement of targets) {
-    const targetScope = targetElement.closest<HTMLElement>(`.${CMS_CSS_CLASSES.item}`) || document;
+    const targetScope = targetElement.closest<HTMLElement>(getCMSElementSelector('item')) || document;
 
     createCMSAttribute(targetElement, targetScope);
   }
 
-  const listInstances: CMSList[] = (await window.fsAttributes[CMS_LOAD_ATTRIBUTE]?.loading) || [];
+  const listInstances: CMSList[] = (await awaitAttributesLoad(CMS_LOAD_ATTRIBUTE))[0] || [];
 
   for (const { items } of listInstances) {
     for (const { element } of items) {
@@ -29,5 +30,5 @@ export const init = async (): Promise<void> => {
     }
   }
 
-  window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE].resolve?.(undefined);
+  return finalizeAttribute(CMS_ATTRIBUTE_ATTRIBUTE);
 };

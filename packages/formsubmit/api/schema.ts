@@ -8,8 +8,7 @@ import {
   INPUT,
   LINK_BLOCK,
   TEXT_BLOCK,
-} from 'global/constants/webflow-selectors';
-
+} from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {

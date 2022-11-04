@@ -1,4 +1,4 @@
-import { isVisible, NAVBAR_CSS_CLASSES } from '@finsweet/ts-utils';
+import { addListener, isVisible, NAVBAR_CSS_CLASSES } from '@finsweet/ts-utils';
 import debounce from 'just-debounce';
 
 import { ATTRIBUTES, getSelector, NAV_MEDIAS } from './constants';
@@ -16,6 +16,7 @@ const displayTriggersStore: Map<
 /**
  * Handle the state change
  * @param trigger
+ * @param preserveScrollTargets
  */
 const handleStateChange = (trigger: HTMLElement, preserveScrollTargets: NodeListOf<Element>) => {
   // Get the trigger data
@@ -44,8 +45,11 @@ const handleStateChange = (trigger: HTMLElement, preserveScrollTargets: NodeList
 
 /**
  * Handle the display triggers
+ * @param preserveScrollTargets
+ *
+ * @returns A callback to destroy the observers and listeners.
  */
-export const initDisplayTriggers = (preserveScrollTargets: NodeListOf<Element>): void => {
+export const initDisplayTriggers = (preserveScrollTargets: NodeListOf<Element>): (() => void) => {
   // DOM Elements
   const smartNavSelector = getSelector('element', 'nav');
 
@@ -101,8 +105,15 @@ export const initDisplayTriggers = (preserveScrollTargets: NodeListOf<Element>):
 
   // Handle window resize events
   const debouncedStateChangeHandler = debounce(() => {
-    for (const trigger of displayTriggers) handleStateChange(trigger, preserveScrollTargets);
+    for (const trigger of displayTriggers) {
+      handleStateChange(trigger, preserveScrollTargets);
+    }
   }, 250);
 
-  window.addEventListener('resize', debouncedStateChangeHandler);
+  const resizeCleanup = addListener(window, 'resize', debouncedStateChangeHandler);
+
+  return () => {
+    observer.disconnect();
+    resizeCleanup();
+  };
 };

@@ -1,5 +1,7 @@
 import type { Job, JobWithContent } from '@finsweet/ts-utils/dist/types/apis/Greenhouse';
 
+import { unescapeHTML } from '$global/helpers';
+
 import { ATTRIBUTES, queryElement } from '../utils/constants';
 
 export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | undefined, queryParam: string | null) {
@@ -62,15 +64,3 @@ export function populateJob(job: Job | JobWithContent, scope: HTMLDivElement | u
 
   return scope;
 }
-
-export const unescapeHTML = (rawHTML: string): string => {
-  return rawHTML
-    .replace(/(&nbsp;)/g, ' ')
-    .replace(/(&lt;)/g, '<')
-    .replace(/(&gt;)/g, '>')
-    .replace(/(&amp;)/g, '&')
-    .replace(/(&quot;)/g, '"')
-    .replace(/(&#96;)/g, '`')
-    .replace(/(&#x27;)/g, "'")
-    .replace(/(<br>)/g, '\n');
-};

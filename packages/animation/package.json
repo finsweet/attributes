@@ -1,16 +1,18 @@
 {
   "name": "@finsweet/attributes-animation",
-  "version": "1.0.11",
+  "version": "1.2.0",
   "description": "Web Animations API for Attributes.",
   "main": "animation.js",
   "files": [
     "animation.js",
+    "animation.esm.js",
     "functions.js"
   ],
   "type": "module",
   "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
     "check": "tsc --noEmit",
@@ -36,10 +38,10 @@
   },
   "homepage": "https://www.finsweet.com/attributes",
   "devDependencies": {
-    "@motionone/dom": "^10.10.0",
-    "@motionone/types": "^10.9.0"
+    "@motionone/dom": "^10.14.2",
+    "@motionone/types": "^10.14.0"
   },
   "dependencies": {
-    "motion": "^10.10.0"
+    "motion": "^10.14.2"
   }
 }

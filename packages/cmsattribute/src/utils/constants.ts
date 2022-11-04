@@ -1,5 +1,4 @@
-import { CMS_ATTRIBUTE_ATTRIBUTE } from 'global/constants/attributes';
-
+import { CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
 import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${CMS_ATTRIBUTE_ATTRIBUTE}`;

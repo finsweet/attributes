@@ -1,8 +1,9 @@
 import { removeTrailingSlash } from '@finsweet/ts-utils';
 
 import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_PREV_NEXT_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { importCMSCore } from '$global/import';
 import type { CMSItem, CMSList } from '$packages/cmscore';
-import { importCMSCore } from '$packages/cmscore';
 
 import { collectElements } from './collect';
 import { getSelector } from './constants';
@@ -14,16 +15,21 @@ export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
 
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   let previousPlaceholderFilled = false;
   let nextPlaceholderFilled = false;
 
   const listInstances = cmsCore.createCMSListInstances([getSelector('element', 'list', { operator: 'prefixed' })]);
-  if (!listInstances.length) return [];
+
+  const finalize = () =>
+    finalizeAttribute(CMS_PREV_NEXT_ATTRIBUTE, listInstances, () => {
+      // TODO: Remove optional chaining after cmscore@1.9.0 has rolled out
+      for (const listInstance of listInstances) listInstance.destroy?.();
+    });
 
   const elements = collectElements();
-  if (!elements) return [];
+  if (!elements) return finalize();
 
   const { previousPlaceholder, nextPlaceholder, previousEmptyElement, nextEmptyElement } = elements;
 
@@ -87,7 +93,5 @@ export const init = async (): Promise<CMSList[]> => {
     listInstance.wrapper.style.display = 'none';
   }
 
-  window.fsAttributes[CMS_PREV_NEXT_ATTRIBUTE].resolve?.(listInstances);
-
-  return listInstances;
+  return finalize();
 };

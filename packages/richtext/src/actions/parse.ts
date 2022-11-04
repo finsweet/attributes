@@ -1,7 +1,8 @@
+import { unescapeHTML } from '$global/helpers';
+
 import { HAS_COMPONENT_TEMPLATE_REGEX, IS_HTML_OPENING_TAG_REGEX } from '../utils/regex';
 import type { TextElement } from '../utils/types';
 import { getComponentHTML } from './components';
-import { unescapeHTML } from './html';
 import { sanitizeHTML } from './sanitize';
 
 /**

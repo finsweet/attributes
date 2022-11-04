@@ -1,23 +1,14 @@
-import { assessScript, initAttributes } from '$global/factory';
+import { DISPLAY_VALUES_ATTRIBUTE } from '$global/constants/attributes';
+import { initAttribute } from '$global/factory';
 
 import { version } from '../package.json';
 import { init } from './init';
-import { ATTRIBUTE } from './utils/constants';
 
 /**
  * Init
  */
-initAttributes();
-
-window.fsAttributes[ATTRIBUTE] ||= {};
-
-const { preventsLoad } = assessScript();
-const attribute = window.fsAttributes[ATTRIBUTE];
-
-attribute.version = version;
-
-if (preventsLoad) attribute.init = init;
-else {
-  window.Webflow ||= [];
-  window.Webflow.push(init);
-}
+initAttribute({
+  init,
+  version,
+  attributeKey: DISPLAY_VALUES_ATTRIBUTE,
+});

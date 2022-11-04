@@ -1,4 +1,7 @@
-import { SMART_LIGHTBOX_ATTRIBUTE } from '$global/constants/attributes';
+import { addListener, isElement } from '@finsweet/ts-utils';
+
+import { CMS_ATTRIBUTE_ATTRIBUTE, SMART_LIGHTBOX_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { getLightboxElement } from './actions/collect';
 import { moveElementToBody } from './actions/move';
@@ -12,9 +15,11 @@ let restoreUntransformedElement: (() => void) | undefined;
  * The CSS style is injected to the `<head>`.
  * The click events are listened for the triggers.
  */
-export const init = (): void => {
-  window.addEventListener('click', async ({ target }) => {
-    if (!(target instanceof Element)) return;
+export const init = async () => {
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
+
+  const clickCleanup = addListener(window, 'click', async ({ target }) => {
+    if (!isElement(target)) return;
 
     // Get the trigger
     const toggleTrigger = target.closest(getSelector('element', 'toggle', { operator: 'prefixed' }));
@@ -58,5 +63,5 @@ export const init = (): void => {
     }, timeout);
   });
 
-  window.fsAttributes[SMART_LIGHTBOX_ATTRIBUTE].resolve?.(undefined);
+  return finalizeAttribute(SMART_LIGHTBOX_ATTRIBUTE, undefined, () => clickCleanup());
 };

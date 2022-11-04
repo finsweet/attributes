@@ -2,18 +2,11 @@
   "extends": "@finsweet/tsconfig",
   "compilerOptions": {
     "target": "ES2019",
-    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "$global/*": ["./global/*"],
-      "$packages/*": ["./packages/*"]
+      "$global/*": ["global/*"],
+      "$packages/*": ["packages/*"]
     }
   },
-  "include": ["./packages/**/*.ts", "./global/**/*.ts"],
-  "exclude": [
-    "./packages/components/**/*.ts",
-    "./packages/cmssave/**/*.ts",
-    "./packages/template/**/*.ts",
-    "./packages/support/**/*.ts"
-  ]
+  "exclude": ["packages/components/**/*.ts", "packages/cmssave/**/*.ts", "packages/support/**/*.ts"]
 }

@@ -1,7 +1,6 @@
-import { ATTRIBUTES_PREFIX } from '$global/constants/attributes';
+import { ATTRIBUTES_PREFIX, SUPPORT_ATTRIBUTE } from '$global/constants/attributes';
 
-const ATTRIBUTES_SUPPORT_QUERY_PARAM = `${ATTRIBUTES_PREFIX}-support`;
-const ATTRIBUTES_SUPPORT_SOURCE = 'https://cdn.jsdelivr.net/npm/@finsweet/attributes-support@1/support.js';
+const ATTRIBUTES_SUPPORT_QUERY_PARAM = `${ATTRIBUTES_PREFIX}-${SUPPORT_ATTRIBUTE}`;
 
 /**
  * Imports the Attributes Support Wizard and mounts it on the page.
@@ -15,21 +14,6 @@ export const importSupport = async () => {
 
   if (!host.includes('webflow.io') || !searchParams.has(ATTRIBUTES_SUPPORT_QUERY_PARAM)) return false;
 
-  if (fsAttributes.supportImport) return fsAttributes.supportImport;
-
-  try {
-    fsAttributes.supportImport = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-
-      script.src = ATTRIBUTES_SUPPORT_SOURCE;
-      script.onload = () => resolve(true);
-      script.onerror = reject;
-
-      document.head.append(script);
-    });
-  } catch (error) {
-    return false;
-  }
-
-  return fsAttributes.supportImport;
+  // TODO: Remove optional chaining once support for {@link window.fsAttributes.import} has rolled out
+  return fsAttributes.import?.(SUPPORT_ATTRIBUTE, '1');
 };

@@ -27,4 +27,4 @@ export const ATTRIBUTES = {
   },
 } as const;
 
-export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
+export const [getSelector, queryElement, getAttribute] = generateSelectors(ATTRIBUTES);

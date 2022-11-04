@@ -1,6 +1,6 @@
-import { cloneNode, getCollectionElements, getCollectionListWrappers } from '@finsweet/ts-utils';
+import { cloneNode } from '@finsweet/ts-utils';
 
-import { normalizePropKey } from '$packages/cmscore';
+import { normalizePropKey, getCollectionElements, getCollectionListWrappers } from '$global/helpers';
 import type { CMSItem, CMSCore } from '$packages/cmscore';
 
 import { ATTRIBUTES, getSelector } from '../utils/constants';

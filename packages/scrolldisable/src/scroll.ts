@@ -1,4 +1,4 @@
-import { isScrollable } from '@finsweet/ts-utils';
+import { isHTMLElement, isScrollable } from '@finsweet/ts-utils';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const { body } = document;
@@ -57,7 +57,7 @@ export const findFirstScrollableElement = (element: HTMLElement): HTMLElement | 
 
   const children = element.querySelectorAll('*');
   for (const child of children) {
-    if (!(child instanceof HTMLElement)) continue;
+    if (!isHTMLElement(child)) continue;
     if (isScrollable(child)) return child;
   }
 };

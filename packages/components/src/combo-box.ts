@@ -1,4 +1,4 @@
-import { cloneNode, Interaction, simulateEvent } from '@finsweet/ts-utils';
+import { cloneNode, Interaction, isElement, isNode, simulateEvent } from '@finsweet/ts-utils';
 
 const MAIN_KEY = 'fs-uswds';
 const ELEMENT_KEY = `${MAIN_KEY}-element`;
@@ -123,7 +123,7 @@ class ComboBox {
    * @param event The mouse Event
    */
   private handleClickEvents({ target }: MouseEvent) {
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
 
     if (target.closest(ELEMENT_ATTRIBUTES.toggle)) {
       this.toggleList();
@@ -155,7 +155,7 @@ class ComboBox {
     const { target, key } = e;
     const { inputElement } = this;
 
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
 
     if (key === 'Escape') {
       this.toggleList({ action: 'close', focus: 'inputElement' });
@@ -183,7 +183,7 @@ class ComboBox {
     const { target, key } = e;
     const { inputElement } = this;
 
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
     if (key === 'Escape' || key === 'ArrowDown' || key === 'ArrowUp' || key === 'ArrowRight' || key === 'ArrowLeft') {
       return;
     }
@@ -196,7 +196,7 @@ class ComboBox {
    * @param event The focus event
    */
   private handleFocusEvents({ target }: FocusEvent) {
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
 
     const listItemElement = target.closest('li');
     if (listItemElement) {
@@ -302,7 +302,7 @@ class ComboBox {
    * @param event A focus or mouse event.
    */
   private handleBlur({ target }: FocusEvent | MouseEvent) {
-    if (!(target instanceof Node)) return;
+    if (!isNode(target)) return;
     if (this.parentElement.contains(target)) return;
 
     this.toggleList({ action: 'close' });

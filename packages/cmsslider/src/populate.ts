@@ -1,7 +1,7 @@
 import { SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { SlideElement, SliderMaskElement } from '@finsweet/ts-utils';
 
-import { ARIA_ROLE_KEY } from '$global/constants/a11ty';
+import { ARIA_ROLE_KEY } from '$global/constants/a11y';
 import type { CMSItem } from '$packages/cmscore';
 
 import type { PopulateData } from './types';

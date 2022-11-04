@@ -1,5 +1,7 @@
+import { addListener } from '@finsweet/ts-utils';
+
+import { normalizePropKey } from '$global/helpers';
 import type { CMSList } from '$packages/cmscore';
-import { normalizePropKey } from '$packages/cmscore';
 
 import { sortListItems } from '../actions/sort';
 import type { SortingDirection, SortItemsCallback } from '../utils/types';
@@ -10,10 +12,6 @@ import type { SortingDirection, SortItemsCallback } from '../utils/types';
  * @param listInstance The {@link CMSList} instance.
  */
 export const initHTMLSelect = async (selectElement: HTMLSelectElement, listInstance: CMSList) => {
-  // Prevent submit events on the form
-  const form = selectElement.closest('form');
-  form?.addEventListener('submit', handleFormSubmit);
-
   let [sortKey, direction] = getSortingParams(selectElement.value);
   let sorting = false;
 
@@ -27,7 +25,7 @@ export const initHTMLSelect = async (selectElement: HTMLSelectElement, listInsta
   };
 
   // Store the original CMS Order
-  selectElement.addEventListener('change', async () => {
+  const changeCleanup = addListener(selectElement, 'change', async () => {
     if (sorting) return;
 
     sorting = true;
@@ -42,7 +40,18 @@ export const initHTMLSelect = async (selectElement: HTMLSelectElement, listInsta
   // Sort items if a sortKey exists on page load
   if (sortKey) await sortItems();
 
-  return sortItems;
+  // Prevent submit events on the form
+  const form = selectElement.closest('form');
+
+  const submitCleanup = addListener(form, 'submit', handleFormSubmit);
+
+  return {
+    sortItems,
+    cleanup: () => {
+      changeCleanup();
+      submitCleanup();
+    },
+  };
 };
 
 /**

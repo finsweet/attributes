@@ -1,5 +1,5 @@
 import { CODE_HIGHLIGHT_ATTRIBUTE } from '$global/constants/attributes';
-import { assessScript, initAttributes } from '$global/factory';
+import { initAttribute } from '$global/factory';
 
 import { version } from '../package.json';
 import { importHighlightJS } from './actions/import';
@@ -8,18 +8,10 @@ import { init } from './init';
 /**
  * Init
  */
-initAttributes();
+initAttribute({
+  init,
+  version,
+  attributeKey: CODE_HIGHLIGHT_ATTRIBUTE,
+});
+
 importHighlightJS();
-
-window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE] ||= {};
-
-const attribute = window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE];
-const { preventsLoad } = assessScript();
-
-attribute.version = version;
-
-if (preventsLoad) attribute.init = init;
-else {
-  window.Webflow ||= [];
-  window.Webflow.push(init);
-}

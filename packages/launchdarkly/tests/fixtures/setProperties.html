@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        [fs-launchdarkly-showif] {
+            display: none;
+        }
+    </style>
+    <script src="http://localhost:3000/packages/launchdarkly/tests/scripts/testExports.js"></script>
+</head>
+<body>
+<div>
+    <h1 data-test-id="loader" fs-launchdarkly-element="loader" >Test</h1>
+    <h1 data-test-id="loader2" fs-launchdarkly-element="random" >Test</h1>
+    <img data-test-id="test_classname" fs-launchdarkly-setproperties="class" fs-launchdarkly-flag="testing" ></img>
+    <img data-test-id="image1" srcset="1234" src="http://example.svg" fs-launchdarkly-setproperties="src"  fs-launchdarkly-flag="testing" />
+    <div data-test-id="iframe-container" fs-launchdarkly-setproperties="src"  fs-launchdarkly-flag="testing">
+    <iframe data-test-id="iframe" src="http://example.svg" ></iframe>
+    </div>
+    <img data-test-id="image2" srcset="1234" src="http://example.svg" fs-launchdarkly-setproperties="srcset"  fs-launchdarkly-flag="testing">LaunchDarkly Test</h1>
+    <p data-test-id="text1" fs-launchdarkly-setproperties="text"  fs-launchdarkly-flag="testing2">LaunchDarkly Test</p>
+    <input data-test-id="input1" type="number" fs-launchdarkly-setproperties="value"  fs-launchdarkly-flag="testing" />
+    <button data-test-id="button1"  fs-launchdarkly-setproperties="value"  fs-launchdarkly-flag="testing" ></button>
+    <select data-test-id="select1"  fs-launchdarkly-setproperties="value"  fs-launchdarkly-flag="testing" >
+    <option value="1">1</option>
+    <option value="123">123</option>
+    </select>
+    <textarea data-test-id="textarea1"  fs-launchdarkly-setproperties="value"  fs-launchdarkly-flag="testing" >
+    </textarea>
+    <div data-test-id="div1"  fs-launchdarkly-setproperties="html"  fs-launchdarkly-flag="testing-html" >
+    </div>
+    <a data-test-id="anchor1"  fs-launchdarkly-setproperties="href"  fs-launchdarkly-flag="testing" >
+    </a>
+</div>
+</body>
+</html>

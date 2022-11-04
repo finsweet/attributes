@@ -1,6 +1,14 @@
-import { cloneNode, CMS_CSS_CLASSES, CURRENT_CSS_CLASS, isNotEmpty } from '@finsweet/ts-utils';
+import {
+  addListener,
+  cloneNode,
+  CURRENT_CSS_CLASS,
+  isElement,
+  isHTMLAnchorElement,
+  isNotEmpty,
+} from '@finsweet/ts-utils';
 import debounce from 'just-debounce';
 
+import { getCMSElementSelector } from '$global/helpers';
 import type { CMSList } from '$packages/cmscore';
 
 import { loadPaginatedItems } from '../actions/load';
@@ -10,13 +18,14 @@ import { getSelector } from '../utils/constants';
 import type { PageButtonsData } from '../utils/types';
 
 // Constants
-const { paginationNext: paginationNextCSSClass, paginationPrevious: paginationPreviousCSSClass } = CMS_CSS_CLASSES;
 
 /**
  * Inits the `Paginate` mode.
  * @param listInstance The {@link CMSList} instance.
+ *
+ * @returns A callback to destroy the event listeners.
  */
-export const initPaginationMode = async (listInstance: CMSList): Promise<void> => {
+export const initPaginationMode = async (listInstance: CMSList) => {
   const settingsData = getPaginationSettings(listInstance);
   if (!settingsData) return;
 
@@ -55,13 +64,21 @@ export const initPaginationMode = async (listInstance: CMSList): Promise<void> =
   // Set initial state
   listInstance.initPagination(showQueryParams);
 
-  //  Listen events
+  // Listen events
+  // Render events
   listInstance.on('renderitems', () => handleElements(listInstance, pageButtonsData, paginationCount));
 
-  paginationWrapper.addEventListener('click', (e) => handlePaginationClicks(e, pageButtonsData, listInstance));
+  // Click events
+  const clickCleanup = addListener(paginationWrapper, 'click', (e) =>
+    handlePaginationClicks(e, pageButtonsData, listInstance)
+  );
+
+  // Resize events
+  let resizeCleanup: () => void;
 
   if (pageButtonsData && hasBreakpoints) {
-    window.addEventListener(
+    resizeCleanup = addListener(
+      window,
       'resize',
       debounce(() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -72,6 +89,12 @@ export const initPaginationMode = async (listInstance: CMSList): Promise<void> =
 
   // Init items load
   await loadPaginatedItems(listInstance);
+
+  // Return destroy callback
+  return () => {
+    clickCleanup();
+    resizeCleanup?.();
+  };
 };
 
 /**
@@ -193,13 +216,13 @@ const createPageElement = (
   newElement.classList.remove(CURRENT_CSS_CLASS);
   newElement.textContent = `${targetPage}`;
 
-  if (newElement instanceof HTMLAnchorElement && pagesQuery) newElement.href = `?${pagesQuery}=${targetPage}`;
+  if (isHTMLAnchorElement(newElement) && pagesQuery) newElement.href = `?${pagesQuery}=${targetPage}`;
 
   return newElement;
 };
 
 /**
- * Updates the CSS and `a11ty` of a page element.
+ * Updates the CSS and `a11y` of a page element.
  * @param element The page element.
  * @param isCurrentPage Defines if the element points to the current active page.
  */
@@ -222,11 +245,11 @@ const updatePageElement = (element: HTMLElement, isCurrentPage: boolean) => {
 const handlePaginationClicks = (e: MouseEvent, pageButtonsData: PageButtonsData | undefined, listInstance: CMSList) => {
   const { target } = e;
 
-  if (!(target instanceof Element)) return;
+  if (!isElement(target)) return;
 
   const isPageButton = target.closest<HTMLElement>(getSelector('element', 'pageButton', { operator: 'prefixed' }));
-  const isNextButton = target.closest(`.${paginationNextCSSClass}`);
-  const isPreviousButton = target.closest(`.${paginationPreviousCSSClass}`);
+  const isNextButton = target.closest(getCMSElementSelector('paginationNext'));
+  const isPreviousButton = target.closest(getCMSElementSelector('paginationPrevious'));
 
   if (!isPageButton && !isNextButton && !isPreviousButton) return;
 

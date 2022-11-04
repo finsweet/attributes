@@ -12,7 +12,6 @@ const {
 /**
  * Reacts to a `CMSList` events.
  * @param listInstance A {@link CMSList} instance.
- * @param originalItemsOrder The original order of {@link CMSItem} instances.
  * @param sortItems A callback to sort the items in the currently selected order.
  */
 export const listenListEvents = (listInstance: CMSList, sortItems: SortItemsCallback) => {

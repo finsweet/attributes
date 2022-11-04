@@ -1,4 +1,4 @@
-import { extractCommaSeparatedValues, getCurrentBreakpoint } from '@finsweet/ts-utils';
+import { extractCommaSeparatedValues, getCurrentBreakpoint, isNumber } from '@finsweet/ts-utils';
 import type { PaginationWrapperElement } from '@finsweet/ts-utils';
 
 import type { CMSList } from '$packages/cmscore';
@@ -112,7 +112,7 @@ export const getPageButtonsSettings = (
     for (let i = breakpointIndex; i >= 0; i--) {
       const value = array[i];
 
-      if (typeof value === 'number') {
+      if (isNumber(value)) {
         values[index] = value;
         break;
       }

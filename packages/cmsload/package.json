@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsload",
-  "version": "1.8.3",
+  "version": "1.10.0",
   "description": "Load More Webflow CMS items on the page after the page has loaded.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
     "check": "tsc --noEmit",

@@ -1,8 +1,7 @@
 import { isKeyOf, FORM_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
 
-import { addListAnimation } from '$packages/cmscore';
-import type { CMSList } from '$packages/cmscore';
+import type { CMSList, CMSCore } from '$packages/cmscore';
 
 import { CMSFilters } from './components/CMSFilters';
 import { CMSTags } from './components/CMSTags';
@@ -34,7 +33,7 @@ const {
  * @param listInstance The {@link CMSList} instance.
  * @returns The new instance, if valid.
  */
-export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | undefined => {
+export const createCMSFiltersInstance = (listInstance: CMSList, cmsCore: CMSCore): CMSFilters | undefined => {
   const instanceIndex = listInstance.getInstanceIndex(elementKey);
 
   // Base elements
@@ -83,15 +82,6 @@ export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | un
   // Debouncing
   const debouncing = parseFloat(listInstance.getAttribute(debouncingKey) || DEFAULT_DEBOUNCING);
 
-  // Make sure instances are unique
-  const {
-    fsAttributes: { cms },
-  } = window;
-
-  cms.filtersInstances ||= [];
-
-  if (cms.filtersInstances[instanceIndex || 0]) return;
-
   // Create instance
   const filtersInstance = new CMSFilters(formBlock, listInstance, {
     resultsElement,
@@ -103,10 +93,8 @@ export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | un
     debouncing,
   });
 
-  cms.filtersInstances[instanceIndex || 0] ||= filtersInstance;
-
   // Add animation
-  addListAnimation(listInstance, { durationKey, easingKey });
+  cmsCore.addListAnimation(listInstance, { durationKey, easingKey });
 
   return filtersInstance;
 };

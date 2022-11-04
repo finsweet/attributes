@@ -1,14 +1,8 @@
-import type { MapEntries } from '@finsweet/ts-utils';
+import { addListener, MapEntries } from '@finsweet/ts-utils';
 
-import {
-  ARIA_ROLE_KEY,
-  ARIA_ROLE_VALUES,
-  ARIA_SORT_KEY,
-  ARIA_SORT_VALUES,
-  TABINDEX_KEY,
-} from '$global/constants/a11ty';
+import { ARIA_ROLE_KEY, ARIA_ROLE_VALUES, ARIA_SORT_KEY, ARIA_SORT_VALUES, TABINDEX_KEY } from '$global/constants/a11y';
+import { normalizePropKey } from '$global/helpers';
 import type { CMSList } from '$packages/cmscore';
-import { normalizePropKey } from '$packages/cmscore';
 
 import { sortListItems } from '../actions/sort';
 import { ATTRIBUTES } from '../utils/constants';
@@ -27,7 +21,7 @@ const {
  * @param listInstance The {@link CMSList} instance.
  * @param globalCSSClasses The state CSS classes (`asc` and `desc`) globally defined on the list.
  */
-export const initButtons = (buttons: NodeListOf<HTMLElement>, listInstance: CMSList, globalCSSClasses: CSSClasses) => {
+export const initButtons = (buttons: HTMLElement[], listInstance: CMSList, globalCSSClasses: CSSClasses) => {
   const buttonsState: ButtonsState = new Map();
 
   let sorting = false;
@@ -44,10 +38,10 @@ export const initButtons = (buttons: NodeListOf<HTMLElement>, listInstance: CMSL
     await sortListItems(listInstance, { sortKey, direction, addingItems });
   };
 
-  for (const button of buttons) {
+  const cleanups = buttons.map((button) => {
     prepareButton(button, buttonsState, globalCSSClasses);
 
-    button.addEventListener('click', async (e) => {
+    const clickCleanup = addListener(button, 'click', async (e) => {
       e.preventDefault();
 
       if (sorting) return;
@@ -73,15 +67,22 @@ export const initButtons = (buttons: NodeListOf<HTMLElement>, listInstance: CMSL
 
       sorting = false;
     });
-  }
 
-  return sortItems;
+    return clickCleanup;
+  });
+
+  return {
+    sortItems,
+    cleanup: () => {
+      for (const cleanup of cleanups) cleanup();
+    },
+  };
 };
 
 /**
  * - Inits the button state.
  * - Clears state CSS classes.
- * - Adds `a11ty` attributes.
+ * - Adds `a11y` attributes.
  * - Stores CSS Class overrides.
  * @param button The button element.
  * @param buttonsState The {@link ButtonsState} object.
@@ -126,7 +127,7 @@ const clearClasses = (...[button, { cssClasses }]: MapEntries<ButtonsState>[numb
 };
 
 /**
- * Sets `a11ty` attributes to a button.
+ * Sets `a11y` attributes to a button.
  * @param button The button element.
  * @param direction The direction state of the button.
  */

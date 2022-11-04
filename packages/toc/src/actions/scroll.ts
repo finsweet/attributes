@@ -7,17 +7,16 @@ import type { ScrollOffsetStyles } from '../utils/types';
  * @param tocWrapper
  * @param tocItems
  * @param offsets
+ *
  */
-export const setScrollOffsets = (tocWrapper: HTMLElement, tocItems: TOCItem[], offsets: ScrollOffsetStyles) => {
+export const setScrollOffsets = (tocItems: TOCItem[], offsets: ScrollOffsetStyles) => {
   if (!Object.values(offsets).some(Boolean)) return;
 
   document.documentElement.style.scrollBehavior = 'smooth';
 
-  for (const tocItem of tocItems) tocItem.setScrollOffset(offsets);
-
-  tocWrapper.addEventListener('click', (e) => {
-    if (e.target instanceof Element && e.target.closest('a')) e.stopPropagation();
-  });
+  for (const tocItem of tocItems) {
+    tocItem.setScrollOffset(offsets);
+  }
 };
 
 /**

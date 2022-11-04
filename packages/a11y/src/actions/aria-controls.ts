@@ -1,51 +1,61 @@
-import { isVisible } from '@finsweet/ts-utils';
-import { ARIA_CONTROLS, ARIA_EXPANDED_KEY } from 'global/constants/a11ty';
+import { isNotEmpty, isVisible } from '@finsweet/ts-utils';
+import { createFocusTrap } from 'focus-trap';
 import debounce from 'just-debounce';
 
-import { queryElement } from '../utils/constants';
+import { ARIA_CONTROLS_KEY, ARIA_EXPANDED_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES } from '$global/constants/a11y';
 
 /**
  * Observes [aria-controls] target visibility.
  * Sets the correspondent [aria-expanded] attribute value.
+ *
+ * @returns A callback to disconnect all observers.
  */
-export const observeAriaControls = (): void => {
-  const controllers = document.querySelectorAll(`[${ARIA_CONTROLS}]`);
+export const observeAriaControls = () => {
+  const controllers = [...document.querySelectorAll(`[${ARIA_CONTROLS_KEY}]`)];
 
-  for (const controller of controllers) observeTarget(controller);
+  const cleanups = controllers.map(observeTarget).filter(isNotEmpty);
+
+  return () => {
+    for (const cleanup of cleanups) cleanup();
+  };
 };
 
 /**
  * Observes an [aria-controls] target.
  * Sets the correspondent [aria-expanded] attribute value.
+ * If the target is a dialog, activates a focus trap.
  *
- * @param controller The [aria-controls] controller.
+ * @param controller The [aria-controls] controller element.
  */
 const observeTarget = (controller: Element) => {
-  const targetSelector = controller.getAttribute(ARIA_CONTROLS);
+  const targetSelector = controller.getAttribute(ARIA_CONTROLS_KEY);
   if (!targetSelector) return;
 
   const target = document.getElementById(targetSelector);
   if (!target) {
-    controller.removeAttribute(ARIA_CONTROLS);
+    controller.removeAttribute(ARIA_CONTROLS_KEY);
     return;
   }
 
-  const autoFocusTarget = queryElement<HTMLElement>('autoFocus', { operator: 'prefixed', scope: target });
+  // Has aria-expanded
+  const hasAriaExpanded = controller.hasAttribute(ARIA_EXPANDED_KEY);
 
-  let visibilityState = isVisible(target);
+  // Is dialog
+  const targetIsDialog = target.getAttribute(ARIA_ROLE_KEY) === ARIA_ROLE_VALUES.dialog;
+  const trap = targetIsDialog ? createFocusTrap(target, { returnFocusOnDeactivate: true }) : null;
 
-  setAriaExpanded(controller, visibilityState);
+  if (!hasAriaExpanded && !targetIsDialog) return;
 
-  const observerCallback: MutationCallback = (mutations) => {
-    mutations.forEach(() => {
-      const newVisibilityState = isVisible(target);
+  // Observe
+  setAriaExpanded(controller, target);
 
-      setAriaExpanded(controller, newVisibilityState);
-
-      if (autoFocusTarget && !visibilityState && newVisibilityState) autoFocusTarget.focus();
-
-      visibilityState = newVisibilityState;
-    });
+  const observerCallback: MutationCallback = () => {
+    const hasExpanded = setAriaExpanded(controller, target);
+    if (hasExpanded) {
+      trap?.activate();
+    } else {
+      trap?.deactivate();
+    }
   };
 
   const debouncedObserverCallback = debounce(observerCallback, 100);
@@ -56,13 +66,22 @@ const observeTarget = (controller: Element) => {
     attributes: true,
     attributeFilter: ['style', 'class'],
   });
+
+  return () => {
+    observer.disconnect();
+    trap?.deactivate();
+  };
 };
 
 /**
  * Sets the [aria-expanded] attribute value to a controller.
  * @param controller
- * @param expanded
+ * @param target
  */
-const setAriaExpanded = (controller: Element, expanded: boolean) => {
-  controller.setAttribute(ARIA_EXPANDED_KEY, `${expanded}`);
+const setAriaExpanded = (controller: Element, target: HTMLElement) => {
+  const hasExpanded = isVisible(target);
+
+  controller.setAttribute(ARIA_EXPANDED_KEY, String(hasExpanded));
+
+  return hasExpanded;
 };

@@ -1,3 +1,5 @@
+import { isString } from '@finsweet/ts-utils';
+
 import { ATTRIBUTES } from './constants';
 import type { GlobalAttributeParams } from './types';
 
@@ -19,7 +21,7 @@ export const assessScript = <AttributeKeys extends Record<string, string>>(
   }
 
   // Check if the Attribute should not be automatically loaded
-  const preventsLoad = typeof currentScript.getAttribute(ATTRIBUTES.preventLoad.key) === 'string';
+  const preventsLoad = isString(currentScript.getAttribute(ATTRIBUTES.preventLoad.key));
 
   // Retrieve <script> Attributes
   const params: GlobalAttributeParams<AttributeKeys> = {

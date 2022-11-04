@@ -1,5 +1,65 @@
 # @finsweet/attributes-docs
 
+## 1.12.7
+
+### Patch Changes
+
+- 95fba640: Created `fs-videohls` Attribute.
+
+## 1.12.6
+
+### Patch Changes
+
+- 489412f8: Created `fs-inputactive` Attribute.
+
+## 1.12.5
+
+### Patch Changes
+
+- 239d236b: Added info about `fs-a11y`
+
+## 1.12.4
+
+### Patch Changes
+
+- 1eb9c91e: Created `fs-accordion` Attribute.
+
+## 1.12.3
+
+### Patch Changes
+
+- 3111ec89: Created `fs-starrating` Attribute.
+
+## 1.12.2
+
+### Patch Changes
+
+- 460f73c6: Created `fs-modal` Attribute
+
+## 1.12.1
+
+### Patch Changes
+
+- 1ece2f42: Created `fs-inputcounter` Attribute
+
+## 1.12.0
+
+### Minor Changes
+
+- e2fa5c6f: Created fs-attributes-numbercount
+
+## 1.11.0
+
+### Minor Changes
+
+- e4b3b680: Created new `window.fsAttributes.destroy()` method to support SPA environments.
+  This new method allows users to destroy all Attributes instances, cleaning up event listeners, observers, states, global variables, etc.
+
+  Websites that use a client-side router that simulates an SPA environment like [barba.js](https://barba.js.org/) or [Swup](https://swup.js.org/) can now properly init and destroy Attributes.
+  After destroying, Attributes can be manually re-initted by calling `window.fsAttribute[ATTRIBUTE_KEY].init()`.
+
+  Updated changesets system, now all updates will be correctly reflected in [the official updates page](https://www.finsweet.com/attributes/updates).
+
 ## 1.10.0
 
 ### Minor Changes

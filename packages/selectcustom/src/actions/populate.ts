@@ -1,7 +1,7 @@
 import { cloneNode, findTextNode } from '@finsweet/ts-utils';
 
 import type { OptionData, Settings } from '../utils/types';
-import { setOptionAria } from './a11ty';
+import { setOptionAria } from './a11y';
 import { toggleResetVisibility, updateOptionsState } from './state';
 
 /**
@@ -19,7 +19,9 @@ export const populateOptions = (settings: Settings) => {
   } = settings;
 
   // Clear existing options
-  for (const { element } of optionsStore.values()) element.remove();
+  for (const { element } of optionsStore.values()) {
+    element.remove();
+  }
 
   optionsStore.splice(0, optionsStore.length);
 
@@ -29,8 +31,9 @@ export const populateOptions = (settings: Settings) => {
   for (const { value, text } of options) {
     let element: HTMLAnchorElement | undefined;
 
-    if (!value && emptyOption) element = cloneNode(emptyOption);
-    else {
+    if (!value && emptyOption) {
+      element = cloneNode(emptyOption);
+    } else {
       element = cloneNode(optionTemplate);
 
       const textNode = findTextNode(element) || element;
@@ -58,5 +61,7 @@ export const populateOptions = (settings: Settings) => {
 
   updateOptionsState(settings, selectedOption);
 
-  if (hideInitial) toggleResetVisibility(!!selectedOption?.value, settings);
+  if (hideInitial) {
+    toggleResetVisibility(!!selectedOption?.value, settings);
+  }
 };

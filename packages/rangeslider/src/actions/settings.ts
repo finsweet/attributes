@@ -1,7 +1,8 @@
 import { Debug, isFormField } from '@finsweet/ts-utils';
 
+import { getDecimalPrecision } from '$global/helpers';
+
 import { ATTRIBUTES, getSelector, queryElement } from '../utils/constants';
-import { getDecimalPrecision } from './values';
 
 /**
  * Constants

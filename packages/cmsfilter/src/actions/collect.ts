@@ -3,14 +3,15 @@ import {
   FORM_CSS_CLASSES,
   getObjectEntries,
   isFormField,
+  isHTMLInputElement,
   isKeyOf,
   sameValues,
 } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
 
-import { normalizePropKey } from '$packages/cmscore';
+import { normalizePropKey } from '$global/helpers';
 
-import { ensureUniqueFormFieldId } from '../utils/a11ty';
+import { ensureUniqueFormFieldId } from '../utils/a11y';
 import { ATTRIBUTES, getSelector, MATCHES, MODES, queryElement, TAG_FORMATS } from '../utils/constants';
 import type { FilterData, FilterElement, FiltersData, ResetButtonsData } from '../utils/types';
 import { handleFilterInput } from './input';
@@ -130,7 +131,7 @@ export const collectFiltersData = (
     const checkboxOrRadioField = element.closest<HTMLLabelElement>(`.${checkboxFieldCSSClass}, .${radioFieldCSSClass}`);
 
     if (checkboxOrRadioField) {
-      const isCheckbox = element instanceof HTMLInputElement;
+      const isCheckbox = isHTMLInputElement(element);
 
       const value = isCheckbox ? 'true' : element.textContent || '';
 

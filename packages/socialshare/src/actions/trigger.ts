@@ -1,14 +1,18 @@
+import { addListener, isElement } from '@finsweet/ts-utils';
+
 import { getSelector, SOCIAL_SHARE_PLATFORMS } from '../utils/constants';
 import { stores } from '../utils/stores';
 import type { SocialShareStoreData, SocialShareTypes } from '../utils/types';
 
 /**
  * Listens for trigger clicks on the document.
+ *
+ * @returns A callback to remove the event listener.
  */
 export const listenTriggerClicks = () => {
-  document.addEventListener('click', (e) => {
+  const clickCleanup = addListener(document, 'click', (e) => {
     const { target } = e;
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
 
     for (const key in SOCIAL_SHARE_PLATFORMS) {
       const platform = key as SocialShareTypes;
@@ -24,6 +28,8 @@ export const listenTriggerClicks = () => {
       break;
     }
   });
+
+  return clickCleanup;
 };
 
 /**

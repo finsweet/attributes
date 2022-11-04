@@ -1,18 +1,20 @@
 import { isFormField } from '@finsweet/ts-utils';
-import { CMS_ATTRIBUTE_ATTRIBUTE } from 'global/constants/attributes';
+
+import { CMS_ATTRIBUTE_ATTRIBUTE, DISPLAY_VALUES_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { collectTargets } from './actions/collect';
 import { listenEvents } from './actions/events';
 import { syncValue } from './actions/sync';
-import { ATTRIBUTE, getSelector } from './utils/constants';
+import { queryElement } from './utils/constants';
 
 /**
  * Inits click events mirroring.
  */
-export const init = async (): Promise<NodeListOf<Element>> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+export const init = async (): Promise<Element[]> => {
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
-  const sourceElements = document.querySelectorAll(getSelector('element', 'source', { operator: 'prefixed' }));
+  const sourceElements = queryElement('source', { operator: 'prefixed', all: true });
 
   for (const sourceElement of sourceElements) {
     if (!isFormField(sourceElement)) continue;
@@ -21,9 +23,9 @@ export const init = async (): Promise<NodeListOf<Element>> => {
     syncValue(sourceElement);
   }
 
-  listenEvents();
+  const removeListeners = listenEvents();
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(sourceElements);
-
-  return sourceElements;
+  return finalizeAttribute(DISPLAY_VALUES_ATTRIBUTE, sourceElements, () => {
+    removeListeners();
+  });
 };

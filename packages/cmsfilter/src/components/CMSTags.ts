@@ -1,4 +1,4 @@
-import { cloneNode, Debug } from '@finsweet/ts-utils';
+import { addListener, cloneNode, Debug, isElement } from '@finsweet/ts-utils';
 
 import type { CMSList } from '$packages/cmscore';
 
@@ -8,6 +8,14 @@ import type { FilterData, TagData, TagFormat, TagsData } from '../utils/types';
 import type { CMSFilters } from './CMSFilters';
 
 export class CMSTags {
+  /**
+   * Destroys the instance's listeners.
+   */
+  public destroy;
+
+  /**
+   * The wrapper element.
+   */
   private readonly wrapper: HTMLElement;
 
   private tagsData: TagsData = [];
@@ -21,7 +29,7 @@ export class CMSTags {
   ) {
     this.wrapper = template.parentElement || Debug.alert('The tags have no parent wrapper.', 'error');
 
-    this.init();
+    this.destroy = this.init();
   }
 
   /**
@@ -34,7 +42,9 @@ export class CMSTags {
 
     this.hasRemoveTrigger = hasRemoveTrigger(template);
 
-    wrapper.addEventListener('click', (e) => this.handleClick(e));
+    const clickCleanup = addListener(wrapper, 'click', (e) => this.handleClick(e));
+
+    return () => clickCleanup();
   }
 
   /**
@@ -44,7 +54,7 @@ export class CMSTags {
   private handleClick(e: MouseEvent) {
     const { target } = e;
 
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
 
     const { hasRemoveTrigger, tagsData, listInstance } = this;
 

@@ -1,0 +1,42 @@
+{
+  "name": "@finsweet/attributes-inputcounter",
+  "version": "1.2.3",
+  "description": "Increment and decrement (+ and -) counter in a Webflow Form.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
+  "main": "inputcounter.js",
+  "files": [
+    "inputcounter.js",
+    "examples.json",
+    "schema.json",
+    "changesets.json"
+  ],
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finsweet/attributes.git"
+  },
+  "keywords": [
+    "webflow",
+    "attributes",
+    "no code",
+    "input counter"
+  ],
+  "author": {
+    "name": "Finsweet",
+    "url": "https://www.finsweet.com/"
+  },
+  "bugs": {
+    "url": "https://sweetjs.finsweet.com/"
+  }
+}

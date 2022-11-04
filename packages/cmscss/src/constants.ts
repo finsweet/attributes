@@ -1,8 +1,7 @@
+import { CMS_CSS_ATTRIBUTE } from '$global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
 
-export const ATTRIBUTE = 'cmscss';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${CMS_CSS_ATTRIBUTE}`;
 
 export const ATTRIBUTES = {
   element: {

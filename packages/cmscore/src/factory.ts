@@ -1,11 +1,6 @@
-import {
-  CMS_CSS_CLASSES,
-  Debug,
-  getCollectionElements,
-  getCollectionListWrappers,
-  isNotEmpty,
-} from '@finsweet/ts-utils';
-import type { CollectionListWrapperElement } from '@finsweet/ts-utils';
+import { CollectionListWrapperElement, isNotEmpty } from '@finsweet/ts-utils';
+
+import { getCollectionListWrappers, getCollectionElements, getCMSElementSelector } from '$global/helpers';
 
 import { CMSList } from '.';
 
@@ -30,24 +25,28 @@ export const createCMSListInstances = (selectors: Parameters<typeof getCollectio
 export const createCMSListInstance = (referenceElement: HTMLElement): CMSList | undefined => {
   const wrapper = getCollectionElements(referenceElement, 'wrapper');
 
-  if (!wrapper) {
-    Debug.alert('The element is not a Collection List.', 'error');
-    return;
-  }
+  if (!wrapper) return;
 
   const { fsAttributes } = window;
 
-  fsAttributes.cms.listInstances ||= [];
-  fsAttributes.cms.listElements ||= [
-    ...document.querySelectorAll<CollectionListWrapperElement>(`.${CMS_CSS_CLASSES.wrapper}`),
+  fsAttributes.cmscore ||= {};
+  const { cmscore } = fsAttributes;
+
+  cmscore.listInstances ||= new Map();
+  const { listInstances } = cmscore;
+
+  const existingListInstance = listInstances.get(wrapper);
+  if (existingListInstance) return existingListInstance;
+
+  const pageListElements = [
+    ...document.querySelectorAll<CollectionListWrapperElement>(getCMSElementSelector('wrapper')),
   ];
 
-  const { listInstances, listElements } = fsAttributes.cms;
-
-  const index = listElements.indexOf(wrapper);
+  const index = pageListElements.indexOf(wrapper);
   if (index === -1) return;
 
-  listInstances[index] ||= new CMSList(wrapper, index);
+  const listInstance = new CMSList(wrapper, index);
+  listInstances.set(wrapper, listInstance);
 
-  return listInstances[index];
+  return listInstance;
 };

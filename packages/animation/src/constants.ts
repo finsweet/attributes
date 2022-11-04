@@ -1,8 +1,7 @@
+import { ANIMATION_ATTRIBUTE } from '$global/constants/attributes';
 import { generateSelectors } from '$global/factory';
 
-export const ATTRIBUTE = 'animation';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${ANIMATION_ATTRIBUTE}`;
 
 export const ATTRIBUTES = {
   /**

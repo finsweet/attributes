@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmscss",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Add CSS classes to Collection Item elements based on a media query.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
     "check": "tsc --noEmit",

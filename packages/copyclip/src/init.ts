@@ -1,10 +1,17 @@
-import { findTextNode } from '@finsweet/ts-utils';
+import { findTextNode, isHTMLElement, isNotEmpty } from '@finsweet/ts-utils';
 import type ClipboardJS from 'clipboard';
 
 import { CMS_ATTRIBUTE_ATTRIBUTE, COPY_CLIP_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 import { getInstanceIndex } from '$global/helpers';
 
-import { ATTRIBUTES, DEFAULT_SUCCESS_DURATION, DEFAULT_SUCCESS_CSS_CLASS, getSelector } from './constants';
+import {
+  ATTRIBUTES,
+  DEFAULT_SUCCESS_DURATION,
+  DEFAULT_SUCCESS_CSS_CLASS,
+  getSelector,
+  queryElement,
+} from './constants';
 import { createClipboardJsInstance } from './factory';
 
 // Constants destructuring
@@ -19,39 +26,37 @@ const {
 /**
  * Inits the copy to clipboard functionality.
  */
-export const init = async (): Promise<[NodeListOf<Element>, ClipboardJS['destroy'][]]> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+export const init = async (): Promise<ClipboardJS[]> => {
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
-  const copyTriggers = document.querySelectorAll(getSelector('element', 'trigger', { operator: 'prefixed' }));
+  const copyTriggers = queryElement('trigger', { operator: 'prefixed', all: true });
 
-  const destroyCallbacks: ClipboardJS['destroy'][] = [];
+  const clipboardInstances = copyTriggers
+    .map((trigger) => {
+      if (!isHTMLElement(trigger)) return;
 
-  for (const trigger of copyTriggers) {
-    if (!(trigger instanceof HTMLElement)) continue;
+      // Get attributes
+      const textToCopy = trigger.getAttribute(textKey);
+      const successMessage = trigger.getAttribute(successMessageKey);
+      const successDuration = +(trigger.getAttribute(successDurationKey) || DEFAULT_SUCCESS_DURATION);
+      const successClass = trigger.getAttribute(successClassKey) || DEFAULT_SUCCESS_CSS_CLASS;
 
-    // Get attributes
-    const textToCopy = trigger.getAttribute(textKey);
-    const successMessage = trigger.getAttribute(successMessageKey);
-    const successDuration = +(trigger.getAttribute(successDurationKey) || DEFAULT_SUCCESS_DURATION);
-    const successClass = trigger.getAttribute(successClassKey) || DEFAULT_SUCCESS_CSS_CLASS;
+      // Get the instance index
+      const instanceIndex = getInstanceIndex(trigger, elementKey);
 
-    // Get the instance index
-    const instanceIndex = getInstanceIndex(trigger, elementKey);
+      // Get the target to be copied, if existing
+      const siblingTarget = trigger.parentElement?.querySelector(
+        getSelector('element', 'sibling', { operator: 'prefixed' })
+      );
 
-    // Get the target to be copied, if existing
-    const siblingTarget = trigger.parentElement?.querySelector(
-      getSelector('element', 'sibling', { operator: 'prefixed' })
-    );
+      const target = siblingTarget || queryElement('target', { instanceIndex });
 
-    const target = siblingTarget || document.querySelector(getSelector('element', 'target', { instanceIndex }));
+      // Store the text node and the original text
+      const textNode = findTextNode(trigger);
+      const originalText = textNode ? textNode.textContent : undefined;
 
-    // Store the text node and the original text
-    const textNode = findTextNode(trigger);
-    const originalText = textNode ? textNode.textContent : undefined;
-
-    // Create options object
-    destroyCallbacks.push(
-      createClipboardJsInstance({
+      // Create options object
+      const clipboardInstance = createClipboardJsInstance({
         trigger,
         target,
         textToCopy,
@@ -60,11 +65,15 @@ export const init = async (): Promise<[NodeListOf<Element>, ClipboardJS['destroy
         successDuration,
         successMessage,
         successClass,
-      })
-    );
-  }
+      });
 
-  window.fsAttributes[COPY_CLIP_ATTRIBUTE].resolve?.([copyTriggers, destroyCallbacks]);
+      return clipboardInstance;
+    })
+    .filter(isNotEmpty);
 
-  return [copyTriggers, destroyCallbacks];
+  return finalizeAttribute(COPY_CLIP_ATTRIBUTE, clipboardInstances, () => {
+    for (const clipboardInstance of clipboardInstances) {
+      clipboardInstance.destroy();
+    }
+  });
 };

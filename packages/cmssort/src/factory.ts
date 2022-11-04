@@ -1,14 +1,13 @@
-import { DROPDOWN_CSS_CLASSES } from '@finsweet/ts-utils';
+import { DROPDOWN_CSS_CLASSES, isHTMLSelectElement } from '@finsweet/ts-utils';
 import type { Dropdown } from '@finsweet/ts-utils';
 
-import type { CMSList } from '$packages/cmscore';
-import { addListAnimation } from '$packages/cmscore';
+import type { CMSCore, CMSList } from '$packages/cmscore';
 
 import { listenListEvents } from './actions/events';
 import { initButtons } from './modes/buttons';
 import { initDropdown } from './modes/dropdown';
 import { initHTMLSelect } from './modes/select';
-import { ATTRIBUTES, DEFAULT_ASC_CLASS, DEFAULT_DESC_CLASS, getSelector, queryElement } from './utils/constants';
+import { ATTRIBUTES, DEFAULT_ASC_CLASS, DEFAULT_DESC_CLASS, queryElement } from './utils/constants';
 import type { CSSClasses } from './utils/types';
 
 // Constants destructuring
@@ -25,12 +24,13 @@ const {
 /**
  * Inits sorting on a `CMSList`.
  * @param listInstance The {@link CMSList} instance.
- * @returns An awaitable Promise.
+ *
+ * @returns A cleanup callback.
  */
-export const initListSorting = async (listInstance: CMSList) => {
+export const initListSorting = async (listInstance: CMSList, cmsCore: CMSCore) => {
   const instanceIndex = listInstance.getInstanceIndex(elementKey);
 
-  const triggers = document.querySelectorAll<HTMLElement>(getSelector('element', 'trigger', { instanceIndex }));
+  const triggers = queryElement<HTMLElement>('trigger', { instanceIndex, all: true });
   if (!triggers.length) return;
 
   const { items } = listInstance;
@@ -39,7 +39,7 @@ export const initListSorting = async (listInstance: CMSList) => {
   for (const item of items) item.collectProps({ fieldKey, typeKey });
 
   // Animation
-  addListAnimation(listInstance, { durationKey, easingKey });
+  cmsCore.addListAnimation(listInstance, { durationKey, easingKey });
 
   // Scroll Anchor Element
   if (!listInstance.scrollAnchor) {
@@ -55,17 +55,19 @@ export const initListSorting = async (listInstance: CMSList) => {
 
   // Init mode
   const [firstTrigger] = triggers;
-  const isSelect = firstTrigger instanceof HTMLSelectElement;
+  const isSelect = isHTMLSelectElement(firstTrigger);
   const isDropdown = firstTrigger.closest<Dropdown>(`.${DROPDOWN_CSS_CLASSES.dropdown}`);
 
-  const sortItems = isSelect
+  const sortActions = isSelect
     ? await initHTMLSelect(firstTrigger, listInstance)
     : isDropdown
     ? initDropdown(isDropdown, listInstance)
     : initButtons(triggers, listInstance, cssClasses);
 
-  if (!sortItems) return;
+  if (!sortActions) return;
 
   // Listen events
-  listenListEvents(listInstance, sortItems);
+  listenListEvents(listInstance, sortActions.sortItems);
+
+  return sortActions.cleanup;
 };

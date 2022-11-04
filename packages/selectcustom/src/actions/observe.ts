@@ -1,6 +1,7 @@
+import { isHTMLOptionElement } from '@finsweet/ts-utils';
 import debounce from 'just-debounce';
 
-import { ARIA_EXPANDED_KEY } from '$global/constants/a11ty';
+import { ARIA_EXPANDED_KEY } from '$global/constants/a11y';
 
 import type { Settings } from '../utils/types';
 import { populateOptions } from './populate';
@@ -9,6 +10,8 @@ import { toggleResetVisibility } from './state';
 /**
  * Observes when the dropdown list is opened/closed.
  * @param settings The instance {@link Settings}.
+ *
+ * @returns The MutationObserver.
  */
 const observeDropdownList = (settings: Settings) => {
   const { dropdownToggle, dropdownList, optionsStore, hideInitial } = settings;
@@ -37,18 +40,22 @@ const observeDropdownList = (settings: Settings) => {
     attributes: true,
     attributeFilter: ['class', 'style'],
   });
+
+  return observer;
 };
 
 /**
  * Observes changes in the {@link HTMLSelectElement} options.
  * @param settings The instance {@link Settings}.
+ *
+ * @returns The MutationObserver.
  */
 const observeSelectElement = (settings: Settings) => {
   const { selectElement } = settings;
 
   const observer = new MutationObserver((mutations) => {
     const hasMutatedOptions = mutations.some(({ addedNodes, removedNodes }) =>
-      [...addedNodes, ...removedNodes].some((node) => node instanceof HTMLOptionElement)
+      [...addedNodes, ...removedNodes].some(isHTMLOptionElement)
     );
 
     if (hasMutatedOptions) populateOptions(settings);
@@ -57,13 +64,22 @@ const observeSelectElement = (settings: Settings) => {
   observer.observe(selectElement, {
     childList: true,
   });
+
+  return observer;
 };
 
 /**
  * Observes mutations on elements of the instance.
  * @param settings The instance {@link Settings}.
+ *
+ * @returns A callback to destroy the MutationObservers.
  */
 export const observeElements = (settings: Settings) => {
-  observeDropdownList(settings);
-  observeSelectElement(settings);
+  const dropdownListObserver = observeDropdownList(settings);
+  const selectElementObserver = observeSelectElement(settings);
+
+  return () => {
+    dropdownListObserver.disconnect();
+    selectElementObserver.disconnect();
+  };
 };

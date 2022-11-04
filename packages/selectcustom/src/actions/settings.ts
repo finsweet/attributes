@@ -1,11 +1,11 @@
-import { DROPDOWN_CSS_CLASSES, findTextNode } from '@finsweet/ts-utils';
+import { DROPDOWN_CSS_CLASSES, findTextNode, isHTMLAnchorElement } from '@finsweet/ts-utils';
 import type { Dropdown, DropdownList, DropdownToggle } from '@finsweet/ts-utils';
 
-import { ARIA_CURRENT_KEY, TABINDEX_KEY } from '$global/constants/a11ty';
+import { ARIA_CURRENT_KEY, TABINDEX_KEY } from '$global/constants/a11y';
 
 import { ATTRIBUTES, getSelector, queryElement } from '../utils/constants';
 import type { OptionsStore } from '../utils/types';
-import { setDropdownAria } from './a11ty';
+import { setDropdownAria } from './a11y';
 
 /**
  * Collects the required elements/settings for the setup.
@@ -34,13 +34,13 @@ export const collectSettings = (referenceElement: HTMLElement) => {
   const optionTemplate = dropdownList.querySelector(
     `a:not(${getSelector('element', 'resetOption', { operator: 'prefixed' })})`
   );
-  if (!(optionTemplate instanceof HTMLAnchorElement)) return;
+  if (!isHTMLAnchorElement(optionTemplate)) return;
 
   const optionsList = optionTemplate.parentElement;
   if (!optionsList) return;
 
   const rawEmptyOption = queryElement('resetOption', { operator: 'prefixed', scope: dropdownList });
-  const emptyOption = rawEmptyOption instanceof HTMLAnchorElement ? rawEmptyOption : undefined;
+  const emptyOption = isHTMLAnchorElement(rawEmptyOption) ? rawEmptyOption : undefined;
 
   for (const element of [optionTemplate, emptyOption]) {
     if (!element) continue;

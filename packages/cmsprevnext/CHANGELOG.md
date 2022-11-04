@@ -1,5 +1,17 @@
 # @finsweet/attributes-cmsprevnext
 
+## 1.6.0
+
+### Minor Changes
+
+- e4b3b680: Created new `window.fsAttributes.destroy()` method to support SPA environments.
+  This new method allows users to destroy all Attributes instances, cleaning up event listeners, observers, states, global variables, etc.
+
+  Websites that use a client-side router that simulates an SPA environment like [barba.js](https://barba.js.org/) or [Swup](https://swup.js.org/) can now properly init and destroy Attributes.
+  After destroying, Attributes can be manually re-initted by calling `window.fsAttribute[ATTRIBUTE_KEY].init()`.
+
+  Updated changesets system, now all updates will be correctly reflected in [the official updates page](https://www.finsweet.com/attributes/updates).
+
 ## 1.5.1
 
 ### Patch Changes

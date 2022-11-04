@@ -1,9 +1,10 @@
-import { CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_CSS_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { importCMSCore } from '$global/import';
 import type { CMSList } from '$packages/cmscore';
-import { importCMSCore } from '$packages/cmscore';
 
 import { addCSSClasses } from './classes';
-import { ATTRIBUTE, getSelector } from './constants';
+import { getSelector } from './constants';
 
 /**
  * Inits the attribute.
@@ -12,16 +13,17 @@ export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
 
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const listInstances = cmsCore.createCMSListInstances([getSelector('element', 'list', { operator: 'prefixed' })]);
 
   // Combine the lists
   await Promise.all(listInstances.map(initListsCSS));
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(listInstances);
-
-  return listInstances;
+  return finalizeAttribute(CMS_CSS_ATTRIBUTE, listInstances, () => {
+    // TODO: Remove optional chaining after cmscore@1.9.0 has rolled out
+    for (const listInstance of listInstances) listInstance.destroy?.();
+  });
 };
 
 /**

@@ -1,5 +1,8 @@
-import { ARIA_LABEL_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES, TABINDEX_KEY } from '$global/constants/a11ty';
+import { addListener, isHTMLAnchorElement, isHTMLElement } from '@finsweet/ts-utils';
+
+import { ARIA_LABEL_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES, TABINDEX_KEY } from '$global/constants/a11y';
 import { CMS_ATTRIBUTE_ATTRIBUTE, LINK_BLOCK_EDIT_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { getSelector } from './constants';
 
@@ -7,7 +10,7 @@ import { getSelector } from './constants';
  * Inits editor friendly link blocks.
  */
 export const init = async (): Promise<NodeListOf<HTMLElement>> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const elements = document.querySelectorAll<HTMLElement>(getSelector('element', 'parent'));
 
@@ -26,10 +29,10 @@ export const init = async (): Promise<NodeListOf<HTMLElement>> => {
   }
 
   // Listen events
-  window.addEventListener('click', (e) => {
+  const clickCleanup = addListener(window, 'click', (e) => {
     const { target } = e;
 
-    if (!(target instanceof HTMLElement) || target instanceof HTMLAnchorElement) return;
+    if (!isHTMLElement(target) || isHTMLAnchorElement(target)) return;
 
     const parentElement = target.closest(getSelector('element', 'parent'));
     if (!parentElement) return;
@@ -42,7 +45,5 @@ export const init = async (): Promise<NodeListOf<HTMLElement>> => {
     return false;
   });
 
-  window.fsAttributes[LINK_BLOCK_EDIT_ATTRIBUTE].resolve?.(elements);
-
-  return elements;
+  return finalizeAttribute(LINK_BLOCK_EDIT_ATTRIBUTE, elements, () => clickCleanup());
 };

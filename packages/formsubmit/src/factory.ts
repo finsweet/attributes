@@ -1,6 +1,7 @@
 import { FORM_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
-import { getInstanceIndex } from 'global/helpers';
+
+import { getInstanceIndex } from '$global/helpers';
 
 import { Form } from './components/Form';
 import { parseActionAttribute } from './utils/attributes';

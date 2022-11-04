@@ -1,4 +1,7 @@
+import { addListener, isElement, isHTMLElement } from '@finsweet/ts-utils';
+
 import { MIRROR_CLICK_ATTRIBUTE } from '$global/constants/attributes';
+import { finalizeAttribute } from '$global/factory';
 import { getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, getSelector } from './constants';
@@ -13,8 +16,8 @@ const {
  * Inits click events mirroring.
  */
 export const init = (): void => {
-  window.addEventListener('click', ({ target }) => {
-    if (!(target instanceof Element)) return;
+  const clickCleanup = addListener(window, 'click', ({ target }) => {
+    if (!isElement(target)) return;
 
     const mirrorTrigger = target.closest(getSelector('element', 'trigger', { operator: 'prefixed' }));
     if (!mirrorTrigger) return;
@@ -25,7 +28,7 @@ export const init = (): void => {
     const mirrorTargets = document.querySelectorAll(getSelector('element', 'target', { instanceIndex }));
 
     for (const mirrorTarget of mirrorTargets) {
-      if (!(mirrorTarget instanceof HTMLElement)) continue;
+      if (!isHTMLElement(mirrorTarget)) continue;
 
       const rawDelay = mirrorTarget.getAttribute(delayKey) || mirrorTrigger.getAttribute(delayKey);
       const delay = rawDelay ? parseInt(rawDelay) : undefined;
@@ -35,5 +38,5 @@ export const init = (): void => {
     }
   });
 
-  window.fsAttributes[MIRROR_CLICK_ATTRIBUTE].resolve?.(undefined);
+  return finalizeAttribute(MIRROR_CLICK_ATTRIBUTE, undefined, () => clickCleanup());
 };

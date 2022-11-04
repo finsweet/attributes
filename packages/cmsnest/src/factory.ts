@@ -1,5 +1,3 @@
-import { Debug } from '@finsweet/ts-utils';
-
 import type { CMSList, CMSCore } from '$packages/cmscore';
 
 import { getNestSources } from './actions/collect';
@@ -14,10 +12,7 @@ import { populateNestedCollections } from './actions/populate';
 export const initListNesting = async (listInstance: CMSList, cmsCore: CMSCore): Promise<void> => {
   // Collect the collections to nest
   const nestSources = getNestSources(cmsCore);
-  if (!nestSources.size) {
-    Debug.alert(`No collections to nest found for the list nº ${listInstance.index}`, 'info');
-    return;
-  }
+  if (!nestSources.size) return;
 
   // Listen for events
   listenListEvents(listInstance, nestSources, cmsCore);

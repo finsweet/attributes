@@ -1,6 +1,7 @@
-import { Debug } from '@finsweet/ts-utils';
+import { addListener, isHTMLVideoElement } from '@finsweet/ts-utils';
 
 import { AUTO_VIDEO_ATTRIBUTE, CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import type { VideoStore } from './types';
 
@@ -8,20 +9,16 @@ import type { VideoStore } from './types';
  * Inits the attribute.
  */
 export const init = async () => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const videos = document.querySelectorAll('video');
-
-  if (!videos.length) {
-    Debug.alert('No videos were found in this page.', 'info');
-    return;
-  }
+  if (!videos.length) return;
 
   const videoStore: VideoStore = new Map();
 
   const observer = new IntersectionObserver((entries) => {
     for (const { target, isIntersecting } of entries) {
-      if (!(target instanceof HTMLVideoElement)) continue;
+      if (!isHTMLVideoElement(target)) continue;
 
       if (isIntersecting) target.play();
       else target.pause();
@@ -30,18 +27,21 @@ export const init = async () => {
     }
   }, {});
 
-  document.addEventListener('visibilitychange', () => {
-    for (const [video, playState] of videoStore) {
-      if (document.hidden || !playState) video.pause();
-      else video.play();
-    }
-  });
-
   for (const video of videos) {
     video.autoplay = false;
     videoStore.set(video, null);
     observer.observe(video);
   }
 
-  window.fsAttributes[AUTO_VIDEO_ATTRIBUTE].resolve?.(videoStore);
+  const visibilityChangeCleanup = addListener(document, 'visibilitychange', () => {
+    for (const [video, playState] of videoStore) {
+      if (document.hidden || !playState) video.pause();
+      else video.play();
+    }
+  });
+
+  return finalizeAttribute(AUTO_VIDEO_ATTRIBUTE, videoStore, () => {
+    observer.disconnect();
+    visibilityChangeCleanup();
+  });
 };

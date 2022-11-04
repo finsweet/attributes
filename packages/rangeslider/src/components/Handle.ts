@@ -1,14 +1,16 @@
-import { setFormFieldValue } from '@finsweet/ts-utils';
+import { addListener, setFormFieldValue } from '@finsweet/ts-utils';
 
-import { ARIA_VALUEMAX_KEY, ARIA_VALUEMIN_KEY, ARIA_VALUENOW_KEY } from '$global/constants/a11ty';
+import { ARIA_VALUEMAX_KEY, ARIA_VALUEMIN_KEY, ARIA_VALUENOW_KEY } from '$global/constants/a11y';
+import { adjustValueToStep } from '$global/helpers';
 
-import { setHandleA11ty } from '../actions/a11ty';
+import { setHandleA11Y } from '../actions/a11y';
 import { setHandleStyles } from '../actions/styles';
-import { adjustValueToStep } from '../actions/values';
 import { HANDLE_INCREMENT_KEYS, HANDLE_KEYS } from '../utils/constants';
 import type { Fill } from './Fill';
 
 export class Handle {
+  public readonly destroy;
+
   private readonly index;
   private readonly minRange;
   private readonly maxRange;
@@ -74,10 +76,10 @@ export class Handle {
     this.trackWidth = trackWidth;
 
     setHandleStyles(element);
-    setHandleA11ty(element, inputElement);
+    setHandleA11Y(element, inputElement);
 
     this.setValue(startValue);
-    this.listenEvents();
+    this.destroy = this.listenEvents();
   }
 
   /**
@@ -86,8 +88,14 @@ export class Handle {
   private listenEvents() {
     const { element, inputElement } = this;
 
-    element.addEventListener('keydown', (e) => this.handleKeyDown(e));
-    inputElement?.addEventListener('change', () => this.handleInputChange());
+    const cleanups = [
+      addListener(element, 'keydown', (e) => this.handleKeyDown(e)),
+      addListener(inputElement, 'change', () => this.handleInputChange()),
+    ];
+
+    return () => {
+      for (const cleanup of cleanups) cleanup();
+    };
   }
 
   /**
@@ -124,6 +132,14 @@ export class Handle {
     }
 
     this.setValue(index === 0 ? minRange : maxRange, false);
+  }
+
+  private formatValue(value: number) {
+    try {
+      return value.toLocaleString(document.documentElement?.lang);
+    } catch {
+      return value.toLocaleString(window.navigator?.language || undefined);
+    }
   }
 
   /**
@@ -163,11 +179,11 @@ export class Handle {
     this.updateSiblingConstraints();
 
     const stringValue = `${newValue}`;
-    const localeStringValue = newValue.toLocaleString();
 
     element.setAttribute(ARIA_VALUENOW_KEY, stringValue);
 
-    if (displayValueElement) displayValueElement.textContent = formatValueDisplay ? localeStringValue : stringValue;
+    if (displayValueElement)
+      displayValueElement.textContent = formatValueDisplay ? this.formatValue(newValue) : stringValue;
 
     if (updateInputElement) this.updateInputElement();
 

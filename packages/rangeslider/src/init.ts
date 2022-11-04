@@ -1,11 +1,13 @@
-import { getHiddenParent, isNotEmpty, isVisible } from '@finsweet/ts-utils';
+import { addListener, getHiddenParent, isNotEmpty, isVisible, noop } from '@finsweet/ts-utils';
 import debounce from 'just-debounce';
 
 import { CMS_ATTRIBUTE_ATTRIBUTE, RANGE_SLIDER_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { adjustValueToStep } from '$global/helpers';
 
 import { getClientX } from './actions/events';
 import { getSettings } from './actions/settings';
-import { adjustValueToStep, getClosestValidHandle } from './actions/values';
+import { getClosestValidHandle } from './actions/values';
 import type { Handle } from './components/Handle';
 import { createFillInstance, createHandleInstances } from './factory';
 import { getSelector } from './utils/constants';
@@ -15,17 +17,19 @@ import type { HandleInstances } from './utils/types';
  * Inits the attribute.
  */
 export const init = async (): Promise<HandleInstances[]> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const wrapperElements = [
     ...document.querySelectorAll<HTMLElement>(getSelector('element', 'wrapper', { operator: 'prefixed' })),
   ];
 
-  const handleInstances = wrapperElements.map(initRangeSlider).filter(isNotEmpty);
+  const rangeSlidersData = wrapperElements.map(initRangeSlider).filter(isNotEmpty);
 
-  window.fsAttributes[RANGE_SLIDER_ATTRIBUTE].resolve?.(handleInstances);
+  const handleInstances = rangeSlidersData.map(({ handles }) => handles);
 
-  return handleInstances;
+  return finalizeAttribute(RANGE_SLIDER_ATTRIBUTE, handleInstances, () => {
+    for (const { destroy } of rangeSlidersData) destroy();
+  });
 };
 
 /**
@@ -143,7 +147,9 @@ const initRangeSlider = (wrapperElement: HTMLElement) => {
 
     ({ left: trackLeft, right: trackRight } = trackElement.getBoundingClientRect());
 
-    for (const handle of handles) if (handle) handle.updateTrackWidth(trackWidth);
+    for (const handle of handles) {
+      if (handle) handle.updateTrackWidth(trackWidth);
+    }
   };
 
   /**
@@ -151,7 +157,7 @@ const initRangeSlider = (wrapperElement: HTMLElement) => {
    */
   const observeWrapperVisibility = () => {
     const hiddenParent = getHiddenParent(wrapperElement);
-    if (!hiddenParent) return;
+    if (!hiddenParent) return noop;
 
     const observer = new MutationObserver(() => {
       if (isVisible(hiddenParent)) handleDOMMutation();
@@ -161,16 +167,24 @@ const initRangeSlider = (wrapperElement: HTMLElement) => {
       attributes: true,
       attributeFilter: ['style', 'class'],
     });
+
+    return () => observer.disconnect();
   };
 
   /**
    * Init events
    */
-  trackElement.addEventListener('mousedown', handleMouseDown);
-  trackElement.addEventListener('touchstart', handleMouseDown, { passive: true });
+  const cleanups = [
+    observeWrapperVisibility(),
+    addListener(trackElement, 'mousedown', handleMouseDown),
+    addListener(trackElement, 'touchstart', handleMouseDown, { passive: true }),
+    addListener(window, 'resize', debounce(handleDOMMutation, 50)),
+  ];
 
-  observeWrapperVisibility();
-  window.addEventListener('resize', debounce(handleDOMMutation, 50));
-
-  return handles;
+  return {
+    handles,
+    destroy: () => {
+      for (const cleanup of cleanups) cleanup();
+    },
+  };
 };

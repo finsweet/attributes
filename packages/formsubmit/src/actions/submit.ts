@@ -1,3 +1,5 @@
+import { isString } from '@finsweet/ts-utils';
+
 /**
  * Submits the form data to a custom URL using the defined action and method in the form.
  * @param form
@@ -11,7 +13,7 @@ export const enhancedSubmit = async (form: HTMLFormElement, action: string, meth
 
   if (method === 'get') {
     for (const [key, value] of formData) {
-      if (typeof value !== 'string') continue;
+      if (!isString(value)) continue;
 
       url.searchParams.append(key, value);
     }

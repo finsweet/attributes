@@ -136,6 +136,11 @@ interface CMSFilters {
    * @param value If passed, only that specific value and the elements that hold it will be cleared.
    */
   resetFilters(filterKeys?: string[], value?: string): Promise<void>;
+
+  /**
+   * Destroys the instance.
+   */
+  public destroy(): void;
 }
 ```
 

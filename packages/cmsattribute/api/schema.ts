@@ -1,5 +1,4 @@
-import { ANY_ELEMENT } from 'global/constants/webflow-selectors';
-
+import { ANY_ELEMENT } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import { TARGET_SETTING_KEY, NAME_SETTING_KEY, VALUE_SETTING_KEY } from '../src/utils/constants';

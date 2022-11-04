@@ -1,6 +1,7 @@
-import type { CollectionListElement, CollectionItemElement } from '@finsweet/ts-utils';
+import { CollectionListElement, CollectionItemElement, isNumber } from '@finsweet/ts-utils';
 
-import { normalizePropKey } from './utils/props';
+import { normalizePropKey } from '$global/helpers';
+
 import type { CMSItemProps } from './utils/types';
 
 /**
@@ -41,6 +42,7 @@ export class CMSItem {
   /**
    * @param element The DOM element of the item.
    * @param list The parent Collection List.
+   * @param currentIndex The element's current index in the rendered DOM.
    */
   constructor(
     /**
@@ -67,7 +69,7 @@ export class CMSItem {
   ) {
     this.href = element.querySelector('a')?.href;
 
-    const rendered = typeof currentIndex === 'number';
+    const rendered = isNumber(currentIndex);
 
     this.needsWebflowRestart = !rendered;
   }

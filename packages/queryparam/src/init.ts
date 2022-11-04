@@ -1,4 +1,5 @@
 import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_FILTER_ATTRIBUTE, QUERY_PARAM_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { queryParamFactory } from './factory';
 import { ATTRIBUTES } from './utils/constants';
@@ -7,7 +8,7 @@ import { ATTRIBUTES } from './utils/constants';
  * Inits the attribute.
  */
 export const init = async (): Promise<void> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const url = new URL(window.location.href);
 
@@ -35,5 +36,5 @@ export const init = async (): Promise<void> => {
 
   history.replaceState(null, '', url.toString());
 
-  window.fsAttributes[QUERY_PARAM_ATTRIBUTE].resolve?.(undefined);
+  return finalizeAttribute(QUERY_PARAM_ATTRIBUTE);
 };

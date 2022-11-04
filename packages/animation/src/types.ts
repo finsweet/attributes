@@ -15,13 +15,14 @@ type FilteredAnimationOptions = Pick<AnimationOptions, 'duration' | 'easing'> & 
 type AnimationPrepare<T> = (element: HTMLElement | HTMLElement[], options?: T) => void;
 type AnimationBase<T> = (element: HTMLElement | HTMLElement[], options?: T & FilteredAnimationOptions) => Promise<void>;
 
-type PrepareInProps = { target?: Element; insertAfter?: Element | null };
-type AnimationInProps = PrepareInProps & { prepared?: true };
+type PrepareProps = { target?: Element; insertAfter?: Node | null; display?: string };
+type AnimationInProps = PrepareProps & { prepared?: true };
+type AnimationOutProps = PrepareProps & { remove?: boolean };
 
-type PrepareIn = AnimationPrepare<PrepareInProps>;
+type PrepareIn = AnimationPrepare<PrepareProps>;
 
 type AnimationIn = AnimationBase<AnimationInProps>;
-type AnimationOut = AnimationBase<{ remove?: boolean }>;
+type AnimationOut = AnimationBase<AnimationOutProps>;
 
 export type AnimationFunctions = { prepareIn: PrepareIn; animateIn: AnimationIn; animateOut: AnimationOut };
 export type Animation = AnimationFunctions & { options?: FilteredAnimationOptions };
@@ -35,10 +36,9 @@ export type AnimationsObject = Readonly<
 
 export type Easings = typeof easings;
 
-export type AnimationImport = Promise<
-  | {
-      animations: AnimationsObject;
-      easings: Easings;
-    }
-  | undefined
->;
+export type AnimationModule = {
+  animations: AnimationsObject;
+  easings: Easings;
+};
+
+export type AnimationImport = Promise<AnimationModule | undefined>;

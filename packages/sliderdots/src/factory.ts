@@ -33,7 +33,9 @@ export const createSliderDots = async (slider: SliderElement) => {
 
   // Make sure CMSSlider has finished (if existing on the page)
   const cmsSliderAttribute = window.fsAttributes[CMS_SLIDER_ATTRIBUTE];
-  if (cmsSliderAttribute) await Promise.all([cmsSliderAttribute.loading, waitSliderReady(sliderNav)]);
+  if (cmsSliderAttribute) {
+    await Promise.all([cmsSliderAttribute.loading, waitSliderReady(sliderNav)]);
+  }
 
   // Get props
   const activeCustomDotCSSClass = slider.getAttribute(activeKey) || DEFAULT_ACTIVE_CSS_CLASS;
@@ -46,9 +48,15 @@ export const createSliderDots = async (slider: SliderElement) => {
   const dotsRelationship = populateSliderDots(slider, customSliderNav);
 
   // Init sync
-  for (const relationshipData of dotsRelationship) syncDotsProperties(relationshipData, activeCustomDotCSSClass);
-  observeSliderNav(sliderNav, dotsRelationship, activeCustomDotCSSClass);
-  listenClickEvents(customSliderNav, dotsRelationship);
+  for (const relationshipData of dotsRelationship) {
+    syncDotsProperties(relationshipData, activeCustomDotCSSClass);
+  }
 
-  return [slider, dotsRelationship];
+  const observer = observeSliderNav(sliderNav, dotsRelationship, activeCustomDotCSSClass);
+  const removeClickListener = listenClickEvents(customSliderNav, dotsRelationship);
+
+  return () => {
+    observer.disconnect();
+    removeClickListener();
+  };
 };

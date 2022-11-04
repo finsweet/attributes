@@ -1,5 +1,4 @@
-import { getCollectionElements, getCollectionListWrappers } from '@finsweet/ts-utils';
-
+import { getCollectionElements, getCollectionListWrappers } from '$global/helpers';
 import type { CMSList } from '$packages/cmscore';
 
 export const parseLoadedPage = async (

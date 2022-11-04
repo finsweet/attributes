@@ -1,4 +1,5 @@
 import { CMS_ATTRIBUTE_ATTRIBUTE, READ_TIME_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { initReadTime } from './factory';
 import { queryElement } from './utils/constants';
@@ -7,7 +8,7 @@ import { queryElement } from './utils/constants';
  * Inits the attribute.
  */
 export const init = async () => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const timeElements = queryElement('time', { operator: 'prefixed', all: true });
 
@@ -15,5 +16,5 @@ export const init = async () => {
     initReadTime(timeElement);
   }
 
-  window.fsAttributes[READ_TIME_ATTRIBUTE].resolve?.(undefined);
+  return finalizeAttribute(READ_TIME_ATTRIBUTE);
 };

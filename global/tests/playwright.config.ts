@@ -55,6 +55,9 @@ export const config: PlaywrightTestConfig = {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: ['--disable-web-security'],
+        },
       },
     },
 
@@ -76,6 +79,8 @@ export const config: PlaywrightTestConfig = {
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'pnpm serve',
+    cwd: '../..',
     port: 3000,
+    reuseExistingServer: true,
   },
 };

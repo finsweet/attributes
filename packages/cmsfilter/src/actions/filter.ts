@@ -1,3 +1,5 @@
+import { isNumber, isUndefined } from '@finsweet/ts-utils';
+
 import { normalizeDate, normalizeNumber } from '$global/helpers';
 import type { CMSItem } from '$packages/cmscore';
 
@@ -42,7 +44,7 @@ const checkFilterValidity = (
     elements: filterElements,
   }: FiltersData[number]
 ) => {
-  if (typeof item.staticIndex === 'number') {
+  if (isNumber(item.staticIndex)) {
     return true;
   }
 
@@ -144,11 +146,11 @@ const checkRangeValidity = (value: string, from: string, to: string, type?: stri
 
   if (!normalizedValue) return false;
 
-  if (!from && typeof normalizedTo !== 'undefined') return normalizedValue <= normalizedTo;
+  if (!from && !isUndefined(normalizedTo)) return normalizedValue <= normalizedTo;
 
-  if (!to && typeof normalizedFrom !== 'undefined') return normalizedValue >= normalizedFrom;
+  if (!to && !isUndefined(normalizedFrom)) return normalizedValue >= normalizedFrom;
 
-  if (typeof normalizedTo === 'undefined' || typeof normalizedFrom === 'undefined') return false;
+  if (isUndefined(normalizedTo) || isUndefined(normalizedFrom)) return false;
 
   return normalizedValue >= normalizedFrom && normalizedValue <= normalizedTo;
 };

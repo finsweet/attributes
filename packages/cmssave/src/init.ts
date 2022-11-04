@@ -1,5 +1,7 @@
+import { CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { importCMSCore } from '$global/import';
 import type { CMSList } from '$packages/cmscore';
-import { importCMSCore } from '$packages/cmscore';
 
 import { initSaveSourceInstance } from './factory';
 import { ATTRIBUTE, getSelector } from './utils/constants';
@@ -11,7 +13,7 @@ export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
 
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   // Create the list instances
   const sourceListInstances = cmsCore.createCMSListInstances([
@@ -23,7 +25,8 @@ export const init = async (): Promise<CMSList[]> => {
   // Init the modes
   await Promise.all(sourceListInstances.map(initSaveSourceInstance));
 
-  window.fsAttributes[ATTRIBUTE].resolve?.(sourceListInstances);
-
-  return sourceListInstances;
+  return finalizeAttribute(ATTRIBUTE, targetListInstances, () => {
+    // TODO: Remove optional chaining after cmscore@1.9.0 has rolled out
+    for (const listInstance of targetListInstances) listInstance.destroy?.();
+  });
 };

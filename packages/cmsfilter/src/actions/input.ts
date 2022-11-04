@@ -7,7 +7,8 @@ import type { FilterData, FilterElement } from '../utils/types';
  * Adds/Removes the active CSS Class.
  *
  * @param element The input element.
- * @param filtersData The {@link FiltersData} object.
+ * @param filterData The {@link FiltersData} object.
+ * @param elementData The {@link FilterElement} object.
  *
  * @returns `true` if the input event was valid and some filter data was updated.
  */

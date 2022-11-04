@@ -2,6 +2,7 @@ import { restartWebflow, RICH_TEXT_BLOCK_CSS_CLASS } from '@finsweet/ts-utils';
 import type { RichTextBlockElement } from '@finsweet/ts-utils';
 
 import { CMS_ATTRIBUTE_ATTRIBUTE, RICH_TEXT_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
 import { getValidTextElements } from './actions/collect';
 import { parseTextElement } from './actions/parse';
@@ -17,7 +18,7 @@ const {
  * Inits the attribute.
  */
 export const init = async (): Promise<HTMLDivElement[]> => {
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
   const rtbElements = [
     ...document.querySelectorAll<RichTextBlockElement>(
@@ -27,9 +28,7 @@ export const init = async (): Promise<HTMLDivElement[]> => {
 
   await Promise.all(rtbElements.map(initRtbElement));
 
-  window.fsAttributes[RICH_TEXT_ATTRIBUTE].resolve?.(rtbElements);
-
-  return rtbElements;
+  return finalizeAttribute(RICH_TEXT_ATTRIBUTE, rtbElements);
 };
 
 /**

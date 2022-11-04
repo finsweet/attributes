@@ -1,5 +1,4 @@
-import { COPY_CLIP_ATTRIBUTE } from 'global/constants/attributes';
-
+import { COPY_CLIP_ATTRIBUTE } from '$global/constants/attributes';
 import { ATTRIBUTES as COPYCLIP_ATTRIBUTES } from '$packages/copyclip/src/constants';
 
 import { queryElement } from '../utils/constants';

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-smartlightbox",
-  "version": "1.6.6",
+  "version": "1.7.0",
   "description": "Change the position of an opened lightbox to prevent unwanted `z-index`, `fixed` positioning, and `transform` issues.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
     "check": "tsc --noEmit",

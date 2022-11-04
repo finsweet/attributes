@@ -1,4 +1,4 @@
-import { FORM_CSS_CLASSES } from '@finsweet/ts-utils';
+import { FORM_CSS_CLASSES, isHTMLInputElement, isHTMLSelectElement, isHTMLTextAreaElement } from '@finsweet/ts-utils';
 
 export function queryParamFactory(elements: HTMLElement[], value: string) {
   for (const element of elements) {
@@ -31,9 +31,9 @@ export function queryParamFactory(elements: HTMLElement[], value: string) {
 
     // select, textarea and input
     if (
-      element instanceof HTMLSelectElement ||
-      element instanceof HTMLTextAreaElement ||
-      (element instanceof HTMLInputElement && element.type !== 'button')
+      isHTMLSelectElement(element) ||
+      isHTMLTextAreaElement(element) ||
+      (isHTMLInputElement(element) && element.type !== 'button')
     ) {
       element.value = value;
       continue;

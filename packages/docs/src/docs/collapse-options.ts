@@ -1,4 +1,4 @@
-import { simulateEvent } from '@finsweet/ts-utils';
+import { isElement, simulateEvent } from '@finsweet/ts-utils';
 
 import { OPTIONS_TRIGGER_SELECTOR, queryElement } from '../utils/constants';
 
@@ -30,7 +30,7 @@ export const initCollapseOptions = () => {
 
     const { target } = e;
 
-    if (!(target instanceof Element)) return;
+    if (!isElement(target)) return;
 
     const isToggleElement = target.closest(OPTIONS_TRIGGER_SELECTOR);
     if (!isToggleElement) return;

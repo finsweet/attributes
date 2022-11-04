@@ -1,8 +1,11 @@
-import { CMS_SELECT_ATTRIBUTE, CMS_LOAD_ATTRIBUTE, CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
-import type { CMSList } from '$packages/cmscore';
-import { importCMSCore } from '$packages/cmscore';
+import { isHTMLSelectElement } from '@finsweet/ts-utils';
 
-import { getSelector } from './constants';
+import { CMS_SELECT_ATTRIBUTE, CMS_LOAD_ATTRIBUTE, CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { importCMSCore } from '$global/import';
+import type { CMSList } from '$packages/cmscore';
+
+import { queryElement } from './constants';
 import { populateSelectElement } from './populate';
 
 /**
@@ -12,24 +15,28 @@ export const init = async (): Promise<CMSList[]> => {
   const cmsCore = await importCMSCore();
   if (!cmsCore) return [];
 
-  await window.fsAttributes[CMS_ATTRIBUTE_ATTRIBUTE]?.loading;
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
-  const targetElements = [...document.querySelectorAll(getSelector('element', 'select', { operator: 'prefixed' }))];
+  const targetElements = queryElement('select', { operator: 'prefixed', all: true });
 
   const listInstancesSet: Set<CMSList> = new Set();
 
   for (const targetElement of targetElements) {
-    if (!(targetElement instanceof HTMLSelectElement)) continue;
+    if (!isHTMLSelectElement(targetElement)) continue;
 
     const selectElementListInstances = populateSelectElement(targetElement, cmsCore);
 
-    for (const listIntance of selectElementListInstances) listInstancesSet.add(listIntance);
+    for (const listIntance of selectElementListInstances) {
+      listInstancesSet.add(listIntance);
+    }
   }
 
   const listInstances = [...listInstancesSet];
 
-  await window.fsAttributes[CMS_LOAD_ATTRIBUTE]?.loading;
-  window.fsAttributes[CMS_SELECT_ATTRIBUTE].resolve?.(listInstances);
+  await awaitAttributesLoad(CMS_LOAD_ATTRIBUTE);
 
-  return listInstances;
+  return finalizeAttribute(CMS_SELECT_ATTRIBUTE, listInstances, () => {
+    // TODO: Remove optional chaining after cmscore@1.9.0 has rolled out
+    for (const listInstance of listInstances) listInstance.destroy?.();
+  });
 };

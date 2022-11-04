@@ -1,7 +1,7 @@
 import type { CollectionItemElement } from '@finsweet/ts-utils';
 
+import { normalizePropKey } from '$global/helpers';
 import type { CMSCore } from '$packages/cmscore';
-import { normalizePropKey } from '$packages/cmscore';
 
 import { ATTRIBUTES, getSelector } from '../utils/constants';
 import type { NestSources, NestTargets } from '../utils/types';

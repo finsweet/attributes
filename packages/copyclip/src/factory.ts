@@ -4,7 +4,7 @@ import ClipboardJS from 'clipboard';
 /**
  * Creates a new `ClipboardJS` instance.
  * @param params
- * @returns The `destroy` method.
+ * @returns The created `ClipboardJS` instance.
  */
 export const createClipboardJsInstance = ({
   trigger,
@@ -63,5 +63,5 @@ export const createClipboardJsInstance = ({
     }, successDuration);
   });
 
-  return clipboard.destroy;
+  return clipboard;
 };

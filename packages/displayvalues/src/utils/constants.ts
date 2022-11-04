@@ -1,12 +1,11 @@
+import { DISPLAY_VALUES_ATTRIBUTE } from '$global/constants/attributes';
 import { generateDynamicAttibuteValue, generateSelectors } from '$global/factory';
-
-export const ATTRIBUTE = 'displayvalues';
 
 export const SOURCE_ELEMENT_KEY = 'source';
 export const TARGET_ELEMENT_KEY = 'target';
 export const PLACEHOLDER_SETTING_KEY = 'placeholder';
 
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
+const ATTRIBUTES_PREFIX = `fs-${DISPLAY_VALUES_ATTRIBUTE}`;
 
 export const ATTRIBUTES = {
   element: {

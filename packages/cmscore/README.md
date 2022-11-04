@@ -307,6 +307,11 @@ interface CMSList {
    * @example 'fs-cmsfilter-element="list-2"' // Returns 2.
    */
   getInstanceIndex(key: string): number | undefined;
+
+  /**
+   * Destroys the instance.
+   */
+  public destroy(): void;
 }
 ```
 
