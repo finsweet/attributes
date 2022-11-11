@@ -22,9 +22,28 @@ export const PRODUCT_DISCOUNTED_VALUE = 'discountvalue';
 export const PRODUCT_TYPE = 'type';
 export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
+export const PRODUCT_WEIGHT_UNIT = 'weightunit';
 export const LOADER = 'loader';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
+
+export const productAttributes = [
+  'title',
+  'description',
+  'handle',
+  'created',
+  'updated',
+  'published',
+  'image',
+  'sku',
+  'price',
+  'compareprice',
+  'discountpercent',
+  'type',
+  'vendor',
+  'weight',
+  'weightunit',
+];
 
 export const QUERY_PARAMS = {
   id: 'id',
@@ -55,6 +74,7 @@ export const ATTRIBUTES = {
       type: PRODUCT_TYPE,
       vendor: PRODUCT_VENDOR,
       weight: PRODUCT_WEIGHT,
+      weightunit: PRODUCT_WEIGHT_UNIT,
       loader: LOADER,
     },
   },

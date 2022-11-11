@@ -1,50 +1,36 @@
-import { assessScript } from '$global/factory';
+import { CMS_ATTRIBUTE_ATTRIBUTE, SHOPIFY_ATTRIBUTE } from '$global/constants/attributes';
+import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 
-import { initializeShopifyClient } from './actions/shopifyClient';
+import { initializeClient } from './actions/client';
+import { hideLoaders } from './actions/loaders';
+import { initPages } from './factory';
 import { ATTRIBUTES } from './utils/constants';
 import type { ShopifyAttributeParams } from './utils/types';
 
 /**
  * Inits the attribute.
  */
-export const init = (params: ShopifyAttributeParams) => {
-  return (): void => {
-    initializeShopifyClient(params);
-  };
-};
+export const init = async (params: ShopifyAttributeParams) => {
+  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
-/**
- * Checks the Shopify params of the Attribute `<script>`.
- * @returns The {@link ShopifyAttributeParams}.
- */
-
-export const assessScriptAttributes = (): ShopifyAttributeParams => {
-  const { currentScript } = document;
-  const globalAttributeParams = assessScript();
-  const { token, domain, productPage, redirectURL, testMode } = ATTRIBUTES;
-
-  const tokenValue = currentScript?.getAttribute(token.key);
-  if (!tokenValue) {
+  const { token, domain, productPage, redirectURL } = params;
+  if (!token) {
     throw new Error('token must be provided');
   }
-
-  const domainValue = currentScript?.getAttribute(domain.key);
-  if (!domainValue) {
+  if (!domain) {
     throw new Error('domain must be provided');
   }
 
-  const productPageValue = currentScript?.getAttribute(productPage.key) || productPage.defaultValue;
+  const client = await initializeClient({
+    token,
+    domain,
+    productPage: productPage || ATTRIBUTES.productPage.defaultValue,
+    redirectURL: redirectURL || ATTRIBUTES.redirectURL.defaultValue,
+  });
 
-  const redirectURLValue = currentScript?.getAttribute(redirectURL.key) || redirectURL.defaultValue;
+  await initPages(client);
 
-  const testModeValue = Boolean(currentScript?.getAttribute(testMode.key));
+  hideLoaders();
 
-  return {
-    globalAttributeParams,
-    domain: domainValue,
-    token: tokenValue,
-    productPage: productPageValue,
-    redirectURL: redirectURLValue,
-    testMode: testModeValue,
-  };
+  return finalizeAttribute(SHOPIFY_ATTRIBUTE, client);
 };
