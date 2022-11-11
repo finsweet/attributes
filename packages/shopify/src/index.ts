@@ -1,32 +1,18 @@
-import { initAttributes } from '$global/factory';
+import { SHOPIFY_ATTRIBUTE } from '$global/constants/attributes';
+import { initAttribute } from '$global/factory';
 
 import { version } from '../package.json';
-import { assessScriptAttributes, init } from './init';
-import { ATTRIBUTE } from './utils/constants';
+import { init } from './init';
+import { ATTRIBUTES } from './utils/constants';
 
-/**
- * Init
- */
-initAttributes();
-
-window.fsAttributes[ATTRIBUTE] ||= {};
-
-const scriptAttributes = assessScriptAttributes();
-const {
-  globalAttributeParams: { preventsLoad },
-  testMode,
-} = scriptAttributes;
-
-const attribute = window.fsAttributes[ATTRIBUTE];
-
-attribute.version = version;
-
-if (testMode) {
-  init(scriptAttributes)();
-} else {
-  if (preventsLoad) attribute.init = init(scriptAttributes);
-  else {
-    window.Webflow ||= [];
-    window.Webflow.push(init(scriptAttributes));
-  }
-}
+initAttribute({
+  init,
+  version,
+  attributeKey: SHOPIFY_ATTRIBUTE,
+  scriptAttributes: {
+    token: ATTRIBUTES.token.key,
+    domain: ATTRIBUTES.domain.key,
+    productPage: ATTRIBUTES.productPage.key,
+    redirectURL: ATTRIBUTES.redirectURL.key,
+  },
+});

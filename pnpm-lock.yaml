@@ -226,13 +226,11 @@ importers:
 
   packages/shopify:
     specifiers:
-      '@playwright/test': ^1.22.2
       '@types/shopify-buy': ^2.10.10
       shopify-buy: ^2.15.1
     dependencies:
       shopify-buy: 2.15.1
     devDependencies:
-      '@playwright/test': 1.26.0
       '@types/shopify-buy': 2.10.10
 
   packages/sliderdots:
@@ -6654,14 +6652,16 @@ packages:
     resolution: {integrity: sha512-KQf+QAMWKMrtBMsB8/24w53tEsxllMj6TuA80TT/5igJalLI/zm0L3oXRbIAl4Ohfc85gyHX/jhMwsVkmhLU4A==}
     dev: true
 
-  /@types/shopify-buy/2.10.10:
-    resolution: {integrity: sha512-KNX9ToXmH67+w2K+snlPbanM/dnmVxBKll7H1+UgPMJTDWxFzWttoNaiueSsiUEmNwu3NoFuGXdwew1bTLY4TQ==}
   /@types/semver/7.3.12:
     resolution: {integrity: sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==}
     dev: true
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+    dev: true
+
+  /@types/shopify-buy/2.10.10:
+    resolution: {integrity: sha512-KNX9ToXmH67+w2K+snlPbanM/dnmVxBKll7H1+UgPMJTDWxFzWttoNaiueSsiUEmNwu3NoFuGXdwew1bTLY4TQ==}
     dev: true
 
   /@types/source-list-map/0.1.2:
