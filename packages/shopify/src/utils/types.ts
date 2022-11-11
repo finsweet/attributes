@@ -1,5 +1,3 @@
-import type { GlobalAttributeParams } from '$global/factory/types';
-
 export interface ShopifyAttributeParams {
   /**
    * Defines the storefrontAccessToken provided by Shopify
