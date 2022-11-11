@@ -13,8 +13,8 @@ export class ShopifyClient {
     this.params = params;
 
     this.client = Client.buildClient({
-      domain: this.params.domain!,
-      storefrontAccessToken: this.params.token!,
+      domain: this.params.domain as string,
+      storefrontAccessToken: this.params.token as string,
     });
   }
 
@@ -49,7 +49,7 @@ export class ShopifyClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': this.params.token!,
+        'X-Shopify-Storefront-Access-Token': this.params.token as string,
       },
       body: JSON.stringify({
         query: query,

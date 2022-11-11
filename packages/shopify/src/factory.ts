@@ -5,7 +5,7 @@ export const initPages = async (client: ShopifyClient) => {
   const { productPage } = client.getParams();
 
   const path = window.location.pathname;
-  if (path.endsWith(productPage!)) {
+  if (path.endsWith(productPage as string)) {
     await productPagInit(client);
     return;
   }

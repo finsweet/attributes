@@ -8061,7 +8061,6 @@
       }
       bindProductDataGraphQl(document.body, productGraphQl);
     } catch (e) {
-      console.log(e);
       window.location.href = redirectURL;
     }
   };
