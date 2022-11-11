@@ -1,7 +1,5 @@
-
 import { productAttributes, queryElement } from '../utils/constants';
 import type { ProductAttribute, ShopifyProduct } from '../utils/types';
-
 
 export const bindProductDataGraphQl = (parentElement: HTMLElement, product: ShopifyProduct) => {
   const {
@@ -14,13 +12,12 @@ export const bindProductDataGraphQl = (parentElement: HTMLElement, product: Shop
     variants,
     vendor,
     productType,
-    featuredImage
+    featuredImage,
   } = product;
 
   const { sku, price, compareAtPrice, image, weight, weightUnit } = variants.nodes[0];
-  const discount = 0
-  const typeValue = productType
-
+  const discount = 0;
+  const typeValue = productType;
 
   const productValues = [
     title,
@@ -37,7 +34,7 @@ export const bindProductDataGraphQl = (parentElement: HTMLElement, product: Shop
     typeValue,
     vendor,
     weight,
-    weightUnit
+    weightUnit,
   ];
 
   productAttributes.forEach((attribute: string, index: number) => {

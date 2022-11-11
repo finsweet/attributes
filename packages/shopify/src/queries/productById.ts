@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @returns {string} - GraphQL query string
  */
 
@@ -45,5 +45,5 @@ export const productByIdQuery = () => {
         vendor
       }
     }  
-    `
-}
+    `;
+};

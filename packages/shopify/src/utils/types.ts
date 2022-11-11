@@ -43,12 +43,12 @@ export type ProductAttribute =
 
 type Image = {
   url: string;
-}
+};
 
 type Money = {
   amount: string;
   currencyCode: string;
-}
+};
 
 type Variant = {
   id: string;
@@ -60,7 +60,7 @@ type Variant = {
   image?: Image;
   weight?: number;
   weightUnit: string;
-}
+};
 
 export type ShopifyProduct = {
   id: string;
@@ -76,6 +76,6 @@ export type ShopifyProduct = {
   productType: string;
   variants: {
     nodes: Variant[];
-  }
+  };
   vendor: string;
-}
+};

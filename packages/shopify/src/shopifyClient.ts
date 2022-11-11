@@ -1,12 +1,9 @@
-
 import Client from 'shopify-buy';
 import type { Product } from 'shopify-buy';
-import type { ShopifyAttributeParams, ShopifyProduct } from './utils/types';
-import { productByIdQuery } from './queries/productById';
+
 import { productByHandle } from './queries/productByHandle';
-
-
-
+import { productByIdQuery } from './queries/productById';
+import type { ShopifyAttributeParams, ShopifyProduct } from './utils/types';
 
 export class ShopifyClient {
   private readonly params: ShopifyAttributeParams;
@@ -48,7 +45,7 @@ export class ShopifyClient {
   }
 
   async makeRequest(query: string, variables: Record<string, string>): Promise<any> {
-    const response = await fetch("https://" + this.params.domain + '/api/2022-10/graphql.json', {
+    const response = await fetch('https://' + this.params.domain + '/api/2022-10/graphql.json', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +53,7 @@ export class ShopifyClient {
       },
       body: JSON.stringify({
         query: query,
-        variables: variables
+        variables: variables,
       }),
     });
     return response.json();
