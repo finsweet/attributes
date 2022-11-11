@@ -8079,10 +8079,10 @@
   // src/shopifyClient.ts
   var import_shopify_buy = __toESM(require_shopify_buy(), 1);
 
-  // src/queries/productById.ts
-  var productByIdQuery = () => {
-    return `query productById($id: ID!) {
-      product(id: $id) {
+  // src/queries/productByHandle.ts
+  var productByHandle = () => {
+    return `query productByHandle($handle: String!) {
+      product(handle: $handle) {
         id
         title
         description
@@ -8125,10 +8125,10 @@
     `;
   };
 
-  // src/queries/productByHandle.ts
-  var productByHandle = () => {
-    return `query productByHandle($handle: String!) {
-      product(handle: $handle) {
+  // src/queries/productById.ts
+  var productByIdQuery = () => {
+    return `query productById($id: ID!) {
+      product(id: $id) {
         id
         title
         description
