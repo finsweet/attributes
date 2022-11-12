@@ -1,4 +1,5 @@
-import { productPagInit } from './actions/productPage';
+import { productPageInit } from './actions/productPage';
+import { productsPageInit } from './actions/productsPage';
 import type { ShopifyClient } from './shopifyClient';
 
 export const initPages = async (client: ShopifyClient) => {
@@ -6,7 +7,9 @@ export const initPages = async (client: ShopifyClient) => {
 
   const path = window.location.pathname;
   if (path.endsWith(productPage as string)) {
-    await productPagInit(client);
+    await productPageInit(client);
     return;
   }
+
+  await productsPageInit(client);
 };

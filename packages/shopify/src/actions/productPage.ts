@@ -1,9 +1,9 @@
 import type { ShopifyClient } from '../shopifyClient';
 import { PRODUCT_ID_PREFIX, QUERY_PARAMS } from '../utils/constants';
 import type { ShopifyProduct } from '../utils/types';
-import { bindProductDataGraphQl } from './product';
+import { bindProductDataGraphQL } from './product';
 
-export const productPagInit = async (client: ShopifyClient) => {
+export const productPageInit = async (client: ShopifyClient) => {
   const { redirectURL } = client.getParams();
 
   const { id, handle } = QUERY_PARAMS;
@@ -24,8 +24,8 @@ export const productPagInit = async (client: ShopifyClient) => {
       window.location.href = redirectURL as string;
       return;
     }
-    bindProductDataGraphQl(document.body, productGraphQl);
+    bindProductDataGraphQL(document.body, productGraphQl);
   } catch (e) {
-    window.location.href = redirectURL as string;
+    // window.location.href = redirectURL as string;
   }
 };

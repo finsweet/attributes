@@ -1,4 +1,4 @@
-const productBody = `
+export const productBody = `
         id
         title
         description

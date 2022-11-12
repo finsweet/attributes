@@ -12,7 +12,7 @@ const productResponse = `{
 			"descriptionHtml": "<p>A set of words that is complete in itself, typically containing a subject and predicate, conveying a statement, question, exclamation, or command, and consisting of a main clause and sometimes one or more subordinate clauses.</p>",
 			"handle": "oakley-sal",
 			"createdAt": "2022-05-21T17:33:16Z",
-			"updatedAt": "2022-11-06T09:55:05Z",
+			"updatedAt": "2022-11-07T19:12:24Z",
 			"publishedAt": "2022-05-25T16:51:56Z",
 			"featuredImage": {
 				"url": "https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973"
@@ -129,6 +129,15 @@ const productResponse = `{
 					"weightUnit": "GRAMS"
 				}]
 			},
+			"options": [{
+				"id": "gid://shopify/ProductOption/8774756597821",
+				"name": "Size",
+				"values": ["Small", "Medium", "Large"]
+			}, {
+				"id": "gid://shopify/ProductOption/8774756630589",
+				"name": "Color",
+				"values": ["Black", "Purple"]
+			}],
 			"productType": "Logo Art",
 			"vendor": "Finsweet Art Shop"
 		}
@@ -166,7 +175,7 @@ const expectedValues: { [key in ProductAttribute]: (_: Page) => Promise<void> } 
 	},
 	updated: async function (page: Page) {
 		const locator = page.locator(`css=[fs-shopify-element="updated"]`);
-		await expect(locator).toContainText('2022-11-06T09:55:05Z');
+		await expect(locator).toContainText('2022-11-07T19:12:24Z');
 	},
 	published: async function (page: Page) {
 		const locator = page.locator(`css=[fs-shopify-element="published"]`);
@@ -174,6 +183,13 @@ const expectedValues: { [key in ProductAttribute]: (_: Page) => Promise<void> } 
 	},
 	image: async function (page: Page) {
 		const locator = page.locator(`css=[fs-shopify-element="image"]`);
+		const src = await locator.evaluate((e) => (e as HTMLElement).getAttribute('src'));
+		await expect(src).toBe(
+			'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973'
+		);
+	},
+	thumbnail: async function (page: Page) {
+		const locator = page.locator(`css=[fs-shopify-element="thumbnail"]`);
 		const src = await locator.evaluate((e) => (e as HTMLElement).getAttribute('src'));
 		await expect(src).toBe(
 			'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973'
@@ -221,6 +237,7 @@ const testProductAttribute = async (page: Page) => {
 		'updated',
 		'published',
 		'image',
+		'thumbnail',
 		'sku',
 		'price',
 		'type',

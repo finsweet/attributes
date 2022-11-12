@@ -4,6 +4,9 @@ export const ATTRIBUTE = 'shopify';
 
 const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
 
+/**
+ * Products
+ */
 export const PRODUCT_TITLE = 'title';
 export const PRODUCT_DESCRIPTION = 'description';
 export const PRODUCT_HANDLE = 'handle';
@@ -11,6 +14,7 @@ export const PRODUCT_CREATED = 'created';
 export const PRODUCT_UPDATED = 'updated';
 export const PRODUCT_PUBLISHED = 'published';
 export const PRODUCT_IMAGE = 'image';
+export const PRODUCT_THUMBNAIL = 'thumbnail';
 export const PRODUCT_SKU = 'sku';
 export const PRODUCT_PRICE = 'price';
 export const PRODUCT_COMPARE_PRICE = 'compareprice';
@@ -23,9 +27,19 @@ export const PRODUCT_WEIGHT_UNIT = 'weightunit';
 export const PRODUCT_TAG_LIST = 'tag-list';
 export const PRODUCT_TAG_TEMPLATE = 'tag-template';
 export const PRODUCT_TAG_TEXT = 'tag-text';
+
+/**
+ * Loader
+ */
 export const LOADER = 'loader';
 
+/**
+ * Collections
+ */
+export const COLLECTION_ID = 'collectionid';
+
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
+export const COLLECTION_ID_PREFIX = 'gid://shopify/Collection/';
 
 export const productAttributes = [
   PRODUCT_TITLE,
@@ -35,6 +49,7 @@ export const productAttributes = [
   PRODUCT_UPDATED,
   PRODUCT_PUBLISHED,
   PRODUCT_IMAGE,
+  PRODUCT_THUMBNAIL,
   PRODUCT_SKU,
   PRODUCT_PRICE,
   PRODUCT_COMPARE_PRICE,
@@ -63,6 +78,7 @@ export const ATTRIBUTES = {
       updated: PRODUCT_UPDATED,
       published: PRODUCT_PUBLISHED,
       image: PRODUCT_IMAGE,
+      thumbnail: PRODUCT_THUMBNAIL,
       sku: PRODUCT_SKU,
       price: PRODUCT_PRICE,
       compareprice: PRODUCT_COMPARE_PRICE,
@@ -99,9 +115,9 @@ export const ATTRIBUTES = {
   redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: '/404' },
 
   /**
-   * Used for running tests
+   * Defines the collectionid attribute of List wrapper or Collections list.
    */
-  testMode: { key: `${ATTRIBUTES_PREFIX}-testmode`, defaultValue: false },
+  collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);

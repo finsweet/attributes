@@ -910,6 +910,15 @@
                       class="product_image"
                     />
                   </div>
+                  <div class="product_image-wrapper-2">
+                    <img
+                      src="https://assets.website-files.com/6288b46a074cc8683de896a8/628a93a9789974c7adf16fd8_joe-black-fs-shopify-02.svg"
+                      loading="lazy"
+                      fs-shopify-element="thumbnail"
+                      alt=""
+                      class="product_image"
+                    />
+                  </div>
                 </div>
                 <div class="product_grid-block-center">
                   <div class="product_wrapper-top">
