@@ -31,6 +31,7 @@ export type ProductAttribute =
   | 'updated'
   | 'published'
   | 'image'
+  | 'thumbnail'
   | 'sku'
   | 'price'
   | 'compareprice'
@@ -77,6 +78,15 @@ export type ShopifyProduct = {
     nodes: Variant[];
   };
   vendor: string;
+};
+
+export type ShopifyCollection = {
+  id: string;
+  description: string;
+  handle: string;
+  products: {
+    nodes: ShopifyProduct[];
+  };
 };
 
 export type ProductValue = string | string[];

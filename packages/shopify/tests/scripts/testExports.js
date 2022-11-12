@@ -7915,6 +7915,7 @@
   var PRODUCT_UPDATED = "updated";
   var PRODUCT_PUBLISHED = "published";
   var PRODUCT_IMAGE = "image";
+  var PRODUCT_THUMBNAIL = "thumbnail";
   var PRODUCT_SKU = "sku";
   var PRODUCT_PRICE = "price";
   var PRODUCT_COMPARE_PRICE = "compareprice";
@@ -7928,6 +7929,7 @@
   var PRODUCT_TAG_TEXT = "tag-text";
   var LOADER = "loader";
   var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
+  var COLLECTION_ID_PREFIX = "gid://shopify/Collection/";
   var productAttributes = [
     PRODUCT_TITLE,
     PRODUCT_DESCRIPTION,
@@ -7936,6 +7938,7 @@
     PRODUCT_UPDATED,
     PRODUCT_PUBLISHED,
     PRODUCT_IMAGE,
+    PRODUCT_THUMBNAIL,
     PRODUCT_SKU,
     PRODUCT_PRICE,
     PRODUCT_COMPARE_PRICE,
@@ -7961,6 +7964,7 @@
         updated: PRODUCT_UPDATED,
         published: PRODUCT_PUBLISHED,
         image: PRODUCT_IMAGE,
+        thumbnail: PRODUCT_THUMBNAIL,
         sku: PRODUCT_SKU,
         price: PRODUCT_PRICE,
         compareprice: PRODUCT_COMPARE_PRICE,
@@ -7979,7 +7983,7 @@
     domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
     productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
-    testMode: { key: `${ATTRIBUTES_PREFIX}-testmode`, defaultValue: false }
+    collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` }
   };
   var [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
 
@@ -7994,6 +7998,9 @@
   // src/actions/product.ts
   var propertyActions = {
     [PRODUCT_IMAGE]: (element, value) => {
+      element.setAttribute("src", String(value));
+    },
+    [PRODUCT_THUMBNAIL]: (element, value) => {
       element.setAttribute("src", String(value));
     },
     [PRODUCT_TAG_LIST]: (element, value) => {
@@ -8018,7 +8025,7 @@
       }
     }
   };
-  var bindProductDataGraphQl = (parentElement, product) => {
+  var bindProductDataGraphQL = (parentElement, product) => {
     const {
       title,
       description,
@@ -8035,6 +8042,7 @@
     const { sku, price, compareAtPrice, image, weight, weightUnit } = variants.nodes[0];
     const discount = 0;
     const typeValue = productType;
+    const productImage = (image || featuredImage).url;
     const productValues = [
       title,
       description,
@@ -8042,7 +8050,8 @@
       createdAt,
       updatedAt,
       publishedAt,
-      (image || featuredImage).url,
+      productImage,
+      productImage,
       sku,
       price.amount,
       compareAtPrice?.amount,
@@ -8069,7 +8078,7 @@
   };
 
   // src/actions/productPage.ts
-  var productPagInit = async (client) => {
+  var productPageInit = async (client) => {
     const { redirectURL } = client.getParams();
     const { id, handle } = QUERY_PARAMS;
     const queryString = window.location.search;
@@ -8086,9 +8095,35 @@
         window.location.href = redirectURL;
         return;
       }
-      bindProductDataGraphQl(document.body, productGraphQl);
+      bindProductDataGraphQL(document.body, productGraphQl);
     } catch (e) {
-      window.location.href = redirectURL;
+    }
+  };
+
+  // src/actions/productsPage.ts
+  var productsPageInit = async (client) => {
+    try {
+      const selector = getSelector("collectionId");
+      const collectionContainers = [...document.querySelectorAll(`div${selector}`)];
+      collectionContainers.forEach(async (container) => {
+        const firstChild = container.firstElementChild;
+        const template = firstChild.cloneNode(true);
+        container.innerHTML = "";
+        const collectionId = container.getAttribute(selector.replace(/(\[|\])/g, ""));
+        if (collectionId) {
+          const collection = await client.fetCollectionById(COLLECTION_ID_PREFIX + collectionId);
+          const {
+            products: { nodes: products }
+          } = collection;
+          products.forEach((product) => {
+            const productContainer = template.cloneNode(true);
+            container.appendChild(productContainer);
+            bindProductDataGraphQL(productContainer, product);
+          });
+        }
+      });
+    } catch (e) {
+      console.log("productsPageInit", e);
     }
   };
 
@@ -8097,9 +8132,10 @@
     const { productPage } = client.getParams();
     const path = window.location.pathname;
     if (path.endsWith(productPage)) {
-      await productPagInit(client);
+      await productPageInit(client);
       return;
     }
+    await productsPageInit(client);
   };
 
   // src/shopifyClient.ts
@@ -8167,6 +8203,23 @@
     `;
   };
 
+  // src/queries/collection.ts
+  var collectionByIdQuery = () => {
+    return `query collectionById($id: ID!) {
+      collection(id: $id) {
+        id
+        description
+        handle
+        products(first: 10) {
+          nodes {
+            ${productBody}
+          }
+        }
+      }
+    }  
+    `;
+  };
+
   // src/shopifyClient.ts
   var ShopifyClient = class {
     params;
@@ -8197,6 +8250,10 @@
     async fetchProductByHandleGraphQL(handle) {
       const response = await this.makeRequest(productByHandle(), { handle });
       return response.data.product;
+    }
+    async fetCollectionById(id) {
+      const response = await this.makeRequest(collectionByIdQuery(), { id });
+      return response.data.collection;
     }
     async makeRequest(query, variables) {
       const response = await fetch("https://" + this.params.domain + "/api/2022-10/graphql.json", {

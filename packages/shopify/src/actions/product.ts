@@ -5,6 +5,7 @@ import {
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
   PRODUCT_TAG_TEXT,
+  PRODUCT_THUMBNAIL,
   queryElement,
 } from '../utils/constants';
 import type { ProductAttribute, ProductValue, ShopifyProduct } from '../utils/types';
@@ -14,6 +15,10 @@ import type { ProductAttribute, ProductValue, ShopifyProduct } from '../utils/ty
  */
 const propertyActions: Record<string, (element: HTMLElement, value: ProductValue) => void> = {
   [PRODUCT_IMAGE]: (element: HTMLElement, value: ProductValue) => {
+    element.setAttribute('src', String(value));
+  },
+
+  [PRODUCT_THUMBNAIL]: (element: HTMLElement, value: ProductValue) => {
     element.setAttribute('src', String(value));
   },
   [PRODUCT_TAG_LIST]: (element: HTMLElement, value: ProductValue) => {
@@ -46,7 +51,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
  * @param parentElement that contains the elements to update.
  * @param product is the product data.
  */
-export const bindProductDataGraphQl = (parentElement: HTMLElement, product: ShopifyProduct) => {
+export const bindProductDataGraphQL = (parentElement: HTMLElement, product: ShopifyProduct) => {
   const {
     title,
     description,
@@ -64,6 +69,7 @@ export const bindProductDataGraphQl = (parentElement: HTMLElement, product: Shop
   const { sku, price, compareAtPrice, image, weight, weightUnit } = variants.nodes[0];
   const discount = 0;
   const typeValue = productType;
+  const productImage = (image || featuredImage).url;
 
   const productValues = [
     title,
@@ -72,7 +78,8 @@ export const bindProductDataGraphQl = (parentElement: HTMLElement, product: Shop
     createdAt,
     updatedAt,
     publishedAt,
-    (image || featuredImage).url,
+    productImage,
+    productImage,
     sku,
     price.amount,
     compareAtPrice?.amount,

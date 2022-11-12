@@ -1,8 +1,9 @@
 import Client from 'shopify-buy';
 import type { Product } from 'shopify-buy';
 
+import { collectionByIdQuery } from './queries/collection';
 import { productByHandle, productByIdQuery } from './queries/product';
-import type { ShopifyAttributeParams, ShopifyProduct } from './utils/types';
+import type { ShopifyAttributeParams, ShopifyCollection, ShopifyProduct } from './utils/types';
 
 export class ShopifyClient {
   private readonly params: ShopifyAttributeParams;
@@ -41,6 +42,11 @@ export class ShopifyClient {
   async fetchProductByHandleGraphQL(handle: string): Promise<ShopifyProduct> {
     const response = await this.makeRequest(productByHandle(), { handle });
     return response.data.product as ShopifyProduct;
+  }
+
+  async fetCollectionById(id: string): Promise<ShopifyCollection> {
+    const response = await this.makeRequest(collectionByIdQuery(), { id });
+    return response.data.collection as ShopifyCollection;
   }
 
   async makeRequest(query: string, variables: Record<string, string>): Promise<any> {
