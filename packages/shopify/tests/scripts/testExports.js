@@ -8008,6 +8008,7 @@
           const tagText = queryElement(PRODUCT_TAG_TEXT, {
             scope: clone
           });
+          clone.removeAttribute(ATTRIBUTES.element.key);
           if (tagText) {
             tagText.innerText = tag;
           }
@@ -8104,10 +8105,8 @@
   // src/shopifyClient.ts
   var import_shopify_buy = __toESM(require_shopify_buy(), 1);
 
-  // src/queries/productByHandle.ts
-  var productByHandle = () => {
-    return `query productByHandle($handle: String!) {
-      product(handle: $handle) {
+  // src/queries/product.ts
+  var productBody = `
         id
         title
         description
@@ -8143,54 +8142,26 @@
             weightUnit
           }
         }
+        options{
+          id
+          name
+          values
+        }
         productType
         vendor
+`;
+  var productByIdQuery = () => {
+    return `query productById($id: ID!) {
+      product(id: $id) {
+        ${productBody}
       }
     }  
     `;
   };
-
-  // src/queries/productById.ts
-  var productByIdQuery = () => {
-    return `query productById($id: ID!) {
-      product(id: $id) {
-        id
-        title
-        description
-        descriptionHtml
-        handle
-        createdAt
-        updatedAt
-        publishedAt
-        featuredImage {
-          url
-        }
-        tags
-        variants(first: 10) {
-          nodes {
-            id
-            sku
-            title
-            unitPrice {
-              amount
-            }
-            price {
-              amount
-              currencyCode
-            }
-            compareAtPrice {
-              amount
-              currencyCode
-            }
-            image {
-              url
-            }
-            weight
-            weightUnit
-          }
-        }
-        productType
-        vendor
+  var productByHandle = () => {
+    return `query productByHandle($handle: String!) {
+      product(handle: $handle) {
+        ${productBody}
       }
     }  
     `;
