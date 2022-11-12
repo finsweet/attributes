@@ -4,9 +4,6 @@ export const ATTRIBUTE = 'shopify';
 
 const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
 
-export const EXAMPLE_ELEMENT_KEY = 'example';
-export const EXAMPLE_SETTING_KEY = 'example';
-export const EXAMPLE_SETTING_VALUES = { value: 'value' };
 export const PRODUCT_TITLE = 'title';
 export const PRODUCT_DESCRIPTION = 'description';
 export const PRODUCT_HANDLE = 'handle';
@@ -23,26 +20,30 @@ export const PRODUCT_TYPE = 'type';
 export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
 export const PRODUCT_WEIGHT_UNIT = 'weightunit';
+export const PRODUCT_TAG_LIST = 'tag-list';
+export const PRODUCT_TAG_TEMPLATE = 'tag-template';
+export const PRODUCT_TAG_TEXT = 'tag-text';
 export const LOADER = 'loader';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 
 export const productAttributes = [
-  'title',
-  'description',
-  'handle',
-  'created',
-  'updated',
-  'published',
-  'image',
-  'sku',
-  'price',
-  'compareprice',
-  'discountpercent',
-  'type',
-  'vendor',
-  'weight',
-  'weightunit',
+  PRODUCT_TITLE,
+  PRODUCT_DESCRIPTION,
+  PRODUCT_HANDLE,
+  PRODUCT_CREATED,
+  PRODUCT_UPDATED,
+  PRODUCT_PUBLISHED,
+  PRODUCT_IMAGE,
+  PRODUCT_SKU,
+  PRODUCT_PRICE,
+  PRODUCT_COMPARE_PRICE,
+  PRODUCT_DISCOUNTED_PERCENT,
+  PRODUCT_TYPE,
+  PRODUCT_VENDOR,
+  PRODUCT_WEIGHT,
+  PRODUCT_WEIGHT_UNIT,
+  PRODUCT_TAG_LIST,
 ];
 
 export const QUERY_PARAMS = {
@@ -54,11 +55,6 @@ export const ATTRIBUTES = {
   element: {
     key: `${ATTRIBUTES_PREFIX}-element`,
     values: {
-      /**
-       * This is an element example definition.
-       */
-      example: EXAMPLE_ELEMENT_KEY,
-
       // product elements
       title: PRODUCT_TITLE,
       description: PRODUCT_DESCRIPTION,
@@ -75,16 +71,11 @@ export const ATTRIBUTES = {
       vendor: PRODUCT_VENDOR,
       weight: PRODUCT_WEIGHT,
       weightunit: PRODUCT_WEIGHT_UNIT,
+      [PRODUCT_TAG_LIST]: PRODUCT_TAG_LIST,
+      [PRODUCT_TAG_TEMPLATE]: PRODUCT_TAG_TEMPLATE,
+      [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
       loader: LOADER,
     },
-  },
-
-  /**
-   * Defines a setting example definition.
-   */
-  example: {
-    key: `${ATTRIBUTES_PREFIX}-${EXAMPLE_SETTING_KEY}`,
-    values: EXAMPLE_SETTING_VALUES,
   },
 
   /**
