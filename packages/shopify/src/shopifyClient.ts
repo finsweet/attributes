@@ -1,8 +1,7 @@
 import Client from 'shopify-buy';
 import type { Product } from 'shopify-buy';
 
-import { productByHandle } from './queries/productByHandle';
-import { productByIdQuery } from './queries/productById';
+import { productByHandle, productByIdQuery } from './queries/product';
 import type { ShopifyAttributeParams, ShopifyProduct } from './utils/types';
 
 export class ShopifyClient {

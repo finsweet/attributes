@@ -1,11 +1,4 @@
-/**
- *
- * @returns {string} - GraphQL query string
- */
-
-export const productByIdQuery = () => {
-  return `query productById($id: ID!) {
-      product(id: $id) {
+const productBody = `
         id
         title
         description
@@ -41,8 +34,38 @@ export const productByIdQuery = () => {
             weightUnit
           }
         }
+        options{
+          id
+          name
+          values
+        }
         productType
         vendor
+`;
+
+/**
+ *
+ * @returns {string} - GraphQL query string
+ */
+
+export const productByIdQuery = () => {
+  return `query productById($id: ID!) {
+      product(id: $id) {
+        ${productBody}
+      }
+    }  
+    `;
+};
+
+/**
+ *
+ * @returns {string} - GraphQL query string
+ */
+
+export const productByHandle = () => {
+  return `query productByHandle($handle: String!) {
+      product(handle: $handle) {
+        ${productBody}
       }
     }  
     `;

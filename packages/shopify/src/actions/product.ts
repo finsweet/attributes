@@ -1,4 +1,5 @@
 import {
+  ATTRIBUTES,
   productAttributes,
   PRODUCT_IMAGE,
   PRODUCT_TAG_LIST,
@@ -28,6 +29,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
         const tagText = queryElement<HTMLElement>(PRODUCT_TAG_TEXT, {
           scope: clone,
         });
+        clone.removeAttribute(ATTRIBUTES.element.key);
         if (tagText) {
           tagText.innerText = tag;
         }
