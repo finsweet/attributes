@@ -7908,9 +7908,6 @@
   // src/utils/constants.ts
   var ATTRIBUTE = "shopify";
   var ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
-  var EXAMPLE_ELEMENT_KEY = "example";
-  var EXAMPLE_SETTING_KEY = "example";
-  var EXAMPLE_SETTING_VALUES = { value: "value" };
   var PRODUCT_TITLE = "title";
   var PRODUCT_DESCRIPTION = "description";
   var PRODUCT_HANDLE = "handle";
@@ -7926,24 +7923,28 @@
   var PRODUCT_VENDOR = "vendor";
   var PRODUCT_WEIGHT = "weight";
   var PRODUCT_WEIGHT_UNIT = "weightunit";
+  var PRODUCT_TAG_LIST = "tag-list";
+  var PRODUCT_TAG_TEMPLATE = "tag-template";
+  var PRODUCT_TAG_TEXT = "tag-text";
   var LOADER = "loader";
   var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
   var productAttributes = [
-    "title",
-    "description",
-    "handle",
-    "created",
-    "updated",
-    "published",
-    "image",
-    "sku",
-    "price",
-    "compareprice",
-    "discountpercent",
-    "type",
-    "vendor",
-    "weight",
-    "weightunit"
+    PRODUCT_TITLE,
+    PRODUCT_DESCRIPTION,
+    PRODUCT_HANDLE,
+    PRODUCT_CREATED,
+    PRODUCT_UPDATED,
+    PRODUCT_PUBLISHED,
+    PRODUCT_IMAGE,
+    PRODUCT_SKU,
+    PRODUCT_PRICE,
+    PRODUCT_COMPARE_PRICE,
+    PRODUCT_DISCOUNTED_PERCENT,
+    PRODUCT_TYPE,
+    PRODUCT_VENDOR,
+    PRODUCT_WEIGHT,
+    PRODUCT_WEIGHT_UNIT,
+    PRODUCT_TAG_LIST
   ];
   var QUERY_PARAMS = {
     id: "id",
@@ -7953,7 +7954,6 @@
     element: {
       key: `${ATTRIBUTES_PREFIX}-element`,
       values: {
-        example: EXAMPLE_ELEMENT_KEY,
         title: PRODUCT_TITLE,
         description: PRODUCT_DESCRIPTION,
         handle: PRODUCT_HANDLE,
@@ -7969,12 +7969,11 @@
         vendor: PRODUCT_VENDOR,
         weight: PRODUCT_WEIGHT,
         weightunit: PRODUCT_WEIGHT_UNIT,
+        [PRODUCT_TAG_LIST]: PRODUCT_TAG_LIST,
+        [PRODUCT_TAG_TEMPLATE]: PRODUCT_TAG_TEMPLATE,
+        [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
         loader: LOADER
       }
-    },
-    example: {
-      key: `${ATTRIBUTES_PREFIX}-${EXAMPLE_SETTING_KEY}`,
-      values: EXAMPLE_SETTING_VALUES
     },
     token: { key: `${ATTRIBUTES_PREFIX}-token` },
     domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
@@ -7993,6 +7992,31 @@
   };
 
   // src/actions/product.ts
+  var propertyActions = {
+    [PRODUCT_IMAGE]: (element, value) => {
+      element.setAttribute("src", String(value));
+    },
+    [PRODUCT_TAG_LIST]: (element, value) => {
+      const tags = value;
+      const template = queryElement(PRODUCT_TAG_TEMPLATE, {
+        scope: element
+      });
+      if (template) {
+        const templateParent = template.parentElement;
+        tags.forEach((tag) => {
+          const clone = template.cloneNode(true);
+          const tagText = queryElement(PRODUCT_TAG_TEXT, {
+            scope: clone
+          });
+          if (tagText) {
+            tagText.innerText = tag;
+          }
+          templateParent.appendChild(clone);
+        });
+        template.remove();
+      }
+    }
+  };
   var bindProductDataGraphQl = (parentElement, product) => {
     const {
       title,
@@ -8004,7 +8028,8 @@
       variants,
       vendor,
       productType,
-      featuredImage
+      featuredImage,
+      tags
     } = product;
     const { sku, price, compareAtPrice, image, weight, weightUnit } = variants.nodes[0];
     const discount = 0;
@@ -8024,7 +8049,8 @@
       typeValue,
       vendor,
       weight,
-      weightUnit
+      weightUnit,
+      tags
     ];
     productAttributes.forEach((attribute, index) => {
       const matchedElements = queryElement(attribute, {
@@ -8032,11 +8058,11 @@
         all: true
       });
       matchedElements.forEach((element) => {
-        if (attribute === "image") {
-          element.setAttribute("src", String(productValues[index]));
-        } else {
-          element.textContent = String(productValues[index]);
+        if (propertyActions[attribute]) {
+          propertyActions[attribute](element, productValues[index]);
+          return;
         }
+        element.innerText = String(productValues[index]);
       });
     });
   };

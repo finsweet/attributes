@@ -37,7 +37,8 @@ export type ProductAttribute =
   | 'discountpercent'
   | 'type'
   | 'vendor'
-  | 'weight';
+  | 'weight'
+  | 'tag-list';
 
 type Image = {
   url: string;
@@ -77,3 +78,5 @@ export type ShopifyProduct = {
   };
   vendor: string;
 };
+
+export type ProductValue = string | string[];
