@@ -1,6 +1,7 @@
 import type { ShopifyClient } from '../shopifyClient';
 import { ATTRIBUTES, COLLECTION_ID_PREFIX, getSelector, LinkFormat, ProductSort } from '../utils/constants';
 import type { ProductOptions, ShopifyProduct } from '../utils/types';
+import { formatAttribute } from '../utils/util';
 import { bindProductDataGraphQL } from './product';
 
 export const productsPageInit = async (client: ShopifyClient) => {
@@ -16,10 +17,10 @@ export const productsPageInit = async (client: ShopifyClient) => {
       // remove all children
       container.innerHTML = '';
 
-      const collectionId = container.getAttribute(selector.replace(/(\[|\])/g, ''));
-      const productLimit = container.getAttribute(getSelector('productLimit').replace(/(\[|\])/g, '')) || '10';
+      const collectionId = container.getAttribute(formatAttribute(selector));
+      const productLimit = container.getAttribute(formatAttribute(getSelector('productLimit'))) || '10';
 
-      const sortKey = container.getAttribute(getSelector('productSort').replace(/(\[|\])/g, ''));
+      const sortKey = container.getAttribute(formatAttribute(getSelector('productSort')));
       let productSort = ProductSort.POSITION;
       if (sortKey === 'most-recent') {
         productSort = ProductSort.MOST_RECENT;
