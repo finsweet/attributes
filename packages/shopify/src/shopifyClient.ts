@@ -47,7 +47,6 @@ export class ShopifyClient {
 
   async fetCollectionById(id: string, productLimit: number, productSort: ProductSort): Promise<ShopifyCollection> {
     const response = await this.makeRequest(collectionById(productSort), { id, productLimit });
-    console.log(collectionById(productSort));
     return response.data.collection as ShopifyCollection;
   }
 
