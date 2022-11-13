@@ -8303,7 +8303,6 @@
     }
     async fetCollectionById(id, productLimit, productSort) {
       const response = await this.makeRequest(collectionById(productSort), { id, productLimit });
-      console.log(collectionById(productSort));
       return response.data.collection;
     }
     async makeRequest(query, variables) {

@@ -49,5 +49,4 @@ export const bindProducts = (products: ShopifyProduct[], template: HTMLDivElemen
     container.appendChild(productContainer);
     bindProductDataGraphQL(productContainer, product);
   });
-}
-
+};
