@@ -7928,6 +7928,9 @@
   var PRODUCT_TAG_TEMPLATE = "tag-template";
   var PRODUCT_TAG_TEXT = "tag-text";
   var LOADER = "loader";
+  var COLLECTION_ID = "collectionid";
+  var COLLECTION_PRODUCT_LIMIT = "productlimit";
+  var COLLECTION_PRODUCT_SORT = "productsort";
   var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
   var COLLECTION_ID_PREFIX = "gid://shopify/Collection/";
   var productAttributes = [
@@ -7983,8 +7986,9 @@
     domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
     productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
-    collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` },
-    productLimit: { key: `${ATTRIBUTES_PREFIX}-productlimit` }
+    collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
+    productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
+    productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` }
   };
   var [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
 
@@ -8104,7 +8108,7 @@
   // src/actions/productsPage.ts
   var productsPageInit = async (client) => {
     try {
-      let selector = getSelector("collectionId");
+      const selector = getSelector("collectionId");
       const collectionContainers = [...document.querySelectorAll(`div${selector}`)];
       collectionContainers.forEach(async (container) => {
         const firstChild = container.firstElementChild;
@@ -8112,21 +8116,35 @@
         container.innerHTML = "";
         const collectionId = container.getAttribute(selector.replace(/(\[|\])/g, ""));
         const productLimit = container.getAttribute(getSelector("productLimit").replace(/(\[|\])/g, "")) || "10";
+        const sortKey = container.getAttribute(getSelector("productSort").replace(/(\[|\])/g, ""));
+        let productSort = "POSITION" /* POSITION */;
+        if (sortKey === "most-recent") {
+          productSort = "MOST_RECENT" /* MOST_RECENT */;
+        } else if (sortKey === "oldest") {
+          productSort = "OLDEST" /* OLDEST */;
+        }
         if (collectionId) {
-          const collection = await client.fetCollectionById(COLLECTION_ID_PREFIX + collectionId, Number(productLimit));
+          const collection = await client.fetCollectionById(
+            COLLECTION_ID_PREFIX + collectionId,
+            Number(productLimit),
+            productSort
+          );
           const {
             products: { nodes: products }
           } = collection;
-          products.forEach((product) => {
-            const productContainer = template.cloneNode(true);
-            container.appendChild(productContainer);
-            bindProductDataGraphQL(productContainer, product);
-          });
+          bindProducts(products, template, container);
         }
       });
     } catch (e) {
       console.log("productsPageInit", e);
     }
+  };
+  var bindProducts = (products, template, container) => {
+    products.forEach((product) => {
+      const productContainer = template.cloneNode(true);
+      container.appendChild(productContainer);
+      bindProductDataGraphQL(productContainer, product);
+    });
   };
 
   // src/factory.ts
@@ -8206,20 +8224,50 @@
   };
 
   // src/queries/collection.ts
-  var collectionByIdQuery = () => {
-    return `query collectionById($id: ID!, $productLimit: Int) {
+  var collectionById = (productSort) => {
+    if (productSort === "MOST_RECENT" /* MOST_RECENT */) {
+      return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         id
         description
         handle
-        products(first: $productLimit) {
+        products(first: $productLimit, sortKey: CREATED) {
           nodes {
             ${productBody}
           }
         }
       }
-    }  
+    }
     `;
+    }
+    if (productSort === "OLDEST" /* OLDEST */) {
+      return `query collectionById($id: ID!, $productLimit: Int) {
+      collection(id: $id) {
+        id
+        description
+        handle
+        products(first: $productLimit, sortKey: CREATED, reverse: true) {
+          nodes {
+            ${productBody}
+          }
+        }
+      }
+    }
+    `;
+    }
+    return `query collectionById($id: ID!, $productLimit: Int) {
+    collection(id: $id) {
+      id
+      description
+      handle
+      products(first: $productLimit) {
+        nodes {
+          ${productBody}
+        }
+      }
+    }
+  }  
+  `;
   };
 
   // src/shopifyClient.ts
@@ -8253,8 +8301,9 @@
       const response = await this.makeRequest(productByHandle(), { handle });
       return response.data.product;
     }
-    async fetCollectionById(id, productLimit) {
-      const response = await this.makeRequest(collectionByIdQuery(), { id, productLimit });
+    async fetCollectionById(id, productLimit, productSort) {
+      const response = await this.makeRequest(collectionById(productSort), { id, productLimit });
+      console.log(collectionById(productSort));
       return response.data.collection;
     }
     async makeRequest(query, variables) {
