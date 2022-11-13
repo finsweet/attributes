@@ -8132,6 +8132,11 @@
     }
   };
 
+  // src/utils/util.ts
+  var formatAttribute = (attribute) => {
+    return attribute.replace(/(\[|\])/g, "");
+  };
+
   // src/actions/productsPage.ts
   var productsPageInit = async (client) => {
     const { productPage } = client.getParams();
@@ -8142,9 +8147,9 @@
         const firstChild = container.firstElementChild;
         const template = firstChild.cloneNode(true);
         container.innerHTML = "";
-        const collectionId = container.getAttribute(selector.replace(/(\[|\])/g, ""));
-        const productLimit = container.getAttribute(getSelector("productLimit").replace(/(\[|\])/g, "")) || "10";
-        const sortKey = container.getAttribute(getSelector("productSort").replace(/(\[|\])/g, ""));
+        const collectionId = container.getAttribute(formatAttribute(selector));
+        const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || "10";
+        const sortKey = container.getAttribute(formatAttribute(getSelector("productSort")));
         let productSort = "POSITION" /* POSITION */;
         if (sortKey === "most-recent") {
           productSort = "MOST_RECENT" /* MOST_RECENT */;
