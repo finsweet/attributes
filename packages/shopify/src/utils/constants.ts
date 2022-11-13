@@ -37,6 +37,7 @@ export const LOADER = 'loader';
  * Collections
  */
 export const COLLECTION_ID = 'collectionid';
+export const COLLECTION_PRODUCT_LIMIT = 'productlimit';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 export const COLLECTION_ID_PREFIX = 'gid://shopify/Collection/';
@@ -118,6 +119,11 @@ export const ATTRIBUTES = {
    * Defines the collectionid attribute of List wrapper or Collections list.
    */
   collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` },
+
+  /**
+ * Defines the collectionid attribute of List wrapper or Collections list.
+ */
+  productLimit: { key: `${ATTRIBUTES_PREFIX}-productlimit` },
 } as const;
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);

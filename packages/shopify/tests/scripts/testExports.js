@@ -7983,7 +7983,8 @@
     domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
     productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
-    collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` }
+    collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` },
+    productLimit: { key: `${ATTRIBUTES_PREFIX}-productlimit` }
   };
   var [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
 
@@ -8103,15 +8104,16 @@
   // src/actions/productsPage.ts
   var productsPageInit = async (client) => {
     try {
-      const selector = getSelector("collectionId");
+      let selector = getSelector("collectionId");
       const collectionContainers = [...document.querySelectorAll(`div${selector}`)];
       collectionContainers.forEach(async (container) => {
         const firstChild = container.firstElementChild;
         const template = firstChild.cloneNode(true);
         container.innerHTML = "";
         const collectionId = container.getAttribute(selector.replace(/(\[|\])/g, ""));
+        const productLimit = container.getAttribute(getSelector("productLimit").replace(/(\[|\])/g, "")) || "10";
         if (collectionId) {
-          const collection = await client.fetCollectionById(COLLECTION_ID_PREFIX + collectionId);
+          const collection = await client.fetCollectionById(COLLECTION_ID_PREFIX + collectionId, Number(productLimit));
           const {
             products: { nodes: products }
           } = collection;
@@ -8205,12 +8207,12 @@
 
   // src/queries/collection.ts
   var collectionByIdQuery = () => {
-    return `query collectionById($id: ID!) {
+    return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         id
         description
         handle
-        products(first: 10) {
+        products(first: $productLimit) {
           nodes {
             ${productBody}
           }
@@ -8251,8 +8253,8 @@
       const response = await this.makeRequest(productByHandle(), { handle });
       return response.data.product;
     }
-    async fetCollectionById(id) {
-      const response = await this.makeRequest(collectionByIdQuery(), { id });
+    async fetCollectionById(id, productLimit) {
+      const response = await this.makeRequest(collectionByIdQuery(), { id, productLimit });
       return response.data.collection;
     }
     async makeRequest(query, variables) {
