@@ -38,6 +38,7 @@ export const LOADER = 'loader';
  */
 export const COLLECTION_ID = 'collectionid';
 export const COLLECTION_PRODUCT_LIMIT = 'productlimit';
+export const COLLECTION_PRODUCT_SORT = 'productsort';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 export const COLLECTION_ID_PREFIX = 'gid://shopify/Collection/';
@@ -118,12 +119,23 @@ export const ATTRIBUTES = {
   /**
    * Defines the collectionid attribute of List wrapper or Collections list.
    */
-  collectionId: { key: `${ATTRIBUTES_PREFIX}-collectionid` },
+  collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
 
   /**
- * Defines the collectionid attribute of List wrapper or Collections list.
- */
-  productLimit: { key: `${ATTRIBUTES_PREFIX}-productlimit` },
+   * Defines the limit of products that should be returned by the collection query
+   */
+  productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
+
+  /**
+   * Defines the sort order of products that should be returned by the collection query
+   */
+  productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
 } as const;
+
+export const enum ProductSort {
+  POSITION = 'POSITION',
+  MOST_RECENT = 'MOST_RECENT',
+  OLDEST = 'OLDEST',
+}
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);

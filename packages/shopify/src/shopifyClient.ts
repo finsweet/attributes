@@ -1,8 +1,9 @@
 import Client from 'shopify-buy';
 import type { Product } from 'shopify-buy';
 
-import { collectionByIdQuery } from './queries/collection';
+import { collectionById } from './queries/collection';
 import { productByHandle, productByIdQuery } from './queries/product';
+import type { ProductSort } from './utils/constants';
 import type { ShopifyAttributeParams, ShopifyCollection, ShopifyProduct } from './utils/types';
 
 export class ShopifyClient {
@@ -44,8 +45,9 @@ export class ShopifyClient {
     return response.data.product as ShopifyProduct;
   }
 
-  async fetCollectionById(id: string, productLimit: number): Promise<ShopifyCollection> {
-    const response = await this.makeRequest(collectionByIdQuery(), { id, productLimit });
+  async fetCollectionById(id: string, productLimit: number, productSort: ProductSort): Promise<ShopifyCollection> {
+    const response = await this.makeRequest(collectionById(productSort), { id, productLimit });
+    console.log(collectionById(productSort));
     return response.data.collection as ShopifyCollection;
   }
 
