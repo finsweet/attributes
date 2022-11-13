@@ -44,12 +44,12 @@ export class ShopifyClient {
     return response.data.product as ShopifyProduct;
   }
 
-  async fetCollectionById(id: string): Promise<ShopifyCollection> {
-    const response = await this.makeRequest(collectionByIdQuery(), { id });
+  async fetCollectionById(id: string, productLimit: number): Promise<ShopifyCollection> {
+    const response = await this.makeRequest(collectionByIdQuery(), { id, productLimit });
     return response.data.collection as ShopifyCollection;
   }
 
-  async makeRequest(query: string, variables: Record<string, string>): Promise<any> {
+  async makeRequest(query: string, variables: Record<string, string | number>): Promise<any> {
     const response = await fetch('https://' + this.params.domain + '/api/2022-10/graphql.json', {
       method: 'POST',
       headers: {
