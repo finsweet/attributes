@@ -1,6 +1,9 @@
 import {
   ATTRIBUTES,
+  getSelector,
+  LinkFormat,
   productAttributes,
+  PRODUCT_ID_PREFIX,
   PRODUCT_IMAGE,
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
@@ -8,7 +11,7 @@ import {
   PRODUCT_THUMBNAIL,
   queryElement,
 } from '../utils/constants';
-import type { ProductAttribute, ProductValue, ShopifyProduct } from '../utils/types';
+import type { ProductAttribute, ProductOptions, ProductValue, ShopifyProduct } from '../utils/types';
 
 /**
  * Defines the actions to update element properties.
@@ -51,8 +54,13 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
  * @param parentElement that contains the elements to update.
  * @param product is the product data.
  */
-export const bindProductDataGraphQL = (parentElement: HTMLElement, product: ShopifyProduct) => {
+export const bindProductDataGraphQL = (
+  parentElement: HTMLElement,
+  product: ShopifyProduct,
+  options: ProductOptions
+) => {
   const {
+    id,
     title,
     description,
     handle,
@@ -104,5 +112,29 @@ export const bindProductDataGraphQL = (parentElement: HTMLElement, product: Shop
       }
       element.innerText = String(productValues[index]);
     });
+  });
+  handleProductLink(parentElement, { id, handle, productOptions: options });
+};
+
+const handleProductLink = (
+  parentElement: HTMLElement,
+  {
+    id,
+    handle,
+    productOptions: { productPage, linkFormat },
+  }: { id: string; handle: string; productOptions: ProductOptions }
+) => {
+  id = id.replace(PRODUCT_ID_PREFIX, '');
+  const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'product'));
+  productLinks.forEach((link) => {
+    let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) as LinkFormat;
+    if (!elementLinkFormat) {
+      elementLinkFormat = linkFormat || LinkFormat.ID;
+    }
+    if (linkFormat === LinkFormat.HANDLE) {
+      link.href = `${productPage}?handle=${handle}`;
+      return;
+    }
+    link.href = `${productPage}?id=${id}`;
   });
 };

@@ -29,9 +29,11 @@ export const PRODUCT_TAG_TEMPLATE = 'tag-template';
 export const PRODUCT_TAG_TEXT = 'tag-text';
 
 /**
- * Loader
+ * Others
  */
 export const LOADER = 'loader';
+export const LINK_FORMAT = 'linkformat';
+export const LINK = 'link';
 
 /**
  * Collections
@@ -130,12 +132,27 @@ export const ATTRIBUTES = {
    * Defines the sort order of products that should be returned by the collection query
    */
   productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
+
+  /**
+   * Defines the link format of the product page
+   **/
+  linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
+
+  /**
+   * Define the type of link to be user (Product page or Collection page)
+   * **/
+  link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: 'product', collection: 'collection' } },
 } as const;
 
 export const enum ProductSort {
   POSITION = 'POSITION',
   MOST_RECENT = 'MOST_RECENT',
   OLDEST = 'OLDEST',
+}
+
+export enum LinkFormat {
+  ID = 'id',
+  HANDLE = 'handle',
 }
 
 export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);

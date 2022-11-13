@@ -1,3 +1,5 @@
+import type { LinkFormat } from './constants';
+
 export interface ShopifyAttributeParams {
   /**
    * Defines the storefrontAccessToken provided by Shopify
@@ -90,3 +92,11 @@ export type ShopifyCollection = {
 };
 
 export type ProductValue = string | string[];
+
+export type ProductBindingOptions = {
+  linkFormat?: LinkFormat;
+};
+export type ProductOptions = {
+  productPage: string;
+  linkFormat?: LinkFormat;
+};
