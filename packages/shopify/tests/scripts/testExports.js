@@ -7928,6 +7928,8 @@
   var PRODUCT_TAG_TEMPLATE = "tag-template";
   var PRODUCT_TAG_TEXT = "tag-text";
   var LOADER = "loader";
+  var LINK_FORMAT = "linkformat";
+  var LINK = "link";
   var COLLECTION_ID = "collectionid";
   var COLLECTION_PRODUCT_LIMIT = "productlimit";
   var COLLECTION_PRODUCT_SORT = "productsort";
@@ -7988,7 +7990,9 @@
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
     collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
     productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
-    productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` }
+    productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
+    linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
+    link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: "product", collection: "collection" } }
   };
   var [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
 
@@ -8030,8 +8034,9 @@
       }
     }
   };
-  var bindProductDataGraphQL = (parentElement, product) => {
+  var bindProductDataGraphQL = (parentElement, product, options) => {
     const {
+      id,
       title,
       description,
       handle,
@@ -8080,11 +8085,31 @@
         element.innerText = String(productValues[index]);
       });
     });
+    handleProductLink(parentElement, { id, handle, productOptions: options });
+  };
+  var handleProductLink = (parentElement, {
+    id,
+    handle,
+    productOptions: { productPage, linkFormat }
+  }) => {
+    id = id.replace(PRODUCT_ID_PREFIX, "");
+    const productLinks = parentElement.querySelectorAll(getSelector("link", "product"));
+    productLinks.forEach((link) => {
+      let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
+      if (!elementLinkFormat) {
+        elementLinkFormat = linkFormat || "id" /* ID */;
+      }
+      if (linkFormat === "handle" /* HANDLE */) {
+        link.href = `${productPage}?handle=${handle}`;
+        return;
+      }
+      link.href = `${productPage}?id=${id}`;
+    });
   };
 
   // src/actions/productPage.ts
   var productPageInit = async (client) => {
-    const { redirectURL } = client.getParams();
+    const { redirectURL, productPage } = client.getParams();
     const { id, handle } = QUERY_PARAMS;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -8100,13 +8125,16 @@
         window.location.href = redirectURL;
         return;
       }
-      bindProductDataGraphQL(document.body, productGraphQl);
+      bindProductDataGraphQL(document.body, productGraphQl, {
+        productPage
+      });
     } catch (e) {
     }
   };
 
   // src/actions/productsPage.ts
   var productsPageInit = async (client) => {
+    const { productPage } = client.getParams();
     try {
       const selector = getSelector("collectionId");
       const collectionContainers = [...document.querySelectorAll(`div${selector}`)];
@@ -8132,18 +8160,23 @@
           const {
             products: { nodes: products }
           } = collection;
-          bindProducts(products, template, container);
+          bindProducts(products, template, container, { productPage });
         }
       });
     } catch (e) {
       console.log("productsPageInit", e);
     }
   };
-  var bindProducts = (products, template, container) => {
+  var bindProducts = (products, template, container, productOptions) => {
+    const linkFormat = container.getAttribute(ATTRIBUTES.linkFormat.key);
+    const options = productOptions;
+    if (linkFormat) {
+      options.linkFormat = linkFormat;
+    }
     products.forEach((product) => {
       const productContainer = template.cloneNode(true);
       container.appendChild(productContainer);
-      bindProductDataGraphQL(productContainer, product);
+      bindProductDataGraphQL(productContainer, product, productOptions);
     });
   };
 

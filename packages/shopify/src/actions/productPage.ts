@@ -4,7 +4,7 @@ import type { ShopifyProduct } from '../utils/types';
 import { bindProductDataGraphQL } from './product';
 
 export const productPageInit = async (client: ShopifyClient) => {
-  const { redirectURL } = client.getParams();
+  const { redirectURL, productPage } = client.getParams();
 
   const { id, handle } = QUERY_PARAMS;
 
@@ -24,7 +24,9 @@ export const productPageInit = async (client: ShopifyClient) => {
       window.location.href = redirectURL as string;
       return;
     }
-    bindProductDataGraphQL(document.body, productGraphQl);
+    bindProductDataGraphQL(document.body, productGraphQl, {
+      productPage: productPage as string,
+    });
   } catch (e) {
     // window.location.href = redirectURL as string;
   }
