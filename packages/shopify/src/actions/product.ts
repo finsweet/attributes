@@ -4,7 +4,7 @@ import {
   LinkFormat,
   productAttributes,
   PRODUCT_ID_PREFIX,
-  PRODUCT_IMAGE,
+  IMAGE,
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
   PRODUCT_TAG_TEXT,
@@ -17,7 +17,7 @@ import type { ProductAttribute, ProductOptions, ProductValue, ShopifyProduct } f
  * Defines the actions to update element properties.
  */
 const propertyActions: Record<string, (element: HTMLElement, value: ProductValue) => void> = {
-  [PRODUCT_IMAGE]: (element: HTMLElement, value: ProductValue) => {
+  [IMAGE]: (element: HTMLElement, value: ProductValue) => {
     element.setAttribute('src', String(value));
   },
 

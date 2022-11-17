@@ -18,6 +18,12 @@ export interface ShopifyAttributeParams {
   productPage: string | null;
 
   /**
+   * Defines the Webflow collection page slug.
+   * @default /test/collection-template
+   */
+  collectionPage: string | null;
+
+  /**
    * Defines the slug or the url to redirect the user to when something goes wrong on
    * product page
    * @default 404.html
@@ -42,6 +48,8 @@ export type ProductAttribute =
   | 'vendor'
   | 'weight'
   | 'tag-list';
+
+export type CollectionAttribute = 'title' | 'description' | 'handle' | 'image';
 
 type Image = {
   url: string;
@@ -86,12 +94,16 @@ export type ShopifyCollection = {
   id: string;
   description: string;
   handle: string;
+  title: string;
+  updatedAt: string;
+  image: Image;
   products: {
     nodes: ShopifyProduct[];
   };
 };
 
 export type ProductValue = string | string[];
+export type CollectionValue = string | string[];
 
 export type ProductBindingOptions = {
   linkFormat?: LinkFormat;

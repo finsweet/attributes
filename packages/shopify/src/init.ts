@@ -13,7 +13,7 @@ import type { ShopifyAttributeParams } from './utils/types';
 export const init = async (params: ShopifyAttributeParams) => {
   await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
 
-  const { token, domain, productPage, redirectURL } = params;
+  const { token, domain, productPage, collectionPage, redirectURL } = params;
   if (!token) {
     throw new Error('token must be provided');
   }
@@ -25,6 +25,7 @@ export const init = async (params: ShopifyAttributeParams) => {
     token,
     domain,
     productPage: productPage || ATTRIBUTES.productPage.defaultValue,
+    collectionPage: collectionPage || ATTRIBUTES.collectionPage.defaultValue,
     redirectURL: redirectURL || ATTRIBUTES.redirectURL.defaultValue,
   });
 
