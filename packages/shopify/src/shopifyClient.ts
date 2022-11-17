@@ -3,7 +3,7 @@ import type { Product } from 'shopify-buy';
 
 import { collectionById } from './queries/collection';
 import { productByHandle, productByIdQuery } from './queries/product';
-import type { ProductSort } from './utils/constants';
+import type { Sort } from './utils/constants';
 import type { ShopifyAttributeParams, ShopifyCollection, ShopifyProduct } from './utils/types';
 
 export class ShopifyClient {
@@ -45,8 +45,8 @@ export class ShopifyClient {
     return response.data.product as ShopifyProduct;
   }
 
-  async fetCollectionById(id: string, productLimit: number, productSort: ProductSort): Promise<ShopifyCollection> {
-    const response = await this.makeRequest(collectionById(productSort), { id, productLimit });
+  async fetCollectionById(id: string, productLimit: number, sort: Sort): Promise<ShopifyCollection> {
+    const response = await this.makeRequest(collectionById(sort), { id, productLimit });
     return response.data.collection as ShopifyCollection;
   }
 

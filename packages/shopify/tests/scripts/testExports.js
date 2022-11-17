@@ -7936,7 +7936,7 @@
   var COLLECTION_IMAGE = "image";
   var COLLECTION_ID = "collectionid";
   var COLLECTION_PRODUCT_LIMIT = "productlimit";
-  var COLLECTION_PRODUCT_SORT = "productsort";
+  var COLLECTION_PRODUCT_SORT = "sort";
   var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
   var COLLECTION_ID_PREFIX = "gid://shopify/Collection/";
   var productAttributes = [
@@ -7999,7 +7999,7 @@
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
     collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
     productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
-    productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
+    sort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
     linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
     link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: "product", collection: "collection" } }
   };
@@ -8144,7 +8144,7 @@
     const collectionId = container.getAttribute(formatAttribute(selector));
     if (collectionId) {
       const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || "10";
-      const sortKey = container.getAttribute(formatAttribute(getSelector("productSort")));
+      const sortKey = container.getAttribute(formatAttribute(getSelector("sort")));
       let productSort = "position" /* POSITION */;
       if (sortKey === "most-recent" /* MOST_RECENT */) {
         productSort = "most-recent" /* MOST_RECENT */;
@@ -8416,8 +8416,8 @@
       const response = await this.makeRequest(productByHandle(), { handle });
       return response.data.product;
     }
-    async fetCollectionById(id, productLimit, productSort) {
-      const response = await this.makeRequest(collectionById(productSort), { id, productLimit });
+    async fetCollectionById(id, productLimit, sort) {
+      const response = await this.makeRequest(collectionById(sort), { id, productLimit });
       return response.data.collection;
     }
     async makeRequest(query, variables) {

@@ -46,7 +46,7 @@ export const COLLECTION_CREATED = 'created';
 export const COLLECTION_IMAGE = 'image';
 export const COLLECTION_ID = 'collectionid';
 export const COLLECTION_PRODUCT_LIMIT = 'productlimit';
-export const COLLECTION_PRODUCT_SORT = 'productsort';
+export const COLLECTION_PRODUCT_SORT = 'sort';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 export const COLLECTION_ID_PREFIX = 'gid://shopify/Collection/';
@@ -144,9 +144,9 @@ export const ATTRIBUTES = {
   productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
 
   /**
-   * Defines the sort order of products that should be returned by the collection query
+   * Defines the sort order of products/collections that should be returned by the product/collection query
    */
-  productSort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
+  sort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
 
   /**
    * Defines the link format of the product page
@@ -159,7 +159,7 @@ export const ATTRIBUTES = {
   link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: 'product', collection: 'collection' } },
 } as const;
 
-export const enum ProductSort {
+export const enum Sort {
   POSITION = 'position',
   MOST_RECENT = 'most-recent',
   OLDEST = 'oldest',

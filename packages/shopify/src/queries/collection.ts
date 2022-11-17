@@ -1,12 +1,12 @@
-import { ProductSort } from '../utils/constants';
+import { Sort } from '../utils/constants';
 import { productBody } from './product';
 
 /**
  *
  * @returns {string} - GraphQL query string
  */
-export const collectionById = (productSort: ProductSort) => {
-  if (productSort === ProductSort.MOST_RECENT) {
+export const collectionById = (productSort: Sort) => {
+  if (productSort === Sort.MOST_RECENT) {
     return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         id
@@ -26,7 +26,7 @@ export const collectionById = (productSort: ProductSort) => {
     }
     `;
   }
-  if (productSort === ProductSort.OLDEST) {
+  if (productSort === Sort.OLDEST) {
     return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         id
