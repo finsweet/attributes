@@ -1,12 +1,5 @@
 import type { ShopifyClient } from '../shopifyClient';
-import {
-  ATTRIBUTES,
-  COLLECTION_ID_PREFIX,
-  getSelector,
-  LinkFormat,
-  ProductSort,
-  queryElement,
-} from '../utils/constants';
+import { ATTRIBUTES, COLLECTION_ID_PREFIX, getSelector, LinkFormat, Sort, queryElement } from '../utils/constants';
 import type { ProductOptions, ShopifyCollection, ShopifyProduct } from '../utils/types';
 import { formatAttribute } from '../utils/util';
 import { bindProductDataGraphQL } from './product';
@@ -42,12 +35,12 @@ export const bindCollectionProductsData = async (
   if (collectionId) {
     const productLimit = container.getAttribute(formatAttribute(getSelector('productLimit'))) || '10';
 
-    const sortKey = container.getAttribute(formatAttribute(getSelector('productSort')));
-    let productSort = ProductSort.POSITION;
-    if (sortKey === ProductSort.MOST_RECENT) {
-      productSort = ProductSort.MOST_RECENT;
-    } else if (sortKey === ProductSort.OLDEST) {
-      productSort = ProductSort.OLDEST;
+    const sortKey = container.getAttribute(formatAttribute(getSelector('sort')));
+    let productSort = Sort.POSITION;
+    if (sortKey === Sort.MOST_RECENT) {
+      productSort = Sort.MOST_RECENT;
+    } else if (sortKey === Sort.OLDEST) {
+      productSort = Sort.OLDEST;
     }
 
     const collection = await client.fetCollectionById(
