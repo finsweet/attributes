@@ -7308,7 +7308,7 @@
         "name": "HTML",
         "kind": "SCALAR"
       };
-      var ID = {
+      var ID2 = {
         "name": "ID",
         "kind": "SCALAR"
       };
@@ -7747,7 +7747,7 @@
       Types.types["Domain"] = Domain;
       Types.types["Float"] = Float;
       Types.types["HTML"] = HTML;
-      Types.types["ID"] = ID;
+      Types.types["ID"] = ID2;
       Types.types["Image"] = Image;
       Types.types["ImageConnection"] = ImageConnection;
       Types.types["ImageEdge"] = ImageEdge;
@@ -7908,13 +7908,9 @@
   // src/utils/constants.ts
   var ATTRIBUTE = "shopify";
   var ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
-  var PRODUCT_TITLE = "title";
-  var PRODUCT_DESCRIPTION = "description";
-  var PRODUCT_HANDLE = "handle";
   var PRODUCT_CREATED = "created";
-  var PRODUCT_UPDATED = "updated";
   var PRODUCT_PUBLISHED = "published";
-  var PRODUCT_IMAGE = "image";
+  var IMAGE = "image";
   var PRODUCT_THUMBNAIL = "thumbnail";
   var PRODUCT_SKU = "sku";
   var PRODUCT_PRICE = "price";
@@ -7927,22 +7923,30 @@
   var PRODUCT_TAG_LIST = "tag-list";
   var PRODUCT_TAG_TEMPLATE = "tag-template";
   var PRODUCT_TAG_TEXT = "tag-text";
+  var PRODUCTS_LIST = "products-list";
   var LOADER = "loader";
   var LINK_FORMAT = "linkformat";
   var LINK = "link";
+  var PRODUCTS = "products";
+  var ID = "id";
+  var TITLE = "title";
+  var DESCRIPTION = "description";
+  var HANDLE = "handle";
+  var UPDATED = "updated";
+  var COLLECTION_IMAGE = "image";
   var COLLECTION_ID = "collectionid";
   var COLLECTION_PRODUCT_LIMIT = "productlimit";
   var COLLECTION_PRODUCT_SORT = "productsort";
   var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
   var COLLECTION_ID_PREFIX = "gid://shopify/Collection/";
   var productAttributes = [
-    PRODUCT_TITLE,
-    PRODUCT_DESCRIPTION,
-    PRODUCT_HANDLE,
+    TITLE,
+    DESCRIPTION,
+    HANDLE,
     PRODUCT_CREATED,
-    PRODUCT_UPDATED,
+    UPDATED,
     PRODUCT_PUBLISHED,
-    PRODUCT_IMAGE,
+    IMAGE,
     PRODUCT_THUMBNAIL,
     PRODUCT_SKU,
     PRODUCT_PRICE,
@@ -7954,6 +7958,7 @@
     PRODUCT_WEIGHT_UNIT,
     PRODUCT_TAG_LIST
   ];
+  var collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
   var QUERY_PARAMS = {
     id: "id",
     handle: "handle"
@@ -7962,13 +7967,14 @@
     element: {
       key: `${ATTRIBUTES_PREFIX}-element`,
       values: {
-        title: PRODUCT_TITLE,
-        description: PRODUCT_DESCRIPTION,
-        handle: PRODUCT_HANDLE,
+        id: ID,
+        title: TITLE,
+        description: DESCRIPTION,
+        handle: HANDLE,
         created: PRODUCT_CREATED,
-        updated: PRODUCT_UPDATED,
+        updated: UPDATED,
         published: PRODUCT_PUBLISHED,
-        image: PRODUCT_IMAGE,
+        image: IMAGE,
         thumbnail: PRODUCT_THUMBNAIL,
         sku: PRODUCT_SKU,
         price: PRODUCT_PRICE,
@@ -7981,12 +7987,15 @@
         [PRODUCT_TAG_LIST]: PRODUCT_TAG_LIST,
         [PRODUCT_TAG_TEMPLATE]: PRODUCT_TAG_TEMPLATE,
         [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
-        loader: LOADER
+        loader: LOADER,
+        products: PRODUCTS,
+        productsList: PRODUCTS_LIST
       }
     },
     token: { key: `${ATTRIBUTES_PREFIX}-token` },
     domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
     productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: "/tests/product-template" },
+    collectionPage: { key: `${ATTRIBUTES_PREFIX}-collectionpage`, defaultValue: "/tests/collection-template" },
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
     collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
     productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
@@ -8004,9 +8013,14 @@
     }
   };
 
+  // src/utils/util.ts
+  var formatAttribute = (attribute) => {
+    return attribute.replace(/(\[|\])/g, "");
+  };
+
   // src/actions/product.ts
   var propertyActions = {
-    [PRODUCT_IMAGE]: (element, value) => {
+    [IMAGE]: (element, value) => {
       element.setAttribute("src", String(value));
     },
     [PRODUCT_THUMBNAIL]: (element, value) => {
@@ -8107,6 +8121,113 @@
     });
   };
 
+  // src/actions/productsPage.ts
+  var productsPageInit = async (client) => {
+    try {
+      const collectionContainers = queryElement("productsList", {
+        scope: document.body,
+        all: true
+      });
+      collectionContainers.forEach(async (container) => {
+        bindCollectionProductsData(client, container);
+      });
+    } catch (e) {
+      console.log("productsPageInit", e);
+    }
+  };
+  var bindCollectionProductsData = async (client, container) => {
+    const selector = getSelector("collectionId");
+    const { productPage } = client.getParams();
+    const firstChild = container.firstElementChild;
+    const template = firstChild.cloneNode(true);
+    container.innerHTML = "";
+    const collectionId = container.getAttribute(formatAttribute(selector));
+    if (collectionId) {
+      const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || "10";
+      const sortKey = container.getAttribute(formatAttribute(getSelector("productSort")));
+      let productSort = "position" /* POSITION */;
+      if (sortKey === "most-recent" /* MOST_RECENT */) {
+        productSort = "most-recent" /* MOST_RECENT */;
+      } else if (sortKey === "oldest" /* OLDEST */) {
+        productSort = "oldest" /* OLDEST */;
+      }
+      const collection = await client.fetCollectionById(
+        COLLECTION_ID_PREFIX + collectionId,
+        Number(productLimit),
+        productSort
+      );
+      const {
+        products: { nodes: products }
+      } = collection;
+      bindProducts(products, template, container, { productPage });
+      return Promise.resolve(collection);
+    }
+    return null;
+  };
+  var bindProducts = (products, template, container, productOptions) => {
+    const linkFormat = container.getAttribute(ATTRIBUTES.linkFormat.key);
+    const options = productOptions;
+    if (linkFormat) {
+      options.linkFormat = linkFormat;
+    }
+    products.forEach((product) => {
+      const productContainer = template.cloneNode(true);
+      bindProductDataGraphQL(productContainer, product, productOptions);
+      container.appendChild(productContainer);
+    });
+  };
+
+  // src/actions/collectionPage.ts
+  var propertyActions2 = {
+    [COLLECTION_IMAGE]: (element, value) => {
+      if (value && value.length) {
+        element.setAttribute("src", String(value));
+      }
+    }
+  };
+  var collectionPageInit = async (client) => {
+    try {
+      const { redirectURL } = client.getParams();
+      const { id } = QUERY_PARAMS;
+      const urlParams = new URLSearchParams(window.location.search);
+      const idParamValue = urlParams.get(id);
+      if (!idParamValue) {
+        window.location.href = redirectURL;
+        return;
+      }
+      document.body.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
+      const selector = getSelector("collectionId");
+      const collectionContainer = document.querySelector(`${selector}`);
+      const productListElement = queryElement("products", {
+        scope: collectionContainer
+      });
+      productListElement.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
+      const collection = await bindCollectionProductsData(client, productListElement);
+      if (collection) {
+        const { id: id2, description, handle, title, image, updatedAt } = collection;
+        const url = image?.url || "";
+        const collectionValues = [id2.replace(COLLECTION_ID_PREFIX, ""), title, description, handle, url, updatedAt];
+        collectionAttributes.forEach((attribute, index) => {
+          const matchedElements = queryElement(attribute, {
+            scope: document.body,
+            all: true
+          });
+          matchedElements.forEach((element) => {
+            if (productListElement.contains(element))
+              return;
+            if (propertyActions2[attribute]) {
+              propertyActions2[attribute](element, collectionValues[index]);
+              return;
+            }
+            element.innerText = String(collectionValues[index]);
+          });
+        });
+      }
+    } catch (e) {
+      console.log("collectionPageInit", e);
+    }
+  };
+
   // src/actions/productPage.ts
   var productPageInit = async (client) => {
     const { redirectURL, productPage } = client.getParams();
@@ -8132,65 +8253,16 @@
     }
   };
 
-  // src/utils/util.ts
-  var formatAttribute = (attribute) => {
-    return attribute.replace(/(\[|\])/g, "");
-  };
-
-  // src/actions/productsPage.ts
-  var productsPageInit = async (client) => {
-    const { productPage } = client.getParams();
-    try {
-      const selector = getSelector("collectionId");
-      const collectionContainers = [...document.querySelectorAll(`div${selector}`)];
-      collectionContainers.forEach(async (container) => {
-        const firstChild = container.firstElementChild;
-        const template = firstChild.cloneNode(true);
-        container.innerHTML = "";
-        const collectionId = container.getAttribute(formatAttribute(selector));
-        const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || "10";
-        const sortKey = container.getAttribute(formatAttribute(getSelector("productSort")));
-        let productSort = "POSITION" /* POSITION */;
-        if (sortKey === "most-recent") {
-          productSort = "MOST_RECENT" /* MOST_RECENT */;
-        } else if (sortKey === "oldest") {
-          productSort = "OLDEST" /* OLDEST */;
-        }
-        if (collectionId) {
-          const collection = await client.fetCollectionById(
-            COLLECTION_ID_PREFIX + collectionId,
-            Number(productLimit),
-            productSort
-          );
-          const {
-            products: { nodes: products }
-          } = collection;
-          bindProducts(products, template, container, { productPage });
-        }
-      });
-    } catch (e) {
-      console.log("productsPageInit", e);
-    }
-  };
-  var bindProducts = (products, template, container, productOptions) => {
-    const linkFormat = container.getAttribute(ATTRIBUTES.linkFormat.key);
-    const options = productOptions;
-    if (linkFormat) {
-      options.linkFormat = linkFormat;
-    }
-    products.forEach((product) => {
-      const productContainer = template.cloneNode(true);
-      container.appendChild(productContainer);
-      bindProductDataGraphQL(productContainer, product, productOptions);
-    });
-  };
-
   // src/factory.ts
   var initPages = async (client) => {
-    const { productPage } = client.getParams();
+    const { productPage, collectionPage } = client.getParams();
     const path = window.location.pathname;
     if (path.endsWith(productPage)) {
       await productPageInit(client);
+      return;
+    }
+    if (path.endsWith(collectionPage)) {
+      collectionPageInit(client);
       return;
     }
     await productsPageInit(client);
@@ -8263,12 +8335,17 @@
 
   // src/queries/collection.ts
   var collectionById = (productSort) => {
-    if (productSort === "MOST_RECENT" /* MOST_RECENT */) {
+    if (productSort === "most-recent" /* MOST_RECENT */) {
       return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         id
         description
         handle
+        title
+        updatedAt
+        image {
+          url
+        }
         products(first: $productLimit, sortKey: CREATED) {
           nodes {
             ${productBody}
@@ -8278,7 +8355,7 @@
     }
     `;
     }
-    if (productSort === "OLDEST" /* OLDEST */) {
+    if (productSort === "oldest" /* OLDEST */) {
       return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         id

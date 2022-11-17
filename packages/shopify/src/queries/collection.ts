@@ -12,6 +12,11 @@ export const collectionById = (productSort: ProductSort) => {
         id
         description
         handle
+        title
+        updatedAt
+        image {
+          url
+        }
         products(first: $productLimit, sortKey: CREATED) {
           nodes {
             ${productBody}

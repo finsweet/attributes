@@ -7,13 +7,10 @@ const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
 /**
  * Products
  */
-export const PRODUCT_TITLE = 'title';
-export const PRODUCT_DESCRIPTION = 'description';
-export const PRODUCT_HANDLE = 'handle';
+
 export const PRODUCT_CREATED = 'created';
-export const PRODUCT_UPDATED = 'updated';
 export const PRODUCT_PUBLISHED = 'published';
-export const PRODUCT_IMAGE = 'image';
+export const IMAGE = 'image';
 export const PRODUCT_THUMBNAIL = 'thumbnail';
 export const PRODUCT_SKU = 'sku';
 export const PRODUCT_PRICE = 'price';
@@ -27,6 +24,7 @@ export const PRODUCT_WEIGHT_UNIT = 'weightunit';
 export const PRODUCT_TAG_LIST = 'tag-list';
 export const PRODUCT_TAG_TEMPLATE = 'tag-template';
 export const PRODUCT_TAG_TEXT = 'tag-text';
+export const PRODUCTS_LIST = 'products-list';
 
 /**
  * Others
@@ -34,10 +32,18 @@ export const PRODUCT_TAG_TEXT = 'tag-text';
 export const LOADER = 'loader';
 export const LINK_FORMAT = 'linkformat';
 export const LINK = 'link';
+export const PRODUCTS = 'products';
+export const ID = 'id';
+export const TITLE = 'title';
+export const DESCRIPTION = 'description';
+export const HANDLE = 'handle';
+export const UPDATED = 'updated';
 
 /**
  * Collections
  */
+export const COLLECTION_CREATED = 'created';
+export const COLLECTION_IMAGE = 'image';
 export const COLLECTION_ID = 'collectionid';
 export const COLLECTION_PRODUCT_LIMIT = 'productlimit';
 export const COLLECTION_PRODUCT_SORT = 'productsort';
@@ -46,13 +52,13 @@ export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 export const COLLECTION_ID_PREFIX = 'gid://shopify/Collection/';
 
 export const productAttributes = [
-  PRODUCT_TITLE,
-  PRODUCT_DESCRIPTION,
-  PRODUCT_HANDLE,
+  TITLE,
+  DESCRIPTION,
+  HANDLE,
   PRODUCT_CREATED,
-  PRODUCT_UPDATED,
+  UPDATED,
   PRODUCT_PUBLISHED,
-  PRODUCT_IMAGE,
+  IMAGE,
   PRODUCT_THUMBNAIL,
   PRODUCT_SKU,
   PRODUCT_PRICE,
@@ -65,6 +71,8 @@ export const productAttributes = [
   PRODUCT_TAG_LIST,
 ];
 
+export const collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
+
 export const QUERY_PARAMS = {
   id: 'id',
   handle: 'handle',
@@ -74,14 +82,14 @@ export const ATTRIBUTES = {
   element: {
     key: `${ATTRIBUTES_PREFIX}-element`,
     values: {
-      // product elements
-      title: PRODUCT_TITLE,
-      description: PRODUCT_DESCRIPTION,
-      handle: PRODUCT_HANDLE,
+      id: ID,
+      title: TITLE,
+      description: DESCRIPTION,
+      handle: HANDLE,
       created: PRODUCT_CREATED,
-      updated: PRODUCT_UPDATED,
+      updated: UPDATED,
       published: PRODUCT_PUBLISHED,
-      image: PRODUCT_IMAGE,
+      image: IMAGE,
       thumbnail: PRODUCT_THUMBNAIL,
       sku: PRODUCT_SKU,
       price: PRODUCT_PRICE,
@@ -95,6 +103,8 @@ export const ATTRIBUTES = {
       [PRODUCT_TAG_TEMPLATE]: PRODUCT_TAG_TEMPLATE,
       [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
       loader: LOADER,
+      products: PRODUCTS,
+      productsList: PRODUCTS_LIST,
     },
   },
 
@@ -112,6 +122,11 @@ export const ATTRIBUTES = {
    * Defines the Webflow product page slug
    */
   productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: '/tests/product-template' },
+
+  /**
+   * Defines the Webflow collection page slug
+   */
+  collectionPage: { key: `${ATTRIBUTES_PREFIX}-collectionpage`, defaultValue: '/tests/collection-template' },
 
   /**
    * Defines the slug or the url to redirect the user to when something goes wrong on product page
@@ -145,9 +160,9 @@ export const ATTRIBUTES = {
 } as const;
 
 export const enum ProductSort {
-  POSITION = 'POSITION',
-  MOST_RECENT = 'MOST_RECENT',
-  OLDEST = 'OLDEST',
+  POSITION = 'position',
+  MOST_RECENT = 'most-recent',
+  OLDEST = 'oldest',
 }
 
 export enum LinkFormat {
