@@ -1,17 +1,16 @@
 import {
   ATTRIBUTES,
-  getSelector,
-  LinkFormat,
   productAttributes,
-  PRODUCT_ID_PREFIX,
   IMAGE,
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
   PRODUCT_TAG_TEXT,
   PRODUCT_THUMBNAIL,
   queryElement,
+  PRODUCTS_COLLECTION,
 } from '../utils/constants';
-import type { ProductAttribute, ProductOptions, ProductValue, ShopifyProduct } from '../utils/types';
+import type { ProductAttribute, ShopifyBindingOptions, ProductValue, ShopifyProduct } from '../utils/types';
+import { handleCollectionLink, handleProductLink } from './util';
 
 /**
  * Defines the actions to update element properties.
@@ -19,6 +18,10 @@ import type { ProductAttribute, ProductOptions, ProductValue, ShopifyProduct } f
 const propertyActions: Record<string, (element: HTMLElement, value: ProductValue) => void> = {
   [IMAGE]: (element: HTMLElement, value: ProductValue) => {
     element.setAttribute('src', String(value));
+  },
+
+  [PRODUCTS_COLLECTION]: (element: HTMLElement, value: ProductValue) => {
+    if (value) element.textContent = String(value);
   },
 
   [PRODUCT_THUMBNAIL]: (element: HTMLElement, value: ProductValue) => {
@@ -57,7 +60,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
 export const bindProductDataGraphQL = (
   parentElement: HTMLElement,
   product: ShopifyProduct,
-  options: ProductOptions
+  options: ShopifyBindingOptions
 ) => {
   const {
     id,
@@ -97,6 +100,7 @@ export const bindProductDataGraphQL = (
     weight,
     weightUnit,
     tags,
+    options.collectionName || '',
   ];
 
   productAttributes.forEach((attribute: string, index: number) => {
@@ -114,27 +118,5 @@ export const bindProductDataGraphQL = (
     });
   });
   handleProductLink(parentElement, { id, handle, productOptions: options });
-};
-
-const handleProductLink = (
-  parentElement: HTMLElement,
-  {
-    id,
-    handle,
-    productOptions: { productPage, linkFormat },
-  }: { id: string; handle: string; productOptions: ProductOptions }
-) => {
-  id = id.replace(PRODUCT_ID_PREFIX, '');
-  const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'product'));
-  productLinks.forEach((link) => {
-    let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) as LinkFormat;
-    if (!elementLinkFormat) {
-      elementLinkFormat = linkFormat || LinkFormat.ID;
-    }
-    if (linkFormat === LinkFormat.HANDLE) {
-      link.href = `${productPage}?handle=${handle}`;
-      return;
-    }
-    link.href = `${productPage}?id=${id}`;
-  });
+  handleCollectionLink(parentElement, { productOptions: options });
 };

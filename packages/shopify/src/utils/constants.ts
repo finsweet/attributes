@@ -25,6 +25,7 @@ export const PRODUCT_TAG_LIST = 'tag-list';
 export const PRODUCT_TAG_TEMPLATE = 'tag-template';
 export const PRODUCT_TAG_TEXT = 'tag-text';
 export const PRODUCTS_LIST = 'products-list';
+export const PRODUCTS_COLLECTION = 'collection';
 
 /**
  * Others
@@ -46,7 +47,11 @@ export const COLLECTION_CREATED = 'created';
 export const COLLECTION_IMAGE = 'image';
 export const COLLECTION_ID = 'collectionid';
 export const COLLECTION_PRODUCT_LIMIT = 'productlimit';
+export const COLLECTIONS_LIMIT = 'collectionlimit';
 export const COLLECTION_PRODUCT_SORT = 'sort';
+export const COLLECTIONS_LIST = 'collections-list';
+export const DEFAULT_PRODUCTS_LIMIT = '10';
+export const DEFAULT_COLLECTIONS_LIMIT = '10';
 
 export const PRODUCT_ID_PREFIX = 'gid://shopify/Product/';
 export const COLLECTION_ID_PREFIX = 'gid://shopify/Collection/';
@@ -69,6 +74,7 @@ export const productAttributes = [
   PRODUCT_WEIGHT,
   PRODUCT_WEIGHT_UNIT,
   PRODUCT_TAG_LIST,
+  PRODUCTS_COLLECTION,
 ];
 
 export const collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
@@ -105,6 +111,8 @@ export const ATTRIBUTES = {
       loader: LOADER,
       products: PRODUCTS,
       productsList: PRODUCTS_LIST,
+      collectionsList: COLLECTIONS_LIST,
+      collection: PRODUCTS_COLLECTION,
     },
   },
 
@@ -142,6 +150,11 @@ export const ATTRIBUTES = {
    * Defines the limit of products that should be returned by the collection query
    */
   productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
+
+  /**
+   * Defines the limit of collections that should be returned by the collections query
+   */
+  collectionLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTIONS_LIMIT}` },
 
   /**
    * Defines the sort order of products/collections that should be returned by the product/collection query
