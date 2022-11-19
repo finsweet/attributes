@@ -1,6 +1,19 @@
 import type { ShopifyClient } from '../shopifyClient';
-import { ATTRIBUTES, COLLECTION_ID_PREFIX, getSelector, LinkFormat, Sort, queryElement } from '../utils/constants';
-import type { ProductOptions, ShopifyCollection, ShopifyProduct } from '../utils/types';
+import {
+  ATTRIBUTES,
+  COLLECTION_ID_PREFIX,
+  getSelector,
+  LinkFormat,
+  Sort,
+  queryElement,
+  DEFAULT_PRODUCTS_LIMIT,
+} from '../utils/constants';
+import type {
+  ShopifyBindingOptions,
+  ShopifyCollection,
+  ShopifyCollectionWithProducts,
+  ShopifyProduct,
+} from '../utils/types';
 import { formatAttribute } from '../utils/util';
 import { bindProductDataGraphQL } from './product';
 
@@ -20,10 +33,11 @@ export const productsPageInit = async (client: ShopifyClient) => {
 
 export const bindCollectionProductsData = async (
   client: ShopifyClient,
-  container: HTMLDivElement
+  container: HTMLDivElement,
+  collectionHandle?: string
 ): Promise<ShopifyCollection | null> => {
   const selector = getSelector('collectionId');
-  const { productPage } = client.getParams();
+  const { productPage, collectionPage } = client.getParams();
   // get first child as template
   const firstChild = container.firstElementChild as HTMLDivElement;
   // clone template
@@ -32,36 +46,47 @@ export const bindCollectionProductsData = async (
   container.innerHTML = '';
 
   const collectionId = container.getAttribute(formatAttribute(selector)) as string;
-  if (collectionId) {
-    const productLimit = container.getAttribute(formatAttribute(getSelector('productLimit'))) || '10';
+  const productLimit = container.getAttribute(formatAttribute(getSelector('productLimit'))) || DEFAULT_PRODUCTS_LIMIT;
 
-    const sortKey = container.getAttribute(formatAttribute(getSelector('sort')));
-    let productSort = Sort.POSITION;
-    if (sortKey === Sort.MOST_RECENT) {
-      productSort = Sort.MOST_RECENT;
-    } else if (sortKey === Sort.OLDEST) {
-      productSort = Sort.OLDEST;
-    }
+  const sortKey = container.getAttribute(formatAttribute(getSelector('sort')));
+  let productSort = Sort.POSITION;
+  if (sortKey === Sort.MOST_RECENT) {
+    productSort = Sort.MOST_RECENT;
+  } else if (sortKey === Sort.OLDEST) {
+    productSort = Sort.OLDEST;
+  }
 
-    const collection = await client.fetCollectionById(
+  let collection: ShopifyCollectionWithProducts;
+  if (collectionHandle) {
+    collection = await client.fetchCollectionByHandle(collectionHandle, Number(productLimit), productSort);
+  } else if (collectionId) {
+    collection = await client.fetchCollectionById(
       COLLECTION_ID_PREFIX + collectionId,
       Number(productLimit),
       productSort
     );
-    const {
-      products: { nodes: products },
-    } = collection;
-    bindProducts(products, template, container, { productPage: productPage as string });
-    return Promise.resolve(collection);
+  } else {
+    return null;
   }
-  return null;
+
+  const {
+    products: { nodes: products },
+  } = collection;
+  bindProducts(products, template, container, {
+    productPage: productPage as string,
+    collectionPage: collectionPage as string,
+    collectionId,
+    collectionHandle: collection.handle,
+    collectionName: collection.title,
+  });
+  return Promise.resolve(collection);
 };
 
 export const bindProducts = (
   products: ShopifyProduct[],
   template: HTMLDivElement,
   container: HTMLDivElement,
-  productOptions: ProductOptions
+  productOptions: ShopifyBindingOptions
 ) => {
   const linkFormat = container.getAttribute(ATTRIBUTES.linkFormat.key) as string;
   const options = productOptions;

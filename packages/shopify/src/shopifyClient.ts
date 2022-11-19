@@ -1,10 +1,15 @@
 import Client from 'shopify-buy';
 import type { Product } from 'shopify-buy';
 
-import { collectionById } from './queries/collection';
+import { allCollections, collectionByHandle, collectionById } from './queries/collection';
 import { productByHandle, productByIdQuery } from './queries/product';
 import type { Sort } from './utils/constants';
-import type { ShopifyAttributeParams, ShopifyCollection, ShopifyProduct } from './utils/types';
+import type {
+  ShopifyAttributeParams,
+  ShopifyCollection,
+  ShopifyCollectionWithProducts,
+  ShopifyProduct,
+} from './utils/types';
 
 export class ShopifyClient {
   private readonly params: ShopifyAttributeParams;
@@ -45,9 +50,23 @@ export class ShopifyClient {
     return response.data.product as ShopifyProduct;
   }
 
-  async fetCollectionById(id: string, productLimit: number, sort: Sort): Promise<ShopifyCollection> {
+  async fetchCollectionById(id: string, productLimit: number, sort: Sort): Promise<ShopifyCollectionWithProducts> {
     const response = await this.makeRequest(collectionById(sort), { id, productLimit });
-    return response.data.collection as ShopifyCollection;
+    return response.data.collection as ShopifyCollectionWithProducts;
+  }
+
+  async fetchCollectionByHandle(
+    handle: string,
+    productLimit: number,
+    sort: Sort
+  ): Promise<ShopifyCollectionWithProducts> {
+    const response = await this.makeRequest(collectionByHandle(sort), { handle, productLimit });
+    return response.data.collection as ShopifyCollectionWithProducts;
+  }
+
+  async fetchAllCollections(collectionLimit: number, sort: Sort): Promise<ShopifyCollection[]> {
+    const response = await this.makeRequest(allCollections(sort), { collectionLimit });
+    return response.data.collections.nodes as ShopifyCollection[];
   }
 
   async makeRequest(query: string, variables: Record<string, string | number>): Promise<any> {

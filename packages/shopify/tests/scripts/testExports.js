@@ -2605,9 +2605,9 @@
             args: {
               handle: variables.__defaultOperation__.handle
             }
-          }, function(collectionByHandle) {
-            collectionByHandle.addFragment(spreads.CollectionFragment);
-            collectionByHandle.addFragment(spreads.CollectionsProductsFragment);
+          }, function(collectionByHandle2) {
+            collectionByHandle2.addFragment(spreads.CollectionFragment);
+            collectionByHandle2.addFragment(spreads.CollectionsProductsFragment);
           });
         });
         return document2;
@@ -7924,6 +7924,7 @@
   var PRODUCT_TAG_TEMPLATE = "tag-template";
   var PRODUCT_TAG_TEXT = "tag-text";
   var PRODUCTS_LIST = "products-list";
+  var PRODUCTS_COLLECTION = "collection";
   var LOADER = "loader";
   var LINK_FORMAT = "linkformat";
   var LINK = "link";
@@ -7936,7 +7937,11 @@
   var COLLECTION_IMAGE = "image";
   var COLLECTION_ID = "collectionid";
   var COLLECTION_PRODUCT_LIMIT = "productlimit";
+  var COLLECTIONS_LIMIT = "collectionlimit";
   var COLLECTION_PRODUCT_SORT = "sort";
+  var COLLECTIONS_LIST = "collections-list";
+  var DEFAULT_PRODUCTS_LIMIT = "10";
+  var DEFAULT_COLLECTIONS_LIMIT = "10";
   var PRODUCT_ID_PREFIX = "gid://shopify/Product/";
   var COLLECTION_ID_PREFIX = "gid://shopify/Collection/";
   var productAttributes = [
@@ -7956,7 +7961,8 @@
     PRODUCT_VENDOR,
     PRODUCT_WEIGHT,
     PRODUCT_WEIGHT_UNIT,
-    PRODUCT_TAG_LIST
+    PRODUCT_TAG_LIST,
+    PRODUCTS_COLLECTION
   ];
   var collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
   var QUERY_PARAMS = {
@@ -7989,7 +7995,9 @@
         [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
         loader: LOADER,
         products: PRODUCTS,
-        productsList: PRODUCTS_LIST
+        productsList: PRODUCTS_LIST,
+        collectionsList: COLLECTIONS_LIST,
+        collection: PRODUCTS_COLLECTION
       }
     },
     token: { key: `${ATTRIBUTES_PREFIX}-token` },
@@ -7999,6 +8007,7 @@
     redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: "/404" },
     collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
     productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
+    collectionLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTIONS_LIMIT}` },
     sort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
     linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
     link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: "product", collection: "collection" } }
@@ -8018,10 +8027,52 @@
     return attribute.replace(/(\[|\])/g, "");
   };
 
+  // src/actions/util.ts
+  var handleProductLink = (parentElement, {
+    id,
+    handle,
+    productOptions: { productPage, linkFormat }
+  }) => {
+    id = id.replace(PRODUCT_ID_PREFIX, "");
+    const productLinks = parentElement.querySelectorAll(getSelector("link", "product"));
+    productLinks.forEach((link) => {
+      let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
+      if (!elementLinkFormat) {
+        elementLinkFormat = linkFormat || "id" /* ID */;
+      }
+      if (elementLinkFormat === "handle" /* HANDLE */) {
+        link.href = `${productPage}?handle=${handle}`;
+        return;
+      }
+      link.href = `${productPage}?id=${id}`;
+    });
+  };
+  var handleCollectionLink = (parentElement, {
+    productOptions: { collectionPage, linkFormat, collectionHandle, collectionId }
+  }) => {
+    const collectionLinks = parentElement.querySelectorAll(getSelector("link", "collection"));
+    collectionLinks.forEach((link) => {
+      let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
+      if (!elementLinkFormat) {
+        elementLinkFormat = linkFormat || "id" /* ID */;
+      }
+      if (elementLinkFormat === "handle" /* HANDLE */ && collectionHandle) {
+        link.href = `${collectionPage}?handle=${collectionHandle}`;
+        return;
+      }
+      if (collectionId)
+        link.href = `${collectionPage}?id=${collectionId.replace(COLLECTION_ID_PREFIX, "")}`;
+    });
+  };
+
   // src/actions/product.ts
   var propertyActions = {
     [IMAGE]: (element, value) => {
       element.setAttribute("src", String(value));
+    },
+    [PRODUCTS_COLLECTION]: (element, value) => {
+      if (value)
+        element.textContent = String(value);
     },
     [PRODUCT_THUMBNAIL]: (element, value) => {
       element.setAttribute("src", String(value));
@@ -8084,7 +8135,8 @@
       vendor,
       weight,
       weightUnit,
-      tags
+      tags,
+      options.collectionName || ""
     ];
     productAttributes.forEach((attribute, index) => {
       const matchedElements = queryElement(attribute, {
@@ -8100,25 +8152,7 @@
       });
     });
     handleProductLink(parentElement, { id, handle, productOptions: options });
-  };
-  var handleProductLink = (parentElement, {
-    id,
-    handle,
-    productOptions: { productPage, linkFormat }
-  }) => {
-    id = id.replace(PRODUCT_ID_PREFIX, "");
-    const productLinks = parentElement.querySelectorAll(getSelector("link", "product"));
-    productLinks.forEach((link) => {
-      let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
-      if (!elementLinkFormat) {
-        elementLinkFormat = linkFormat || "id" /* ID */;
-      }
-      if (linkFormat === "handle" /* HANDLE */) {
-        link.href = `${productPage}?handle=${handle}`;
-        return;
-      }
-      link.href = `${productPage}?id=${id}`;
-    });
+    handleCollectionLink(parentElement, { productOptions: options });
   };
 
   // src/actions/productsPage.ts
@@ -8135,34 +8169,44 @@
       console.log("productsPageInit", e);
     }
   };
-  var bindCollectionProductsData = async (client, container) => {
+  var bindCollectionProductsData = async (client, container, collectionHandle) => {
     const selector = getSelector("collectionId");
-    const { productPage } = client.getParams();
+    const { productPage, collectionPage } = client.getParams();
     const firstChild = container.firstElementChild;
     const template = firstChild.cloneNode(true);
     container.innerHTML = "";
     const collectionId = container.getAttribute(formatAttribute(selector));
-    if (collectionId) {
-      const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || "10";
-      const sortKey = container.getAttribute(formatAttribute(getSelector("sort")));
-      let productSort = "position" /* POSITION */;
-      if (sortKey === "most-recent" /* MOST_RECENT */) {
-        productSort = "most-recent" /* MOST_RECENT */;
-      } else if (sortKey === "oldest" /* OLDEST */) {
-        productSort = "oldest" /* OLDEST */;
-      }
-      const collection = await client.fetCollectionById(
+    const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || DEFAULT_PRODUCTS_LIMIT;
+    const sortKey = container.getAttribute(formatAttribute(getSelector("sort")));
+    let productSort = "position" /* POSITION */;
+    if (sortKey === "most-recent" /* MOST_RECENT */) {
+      productSort = "most-recent" /* MOST_RECENT */;
+    } else if (sortKey === "oldest" /* OLDEST */) {
+      productSort = "oldest" /* OLDEST */;
+    }
+    let collection;
+    if (collectionHandle) {
+      collection = await client.fetchCollectionByHandle(collectionHandle, Number(productLimit), productSort);
+    } else if (collectionId) {
+      collection = await client.fetchCollectionById(
         COLLECTION_ID_PREFIX + collectionId,
         Number(productLimit),
         productSort
       );
-      const {
-        products: { nodes: products }
-      } = collection;
-      bindProducts(products, template, container, { productPage });
-      return Promise.resolve(collection);
+    } else {
+      return null;
     }
-    return null;
+    const {
+      products: { nodes: products }
+    } = collection;
+    bindProducts(products, template, container, {
+      productPage,
+      collectionPage,
+      collectionId,
+      collectionHandle: collection.handle,
+      collectionName: collection.title
+    });
+    return Promise.resolve(collection);
   };
   var bindProducts = (products, template, container, productOptions) => {
     const linkFormat = container.getAttribute(ATTRIBUTES.linkFormat.key);
@@ -8186,15 +8230,16 @@
     }
   };
   var collectionPageInit = async (client) => {
+    const { redirectURL } = client.getParams();
+    const { id, handle } = QUERY_PARAMS;
+    const urlParams = new URLSearchParams(window.location.search);
+    const idParamValue = urlParams.get(id);
+    const handleParamValue = urlParams.get(handle);
+    if (!idParamValue && !handleParamValue) {
+      window.location.href = redirectURL;
+      return;
+    }
     try {
-      const { redirectURL } = client.getParams();
-      const { id } = QUERY_PARAMS;
-      const urlParams = new URLSearchParams(window.location.search);
-      const idParamValue = urlParams.get(id);
-      if (!idParamValue) {
-        window.location.href = redirectURL;
-        return;
-      }
       document.body.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
       const selector = getSelector("collectionId");
       const collectionContainer = document.querySelector(`${selector}`);
@@ -8202,54 +8247,103 @@
         scope: collectionContainer
       });
       productListElement.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
-      const collection = await bindCollectionProductsData(client, productListElement);
+      const collection = await bindCollectionProductsData(client, productListElement, handleParamValue);
       if (collection) {
-        const { id: id2, description, handle, title, image, updatedAt } = collection;
-        const url = image?.url || "";
-        const collectionValues = [id2.replace(COLLECTION_ID_PREFIX, ""), title, description, handle, url, updatedAt];
-        collectionAttributes.forEach((attribute, index) => {
-          const matchedElements = queryElement(attribute, {
-            scope: document.body,
-            all: true
-          });
-          matchedElements.forEach((element) => {
-            if (productListElement.contains(element))
-              return;
-            if (propertyActions2[attribute]) {
-              propertyActions2[attribute](element, collectionValues[index]);
-              return;
-            }
-            element.innerText = String(collectionValues[index]);
-          });
-        });
+        bindCollectionData(collection, document.body);
       }
     } catch (e) {
       console.log("collectionPageInit", e);
     }
   };
+  var bindCollectionData = (collection, parentElement, scopeToExclude) => {
+    const { id, description, handle, title, image, updatedAt } = collection;
+    const url = image?.url || "";
+    const collectionValues = [id.replace(COLLECTION_ID_PREFIX, ""), title, description, handle, url, updatedAt];
+    collectionAttributes.forEach((attribute, index) => {
+      const matchedElements = queryElement(attribute, {
+        scope: parentElement,
+        all: true
+      });
+      matchedElements.forEach((element) => {
+        if (scopeToExclude && scopeToExclude.contains(element))
+          return;
+        if (propertyActions2[attribute]) {
+          propertyActions2[attribute](element, collectionValues[index]);
+          return;
+        }
+        element.innerText = String(collectionValues[index]);
+      });
+    });
+  };
+
+  // src/actions/collectionsPage.ts
+  var collectionsPageInit = async (client) => {
+    const { collectionPage, productPage } = client.getParams();
+    try {
+      const collectionContainers = queryElement("collectionsList", {
+        scope: document.body,
+        all: true
+      });
+      collectionContainers.forEach(async (container) => {
+        const collectionsLimit = container.getAttribute(formatAttribute(getSelector("collectionLimit"))) || DEFAULT_COLLECTIONS_LIMIT;
+        const sortKey = container.getAttribute(formatAttribute(getSelector("sort")));
+        let collectionSort = "position" /* POSITION */;
+        if (sortKey === "most-recent" /* MOST_RECENT */) {
+          collectionSort = "most-recent" /* MOST_RECENT */;
+        } else if (sortKey === "oldest" /* OLDEST */) {
+          collectionSort = "oldest" /* OLDEST */;
+        }
+        const collections = await client.fetchAllCollections(Number(collectionsLimit), collectionSort);
+        const firstChild = container.firstElementChild;
+        const template = firstChild.cloneNode(true);
+        container.innerHTML = "";
+        collections.forEach((collection) => {
+          const collectionContainer = template.cloneNode(true);
+          bindCollectionData(collection, collectionContainer);
+          handleCollectionLink(collectionContainer, {
+            productOptions: {
+              collectionId: collection.id,
+              collectionHandle: collection.handle,
+              collectionPage,
+              productPage
+            }
+          });
+          container.appendChild(collectionContainer);
+        });
+      });
+    } catch (e) {
+      console.log("productsPageInit", e);
+    }
+  };
 
   // src/actions/productPage.ts
   var productPageInit = async (client) => {
-    const { redirectURL, productPage } = client.getParams();
+    const { redirectURL, productPage, collectionPage } = client.getParams();
     const { id, handle } = QUERY_PARAMS;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const idValue = PRODUCT_ID_PREFIX + urlParams.get(id);
-    const handleValue = urlParams.get(handle);
+    const idParamValue = PRODUCT_ID_PREFIX + urlParams.get(id);
+    const handleParamValue = urlParams.get(handle);
+    if (!idParamValue && !handleParamValue) {
+      window.location.href = redirectURL;
+      return;
+    }
     try {
       let productGraphQl;
       if (urlParams.get(id)) {
-        productGraphQl = await client.fetchProductByIDGraphQL(idValue);
-      } else if (handleValue) {
-        productGraphQl = await client.fetchProductByHandleGraphQL(handleValue);
+        productGraphQl = await client.fetchProductByIDGraphQL(idParamValue);
+      } else if (handleParamValue) {
+        productGraphQl = await client.fetchProductByHandleGraphQL(handleParamValue);
       } else {
         window.location.href = redirectURL;
         return;
       }
       bindProductDataGraphQL(document.body, productGraphQl, {
-        productPage
+        productPage,
+        collectionPage
       });
     } catch (e) {
+      console.log("productPageInit", e);
     }
   };
 
@@ -8266,6 +8360,7 @@
       return;
     }
     await productsPageInit(client);
+    await collectionsPageInit(client);
   };
 
   // src/shopifyClient.ts
@@ -8334,10 +8429,7 @@
   };
 
   // src/queries/collection.ts
-  var collectionById = (productSort) => {
-    if (productSort === "most-recent" /* MOST_RECENT */) {
-      return `query collectionById($id: ID!, $productLimit: Int) {
-      collection(id: $id) {
+  var collectionProperties = `
         id
         description
         handle
@@ -8346,6 +8438,12 @@
         image {
           url
         }
+`;
+  var collectionById = (productSort) => {
+    if (productSort === "most-recent" /* MOST_RECENT */) {
+      return `query collectionById($id: ID!, $productLimit: Int) {
+      collection(id: $id) {
+        ${collectionProperties}
         products(first: $productLimit, sortKey: CREATED) {
           nodes {
             ${productBody}
@@ -8358,9 +8456,7 @@
     if (productSort === "oldest" /* OLDEST */) {
       return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
-        id
-        description
-        handle
+        ${collectionProperties}
         products(first: $productLimit, sortKey: CREATED, reverse: true) {
           nodes {
             ${productBody}
@@ -8372,9 +8468,7 @@
     }
     return `query collectionById($id: ID!, $productLimit: Int) {
     collection(id: $id) {
-      id
-      description
-      handle
+      ${collectionProperties}
       products(first: $productLimit) {
         nodes {
           ${productBody}
@@ -8382,6 +8476,75 @@
       }
     }
   }  
+  `;
+  };
+  var collectionByHandle = (productSort) => {
+    if (productSort === "most-recent" /* MOST_RECENT */) {
+      return `query collectionByHandle($handle: String!, $productLimit: Int) {
+      collection(handle: $handle) {
+        ${collectionProperties}
+        products(first: $productLimit, sortKey: CREATED) {
+          nodes {
+            ${productBody}
+          }
+        }
+      }
+    }
+    `;
+    }
+    if (productSort === "oldest" /* OLDEST */) {
+      return `query collectionByHandle($handle: String!, $productLimit: Int) {
+      collection(handle: $handle) {
+        ${collectionProperties}
+        products(first: $productLimit, sortKey: CREATED, reverse: true) {
+          nodes {
+            ${productBody}
+          }
+        }
+      }
+    }
+    `;
+    }
+    return `query collectionById($handle: String!, $productLimit: Int) {
+    collection(handle: $handle) {
+      ${collectionProperties}
+      products(first: $productLimit) {
+        nodes {
+          ${productBody}
+        }
+      }
+    }
+  }  
+  `;
+  };
+  var allCollections = (collectionSort) => {
+    if (collectionSort === "most-recent" /* MOST_RECENT */) {
+      return `query collections($collectionLimit: Int) {
+      collections(first: $collectionLimit, sortKey: UPDATED_AT) {
+          nodes {
+            ${collectionProperties}
+          }
+      }
+    }
+    `;
+    }
+    if (collectionSort === "oldest" /* OLDEST */) {
+      return `query collections($collectionLimit: Int) {
+      collections(first: $collectionLimit, sortKey: UPDATED_AT, reverse: true) {
+          nodes {
+            ${collectionProperties}
+          }
+      }
+    }
+    `;
+    }
+    return `query collections($collectionLimit: Int) {
+    collections(first: $collectionLimit) {
+        nodes {
+          ${collectionProperties}
+        }
+    }
+  }
   `;
   };
 
@@ -8416,9 +8579,17 @@
       const response = await this.makeRequest(productByHandle(), { handle });
       return response.data.product;
     }
-    async fetCollectionById(id, productLimit, sort) {
+    async fetchCollectionById(id, productLimit, sort) {
       const response = await this.makeRequest(collectionById(sort), { id, productLimit });
       return response.data.collection;
+    }
+    async fetchCollectionByHandle(handle, productLimit, sort) {
+      const response = await this.makeRequest(collectionByHandle(sort), { handle, productLimit });
+      return response.data.collection;
+    }
+    async fetchAllCollections(collectionLimit, sort) {
+      const response = await this.makeRequest(allCollections(sort), { collectionLimit });
+      return response.data.collections.nodes;
     }
     async makeRequest(query, variables) {
       const response = await fetch("https://" + this.params.domain + "/api/2022-10/graphql.json", {

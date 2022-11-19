@@ -97,6 +97,9 @@ export type ShopifyCollection = {
   title: string;
   updatedAt: string;
   image: Image;
+};
+
+export type ShopifyCollectionWithProducts = ShopifyCollection & {
   products: {
     nodes: ShopifyProduct[];
   };
@@ -108,7 +111,11 @@ export type CollectionValue = string | string[];
 export type ProductBindingOptions = {
   linkFormat?: LinkFormat;
 };
-export type ProductOptions = {
+export type ShopifyBindingOptions = {
   productPage: string;
+  collectionPage: string;
   linkFormat?: LinkFormat;
+  collectionId?: string;
+  collectionHandle?: string;
+  collectionName?: string;
 };
