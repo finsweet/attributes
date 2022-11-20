@@ -6,8 +6,10 @@ import {
   getSelector,
   LinkFormat,
   PRODUCT_ID_PREFIX,
+  PRODUCTS_VARIANT_SEPARATOR,
 } from '../utils/constants';
 import type { ShopifyBindingOptions } from '../utils/types';
+import type { Option } from '../utils/types';
 
 export const hideLoader = () => {
   const matchedElements = queryElement<HTMLElement>(LOADER, {
@@ -65,4 +67,28 @@ export const handleCollectionLink = (
     }
     if (collectionId) link.href = `${collectionPage}?id=${collectionId.replace(COLLECTION_ID_PREFIX, '')}`;
   });
+};
+
+/**
+ *@param options Product options.
+  takes all possible combination of option values and separate them by /, e.g. 
+  [{"id":"gid://shopify/ProductOption/8774761119805","name":"Size","values":["Small","Medium","Large"]},{"id":"gid://shopify/ProductOption/8774761152573","name":"Color","values":["Black","Purple"]}]
+  will be converted to ["Small / Black", "Small / Purple", "Medium / Black", "Medium / Purple", "Large / Black", "Large / Purple"]
+  **/
+export const extractAllPossibleVariants = (options: Option[]) => {
+  const variants: string[] = [];
+  const variant: string[] = [];
+  const extract = (index: number) => {
+    if (index === options.length) {
+      variants.push(variant.join(PRODUCTS_VARIANT_SEPARATOR));
+      return;
+    }
+    options[index].values.forEach((value) => {
+      variant.push(value);
+      extract(index + 1);
+      variant.pop();
+    });
+  };
+  extract(0);
+  return variants;
 };

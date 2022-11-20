@@ -60,10 +60,17 @@ type Money = {
   currencyCode: string;
 };
 
-type Variant = {
+export type Option = {
+  id: string;
+  name: string;
+  values: string[];
+};
+
+export type Variant = {
   id: string;
   sku: string;
   title: string;
+  normalisedTitle?: string;
   unitPrice?: Money;
   price: Money;
   compareAtPrice?: Money;
@@ -84,6 +91,7 @@ export type ShopifyProduct = {
   featuredImage: Image;
   tags: string[];
   productType: string;
+  options: Option[];
   variants: {
     nodes: Variant[];
   };

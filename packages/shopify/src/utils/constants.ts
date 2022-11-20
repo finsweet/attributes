@@ -26,6 +26,10 @@ export const PRODUCT_TAG_TEMPLATE = 'tag-template';
 export const PRODUCT_TAG_TEXT = 'tag-text';
 export const PRODUCTS_LIST = 'products-list';
 export const PRODUCTS_COLLECTION = 'collection';
+export const PRODUCTS_OPTION_TEMPLATE = 'option-template';
+export const PRODUCTS_OPTION_NAME = 'option-name';
+export const PRODUCTS_VARIANT_LIST = 'variant-list';
+export const PRODUCTS_VARIANT_SEPARATOR = ' / ';
 
 /**
  * Others
@@ -113,6 +117,9 @@ export const ATTRIBUTES = {
       productsList: PRODUCTS_LIST,
       collectionsList: COLLECTIONS_LIST,
       collection: PRODUCTS_COLLECTION,
+      optiontemplate: PRODUCTS_OPTION_TEMPLATE,
+      optionname: PRODUCTS_OPTION_NAME,
+      variantlist: PRODUCTS_VARIANT_LIST,
     },
   },
 
