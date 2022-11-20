@@ -7925,6 +7925,10 @@
   var PRODUCT_TAG_TEXT = "tag-text";
   var PRODUCTS_LIST = "products-list";
   var PRODUCTS_COLLECTION = "collection";
+  var PRODUCTS_OPTION_TEMPLATE = "option-template";
+  var PRODUCTS_OPTION_NAME = "option-name";
+  var PRODUCTS_VARIANT_LIST = "variant-list";
+  var PRODUCTS_VARIANT_SEPARATOR = " / ";
   var LOADER = "loader";
   var LINK_FORMAT = "linkformat";
   var LINK = "link";
@@ -7997,7 +8001,10 @@
         products: PRODUCTS,
         productsList: PRODUCTS_LIST,
         collectionsList: COLLECTIONS_LIST,
-        collection: PRODUCTS_COLLECTION
+        collection: PRODUCTS_COLLECTION,
+        optiontemplate: PRODUCTS_OPTION_TEMPLATE,
+        optionname: PRODUCTS_OPTION_NAME,
+        variantlist: PRODUCTS_VARIANT_LIST
       }
     },
     token: { key: `${ATTRIBUTES_PREFIX}-token` },
@@ -8114,45 +8121,101 @@
       featuredImage,
       tags
     } = product;
-    const { sku, price, compareAtPrice, image, weight, weightUnit } = variants.nodes[0];
-    const discount = 0;
-    const typeValue = productType;
-    const productImage = (image || featuredImage).url;
-    const productValues = [
-      title,
-      description,
-      handle,
-      createdAt,
-      updatedAt,
-      publishedAt,
-      productImage,
-      productImage,
-      sku,
-      price.amount,
-      compareAtPrice?.amount,
-      discount || 0,
-      typeValue,
-      vendor,
-      weight,
-      weightUnit,
-      tags,
-      options.collectionName || ""
-    ];
-    productAttributes.forEach((attribute, index) => {
-      const matchedElements = queryElement(attribute, {
-        scope: parentElement,
-        all: true
-      });
-      matchedElements.forEach((element) => {
-        if (propertyActions[attribute]) {
-          propertyActions[attribute](element, productValues[index]);
-          return;
-        }
-        element.innerText = String(productValues[index]);
-      });
+    const variantMaps = {};
+    variants.nodes.forEach((variant) => {
+      variantMaps[variant.title] = variant;
     });
-    handleProductLink(parentElement, { id, handle, productOptions: options });
-    handleCollectionLink(parentElement, { productOptions: options });
+    function bindProductVariant(variant) {
+      const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
+      const discount = 0;
+      const typeValue = productType;
+      const productImage = (image || featuredImage).url;
+      const productValues = [
+        title,
+        description,
+        handle,
+        createdAt,
+        updatedAt,
+        publishedAt,
+        productImage,
+        productImage,
+        sku,
+        price.amount,
+        compareAtPrice?.amount,
+        discount || 0,
+        typeValue,
+        vendor,
+        weight,
+        weightUnit,
+        tags,
+        options.collectionName || ""
+      ];
+      productAttributes.forEach((attribute, index) => {
+        const matchedElements = queryElement(attribute, {
+          scope: parentElement,
+          all: true
+        });
+        matchedElements.forEach((element) => {
+          if (propertyActions[attribute]) {
+            propertyActions[attribute](element, productValues[index]);
+            return;
+          }
+          element.innerText = String(productValues[index]);
+        });
+      });
+      handleProductLink(parentElement, { id, handle, productOptions: options });
+      handleCollectionLink(parentElement, { productOptions: options });
+    }
+    bindProductVariant(variants.nodes[0]);
+    const firstTemplate = queryElement("optiontemplate", {
+      scope: parentElement
+    });
+    if (!firstTemplate) {
+      return;
+    }
+    const templateParent = firstTemplate.parentElement;
+    templateParent.innerHTML = "";
+    const template = firstTemplate.cloneNode(true);
+    const selectedVariantKey = product.options.map(() => "");
+    product.options.forEach((option, index) => {
+      const clone = template.cloneNode(true);
+      const optionName = queryElement("optionname", {
+        scope: clone
+      });
+      if (optionName) {
+        optionName.innerText = option.name;
+      }
+      const variantList = queryElement("variantlist", {
+        scope: clone
+      });
+      if (variantList) {
+        const childNode = variantList.children[0];
+        const template2 = childNode.cloneNode(true);
+        variantList.innerHTML = "";
+        option.values.forEach((value) => {
+          const clone2 = template2.cloneNode(true);
+          const input = clone2.querySelector("input");
+          const label = clone2.querySelector(`[for='${input.name}']`);
+          input.value = value;
+          label.innerText = value;
+          input.setAttribute("name", `${input.name}-${index}`);
+          label.setAttribute("for", `${input.name}-${index}`);
+          input.addEventListener("change", () => {
+            selectedVariantKey[index] = value;
+            const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
+            if (variant) {
+              bindProductVariant(variant);
+            }
+          });
+          variantList.appendChild(clone2);
+        });
+        const firstInput = variantList.querySelector("input");
+        setTimeout(() => {
+          firstInput.click();
+        }, 500);
+      }
+      templateParent.appendChild(clone);
+    });
   };
 
   // src/actions/productsPage.ts

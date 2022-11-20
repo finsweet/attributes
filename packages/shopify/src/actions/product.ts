@@ -8,8 +8,9 @@ import {
   PRODUCT_THUMBNAIL,
   queryElement,
   PRODUCTS_COLLECTION,
+  PRODUCTS_VARIANT_SEPARATOR,
 } from '../utils/constants';
-import type { ProductAttribute, ShopifyBindingOptions, ProductValue, ShopifyProduct } from '../utils/types';
+import type { ProductAttribute, ShopifyBindingOptions, ProductValue, ShopifyProduct, Variant } from '../utils/types';
 import { handleCollectionLink, handleProductLink } from './util';
 
 /**
@@ -77,46 +78,115 @@ export const bindProductDataGraphQL = (
     tags,
   } = product;
 
-  const { sku, price, compareAtPrice, image, weight, weightUnit } = variants.nodes[0];
-  const discount = 0;
-  const typeValue = productType;
-  const productImage = (image || featuredImage).url;
+  const variantMaps: { [k: string]: Variant } = {};
 
-  const productValues = [
-    title,
-    description,
-    handle,
-    createdAt,
-    updatedAt,
-    publishedAt,
-    productImage,
-    productImage,
-    sku,
-    price.amount,
-    compareAtPrice?.amount,
-    discount || 0,
-    typeValue,
-    vendor,
-    weight,
-    weightUnit,
-    tags,
-    options.collectionName || '',
-  ];
-
-  productAttributes.forEach((attribute: string, index: number) => {
-    const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
-      scope: parentElement,
-      all: true,
-    });
-
-    matchedElements.forEach((element) => {
-      if (propertyActions[attribute]) {
-        propertyActions[attribute](element, productValues[index] as string);
-        return;
-      }
-      element.innerText = String(productValues[index]);
-    });
+  variants.nodes.forEach((variant) => {
+    variantMaps[variant.title] = variant;
   });
-  handleProductLink(parentElement, { id, handle, productOptions: options });
-  handleCollectionLink(parentElement, { productOptions: options });
+
+  function bindProductVariant(variant: Variant) {
+    const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
+    const discount = 0;
+    const typeValue = productType;
+    const productImage = (image || featuredImage).url;
+
+    const productValues = [
+      title,
+      description,
+      handle,
+      createdAt,
+      updatedAt,
+      publishedAt,
+      productImage,
+      productImage,
+      sku,
+      price.amount,
+      compareAtPrice?.amount,
+      discount || 0,
+      typeValue,
+      vendor,
+      weight,
+      weightUnit,
+      tags,
+      options.collectionName || '',
+    ];
+
+    productAttributes.forEach((attribute: string, index: number) => {
+      const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
+        scope: parentElement,
+        all: true,
+      });
+
+      matchedElements.forEach((element) => {
+        if (propertyActions[attribute]) {
+          propertyActions[attribute](element, productValues[index] as string);
+          return;
+        }
+        element.innerText = String(productValues[index]);
+      });
+    });
+    handleProductLink(parentElement, { id, handle, productOptions: options });
+    handleCollectionLink(parentElement, { productOptions: options });
+  }
+
+  bindProductVariant(variants.nodes[0]);
+
+  const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
+    scope: parentElement,
+  });
+  if (!firstTemplate) {
+    return;
+  }
+  const templateParent = firstTemplate.parentElement as HTMLElement;
+  templateParent.innerHTML = '';
+  const template = firstTemplate.cloneNode(true) as HTMLElement;
+
+  const selectedVariantKey = product.options.map(() => '');
+
+  product.options.forEach((option, index) => {
+    const clone = template.cloneNode(true) as HTMLElement;
+    const optionName = queryElement<HTMLElement>('optionname', {
+      scope: clone,
+    });
+    if (optionName) {
+      optionName.innerText = option.name;
+    }
+
+    // handle variantlist
+    const variantList = queryElement<HTMLElement>('variantlist', {
+      scope: clone,
+    });
+    if (variantList) {
+      // use the first element as template
+      const childNode = variantList.children[0];
+      const template = childNode.cloneNode(true) as HTMLElement;
+      variantList.innerHTML = '';
+      option.values.forEach((value) => {
+        const clone = template.cloneNode(true) as HTMLElement;
+        const input = clone.querySelector('input') as HTMLInputElement;
+        const label = clone.querySelector(`[for='${input.name}']`) as HTMLLabelElement;
+        input.value = value;
+        label.innerText = value;
+        // update the name with the index
+        input.setAttribute('name', `${input.name}-${index}`);
+        label.setAttribute('for', `${input.name}-${index}`);
+
+        input.addEventListener('change', () => {
+          selectedVariantKey[index] = value;
+          const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
+          if (variant) {
+            bindProductVariant(variant);
+          }
+        });
+        variantList.appendChild(clone);
+      });
+
+      // select the first one
+      const firstInput = variantList.querySelector('input') as HTMLInputElement;
+      setTimeout(() => {
+        firstInput.click();
+      }, 500);
+    }
+    templateParent.appendChild(clone);
+  });
 };
