@@ -8166,7 +8166,6 @@
       handleProductLink(parentElement, { id, handle, productOptions: options });
       handleCollectionLink(parentElement, { productOptions: options });
     }
-    bindProductVariant(variants.nodes[0]);
     const firstTemplate = queryElement("optiontemplate", {
       scope: parentElement
     });
@@ -8188,6 +8187,7 @@
       const variantList = queryElement("variantlist", {
         scope: clone
       });
+      const selectElement = clone.querySelector("select");
       if (variantList) {
         const childNode = variantList.children[0];
         const template2 = childNode.cloneNode(true);
@@ -8213,6 +8213,22 @@
         setTimeout(() => {
           firstInput.click();
         }, 500);
+      } else if (selectElement) {
+        selectElement.innerHTML = "";
+        option.values.forEach((value) => {
+          const optionElement = document.createElement("option");
+          optionElement.value = value;
+          optionElement.innerText = value;
+          selectElement.appendChild(optionElement);
+        });
+        selectElement.addEventListener("change", () => {
+          selectedVariantKey[index] = selectElement.value;
+          const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
+          if (variant) {
+            bindProductVariant(variant);
+          }
+        });
+        selectElement.dispatchEvent(new Event("change"));
       }
       templateParent.appendChild(clone);
     });

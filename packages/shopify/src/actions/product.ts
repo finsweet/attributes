@@ -129,14 +129,13 @@ export const bindProductDataGraphQL = (
     handleCollectionLink(parentElement, { productOptions: options });
   }
 
-  bindProductVariant(variants.nodes[0]);
-
   const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
     scope: parentElement,
   });
   if (!firstTemplate) {
     return;
   }
+
   const templateParent = firstTemplate.parentElement as HTMLElement;
   templateParent.innerHTML = '';
   const template = firstTemplate.cloneNode(true) as HTMLElement;
@@ -156,6 +155,8 @@ export const bindProductDataGraphQL = (
     const variantList = queryElement<HTMLElement>('variantlist', {
       scope: clone,
     });
+    const selectElement = clone.querySelector('select') as HTMLSelectElement;
+
     if (variantList) {
       // use the first element as template
       const childNode = variantList.children[0];
@@ -186,7 +187,24 @@ export const bindProductDataGraphQL = (
       setTimeout(() => {
         firstInput.click();
       }, 500);
+    } else if (selectElement) {
+      selectElement.innerHTML = '';
+      option.values.forEach((value) => {
+        const optionElement = document.createElement('option');
+        optionElement.value = value;
+        optionElement.innerText = value;
+        selectElement.appendChild(optionElement);
+      });
+      selectElement.addEventListener('change', () => {
+        selectedVariantKey[index] = selectElement.value;
+        const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
+        if (variant) {
+          bindProductVariant(variant);
+        }
+      });
+      selectElement.dispatchEvent(new Event('change'));
     }
+
     templateParent.appendChild(clone);
   });
 };
