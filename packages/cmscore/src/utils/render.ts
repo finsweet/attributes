@@ -21,6 +21,7 @@ export const renderListItems = async (listInstance: CMSList, animateItems = fals
   const validItems: CMSItem[] = [];
   const itemsToHide: CMSItem[] = [];
   const itemsToShow: CMSItem[] = [];
+  const staticItems: CMSItem[] = [];
 
   for (const item of items) {
     const { valid, currentIndex } = item;
@@ -28,6 +29,11 @@ export const renderListItems = async (listInstance: CMSList, animateItems = fals
 
     if (valid) {
       validItems.push(item);
+
+      if (item.staticIndex) {
+        staticItems.push(item);
+        continue;
+      }
 
       if (!paginationActive || !currentPage) {
         itemsToShow.push(item);
@@ -37,9 +43,14 @@ export const renderListItems = async (listInstance: CMSList, animateItems = fals
       const matchesCurrentPage =
         validItems.length > (currentPage - 1) * itemsPerPage && validItems.length <= currentPage * itemsPerPage;
 
-      if (matchesCurrentPage) itemsToShow.push(item);
+      if (matchesCurrentPage && !item.staticIndex) itemsToShow.push(item);
+      else if (matchesCurrentPage && item.staticIndex) staticItems.push(item);
       else if (rendered) itemsToHide.push(item);
     } else if (rendered) itemsToHide.push(item);
+  }
+
+  for (const staticItem of staticItems) {
+    if (staticItem.staticIndex) itemsToShow.splice(staticItem.staticIndex, 0, staticItem);
   }
 
   // Set new properties
@@ -66,6 +77,8 @@ export const renderListItems = async (listInstance: CMSList, animateItems = fals
     ...hideItems(itemsToHide, listInstance, animateItems),
     ...showItems(itemsToAnchor, listInstance, animateItems),
   ]);
+
+  // console.log(itemsToShow);
 
   // Emit events
   await listInstance.emitSerial('renderitems', itemsToShow);
