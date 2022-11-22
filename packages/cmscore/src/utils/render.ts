@@ -78,8 +78,6 @@ export const renderListItems = async (listInstance: CMSList, animateItems = fals
     ...showItems(itemsToAnchor, listInstance, animateItems),
   ]);
 
-  // console.log(itemsToShow);
-
   // Emit events
   await listInstance.emitSerial('renderitems', itemsToShow);
 
