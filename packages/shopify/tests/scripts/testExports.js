@@ -8166,6 +8166,7 @@
       handleProductLink(parentElement, { id, handle, productOptions: options });
       handleCollectionLink(parentElement, { productOptions: options });
     }
+    bindProductVariant(variants.nodes[0]);
     const firstTemplate = queryElement("optiontemplate", {
       scope: parentElement
     });

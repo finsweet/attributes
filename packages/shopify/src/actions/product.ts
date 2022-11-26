@@ -129,6 +129,9 @@ export const bindProductDataGraphQL = (
     handleCollectionLink(parentElement, { productOptions: options });
   }
 
+  // By default, bind the first variant
+  bindProductVariant(variants.nodes[0]);
+
   const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
     scope: parentElement,
   });
