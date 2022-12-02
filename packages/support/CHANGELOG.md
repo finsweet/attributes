@@ -1,11 +1,5 @@
 # @finsweet/attributes-support
 
-## 1.1.1
-
-### Patch Changes
-
-- f7697f0f: Updated `elementAppliedTo` method to use `.matches` to validate `:is` selectors.
-
 ## 1.1.0
 
 ### Minor Changes

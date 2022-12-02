@@ -39,6 +39,6 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "dependencies": {
-    "hls.js": "^1.2.7"
+    "hls.js": "^1.2.4"
   }
 }

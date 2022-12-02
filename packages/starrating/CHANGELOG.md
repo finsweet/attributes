@@ -1,11 +1,5 @@
 # @finsweet/attributes-starrating
 
-## 1.0.2
-
-### Patch Changes
-
-- 1126763c: Fixed star selection not working correctly on iOS devices
-
 ## 1.0.1
 
 ### Patch Changes

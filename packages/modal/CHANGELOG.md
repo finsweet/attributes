@@ -1,11 +1,5 @@
 # @finsweet/attributes-modal
 
-## 1.1.3
-
-### Patch Changes
-
-- cbea0925: Skip adding A11Y attributes to triggers with `aria-hidden`
-
 ## 1.1.2
 
 ### Patch Changes

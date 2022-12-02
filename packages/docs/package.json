@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-docs",
-  "version": "1.12.8",
+  "version": "1.12.7",
   "description": "Attributes documentation custom code.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -36,6 +36,6 @@
     "@types/marked": "^4.0.3"
   },
   "dependencies": {
-    "marked": "^4.2.2"
+    "marked": "^4.0.15"
   }
 }
