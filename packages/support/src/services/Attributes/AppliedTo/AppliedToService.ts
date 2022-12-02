@@ -22,30 +22,9 @@ export function elementAppliedTo(
       const { selectors } = domSelector;
 
       selectors.forEach((selector: string) => {
-        if (selector === '*') {
+        if (element.matches(selector)) {
           appliedToElement = element;
           return;
-        }
-
-        // validate classnames
-        if (selector.match(/^\./) && element.classList.contains(selector.replace(/^\./, ''))) {
-          appliedToElement = element;
-          return;
-        }
-
-        // validate tags
-        if (!selector.match(/^\./) && element.tagName.toLowerCase() === selector) {
-          appliedToElement = element;
-          return;
-        }
-
-        // validate both tags and classnames
-        if (selector.includes('.')) {
-          const [tagName, classNames] = selector.split('.');
-          if (element.classList.contains(classNames) && element.tagName.toLowerCase() === tagName) {
-            appliedToElement = element;
-            return;
-          }
         }
       });
     });

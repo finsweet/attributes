@@ -4,6 +4,7 @@ import {
   ARIA_CONTROLS_KEY,
   ARIA_EXPANDED_KEY,
   ARIA_HASPOPUP_KEY,
+  ARIA_HIDDEN_KEY,
   ARIA_MODAL_KEY,
   ARIA_MODAL_VALUES,
   ARIA_ROLEDESCRIPTION_KEY,
@@ -27,23 +28,20 @@ export const setModalA11Y = (modalElement: HTMLElement, openTriggers: Element[],
   modalElement.setAttribute(ARIA_MODAL_KEY, ARIA_MODAL_VALUES.true);
 
   for (const trigger of [...openTriggers, ...closeTriggers]) {
+    if (trigger.hasAttribute(ARIA_HIDDEN_KEY)) continue;
+
+    ensureUniqueId(trigger);
+
+    const action = openTriggers.includes(trigger) ? 'open' : 'close';
+
     trigger.setAttribute(TABINDEX_KEY, '0');
     trigger.setAttribute(ARIA_ROLE_KEY, ARIA_ROLE_VALUES.button);
     trigger.setAttribute(ARIA_CONTROLS_KEY, modalId);
     trigger.setAttribute(ARIA_HASPOPUP_KEY, ARIA_ROLE_VALUES.dialog);
     trigger.setAttribute(ARIA_EXPANDED_KEY, String(expanded));
-    ensureUniqueId(trigger);
-  }
 
-  for (const trigger of openTriggers) {
     if (!trigger.hasAttribute(ARIA_ROLEDESCRIPTION_KEY)) {
-      trigger.setAttribute(ARIA_ROLEDESCRIPTION_KEY, 'open-modal-trigger');
-    }
-  }
-
-  for (const trigger of closeTriggers) {
-    if (!trigger.hasAttribute(ARIA_ROLEDESCRIPTION_KEY)) {
-      trigger.setAttribute(ARIA_ROLEDESCRIPTION_KEY, 'close-modal-trigger');
+      trigger.setAttribute(ARIA_ROLEDESCRIPTION_KEY, `${action}-modal-trigger`);
     }
   }
 };

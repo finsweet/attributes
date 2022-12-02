@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "launchdarkly-js-client-sdk": "^2.23.0",
-    "superstruct": "^0.16.5"
+    "superstruct": "^0.16.7"
   }
 }

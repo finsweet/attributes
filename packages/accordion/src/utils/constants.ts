@@ -1,4 +1,4 @@
-import { ACCORDION_ATTRIBUTE } from '$global/constants/attributes';
+import { ACCORDION_ATTRIBUTE, CMS_LOAD_ATTRIBUTE } from '$global/constants/attributes';
 import { generateSelectors } from '$global/factory';
 
 const ATTRIBUTES_PREFIX = `fs-${ACCORDION_ATTRIBUTE}`;
@@ -73,3 +73,5 @@ export const ATTRIBUTES = {
 export const [getSelector, queryElement, getAttribute] = generateSelectors(ATTRIBUTES);
 
 export const DEFAULT_ACTIVE_CLASS = `is-active-${ACCORDION_ATTRIBUTE}`;
+
+export const CMS_LOAD_LIST_ELEMENT_SELECTOR = `[fs-${CMS_LOAD_ATTRIBUTE}-element^="list"]`;

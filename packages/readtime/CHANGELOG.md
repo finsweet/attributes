@@ -1,5 +1,11 @@
 # @finsweet/attributes-readtime
 
+## 1.2.1
+
+### Patch Changes
+
+- c6112e4b: Updated `getInstanceIndex` to get instance from `ATTRIBUTES.element.key`
+
 ## 1.2.0
 
 ### Minor Changes

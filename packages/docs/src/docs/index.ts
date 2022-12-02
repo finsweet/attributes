@@ -4,7 +4,7 @@ import { attributesData } from '../../api/attributes';
 import { ATTRIBUTES } from '../utils/constants';
 import { initCollapseOptions } from './collapse-options';
 import { initCopyExampleButtons } from './copy-examples';
-import { initCopyScriptButton } from './copy-script';
+import { initCopyButtons } from './copy-script';
 import { initCodeHighlight } from './highlight';
 import { initTitles } from './titles';
 
@@ -27,7 +27,7 @@ window.Webflow.push(async () => {
   const copyCode = `<!-- [Attributes by Finsweet] ${title} -->\n<script ${loadMode} src=\"${baseSrc}/${scriptSrc}\"></script>`;
 
   initCodeHighlight(copyCode);
-  initCopyScriptButton(copyCode);
+  initCopyButtons(copyCode);
 
   try {
     const response = await fetch(`${baseSrc}/${examplesSrc}`);

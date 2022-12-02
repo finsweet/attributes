@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-readtime",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Calculate and display the estimated read time of Rich Text content based on word count.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

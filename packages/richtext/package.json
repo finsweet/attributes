@@ -41,6 +41,6 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "devDependencies": {
-    "@types/dompurify": "^2.3.1"
+    "@types/dompurify": "^2.4.0"
   }
 }

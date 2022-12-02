@@ -19,10 +19,12 @@ test.describe('modal', () => {
 
     // Closes
     await closeTrigger1.nth(1).click({ force: true });
+    await page.waitForTimeout(300);
     await expect(modal1).toHaveCSS('display', 'none');
 
     // Opens with custom display property
     await openTrigger5.first().click();
+    await page.waitForTimeout(300);
     await expect(modal5).toHaveCSS('display', 'block');
   });
 });

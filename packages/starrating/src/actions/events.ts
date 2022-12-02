@@ -14,8 +14,8 @@ const activeGroupsStore: Set<Element> = new Set();
  */
 export const listenEvents = () => {
   const cleanups = [
+    addListener(window, 'input', handleGroupHover),
     addListener(window, 'mouseover', handleGroupHover),
-    addListener(window, 'focusin', handleGroupHover),
     addListener(window, 'mouseover', handleGroupUnhover),
     () => activeGroupsStore.clear(),
   ];
@@ -49,7 +49,7 @@ const handleGroupHover = ({ target }: Event) => {
 
   activeGroupsStore.add(group);
 
-  setTimeout(() => setClasses(name, group, hoveredValue));
+  setClasses(name, group, hoveredValue);
 };
 
 /**

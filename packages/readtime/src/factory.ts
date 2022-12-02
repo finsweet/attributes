@@ -7,8 +7,10 @@ import { ATTRIBUTES, DEFAULT_DECIMALS, DEFAULT_WPM, queryElement } from './utils
  * @param timeElement
  */
 export const initReadTime = (timeElement: Element) => {
-  const instanceIndex = getInstanceIndex(timeElement, ATTRIBUTES.wpm.key);
+  const instanceIndex = getInstanceIndex(timeElement, ATTRIBUTES.element.key);
+
   const contentsElement = queryElement<HTMLElement>('contents', { instanceIndex, operator: 'prefixed' });
+
   if (!contentsElement) return;
 
   const wpm = Number(timeElement.getAttribute(ATTRIBUTES.wpm.key)) || DEFAULT_WPM;
