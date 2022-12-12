@@ -13,6 +13,7 @@ initAttribute({
     token: ATTRIBUTES.token.key,
     domain: ATTRIBUTES.domain.key,
     productPage: ATTRIBUTES.productPage.key,
+    collectionPage: ATTRIBUTES.collectionPage.key,
     redirectURL: ATTRIBUTES.redirectURL.key,
   },
 });
