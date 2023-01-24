@@ -571,12 +571,12 @@ importers:
 
   packages/shopify:
     specifiers:
-      '@finsweet/ts-utils': ^0.37.1
+      '@finsweet/ts-utils': ^0.37.3
       '@types/shopify-buy': ^2.10.10
-      shopify-buy: ^2.15.1
+      shopify-buy: ^2.18.0
     dependencies:
-      '@finsweet/ts-utils': 0.37.1
-      shopify-buy: 2.15.1
+      '@finsweet/ts-utils': 0.37.3
+      shopify-buy: 2.18.0
     devDependencies:
       '@types/shopify-buy': 2.10.10
 
@@ -3506,6 +3506,8 @@ packages:
   /side-channel@1.0.4:
   /shopify-buy/2.15.1:
     resolution: {integrity: sha512-ijtQXSTlzNWJ4xEYucfvJZ80PYYEKub+sVcXr77krDagv0NM9SHzkUVk37tMDJIwzh5KM+LOmed6ZN5V1cFyBg==}
+  /shopify-buy/2.18.0:
+    resolution: {integrity: sha512-UaK/oegLRoeAHCfuYj+fVPfsdB8g6LoFdBg9YkSULDlzgWCHVBYWp+g4/1hYS1EZe0SRXFRkksf/3ESwFS8Nig==}
     dev: false
 
   /side-channel/1.0.4:
