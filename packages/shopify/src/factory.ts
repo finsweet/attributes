@@ -13,7 +13,7 @@ export const initPages = async (client: ShopifyClient) => {
     return;
   }
   if (path.endsWith(collectionPage as string)) {
-    collectionPageInit(client);
+    await collectionPageInit(client);
     return;
   }
 

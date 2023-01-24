@@ -42,6 +42,7 @@
     "@types/shopify-buy": "^2.10.10"
   },
   "dependencies": {
+    "@finsweet/ts-utils": "^0.37.1",
     "shopify-buy": "^2.15.1"
   }
 }

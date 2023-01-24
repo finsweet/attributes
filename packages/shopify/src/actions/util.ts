@@ -1,3 +1,5 @@
+import { isHTMLAnchorElement } from '@finsweet/ts-utils';
+
 import {
   queryElement,
   LOADER,
@@ -55,8 +57,7 @@ export const handleCollectionLink = (
     productOptions: { collectionPage, linkFormat, collectionHandle, collectionId },
   }: { productOptions: ShopifyBindingOptions }
 ) => {
-  const collectionLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'collection'));
-  collectionLinks.forEach((link) => {
+  function addLink(link: HTMLAnchorElement) {
     let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) as LinkFormat;
     if (!elementLinkFormat) {
       elementLinkFormat = linkFormat || LinkFormat.ID;
@@ -66,12 +67,22 @@ export const handleCollectionLink = (
       return;
     }
     if (collectionId) link.href = `${collectionPage}?id=${collectionId.replace(COLLECTION_ID_PREFIX, '')}`;
+  }
+
+  if (isHTMLAnchorElement(parentElement)) {
+    addLink(parentElement as HTMLAnchorElement);
+    return;
+  }
+
+  const collectionLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'collection'));
+  collectionLinks.forEach((link) => {
+    addLink(link);
   });
 };
 
 /**
  *@param options Product options.
-  takes all possible combination of option values and separate them by /, e.g. 
+  takes all possible combination of option values and separate them by /, e.g.
   [{"id":"gid://shopify/ProductOption/8774761119805","name":"Size","values":["Small","Medium","Large"]},{"id":"gid://shopify/ProductOption/8774761152573","name":"Color","values":["Black","Purple"]}]
   will be converted to ["Small / Black", "Small / Purple", "Medium / Black", "Medium / Purple", "Large / Black", "Large / Purple"]
   **/

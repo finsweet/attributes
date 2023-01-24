@@ -179,15 +179,15 @@ export const ATTRIBUTES = {
   link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: 'product', collection: 'collection' } },
 } as const;
 
-export const enum Sort {
-  POSITION = 'position',
-  MOST_RECENT = 'most-recent',
-  OLDEST = 'oldest',
-}
+export const sortOptions: { [k: string]: string } = {
+  position: 'position',
+  'most-recent': 'most-recent',
+  oldest: 'oldest',
+};
 
 export enum LinkFormat {
   ID = 'id',
   HANDLE = 'handle',
 }
 
-export const [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
+export const [getSelector, queryElement, getAttribute] = generateSelectors(ATTRIBUTES);
