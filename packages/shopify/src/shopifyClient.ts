@@ -3,7 +3,6 @@ import type { Product } from 'shopify-buy';
 
 import { allCollections, collectionByHandle, collectionById } from './queries/collection';
 import { productByHandle, productByIdQuery } from './queries/product';
-import type { Sort } from './utils/constants';
 import type {
   ShopifyAttributeParams,
   ShopifyCollection,
@@ -50,7 +49,7 @@ export class ShopifyClient {
     return response.data.product as ShopifyProduct;
   }
 
-  async fetchCollectionById(id: string, productLimit: number, sort: Sort): Promise<ShopifyCollectionWithProducts> {
+  async fetchCollectionById(id: string, productLimit: number, sort: string): Promise<ShopifyCollectionWithProducts> {
     const response = await this.makeRequest(collectionById(sort), { id, productLimit });
     return response.data.collection as ShopifyCollectionWithProducts;
   }
@@ -58,13 +57,13 @@ export class ShopifyClient {
   async fetchCollectionByHandle(
     handle: string,
     productLimit: number,
-    sort: Sort
+    sort: string
   ): Promise<ShopifyCollectionWithProducts> {
     const response = await this.makeRequest(collectionByHandle(sort), { handle, productLimit });
     return response.data.collection as ShopifyCollectionWithProducts;
   }
 
-  async fetchAllCollections(collectionLimit: number, sort: Sort): Promise<ShopifyCollection[]> {
+  async fetchAllCollections(collectionLimit: number, sort: string): Promise<ShopifyCollection[]> {
     const response = await this.makeRequest(allCollections(sort), { collectionLimit });
     return response.data.collections.nodes as ShopifyCollection[];
   }
