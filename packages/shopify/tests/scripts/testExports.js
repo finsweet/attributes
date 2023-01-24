@@ -7422,7 +7422,7 @@
           "customerReset": "CustomerResetInput"
         }
       };
-      var Node2 = {
+      var Node = {
         "name": "Node",
         "kind": "INTERFACE",
         "fieldBaseTypes": {},
@@ -7757,7 +7757,7 @@
       Types.types["Money"] = Money;
       Types.types["MoneyV2"] = MoneyV2;
       Types.types["Mutation"] = Mutation$1;
-      Types.types["Node"] = Node2;
+      Types.types["Node"] = Node;
       Types.types["Order"] = Order;
       Types.types["OrderLineItem"] = OrderLineItem;
       Types.types["OrderLineItemConnection"] = OrderLineItemConnection;
@@ -7863,15 +7863,12 @@
     }
   });
 
-  // ../../node_modules/.pnpm/@finsweet+ts-utils@0.37.1/node_modules/@finsweet/ts-utils/dist/type-guards/instances.js
-  var isHTMLAnchorElement = (target) => target instanceof HTMLAnchorElement;
-
   // ../../node_modules/.pnpm/@finsweet+ts-utils@0.37.1/node_modules/@finsweet/ts-utils/dist/type-guards/primitives.js
   var isString = (value) => typeof value === "string";
 
   // ../../global/factory/selectors.ts
   var generateSelectors = (attributes) => {
-    const getSelector3 = (name, valueKey, params) => {
+    const getSelector2 = (name, valueKey, params) => {
       const attribute = attributes[name];
       const { key: attributeKey, values } = attribute;
       let attributeValue;
@@ -7895,17 +7892,17 @@
       }
     };
     function queryElement2(elementKey, params) {
-      const selector = getSelector3("element", elementKey, params);
+      const selector = getSelector2("element", elementKey, params);
       const scope = params?.scope || document;
       return params?.all ? [...scope.querySelectorAll(selector)] : scope.querySelector(selector);
     }
-    const getAttribute2 = (element, settingKey) => {
+    const getAttribute = (element, settingKey) => {
       const attribute = attributes[settingKey];
       if (!attribute)
         return null;
       return element.getAttribute(attribute.key);
     };
-    return [getSelector3, queryElement2, getAttribute2];
+    return [getSelector2, queryElement2, getAttribute];
   };
 
   // src/utils/constants.ts
@@ -8022,7 +8019,7 @@
     linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
     link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: "product", collection: "collection" } }
   };
-  var [getSelector, queryElement, getAttribute] = generateSelectors(ATTRIBUTES);
+  var [getSelector, queryElement] = generateSelectors(ATTRIBUTES);
 
   // src/actions/loaders.ts
   var hideLoaders = () => {
@@ -8030,6 +8027,11 @@
     for (const element of allElements) {
       element.style.display = "none";
     }
+  };
+
+  // src/utils/util.ts
+  var formatAttribute = (attribute) => {
+    return attribute.replace(/(\[|\])/g, "");
   };
 
   // src/actions/util.ts
@@ -8055,7 +8057,8 @@
   var handleCollectionLink = (parentElement, {
     productOptions: { collectionPage, linkFormat, collectionHandle, collectionId }
   }) => {
-    function addLink(link) {
+    const collectionLinks = parentElement.querySelectorAll(getSelector("link", "collection"));
+    collectionLinks.forEach((link) => {
       let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
       if (!elementLinkFormat) {
         elementLinkFormat = linkFormat || "id" /* ID */;
@@ -8066,14 +8069,6 @@
       }
       if (collectionId)
         link.href = `${collectionPage}?id=${collectionId.replace(COLLECTION_ID_PREFIX, "")}`;
-    }
-    if (isHTMLAnchorElement(parentElement)) {
-      addLink(parentElement);
-      return;
-    }
-    const collectionLinks = parentElement.querySelectorAll(getSelector("link", "collection"));
-    collectionLinks.forEach((link) => {
-      addLink(link);
     });
   };
 
@@ -8244,9 +8239,12 @@
   var productsPageInit = async (client) => {
     try {
       const collectionContainers = queryElement("productsList", {
+        scope: document.body,
         all: true
       });
-      await Promise.all(collectionContainers.map((container) => bindCollectionProductsData(client, container)));
+      collectionContainers.forEach(async (container) => {
+        bindCollectionProductsData(client, container);
+      });
     } catch (e) {
       console.log("productsPageInit", e);
     }
@@ -8257,9 +8255,9 @@
     const firstChild = container.firstElementChild;
     const template = firstChild.cloneNode(true);
     container.innerHTML = "";
-    const collectionId = getAttribute(container, "collectionId");
-    const productLimit = getAttribute(container, "productLimit") || DEFAULT_PRODUCTS_LIMIT;
-    const sortKey = getAttribute(container, "sort");
+    const collectionId = container.getAttribute(formatAttribute(selector));
+    const productLimit = container.getAttribute(formatAttribute(getSelector("productLimit"))) || DEFAULT_PRODUCTS_LIMIT;
+    const sortKey = container.getAttribute(formatAttribute(getSelector("sort")));
     let productSort = "position" /* POSITION */;
     if (sortKey === "most-recent" /* MOST_RECENT */) {
       productSort = "most-recent" /* MOST_RECENT */;
@@ -8361,41 +8359,40 @@
   // src/actions/collectionsPage.ts
   var collectionsPageInit = async (client) => {
     const { collectionPage, productPage } = client.getParams();
-    const collectionContainers = queryElement("collectionsList", {
-      all: true
-    });
-    for (const container of collectionContainers) {
-      const collectionsLimit = getAttribute(container, "collectionLimit") || DEFAULT_COLLECTIONS_LIMIT;
-      const sortKey = getAttribute(container, "sort");
-      let collectionSort = "position" /* POSITION */;
-      if (sortKey === "most-recent" /* MOST_RECENT */) {
-        collectionSort = "most-recent" /* MOST_RECENT */;
-      } else if (sortKey === "oldest" /* OLDEST */) {
-        collectionSort = "oldest" /* OLDEST */;
-      }
-      let collections;
-      try {
-        collections = await client.fetchAllCollections(Number(collectionsLimit), collectionSort);
-      } catch (e) {
-        console.log("productsPageInit", e);
-        return;
-      }
-      const firstChild = container.firstElementChild;
-      const template = firstChild.cloneNode(true);
-      container.innerHTML = "";
-      collections.forEach((collection) => {
-        const collectionContainer = template.cloneNode(true);
-        bindCollectionData(collection, collectionContainer);
-        handleCollectionLink(collectionContainer, {
-          productOptions: {
-            collectionId: collection.id,
-            collectionHandle: collection.handle,
-            collectionPage,
-            productPage
-          }
-        });
-        container.appendChild(collectionContainer);
+    try {
+      const collectionContainers = queryElement("collectionsList", {
+        scope: document.body,
+        all: true
       });
+      collectionContainers.forEach(async (container) => {
+        const collectionsLimit = container.getAttribute(formatAttribute(getSelector("collectionLimit"))) || DEFAULT_COLLECTIONS_LIMIT;
+        const sortKey = container.getAttribute(formatAttribute(getSelector("sort")));
+        let collectionSort = "position" /* POSITION */;
+        if (sortKey === "most-recent" /* MOST_RECENT */) {
+          collectionSort = "most-recent" /* MOST_RECENT */;
+        } else if (sortKey === "oldest" /* OLDEST */) {
+          collectionSort = "oldest" /* OLDEST */;
+        }
+        const collections = await client.fetchAllCollections(Number(collectionsLimit), collectionSort);
+        const firstChild = container.firstElementChild;
+        const template = firstChild.cloneNode(true);
+        container.innerHTML = "";
+        collections.forEach((collection) => {
+          const collectionContainer = template.cloneNode(true);
+          bindCollectionData(collection, collectionContainer);
+          handleCollectionLink(collectionContainer, {
+            productOptions: {
+              collectionId: collection.id,
+              collectionHandle: collection.handle,
+              collectionPage,
+              productPage
+            }
+          });
+          container.appendChild(collectionContainer);
+        });
+      });
+    } catch (e) {
+      console.log("productsPageInit", e);
     }
   };
 
@@ -8439,7 +8436,7 @@
       return;
     }
     if (path.endsWith(collectionPage)) {
-      await collectionPageInit(client);
+      collectionPageInit(client);
       return;
     }
     await productsPageInit(client);
