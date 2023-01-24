@@ -1,4 +1,5 @@
-import { Sort } from '../utils/constants';
+import { sortOptions } from '$packages/shopify/src/utils/constants';
+
 import { productBody } from './product';
 
 const collectionProperties = `
@@ -16,8 +17,8 @@ const collectionProperties = `
  *@param {string} productSort - Sort key
  * @returns {string} - GraphQL query string
  */
-export const collectionById = (productSort: Sort) => {
-  if (productSort === Sort.MOST_RECENT) {
+export const collectionById = (productSort: string) => {
+  if (productSort === sortOptions['most-recent']) {
     return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         ${collectionProperties}
@@ -30,7 +31,7 @@ export const collectionById = (productSort: Sort) => {
     }
     `;
   }
-  if (productSort === Sort.OLDEST) {
+  if (productSort === sortOptions['oldest']) {
     return `query collectionById($id: ID!, $productLimit: Int) {
       collection(id: $id) {
         ${collectionProperties}
@@ -61,8 +62,8 @@ export const collectionById = (productSort: Sort) => {
  *@param {string} productSort - Sort key
  * @returns {string} - GraphQL query string
  */
-export const collectionByHandle = (productSort: Sort) => {
-  if (productSort === Sort.MOST_RECENT) {
+export const collectionByHandle = (productSort: string) => {
+  if (productSort === sortOptions['most-recent']) {
     return `query collectionByHandle($handle: String!, $productLimit: Int) {
       collection(handle: $handle) {
         ${collectionProperties}
@@ -75,7 +76,7 @@ export const collectionByHandle = (productSort: Sort) => {
     }
     `;
   }
-  if (productSort === Sort.OLDEST) {
+  if (productSort === sortOptions['oldest']) {
     return `query collectionByHandle($handle: String!, $productLimit: Int) {
       collection(handle: $handle) {
         ${collectionProperties}
@@ -106,8 +107,8 @@ export const collectionByHandle = (productSort: Sort) => {
  * @param {string} collectionSort - Sort key
  * @returns {string} - GraphQL query string
  */
-export const allCollections = (collectionSort: Sort) => {
-  if (collectionSort === Sort.MOST_RECENT) {
+export const allCollections = (collectionSort: string) => {
+  if (collectionSort === sortOptions['most-recent']) {
     return `query collections($collectionLimit: Int) {
       collections(first: $collectionLimit, sortKey: UPDATED_AT) {
           nodes {
@@ -118,7 +119,7 @@ export const allCollections = (collectionSort: Sort) => {
     `;
   }
 
-  if (collectionSort === Sort.OLDEST) {
+  if (collectionSort === sortOptions['oldest']) {
     return `query collections($collectionLimit: Int) {
       collections(first: $collectionLimit, sortKey: UPDATED_AT, reverse: true) {
           nodes {
