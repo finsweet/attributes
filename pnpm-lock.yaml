@@ -571,9 +571,11 @@ importers:
 
   packages/shopify:
     specifiers:
+      '@finsweet/ts-utils': ^0.37.1
       '@types/shopify-buy': ^2.10.10
       shopify-buy: ^2.15.1
     dependencies:
+      '@finsweet/ts-utils': 0.37.1
       shopify-buy: 2.15.1
     devDependencies:
       '@types/shopify-buy': 2.10.10
