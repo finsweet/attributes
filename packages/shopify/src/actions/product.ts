@@ -1,16 +1,16 @@
 import {
   ATTRIBUTES,
-  productAttributes,
   IMAGE,
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
   PRODUCT_TAG_TEXT,
   PRODUCT_THUMBNAIL,
-  queryElement,
+  productAttributes,
   PRODUCTS_COLLECTION,
   PRODUCTS_VARIANT_SEPARATOR,
+  queryElement,
 } from '../utils/constants';
-import type { ProductAttribute, ShopifyBindingOptions, ProductValue, ShopifyProduct, Variant } from '../utils/types';
+import type { ProductAttribute, ProductValue, ShopifyBindingOptions, ShopifyProduct, Variant } from '../utils/types';
 import { handleCollectionLink, handleProductLink } from './util';
 
 /**

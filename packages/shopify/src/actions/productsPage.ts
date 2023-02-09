@@ -2,11 +2,11 @@ import type { ShopifyClient } from '../shopifyClient';
 import {
   ATTRIBUTES,
   COLLECTION_ID_PREFIX,
+  DEFAULT_PRODUCTS_LIMIT,
+  getAttribute,
   getSelector,
   LinkFormat,
   queryElement,
-  DEFAULT_PRODUCTS_LIMIT,
-  getAttribute,
   sortOptions,
 } from '../utils/constants';
 import type {

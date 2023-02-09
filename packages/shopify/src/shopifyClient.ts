@@ -1,5 +1,5 @@
-import Client from 'shopify-buy';
 import type { Product } from 'shopify-buy';
+import Client from 'shopify-buy';
 
 import { allCollections, collectionByHandle, collectionById } from './queries/collection';
 import { productByHandle, productByIdQuery } from './queries/product';

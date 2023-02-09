@@ -1,12 +1,12 @@
 import type { ShopifyClient } from '../shopifyClient';
 import {
   ATTRIBUTES,
-  collectionAttributes,
   COLLECTION_ID_PREFIX,
   COLLECTION_IMAGE,
+  collectionAttributes,
   getSelector,
-  queryElement,
   QUERY_PARAMS,
+  queryElement,
 } from '../utils/constants';
 import type { CollectionAttribute, CollectionValue, ProductAttribute, ShopifyCollection } from '../utils/types';
 import { bindCollectionProductsData } from './productsPage';

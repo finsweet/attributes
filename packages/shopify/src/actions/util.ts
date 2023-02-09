@@ -1,14 +1,14 @@
 import { isHTMLAnchorElement } from '@finsweet/ts-utils';
 
 import {
-  queryElement,
-  LOADER,
   ATTRIBUTES,
   COLLECTION_ID_PREFIX,
   getSelector,
   LinkFormat,
+  LOADER,
   PRODUCT_ID_PREFIX,
   PRODUCTS_VARIANT_SEPARATOR,
+  queryElement,
 } from '../utils/constants';
 import type { ShopifyBindingOptions } from '../utils/types';
 import type { Option } from '../utils/types';

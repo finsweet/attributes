@@ -1,7 +1,7 @@
 import type { ShopifyCollection } from '$packages/shopify/src/utils/types';
 
 import type { ShopifyClient } from '../shopifyClient';
-import { queryElement, DEFAULT_COLLECTIONS_LIMIT, getAttribute, sortOptions } from '../utils/constants';
+import { DEFAULT_COLLECTIONS_LIMIT, getAttribute, queryElement, sortOptions } from '../utils/constants';
 import { bindCollectionData } from './collectionPage';
 import { handleCollectionLink } from './util';
 
