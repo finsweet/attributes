@@ -3,6 +3,7 @@
   "include": ["./**/*.ts", "../../global/base/index.d.ts"],
   "compilerOptions": {
     "baseUrl": ".",
+    "noUnusedLocals": true,
     "paths": {
       "$global/*": ["../../global/*"],
       "$packages/*": ["../../packages/*"]

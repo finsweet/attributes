@@ -1,5 +1,5 @@
-import { FORM_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
+import { FORM_CSS_CLASSES } from '@finsweet/ts-utils';
 
 import { getInstanceIndex } from '$global/helpers';
 

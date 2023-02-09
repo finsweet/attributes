@@ -3,11 +3,11 @@ import { extractCommaSeparatedValues, isKeyOf, isNotEmpty } from '@finsweet/ts-u
 import { parseNumericAttribute } from '$global/helpers';
 
 import {
+  ATTRIBUTES,
+  DEFAULT_ACTIVE_CLASS,
   getAttribute,
   queryElement,
   SINGLE_SETTING_VALUES,
-  ATTRIBUTES,
-  DEFAULT_ACTIVE_CLASS,
 } from '../utils/constants';
 import type { AccordionGroupData, InitialState } from '../utils/types';
 

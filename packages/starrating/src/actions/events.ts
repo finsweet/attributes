@@ -1,6 +1,6 @@
 import { addListener, isElement } from '@finsweet/ts-utils';
 
-import { getClosestRadioField, getClosestGroup, queryStar, queryRadio } from '../utils/helpers';
+import { getClosestGroup, getClosestRadioField, queryRadio, queryStar } from '../utils/helpers';
 import { setClasses } from './classes';
 
 /**

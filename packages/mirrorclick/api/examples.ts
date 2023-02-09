@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Custom Slider Arrows',
     description: "Mirror clicks of external buttons to a Slider's arrows.",
@@ -377,3 +377,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

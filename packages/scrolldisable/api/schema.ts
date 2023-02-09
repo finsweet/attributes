@@ -1,27 +1,27 @@
 import {
-  BUTTON,
-  TEXT_LINK,
-  LINK_BLOCK,
-  DIV_BLOCK,
   ANY_ELEMENT,
+  BUTTON,
+  DIV_BLOCK,
+  LINK_BLOCK,
   NAVBAR,
-  SECTION,
   RICH_TEXT_BLOCK,
+  SECTION,
+  TEXT_LINK,
 } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  WHEN_VISIBLE_ELEMENT_KEY,
-  ENABLE_ELEMENT_KEY,
   DISABLE_ELEMENT_KEY,
-  TOGGLE_ELEMENT_KEY,
+  ENABLE_ELEMENT_KEY,
+  GAP_SETTING_KEY,
+  MEDIA_SETTING_KEY,
   NAV_ELEMENT_KEY,
   PRESERVE_ELEMENT_KEY,
-  MEDIA_SETTING_KEY,
-  GAP_SETTING_KEY,
+  TOGGLE_ELEMENT_KEY,
+  WHEN_VISIBLE_ELEMENT_KEY,
 } from './../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: DISABLE_ELEMENT_KEY,
@@ -106,3 +106,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

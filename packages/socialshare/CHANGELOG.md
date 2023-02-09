@@ -1,5 +1,11 @@
 # @finsweet/attributes-socialshare
 
+## 1.3.1
+
+### Patch Changes
+
+- 2930a679: Added copy/paste examples.
+
 ## 1.3.0
 
 ### Minor Changes

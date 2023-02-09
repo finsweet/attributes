@@ -1,6 +1,8 @@
 import type { AttributeSchema } from '$global/types/schema';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [],
   settings: [],
 };
+
+export default schema;

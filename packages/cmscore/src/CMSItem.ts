@@ -1,4 +1,4 @@
-import { CollectionListElement, CollectionItemElement, isNumber } from '@finsweet/ts-utils';
+import type { CollectionItemElement, CollectionListElement } from '@finsweet/ts-utils';
 
 import { normalizePropKey } from '$global/helpers';
 
@@ -25,6 +25,11 @@ export class CMSItem {
   public valid = true;
 
   /**
+   * The element's current index in the rendered DOM.
+   */
+  public currentIndex?: number;
+
+  /**
    * Promise that fulfills when the item is rendered to the DOM.
    */
   public rendering?: Promise<void>;
@@ -42,7 +47,7 @@ export class CMSItem {
   /**
    * @param element The DOM element of the item.
    * @param list The parent Collection List.
-   * @param currentIndex The element's current index in the rendered DOM.
+   * @param staticIndex The element's static place, if defined.
    */
   constructor(
     /**
@@ -56,11 +61,6 @@ export class CMSItem {
     public readonly list: CollectionListElement,
 
     /**
-     * The element's current index in the rendered DOM.
-     */
-    public currentIndex?: number,
-
-    /**
      * The element's static place.
      * If defined, it will convert the item to non-interactive.
      * Meaning that it can't be sorted, nor filtered. It will always stay at the same place.
@@ -69,7 +69,9 @@ export class CMSItem {
   ) {
     this.href = element.querySelector('a')?.href;
 
-    const rendered = isNumber(currentIndex);
+    this.currentIndex = [...list.children].indexOf(element);
+
+    const rendered = this.currentIndex >= 0;
 
     this.needsWebflowRestart = !rendered;
   }

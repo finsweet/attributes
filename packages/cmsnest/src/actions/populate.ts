@@ -1,7 +1,7 @@
 import { cloneNode } from '@finsweet/ts-utils';
 
-import { normalizePropKey, getCollectionElements, getCollectionListWrappers } from '$global/helpers';
-import type { CMSItem, CMSCore } from '$packages/cmscore';
+import { getCollectionElements, getCollectionListWrappers, normalizePropKey } from '$global/helpers';
+import type { CMSCore, CMSItem } from '$packages/cmscore';
 
 import { ATTRIBUTES, getSelector } from '../utils/constants';
 import type { NestSources } from '../utils/types';

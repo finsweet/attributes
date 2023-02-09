@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'All Form Fields demo',
     description: 'Demo where all available Form Fields in Webflow are mirrored.',
@@ -672,3 +672,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

@@ -1,25 +1,25 @@
 import {
-  SLIDER,
-  DIV_BLOCK,
-  TEXT_BLOCK,
   BUTTON,
-  LINK_BLOCK,
+  DIV_BLOCK,
   EMBED_CODE,
   IMAGE,
+  LINK_BLOCK,
+  SLIDER,
   SLIDER_NAV,
+  TEXT_BLOCK,
 } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  SLIDER_ELEMENT_KEY,
-  CONTENT_ELEMENT_KEY,
-  SLIDER_NAV_ELEMENT_KEY,
   ACTIVE_SETTING_KEY,
-  REMOVE_SETTING_KEY,
+  CONTENT_ELEMENT_KEY,
   DEFAULT_ACTIVE_CSS_CLASS,
+  REMOVE_SETTING_KEY,
+  SLIDER_ELEMENT_KEY,
+  SLIDER_NAV_ELEMENT_KEY,
 } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: SLIDER_ELEMENT_KEY,
@@ -89,3 +89,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

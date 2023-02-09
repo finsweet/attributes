@@ -1,6 +1,6 @@
 import { CMS_ATTRIBUTE_ATTRIBUTE, COUNT_ITEMS_ATTRIBUTE } from '$global/constants/attributes';
 import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
-import { getInstanceIndex, getCollectionElements } from '$global/helpers';
+import { getCollectionElements, getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, queryElement } from './constants';
 

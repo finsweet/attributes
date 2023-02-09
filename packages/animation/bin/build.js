@@ -1,18 +1,18 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { buildAttribute } from '../../../global/build/index.js';
 
-import {
-  generateChangesetsJSON,
-  generateExamplesJSON,
-  generateScript,
-  generateSchemaJSON,
-} from '../../../global/build/index.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-generateScript('src/index.ts', 'animation');
-generateScript('src/esm.ts', 'animation.esm', 'esm');
-generateScript('src/functions.ts', 'functions', 'esm');
-generateExamplesJSON(__dirname);
-generateSchemaJSON(__dirname);
-generateChangesetsJSON(__dirname);
+buildAttribute([
+  {
+    entryFile: 'src/index.ts',
+    outName: 'animation',
+  },
+  {
+    entryFile: 'src/esm.ts',
+    outName: 'animation.esm',
+    format: 'esm',
+  },
+  {
+    entryFile: 'src/functions.ts',
+    outName: 'functions',
+    format: 'esm',
+  },
+]);

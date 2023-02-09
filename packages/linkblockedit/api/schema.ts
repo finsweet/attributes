@@ -1,9 +1,9 @@
-import { DIV_BLOCK, TEXT_BLOCK, BUTTON } from '$global/constants/webflow-selectors';
+import { BUTTON, DIV_BLOCK, TEXT_BLOCK } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import { PARENT_ELEMENT_KEY } from '../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: PARENT_ELEMENT_KEY,
@@ -23,3 +23,5 @@ export const schema: AttributeSchema = {
   ],
   settings: [],
 };
+
+export default schema;

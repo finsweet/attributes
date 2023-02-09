@@ -3,7 +3,7 @@ import type { AttributeSchema } from '$global/types/schema';
 
 import { SRC_ELEMENT_KEY } from '../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: SRC_ELEMENT_KEY,
@@ -17,3 +17,5 @@ export const schema: AttributeSchema = {
   ],
   settings: [],
 };
+
+export default schema;

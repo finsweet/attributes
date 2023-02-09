@@ -2,13 +2,13 @@ import { ANY_ELEMENT, RICH_TEXT_BLOCK } from '$global/constants/webflow-selector
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  RICH_TEXT_ELEMENT_KEY,
   COMPONENT_SETTING_KEY,
-  SANITIZE_SETTING_KEY,
   RESET_IX_SETTING_KEY,
+  RICH_TEXT_ELEMENT_KEY,
+  SANITIZE_SETTING_KEY,
 } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: RICH_TEXT_ELEMENT_KEY,
@@ -76,3 +76,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

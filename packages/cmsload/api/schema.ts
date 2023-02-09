@@ -1,16 +1,16 @@
 import {
+  BUTTON,
   COLLECTION_LIST,
+  DIV_BLOCK,
   EMBED_CODE,
-  TEXT_BLOCK,
-  IMAGE,
   GIF,
+  IMAGE,
+  LINK_BLOCK,
   LOTTIE_ANIMATION,
   PAGINATION_WRAPPER,
-  DIV_BLOCK,
-  LINK_BLOCK,
-  TEXT_LINK,
+  TEXT_BLOCK,
   TEXT_ELEMENT,
-  BUTTON,
+  TEXT_LINK,
 } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
@@ -18,6 +18,7 @@ import {
   ANIMATION_SETTING_KEY,
   DURATION_SETTING_KEY,
   EASING_SETTING_KEY,
+  EMPTY_ELEMENT_KEY,
   ITEMS_COUNT_ELEMENT_KEY,
   LIST_ELEMENT_KEY,
   LOADER_ELEMENT_KEY,
@@ -25,7 +26,6 @@ import {
   MODE_SETTING_VALUES,
   PAGE_BOUNDARY_SETTING_KEY,
   PAGE_BUTTON_ELEMENT_KEY,
-  VISIBLE_COUNT_ELEMENT_KEY,
   PAGE_DOTS_ELEMENT_KEY,
   PAGE_SIBLINGS_SETTING_KEY,
   RESET_IX_SETTING_KEY,
@@ -33,12 +33,12 @@ import {
   SHOW_QUERY_SETTING_KEY,
   STAGGER_SETTING_KEY,
   THRESHOLD_SETTING_KEY,
-  EMPTY_ELEMENT_KEY,
+  VISIBLE_COUNT_ELEMENT_KEY,
   VISIBLE_COUNT_FROM_ELEMENT_KEY,
   VISIBLE_COUNT_TO_ELEMENT_KEY,
 } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -479,3 +479,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

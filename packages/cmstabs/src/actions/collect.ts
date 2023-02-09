@@ -1,5 +1,5 @@
-import { TABS_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { TabsElement } from '@finsweet/ts-utils';
+import { TABS_CSS_CLASSES } from '@finsweet/ts-utils';
 
 import type { CMSList } from '$packages/cmscore';
 

@@ -1,7 +1,7 @@
 import type { CollectionListWrapperElement } from '@finsweet/ts-utils';
 
 import { getCMSElementSelector, getInstanceIndex } from '$global/helpers';
-import type { CMSList, CMSCore } from '$packages/cmscore';
+import type { CMSCore, CMSList } from '$packages/cmscore';
 
 import { ATTRIBUTES, getSelector } from './constants';
 

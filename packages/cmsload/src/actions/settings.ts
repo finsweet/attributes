@@ -1,5 +1,5 @@
-import { extractCommaSeparatedValues, getCurrentBreakpoint, isNumber } from '@finsweet/ts-utils';
 import type { PaginationWrapperElement } from '@finsweet/ts-utils';
+import { extractCommaSeparatedValues, getCurrentBreakpoint, isNumber } from '@finsweet/ts-utils';
 
 import type { CMSList } from '$packages/cmscore';
 

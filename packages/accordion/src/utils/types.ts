@@ -17,6 +17,6 @@ export interface AccordionGroupData {
   activeClass: string;
 }
 
-type InitialValues = typeof ATTRIBUTES['initial']['values'];
+type InitialValues = (typeof ATTRIBUTES)['initial']['values'];
 
 export type InitialState = InitialValues[keyof InitialValues] | number[] | undefined;

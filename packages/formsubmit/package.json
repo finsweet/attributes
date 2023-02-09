@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-formsubmit",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Smart actions after Webflow form submission.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -9,13 +9,15 @@
   "files": [
     "formsubmit.js",
     "examples.json",
-    "schema.json"
+    "schema.json",
+    "changesets.json"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/build.js",
     "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix",
     "check": "tsc --noEmit",
     "format": "prettier --write ./src",
     "test": "pnpm playwright test",

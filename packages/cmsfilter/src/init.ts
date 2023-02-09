@@ -1,6 +1,6 @@
 import { isNotEmpty } from '@finsweet/ts-utils';
 
-import { QUERY_PARAM_ATTRIBUTE, CMS_FILTER_ATTRIBUTE, CMS_ATTRIBUTE_ATTRIBUTE } from '$global/constants/attributes';
+import { CMS_ATTRIBUTE_ATTRIBUTE, CMS_FILTER_ATTRIBUTE, QUERY_PARAM_ATTRIBUTE } from '$global/constants/attributes';
 import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
 import { importCMSCore } from '$global/import';
 import type { CMSCore, CMSList } from '$packages/cmscore';

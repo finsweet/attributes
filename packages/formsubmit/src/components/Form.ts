@@ -1,15 +1,15 @@
-import { FormErrorElement, FORM_CSS_CLASSES, simulateEvent, addListener } from '@finsweet/ts-utils';
 import type { FormBlockElement, FormSuccessElement } from '@finsweet/ts-utils';
+import { addListener, FORM_CSS_CLASSES, FormErrorElement, simulateEvent } from '@finsweet/ts-utils';
 
 import { redirectUser } from '../actions/redirect';
 import { collectPreventResetFields, resetForm } from '../actions/reset';
 import { enhancedSubmit } from '../actions/submit';
 import {
   checkFormSuccess,
-  showFormError,
-  hideFormError,
-  showFormSuccess,
   displayFormSubmitWaitText,
+  hideFormError,
+  showFormError,
+  showFormSuccess,
 } from '../utils/dom';
 
 export class Form {

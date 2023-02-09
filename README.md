@@ -57,32 +57,6 @@ When you run `pnpm dev`, two things happen:
 <script defer src="http://localhost:3000/{FILE_PATH}.js"></script>
 ```
 
-### Setting up a path alias
-
-Path aliases are very helpful to avoid code like:
-
-```typescript
-import example from '../../../../utils/example';
-```
-
-Instead, we can create path aliases that map to a specific folder, so the code becomes cleaner like:
-
-```typescript
-import example from '$utils/example';
-```
-
-You can set up path aliases using the `paths` setting in `tsconfig.json`. This template has an already predefined path as an example:
-
-```json
-{
-  "paths": {
-    "$utils/*": ["src/utils/*"]
-  }
-}
-```
-
-To avoid any surprises, take some time to familiarize yourself with the [tsconfig](/tsconfig.json) enabled flags.
-
 ## Testing
 
 As previously mentioned, this library has [Playwright](https://playwright.dev/) included as an automated testing tool.

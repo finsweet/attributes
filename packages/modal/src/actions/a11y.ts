@@ -7,9 +7,9 @@ import {
   ARIA_HIDDEN_KEY,
   ARIA_MODAL_KEY,
   ARIA_MODAL_VALUES,
-  ARIA_ROLEDESCRIPTION_KEY,
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
+  ARIA_ROLEDESCRIPTION_KEY,
   TABINDEX_KEY,
 } from '$global/constants/a11y';
 import { ensureUniqueId } from '$global/helpers';

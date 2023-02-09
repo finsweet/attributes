@@ -2,20 +2,20 @@ import { DIV_BLOCK, HEADING, PARAGRAPH, TEXT_BLOCK } from '$global/constants/web
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  WRAPPER_ELEMENT_KEY,
-  TRACK_ELEMENT_KEY,
-  FILL_ELEMENT_KEY,
-  HANDLE_ELEMENT_KEY,
   DISPLAY_VALUE_ELEMENT_KEY,
-  MIN_SETTING_KEY,
+  FILL_ELEMENT_KEY,
+  FORMAT_DISPLAY_SETTING_KEY,
+  HANDLE_ELEMENT_KEY,
   MAX_SETTING_KEY,
+  MIN_SETTING_KEY,
   START_SETTING_KEY,
   STEP_SETTING_KEY,
-  FORMAT_DISPLAY_SETTING_KEY,
+  TRACK_ELEMENT_KEY,
   UPDATE_ACTION_SETTING_KEY,
+  WRAPPER_ELEMENT_KEY,
 } from './../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: WRAPPER_ELEMENT_KEY,
@@ -206,3 +206,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

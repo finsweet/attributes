@@ -1,22 +1,22 @@
 import {
+  BUTTON,
   COLLECTION_LIST,
   DIV_BLOCK,
   LINK_BLOCK,
   TEXT_ELEMENT,
   TEXT_LINK,
-  BUTTON,
 } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
   LIST_ELEMENT_KEY,
-  PREVIOUS_ELEMENT_KEY,
-  PREVIOUS_EMPTY_ELEMENT_KEY,
   NEXT_ELEMENT_KEY,
   NEXT_EMPTY_ELEMENT_KEY,
+  PREVIOUS_ELEMENT_KEY,
+  PREVIOUS_EMPTY_ELEMENT_KEY,
 } from '../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -94,3 +94,5 @@ export const schema: AttributeSchema = {
   ],
   settings: [],
 };
+
+export default schema;

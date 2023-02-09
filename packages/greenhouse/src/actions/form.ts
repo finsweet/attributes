@@ -16,8 +16,8 @@ import type {
 import { ATTRIBUTES, getSelector, queryElement } from '../utils/constants';
 import { insertAfter } from '../utils/dom';
 import {
-  createInputHidden,
   createInputElement,
+  createInputHidden,
   createMultiSelectElement,
   createSingleSelectElement,
   createTextAreaElement,

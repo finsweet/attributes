@@ -1,28 +1,28 @@
 import {
   BUTTON,
-  LINK_BLOCK,
-  TEXT_LINK,
   DIV_BLOCK,
-  TEXT_BLOCK,
-  PARAGRAPH,
-  HEADING,
   FORM_INPUT,
+  HEADING,
+  LINK_BLOCK,
+  PARAGRAPH,
+  TEXT_BLOCK,
+  TEXT_LINK,
 } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  TRIGGER_ELEMENT_KEY,
-  TARGET_ELEMENT_KEY,
-  SIBLING_ELEMENT_KEY,
-  TEXT_SETTING_KEY,
-  SUCCESS_MESSAGE_SETTING_KEY,
-  SUCESSS_DURATION_SETTING_KEY,
-  SUCESSS_CLASS_SETTING_KEY,
   DEFAULT_SUCCESS_CSS_CLASS,
   DEFAULT_SUCCESS_DURATION,
+  SIBLING_ELEMENT_KEY,
+  SUCCESS_MESSAGE_SETTING_KEY,
+  SUCESSS_CLASS_SETTING_KEY,
+  SUCESSS_DURATION_SETTING_KEY,
+  TARGET_ELEMENT_KEY,
+  TEXT_SETTING_KEY,
+  TRIGGER_ELEMENT_KEY,
 } from './../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: TRIGGER_ELEMENT_KEY,
@@ -115,3 +115,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

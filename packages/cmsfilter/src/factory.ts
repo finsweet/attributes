@@ -1,7 +1,7 @@
-import { isKeyOf, FORM_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { FormBlockElement } from '@finsweet/ts-utils';
+import { FORM_CSS_CLASSES, isKeyOf } from '@finsweet/ts-utils';
 
-import type { CMSList, CMSCore } from '$packages/cmscore';
+import type { CMSCore, CMSList } from '$packages/cmscore';
 
 import { CMSFilters } from './components/CMSFilters';
 import { CMSTags } from './components/CMSTags';

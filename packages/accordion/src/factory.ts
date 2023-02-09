@@ -15,14 +15,14 @@ import type { AccordionData, AccordionGroupData } from './utils/types';
  */
 export const initAccordionGroups = (accordions: HTMLElement[]) => {
   // Init groups
-  const groupsStore = accordions.reduce<Map<HTMLElement, AccordionGroupData>>((groupsStore, accordion) => {
+  const groupsStore = accordions.reduce<Map<HTMLElement, AccordionGroupData>>((store, accordion) => {
     const group = accordion.closest<HTMLElement>(getSelector('element', 'group')) || document.body;
 
-    let groupData = groupsStore.get(group);
+    let groupData = store.get(group);
 
     if (!groupData) {
       groupData = getGroupSettings(group);
-      groupsStore.set(group, groupData);
+      store.set(group, groupData);
     }
 
     const controls = initAccordion(accordion, groupData);
@@ -33,7 +33,7 @@ export const initAccordionGroups = (accordions: HTMLElement[]) => {
       });
     }
 
-    return groupsStore;
+    return store;
   }, new Map());
 
   const groupsData = groupsStore.values();

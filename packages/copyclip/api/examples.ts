@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Copy me',
     description: 'Copy the content of the trigger when clicking on it.',
@@ -307,3 +307,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

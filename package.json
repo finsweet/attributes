@@ -20,34 +20,37 @@
     "build": "pnpm -r --filter \"./packages/**\" build",
     "build:dev": "pnpm -r --filter \"./packages/**\" build:dev",
     "lint": "pnpm -r --filter \"./packages/**\" lint",
+    "lint:fix": "pnpm -r --filter \"./packages/**\" lint:fix",
     "check": "pnpm -r --filter \"./packages/**\" check",
     "format": "pnpm -r --filter \"./packages/**\" format",
     "test": "pnpm -r --filter \"./packages/**\" --filter !@finsweet/attributes-support test --workspace-concurrency=1",
     "test:headed": "pnpm -r --filter \"./packages/**\" --filter !@finsweet/attributes-support test:headed --workspace-concurrency=1",
     "release": "changeset publish",
-    "update": "pnpm update -i -L -r",
-    "serve": "serve --cors"
+    "update": "pnpm update -i -L -r"
   },
   "devDependencies": {
-    "@changesets/changelog-git": "^0.1.13",
-    "@changesets/cli": "^2.25.2",
-    "@finsweet/eslint-config": "^1.1.5",
-    "@finsweet/tsconfig": "^1.1.0",
-    "@playwright/test": "^1.27.1",
-    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
+    "@changesets/changelog-git": "^0.1.14",
+    "@changesets/cli": "^2.26.0",
+    "@finsweet/eslint-config": "^2.0.1",
+    "@finsweet/tsconfig": "^1.2.0",
+    "@playwright/test": "^1.30.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.15.13",
-    "eslint": "^8.27.0",
-    "eslint-config-prettier": "^8.5.0",
+    "esbuild": "^0.17.6",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
-    "serve": "^14.1.1",
-    "typescript": "^4.8.4"
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@finsweet/ts-utils": "^0.37.1",
-    "nanoid": "^4.0.0"
+    "@finsweet/ts-utils": "^0.37.3",
+    "nanoid": "^4.0.1"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "body-scroll-lock@4.0.0-beta.0": "patches/body-scroll-lock@4.0.0-beta.0.patch"
+    }
   }
 }

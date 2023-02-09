@@ -1,15 +1,15 @@
-import { DIV_BLOCK, LIGHTBOX, LINK_BLOCK, TEXT_LINK, BUTTON } from '$global/constants/webflow-selectors';
+import { BUTTON, DIV_BLOCK, LIGHTBOX, LINK_BLOCK, TEXT_LINK } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  TRIGGER_OPEN_ELEMENT_KEY,
-  TRIGGER_CLOSE_ELEMENT_KEY,
-  TRIGGER_TOGGLE_ELEMENT_KEY,
   LIGHTBOX_ELEMENT_KEY,
+  TRIGGER_CLOSE_ELEMENT_KEY,
+  TRIGGER_OPEN_ELEMENT_KEY,
+  TRIGGER_TOGGLE_ELEMENT_KEY,
   WAIT_SETTING_KEY,
 } from './../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIGHTBOX_ELEMENT_KEY,
@@ -70,3 +70,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

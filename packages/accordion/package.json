@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-accordion",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "Create accessible accordions inside Webflow without Webflow Interactions.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -17,6 +17,7 @@
     "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix",
     "check": "tsc --noEmit",
     "format": "prettier --write ./src",
     "test": "pnpm playwright test",

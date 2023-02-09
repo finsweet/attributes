@@ -1,19 +1,19 @@
 import type {
-  CollectionListWrapperElement,
-  CollectionListElement,
   CollectionItemElement,
+  CollectionListElement,
+  CollectionListWrapperElement,
+  PageCountElement,
   PaginationButtonElement,
   PaginationWrapperElement,
-  PageCountElement,
 } from '@finsweet/ts-utils';
 import Emittery from 'emittery';
 
-import { getInstanceIndex, getCollectionElements } from '$global/helpers';
+import { getCollectionElements, getInstanceIndex } from '$global/helpers';
 import type { Animation } from '$packages/animation/src/types';
 
 import { CMSItem } from './CMSItem';
 import { updateItemsCount } from './utils/items';
-import { storePaginationData, setPaginationQueryParams } from './utils/pagination';
+import { setPaginationQueryParams, storePaginationData } from './utils/pagination';
 import { renderListItems } from './utils/render';
 import type { CMSListEvents } from './utils/types';
 
@@ -235,7 +235,7 @@ export class CMSList extends Emittery<CMSListEvents> {
     const items: CMSItem[] = [];
 
     if (list) {
-      items.push(...collectionItems.map((element, index) => new CMSItem(element, list, index)));
+      items.push(...collectionItems.map((element) => new CMSItem(element, list)));
     }
 
     this.items = items;
@@ -292,7 +292,7 @@ export class CMSList extends Emittery<CMSListEvents> {
     const newItems = itemsData.map(({ itemElement, targetIndex, interactive }) => {
       const staticIndex = !interactive ? targetIndex : undefined;
 
-      const newItem = new CMSItem(itemElement, list, undefined, staticIndex);
+      const newItem = new CMSItem(itemElement, list, staticIndex);
 
       for (const array of [items, originalItemsOrder]) {
         array.splice(targetIndex, 0, newItem);

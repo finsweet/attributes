@@ -6,7 +6,7 @@ import type { CMSList } from '$packages/cmscore';
 
 import { sortListItems } from '../actions/sort';
 import { ATTRIBUTES } from '../utils/constants';
-import type { ButtonState, ButtonsState, CSSClasses, SortingDirection, SortItemsCallback } from '../utils/types';
+import type { ButtonsState, ButtonState, CSSClasses, SortingDirection, SortItemsCallback } from '../utils/types';
 
 // Constants destructuring
 const {

@@ -1,10 +1,10 @@
-import { queryElement, ATTRIBUTES } from './../utils/constants';
+import { ATTRIBUTES, queryElement } from './../utils/constants';
 import type {
   FacebookSocialShare,
-  TwitterSocialShare,
   PinterestSocialShare,
   SocialShare,
   SocialShareTypes,
+  TwitterSocialShare,
 } from './../utils/types';
 
 export function collectFacebookData(

@@ -78,6 +78,8 @@ export const SCROLL_DISABLE_ATTRIBUTE = 'scrolldisable';
 
 export const SELECT_CUSTOM_ATTRIBUTE = 'selectcustom';
 
+export const COMBO_BOX_ATTRIBUTE = 'combobox';
+
 export const SLIDER_DOTS_ATTRIBUTE = 'sliderdots';
 
 export const SMART_LIGHTBOX_ATTRIBUTE = 'smartlightbox';

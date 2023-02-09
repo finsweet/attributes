@@ -3,7 +3,7 @@ import type { AttributeSchema } from '$global/types/schema';
 
 import { NAME_SETTING_KEY, REMOVE_QUERY_SETTING_KEY } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [],
   fields: [
     {
@@ -39,3 +39,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

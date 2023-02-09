@@ -1,6 +1,6 @@
 import type { CMSList } from '$packages/cmscore';
 
-import { attributesData } from '../../api/attributes';
+import attributesData from '../../api/attributes';
 import { createChangesetElement } from './dom';
 import { getAttributeChangesets } from './fetch';
 import { hideLoader } from './loader';

@@ -1,4 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import type { LDFlagSet } from 'launchdarkly-js-client-sdk';
+import { hideLoaders } from 'src/actions/loaders';
+import { initFlags } from 'src/factory';
 
 test.describe('Update Element Property', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,9 +10,11 @@ test.describe('Update Element Property', () => {
 
   test.describe('When flag is not set', async () => {
     test('It does not update the property', async ({ page }) => {
-      const flags = `{}`;
+      const flags = {};
       const selector = '[data-test-id="image1"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator(selector);
       const src = await locator.getAttribute('src');
@@ -20,12 +25,14 @@ test.describe('Update Element Property', () => {
   test.describe('When flag is set', async () => {
     const titleText = 'abc';
     const innerHTMLContent = `<span>${titleText}</span>`;
-    let flags = `{testing: 'http://example2.svg','testing-html': '${innerHTMLContent}', testing2: '${titleText}'}`;
+    let flags: LDFlagSet = { testing: 'http://example2.svg', 'testing-html': innerHTMLContent, testing2: titleText };
     let selector: string;
 
     test('It updates src property of a nested iframe', async ({ page }) => {
       selector = '[data-test-id="iframe-container"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator('[data-test-id="iframe"]');
       const src = await locator.getAttribute('src');
@@ -34,7 +41,9 @@ test.describe('Update Element Property', () => {
 
     test('It updates src property and removes the srcset attribute', async ({ page }) => {
       selector = '[data-test-id="image1"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator(selector);
       const src = await locator.getAttribute('src');
@@ -46,7 +55,9 @@ test.describe('Update Element Property', () => {
 
     test('It updates srcset property and removes the src attribute', async ({ page }) => {
       selector = '[data-test-id="image2"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator(selector);
       const srcset = await locator.getAttribute('srcset');
@@ -58,7 +69,9 @@ test.describe('Update Element Property', () => {
 
     test('It updates href property of an element', async ({ page }) => {
       selector = '[data-test-id="anchor1"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator(selector);
       const href = await locator.getAttribute('href');
@@ -67,7 +80,9 @@ test.describe('Update Element Property', () => {
 
     test('It updates innerHTML of an element', async ({ page }) => {
       selector = '[data-test-id="div1"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const innerHTML = await page.locator(selector).innerHTML();
       expect(innerHTML).toEqual(innerHTMLContent);
@@ -75,7 +90,9 @@ test.describe('Update Element Property', () => {
 
     test('It sets the innerText of element when "setproperties" attribute is text', async ({ page }) => {
       selector = '[data-test-id="text1"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator('data-test-id=text1');
       const textContent = await locator.innerText();
@@ -84,16 +101,18 @@ test.describe('Update Element Property', () => {
 
     test('It sets the value of element when "setproperties" attribute is "value"', async ({ page }) => {
       const value = '123';
-      flags = `{testing: '${value}'}`;
+      flags = { testing: value };
       selector = '[data-test-id="input1"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
       const selectorTestIds = ['input1', 'select1', 'textarea1'];
 
       let elementValue;
       for (const selectorTestId of selectorTestIds) {
         const locator = page.locator(`[data-test-id="${selectorTestId}"]`);
         elementValue = await locator.inputValue();
-        expect(elementValue).toEqual('123');
+        expect(elementValue).toEqual(value);
       }
 
       // handle for button
@@ -104,9 +123,11 @@ test.describe('Update Element Property', () => {
 
     test('It includes the classname as part of classList when attribute is "classname"', async ({ page }) => {
       const className = 'classname1';
-      flags = `{testing: '${className}'}`;
+      flags = { testing: className };
       selector = '[data-test-id="test_classname"]';
-      await page.evaluate(`fsLaunchDarkly.initFlags(${flags})`);
+      await page.evaluate((flags) => {
+        initFlags(flags);
+      }, flags);
 
       const locator = page.locator(selector);
       await expect(locator).toHaveClass(className);
@@ -115,14 +136,18 @@ test.describe('Update Element Property', () => {
 
   test.describe('When element is loader', () => {
     test('It hides fs-launchdarkly-element with "loader" value', async ({ page }) => {
-      await page.evaluate(`fsLaunchDarkly.hideLoaders()`);
+      await page.evaluate(() => {
+        hideLoaders();
+      });
 
       const loader = page.locator('[data-test-id="loader"]');
       await expect(loader).not.toBeVisible();
     });
 
     test('It does not hide fs-launchdarkly-element with unsupported value', async ({ page }) => {
-      await page.evaluate(`fsLaunchDarkly.hideLoaders()`);
+      await page.evaluate(() => {
+        hideLoaders();
+      });
 
       const loader = page.locator('[data-test-id="loader2"]');
       await expect(loader).toBeVisible();

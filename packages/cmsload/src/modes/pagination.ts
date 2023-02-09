@@ -13,7 +13,7 @@ import type { CMSList } from '$packages/cmscore';
 
 import { loadPaginatedItems } from '../actions/load';
 import { handlePaginationButtons, updatePaginationCount } from '../actions/pagination';
-import { getPaginationSettings, getPageButtonsSettings } from '../actions/settings';
+import { getPageButtonsSettings, getPaginationSettings } from '../actions/settings';
 import { getSelector } from '../utils/constants';
 import type { PageButtonsData } from '../utils/types';
 

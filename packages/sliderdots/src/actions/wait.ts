@@ -1,4 +1,4 @@
-import { isElement, SliderNavElement, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
+import { isElement, SLIDER_CSS_CLASSES, SliderNavElement } from '@finsweet/ts-utils';
 
 /**
  * Returns a Promise that resolves when all slider dots have been initially populated.

@@ -7,8 +7,8 @@ import { getInstanceIndex } from '$global/helpers';
 
 import {
   ATTRIBUTES,
-  DEFAULT_SUCCESS_DURATION,
   DEFAULT_SUCCESS_CSS_CLASS,
+  DEFAULT_SUCCESS_DURATION,
   getSelector,
   queryElement,
 } from './constants';

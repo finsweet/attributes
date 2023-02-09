@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsslider",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Convert the native Webflow slider component to a CMS slider.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
@@ -17,6 +17,7 @@
     "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix",
     "check": "tsc --noEmit",
     "format": "prettier --write ./src",
     "test": "pnpm playwright test",

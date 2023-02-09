@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Range slider with 1 handle',
     description: 'A simple range slider with 1 handle.',
@@ -646,3 +646,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

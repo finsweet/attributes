@@ -1,14 +1,14 @@
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
+  COLLECTION_SETTING_KEY,
+  EMPTY_SETTING_KEY,
+  FIELD_SETTING_KEY,
   LIST_ELEMENT_KEY,
   REMOVE_ELEMENT_KEY,
-  COLLECTION_SETTING_KEY,
-  FIELD_SETTING_KEY,
-  EMPTY_SETTING_KEY,
 } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -62,3 +62,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

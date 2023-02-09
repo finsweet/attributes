@@ -3,11 +3,11 @@ import { getInstanceIndex } from '$global/helpers';
 import { collectFacebookData, collectPinterestData, collectSocialData, collectTwitterData } from './actions/collect';
 import {
   createFacebookShare,
-  createTwitterShare,
-  createPinterestShare,
-  createTelegramShare,
   createLinkedinShare,
+  createPinterestShare,
   createRedditShare,
+  createTelegramShare,
+  createTwitterShare,
 } from './actions/share';
 import { ATTRIBUTES, queryElement, SOCIAL_SHARE_PLATFORMS } from './utils/constants';
 import { getCMSItemWrapper } from './utils/dom';

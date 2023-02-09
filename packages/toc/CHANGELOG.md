@@ -1,5 +1,11 @@
 # @finsweet/attributes-toc
 
+## 1.2.1
+
+### Patch Changes
+
+- 132594e3: fix: only restart webflow if at least one instance of TOC was created.
+
 ## 1.2.0
 
 ### Minor Changes

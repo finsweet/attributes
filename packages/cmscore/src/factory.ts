@@ -1,6 +1,6 @@
 import { CollectionListWrapperElement, isNotEmpty } from '@finsweet/ts-utils';
 
-import { getCollectionListWrappers, getCollectionElements, getCMSElementSelector } from '$global/helpers';
+import { getCMSElementSelector, getCollectionElements, getCollectionListWrappers } from '$global/helpers';
 
 import { CMSList } from '.';
 

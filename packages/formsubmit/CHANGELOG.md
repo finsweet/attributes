@@ -1,5 +1,11 @@
 # @finsweet/attributes-formsubmit
 
+## 1.4.1
+
+### Patch Changes
+
+- 8a17207e: Added missing `changesets.json` file.
+
 ## 1.4.0
 
 ### Minor Changes

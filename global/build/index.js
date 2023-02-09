@@ -1,87 +1,111 @@
-import esbuild from 'esbuild';
-import { writeFileSync, readFileSync } from 'fs';
-import { pathToFileURL } from 'url';
+/* eslint-disable no-console */
 
-const production = process.env.NODE_ENV === 'production';
-const development = process.env.NODE_ENV === 'development';
+import * as esbuild from 'esbuild';
+import { writeFileSync } from 'fs';
+import { access } from 'fs/promises';
+import { dirname, join, resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const PRODUCTION = process.env.NODE_ENV === 'production';
+const DEVELOPMENT = process.env.NODE_ENV === 'development';
+const LIVE_RELOAD = !PRODUCTION;
+const SERVE_PORT = 3000;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const root = resolve(__dirname, '../../');
+const directory = process.cwd();
 
 /**
- * Default Settings
- * @type {esbuild.BuildOptions}
+ * @type {import('esbuild').BuildOptions}
  */
-export const defaultBuildSettings = {
+const defaultBuildSettings = {
   bundle: true,
-  minify: production,
-  sourcemap: !production,
-  target: production ? 'es2017' : 'esnext',
-  watch: development,
+  minify: PRODUCTION,
+  sourcemap: !PRODUCTION,
+  target: PRODUCTION ? 'es2019' : 'esnext',
+  inject: LIVE_RELOAD ? [join(__dirname, 'live-reload.js')] : undefined,
   define: {
+    SERVE_PORT: JSON.stringify(SERVE_PORT),
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
   },
 };
 
 /**
- * Generates the main script.
- * @param {string | string[]} entryPoint
- * @param {string} fileName
- * @param {esbuild.BuildOptions['format']} [format]
+ * Defines the build configuration for a single attribute.
+ * @typedef {{ entryFile: string; outName: string; format?: import('esbuild').BuildOptions['format'] }} AttributeBuildConfig
  */
-export const generateScript = (entryPoint, fileName, format) => {
-  esbuild.build({
+
+/**
+ * Builds an Attribute.
+ * In development mode, it will watch for changes and serve the files in {@link SERVE_PORT}.
+ * @param {Array<AttributeBuildConfig>} files
+ */
+export const buildAttribute = async (files) => {
+  await Promise.all([...files.map(buildFile), generateAPIJSON('examples'), generateAPIJSON('schema')]);
+};
+
+/**
+ * Creates the build context for esbuild.
+ * @param {AttributeBuildConfig} file
+ */
+export const buildFile = async ({ entryFile, outName, format }) => {
+  const entryPoint = join(directory, entryFile);
+  const outfile = join(directory, `${outName}.js`);
+
+  const context = await esbuild.context({
+    ...defaultBuildSettings,
+    format,
+    outfile,
+    entryPoints: [entryPoint],
+  });
+
+  if (PRODUCTION) {
+    await context.rebuild();
+    return context.dispose();
+  }
+
+  if (!DEVELOPMENT) {
+    return context.dispose();
+  }
+
+  await context.watch();
+
+  try {
+    await context.serve({ port: SERVE_PORT, servedir: root });
+    console.log(`Serving files at http://localhost:${SERVE_PORT}`);
+  } catch (err) {}
+};
+
+/**
+ * Generates a JSON file from an API file.
+ * @param {string} fileName
+ */
+export const generateAPIJSON = async (fileName) => {
+  const entryPoint = `api/${fileName}.ts`;
+
+  const entryPointExists = await checkFileExists(join(directory, entryPoint));
+  if (!entryPointExists) return;
+
+  const result = await esbuild.build({
     ...defaultBuildSettings,
     entryPoints: [entryPoint],
-    outfile: `./${fileName}.js`,
-    format,
-  });
-};
-
-/**
- * Generates the `examples.json` API.
- * @param {string} __dirname
- */
-export const generateExamplesJSON = (__dirname) => {
-  if (!production) return;
-
-  esbuild.buildSync({
-    ...defaultBuildSettings,
-    entryPoints: ['api/examples.ts'],
-    outfile: `temp/examples.js`,
     format: 'esm',
+    write: false,
   });
 
-  import(pathToFileURL(`${__dirname}/../temp/examples.js`)).then(({ examples }) => {
-    writeFileSync(`${__dirname}/../examples.json`, JSON.stringify(examples));
-  });
-};
+  const module = await importBuildResult(result);
 
-/**
- * Generates the `schema.json` API.
- * @param {string} __dirname
- */
-export const generateSchemaJSON = (__dirname) => {
-  if (!production) return;
-
-  esbuild.buildSync({
-    ...defaultBuildSettings,
-    entryPoints: ['api/schema.ts'],
-    outfile: `temp/schema.js`,
-    format: 'esm',
-  });
-
-  import(pathToFileURL(`${__dirname}/../temp/schema.js`)).then(({ schema }) => {
-    writeFileSync(`${__dirname}/../schema.json`, JSON.stringify(schema));
-  });
+  writeFileSync(join(directory, `${fileName}.json`), JSON.stringify(module.default));
 };
 
 /**
  * Generates the `changesets.json` API.
- * @param {string} __dirname
  */
-export const generateChangesetsJSON = (__dirname) => {
-  const writeChangesets = (result) => writeFileSync(`${__dirname}/../changesets.json`, JSON.stringify(result));
+export const generateChangesetsJSON = () => {
+  const writeChangesets = (result) => writeFileSync(join(directory, 'changesets.json'), JSON.stringify(result));
 
   try {
-    const changelog = readFileSync(`${__dirname}/../CHANGELOG.md`, 'utf-8');
+    const changelog = readFileSync(join(directory, 'CHANGELOG.md'), 'utf-8');
     if (!changelog) {
       throw new Error('Changelog not found');
     }
@@ -107,5 +131,25 @@ export const generateChangesetsJSON = (__dirname) => {
     console.log(err.message);
     writeChangesets({});
     return;
+  }
+};
+
+/**
+ * Imports a build result as a module.
+ * @param {esbuild.BuildResult} result
+ */
+const importBuildResult = (result) =>
+  import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].contents).toString('base64')}`);
+
+/**
+ * @returns true if the file exists, false otherwise
+ * @param {string} path
+ */
+const checkFileExists = async (path) => {
+  try {
+    await access(path);
+    return true;
+  } catch (err) {
+    return false;
   }
 };

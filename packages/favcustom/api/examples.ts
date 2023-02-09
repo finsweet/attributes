@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Image as the source',
     description: 'Use an existing image on the page as the source for the favicon.',
@@ -63,3 +63,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

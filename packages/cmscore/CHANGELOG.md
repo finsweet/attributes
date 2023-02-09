@@ -1,5 +1,11 @@
 # @finsweet/attributes-cmscore
 
+## 1.10.3
+
+### Patch Changes
+
+- ea2fac74: fix: assign correct rendered index to new CMSItem instances.
+
 ## 1.10.2
 
 ### Patch Changes

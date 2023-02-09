@@ -9,7 +9,7 @@ type Modes = typeof MODES;
 type FilterMode = keyof Modes;
 type ElementMode = Modes[FilterMode][number];
 
-type Match = typeof MATCHES[number];
+type Match = (typeof MATCHES)[number];
 
 /**
  * Filters
@@ -152,4 +152,4 @@ export interface TagData {
 
 export type TagsData = TagData[];
 
-export type TagFormat = typeof TAG_FORMATS[number];
+export type TagFormat = (typeof TAG_FORMATS)[number];

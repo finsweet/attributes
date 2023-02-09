@@ -3,7 +3,7 @@ import { marked } from 'marked';
 import { CODE_HIGHLIGHT_ATTRIBUTE, TOC_ATTRIBUTE } from '$global/constants/attributes';
 import { queryElement as queryTOCElement } from '$packages/toc/src/utils/constants';
 
-import { attributesData } from '../../api/attributes';
+import attributesData from '../../api/attributes';
 import { getAttributeReadme } from './fetch';
 
 declare global {

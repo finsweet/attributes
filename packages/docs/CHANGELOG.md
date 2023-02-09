@@ -1,5 +1,23 @@
 # @finsweet/attributes-docs
 
+## 1.12.10
+
+### Patch Changes
+
+- 97af4abf: Added missing `examples.json` file in package.json
+
+## 1.12.9
+
+### Patch Changes
+
+- 2930a679: Added copy/paste examples.
+
+## 1.12.8
+
+### Patch Changes
+
+- 92a70574: Fix "Copy to clipboard" buttons on pages that don't have a copyable script like `cms-element`.
+
 ## 1.12.7
 
 ### Patch Changes

@@ -1,3 +1,5 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [];
+const examples: AttributeExamples = [];
+
+export default examples;

@@ -1,0 +1,45 @@
+{
+  "name": "@finsweet/attributes-combobox",
+  "version": "1.0.0",
+  "description": "A combo box that helps users select an item from a large list of options.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "sideEffects": false,
+  "type": "module",
+  "main": "combobox.js",
+  "files": [
+    "combobox.js",
+    "examples.json",
+    "schema.json",
+    "changesets.json"
+  ],
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "pnpm playwright test",
+    "test:headed": "pnpm playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finsweet/attributes.git"
+  },
+  "keywords": [
+    "webflow",
+    "attributes",
+    "no code"
+  ],
+  "author": {
+    "name": "Finsweet",
+    "url": "https://www.finsweet.com/"
+  },
+  "bugs": {
+    "url": "https://sweetjs.finsweet.com/"
+  },
+  "dependencies": {
+    "just-debounce": "^1.1.0"
+  }
+}

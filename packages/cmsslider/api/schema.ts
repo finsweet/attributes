@@ -1,9 +1,9 @@
 import { COLLECTION_LIST, SLIDER } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
-import { LIST_ELEMENT_KEY, SLIDER_ELEMENT_KEY, RESET_IX_SETTING_KEY } from './../src/constants';
+import { LIST_ELEMENT_KEY, RESET_IX_SETTING_KEY, SLIDER_ELEMENT_KEY } from './../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -45,3 +45,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

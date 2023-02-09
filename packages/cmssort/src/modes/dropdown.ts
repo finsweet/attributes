@@ -1,5 +1,5 @@
+import type { Dropdown, DropdownList, DropdownToggle } from '@finsweet/ts-utils';
 import { addListener, CURRENT_CSS_CLASS, Debug, DROPDOWN_CSS_CLASSES, isElement } from '@finsweet/ts-utils';
-import type { Dropdown, DropdownToggle, DropdownList } from '@finsweet/ts-utils';
 
 import {
   ARIA_HASPOPUP_KEY,

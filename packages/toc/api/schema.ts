@@ -10,15 +10,15 @@ import type { AttributeSchema } from '$global/types/schema';
 
 import {
   CONTENTS_ELEMENT_KEY,
-  TABLE_ELEMENT_KEY,
-  LINK_ELEMENT_KEY,
+  HIDE_URL_HASH_SETTING_KEY,
   IX_TRIGGER_ELEMENT_KEY,
+  LINK_ELEMENT_KEY,
   OFFSET_BOTTOM_SETTING_KEY,
   OFFSET_TOP_SETTING_KEY,
-  HIDE_URL_HASH_SETTING_KEY,
+  TABLE_ELEMENT_KEY,
 } from './../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: CONTENTS_ELEMENT_KEY,
@@ -120,3 +120,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

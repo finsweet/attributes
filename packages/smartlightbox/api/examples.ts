@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Transform issue with fixed position lightbox',
     description:
@@ -1797,3 +1797,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

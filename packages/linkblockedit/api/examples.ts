@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Simple Link Block',
     description: 'Convert a Div into a Link Block to make it Editor friendly.',
@@ -63,3 +63,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

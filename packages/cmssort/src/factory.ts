@@ -1,5 +1,5 @@
-import { DROPDOWN_CSS_CLASSES, isHTMLSelectElement } from '@finsweet/ts-utils';
 import type { Dropdown } from '@finsweet/ts-utils';
+import { DROPDOWN_CSS_CLASSES, isHTMLSelectElement } from '@finsweet/ts-utils';
 
 import type { CMSCore, CMSList } from '$packages/cmscore';
 

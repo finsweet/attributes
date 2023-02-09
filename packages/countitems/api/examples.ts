@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Count list items',
     description: 'Display the amount of items from a parent element. Works both for Collection Lists and Static Lists.',
@@ -511,3 +511,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

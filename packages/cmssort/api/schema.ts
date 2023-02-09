@@ -1,5 +1,8 @@
 import {
+  BUTTON,
   COLLECTION_LIST,
+  DROPDOWN,
+  DROPDOWN_ITEM,
   HEADING,
   LINK_BLOCK,
   PARAGRAPH,
@@ -7,28 +10,25 @@ import {
   SELECT_OPTION,
   TEXT_BLOCK,
   TEXT_LINK,
-  BUTTON,
-  DROPDOWN,
-  DROPDOWN_ITEM,
 } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  LIST_ELEMENT_KEY,
-  TRIGGER_ELEMENT_KEY,
-  DROPDOWN_LABEL_ELEMENT_KEY,
-  SCROLL_ANCHOR_ELEMENT_KEY,
-  FIELD_SETTING_KEY,
-  TYPE_SETTING_KEY, // EASING_SETTING_KEY,
-  DURATION_SETTING_KEY,
   ASC_CLASS_SETTING_KEY,
   DESC_CLASS_SETTING_KEY,
+  DROPDOWN_LABEL_ELEMENT_KEY,
+  DURATION_SETTING_KEY,
+  FIELD_SETTING_KEY,
+  LIST_ELEMENT_KEY,
   REVERSE_SETTING_KEY,
+  SCROLL_ANCHOR_ELEMENT_KEY,
+  TRIGGER_ELEMENT_KEY,
+  TYPE_SETTING_KEY, // EASING_SETTING_KEY,
 } from '../src/utils/constants';
 
 const BUTTON_TRIGGER_KEY = 'button-trigger';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -250,3 +250,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

@@ -1,9 +1,9 @@
 import {
+  ALLOWED_HEADINGS_SELECTOR,
   ANCHOR_SELECTOR,
   CUSTOM_HEADING_REGEXP,
   DEFAULT_INITIAL_HEADING_LEVEL,
   getSelector,
-  ALLOWED_HEADINGS_SELECTOR,
   OMIT_HEADING_REGEXP,
 } from '../utils/constants';
 import { extractHeadingLevel } from '../utils/helpers';

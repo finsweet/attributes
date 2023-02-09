@@ -1,4 +1,4 @@
-import type { CMSList, CMSCore } from '$packages/cmscore';
+import type { CMSCore, CMSList } from '$packages/cmscore';
 
 import { getNestSources } from './actions/collect';
 import { listenListEvents } from './actions/events';

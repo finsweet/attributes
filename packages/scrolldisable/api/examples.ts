@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Disable and Enable',
     description: 'Disable or enable scrolling when clicking on the element.',
@@ -628,3 +628,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

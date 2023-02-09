@@ -1,4 +1,4 @@
-import { addListener, simulateEvent, isElement } from '@finsweet/ts-utils';
+import { addListener, isElement, simulateEvent } from '@finsweet/ts-utils';
 
 import { ARIA_CONTROLS_KEY, ARIA_ROLE_KEY, ARIA_ROLE_VALUES, TABINDEX_KEY } from '$global/constants/a11y';
 

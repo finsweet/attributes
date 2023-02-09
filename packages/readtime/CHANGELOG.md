@@ -1,5 +1,11 @@
 # @finsweet/attributes-readtime
 
+## 1.2.2
+
+### Patch Changes
+
+- 2930a679: Added copy/paste examples.
+
 ## 1.2.1
 
 ### Patch Changes

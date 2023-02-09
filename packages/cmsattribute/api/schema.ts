@@ -1,9 +1,9 @@
 import { ANY_ELEMENT } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
-import { TARGET_SETTING_KEY, NAME_SETTING_KEY, VALUE_SETTING_KEY } from '../src/utils/constants';
+import { NAME_SETTING_KEY, TARGET_SETTING_KEY, VALUE_SETTING_KEY } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [],
   settings: [],
   fields: [
@@ -60,3 +60,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

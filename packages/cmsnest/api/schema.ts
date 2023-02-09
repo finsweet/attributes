@@ -1,9 +1,9 @@
-import { COLLECTION_LIST, COLLECTION_ITEM, DIV_BLOCK } from '$global/constants/webflow-selectors';
+import { COLLECTION_ITEM, COLLECTION_LIST, DIV_BLOCK } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
-import { LIST_ELEMENT_KEY, COLLECTION_SETTING_KEY } from '../src/utils/constants';
+import { COLLECTION_SETTING_KEY, LIST_ELEMENT_KEY } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -45,3 +45,5 @@ export const schema: AttributeSchema = {
   ],
   settings: [],
 };
+
+export default schema;

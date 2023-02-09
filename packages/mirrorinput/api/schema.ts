@@ -1,9 +1,9 @@
 import { FORM_INPUT } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
-import { TRIGGER_ELEMENT_KEY, TARGET_ELEMENT_KEY } from './../src/constants';
+import { TARGET_ELEMENT_KEY, TRIGGER_ELEMENT_KEY } from './../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: TRIGGER_ELEMENT_KEY,
@@ -32,3 +32,5 @@ export const schema: AttributeSchema = {
   ],
   settings: [],
 };
+
+export default schema;

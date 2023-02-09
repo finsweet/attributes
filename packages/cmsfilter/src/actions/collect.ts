@@ -1,3 +1,4 @@
+import type { FormBlockElement } from '@finsweet/ts-utils';
 import {
   extractCommaSeparatedValues,
   FORM_CSS_CLASSES,
@@ -7,7 +8,6 @@ import {
   isKeyOf,
   sameValues,
 } from '@finsweet/ts-utils';
-import type { FormBlockElement } from '@finsweet/ts-utils';
 
 import { normalizePropKey } from '$global/helpers';
 

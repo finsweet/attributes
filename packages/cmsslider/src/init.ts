@@ -23,6 +23,16 @@ export const init = async (): Promise<CMSList[]> => {
   // Collect the combine data
   const [populateData, restartIx] = collectPopulateData(listInstances);
 
+  /**
+   * Restarts the sliders module + the ix2 module, if required.
+   */
+  const restartSliders = async () => {
+    const modulesToRestart: Parameters<typeof restartWebflow>['0'] = ['slider'];
+    if (restartIx) modulesToRestart.push('ix2');
+
+    await restartWebflow(modulesToRestart);
+  };
+
   // Populate the sliders
   for (const data of populateData) {
     const { listInstances } = data;
@@ -40,17 +50,14 @@ export const init = async (): Promise<CMSList[]> => {
         listInstance.items = [];
 
         createSlidesFromItems(newItems);
+        await restartSliders();
       });
     }
   }
 
-  const modulesToRestart: Parameters<typeof restartWebflow>['0'] = ['slider'];
-  if (restartIx) modulesToRestart.push('ix2');
-
-  await restartWebflow(modulesToRestart);
+  await restartSliders();
 
   return finalizeAttribute(CMS_SLIDER_ATTRIBUTE, listInstances, () => {
-    // TODO: Remove optional chaining after cmscore@1.9.0 has rolled out
-    for (const listInstance of listInstances) listInstance.destroy?.();
+    for (const listInstance of listInstances) listInstance.destroy();
   });
 };

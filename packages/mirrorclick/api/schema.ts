@@ -1,9 +1,9 @@
-import { DIV_BLOCK, BUTTON, TEXT_LINK, LINK_BLOCK, ANY_ELEMENT } from '$global/constants/webflow-selectors';
+import { ANY_ELEMENT, BUTTON, DIV_BLOCK, LINK_BLOCK, TEXT_LINK } from '$global/constants/webflow-selectors';
 import type { AttributeSchema } from '$global/types/schema';
 
-import { TRIGGER_ELEMENT_KEY, TARGET_ELEMENT_KEY, DELAY_SETTING_KEY } from '../src/constants';
+import { DELAY_SETTING_KEY, TARGET_ELEMENT_KEY, TRIGGER_ELEMENT_KEY } from '../src/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: TRIGGER_ELEMENT_KEY,
@@ -56,3 +56,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

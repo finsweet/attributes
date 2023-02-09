@@ -1,5 +1,5 @@
+import type { SlideElement, SliderDotElement, SliderElement } from '@finsweet/ts-utils';
 import { cloneNode, SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
-import type { SliderElement, SlideElement, SliderDotElement } from '@finsweet/ts-utils';
 
 import { ATTRIBUTES, queryElement } from '../utils/constants';
 import type { DotsRelationship } from '../utils/types';

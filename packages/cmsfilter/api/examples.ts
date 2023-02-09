@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Radio button #1',
     description: 'Button with an icon and without radio button circle.',
@@ -12216,3 +12216,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

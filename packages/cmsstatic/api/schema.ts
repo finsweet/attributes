@@ -2,13 +2,13 @@ import { COLLECTION_LIST, DIV_BLOCK, LINK_BLOCK } from '$global/constants/webflo
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
-  LIST_ELEMENT_KEY,
-  STATIC_ITEM_ELEMENT_KEY,
-  ORDER_SETTING_KEY,
   INTERACTIVE_SETTING_KEY,
+  LIST_ELEMENT_KEY,
+  ORDER_SETTING_KEY,
+  STATIC_ITEM_ELEMENT_KEY,
 } from './../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: LIST_ELEMENT_KEY,
@@ -53,3 +53,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

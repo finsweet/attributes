@@ -1,5 +1,5 @@
-import { SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 import type { SliderElement } from '@finsweet/ts-utils';
+import { SLIDER_CSS_CLASSES } from '@finsweet/ts-utils';
 
 import type { CMSList } from '$packages/cmscore';
 

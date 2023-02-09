@@ -3,12 +3,12 @@ import type { AttributeSchema } from '$global/types/schema';
 
 import {
   DROPDOWN_ELEMENT_KEY,
+  HIDE_INITIAL_SETTING_KEY,
   LABEL_ELEMENT_KEY,
   RESET_OPTION_KEY,
-  HIDE_INITIAL_SETTING_KEY,
 } from './../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: DROPDOWN_ELEMENT_KEY,
@@ -71,3 +71,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

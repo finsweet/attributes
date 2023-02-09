@@ -1,7 +1,7 @@
 import { isNumber } from '@finsweet/ts-utils';
 
 import { DEFAULT_ACTIVE_CLASS, getAttribute } from '../utils/constants';
-import { getSelectedGroupValue, getAllRadios, getClosestRadioField, queryStar } from '../utils/helpers';
+import { getAllRadios, getClosestRadioField, getSelectedGroupValue, queryStar } from '../utils/helpers';
 
 /**
  * Adds/removes the active classes of a group's stars.

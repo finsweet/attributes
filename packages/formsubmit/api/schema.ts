@@ -12,20 +12,20 @@ import {
 import type { AttributeSchema } from '$global/types/schema';
 
 import {
+  DISABLE_SETTING_KEY,
+  ENHANCE_SETTING_KEY,
   FORM_ELEMENT_KEY,
-  RESET_ELEMENT_KEY,
   IX_TRIGGER_ELEMENT_KEY,
-  RESET_SETTING_KEY,
   PREVENT_RESET_SETTING_KEY,
-  RELOAD_SETTING_KEY,
+  REDIRECT_NEW_TAB_SETTING_KEY,
   REDIRECT_SETTING_KEY,
   REDIRECT_URL_SETTING_KEY,
-  REDIRECT_NEW_TAB_SETTING_KEY,
-  ENHANCE_SETTING_KEY,
-  DISABLE_SETTING_KEY,
+  RELOAD_SETTING_KEY,
+  RESET_ELEMENT_KEY,
+  RESET_SETTING_KEY,
 } from '../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: FORM_ELEMENT_KEY,
@@ -176,3 +176,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

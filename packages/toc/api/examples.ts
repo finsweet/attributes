@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Sidebar TOC',
     description: 'Sidebar Table of Contents + Interactions.',
@@ -1309,3 +1309,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

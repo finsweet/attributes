@@ -1,9 +1,9 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { buildAttribute } from '../../../global/build/index.js';
 
-import { generateChangesetsJSON, generateScript } from '../../../global/build/index.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-generateScript('src/index.ts', 'cmscore', 'esm');
-generateChangesetsJSON(__dirname);
+buildAttribute([
+  {
+    entryFile: 'src/index.ts',
+    outName: 'cmscore',
+    format: 'esm',
+  },
+]);

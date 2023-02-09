@@ -3,7 +3,7 @@ import type { AttributeSchema } from '$global/types/schema';
 
 import { CODE_ELEMENT_KEY, THEME_SETTING_KEY } from './../src/utils/constants';
 
-export const schema: AttributeSchema = {
+const schema: AttributeSchema = {
   elements: [
     {
       key: CODE_ELEMENT_KEY,
@@ -36,3 +36,5 @@ export const schema: AttributeSchema = {
     },
   ],
 };
+
+export default schema;

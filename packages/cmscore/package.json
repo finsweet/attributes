@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmscore",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "Core functionalities of all cms Attributes.",
   "main": "./src/index.ts",
   "type": "module",
@@ -15,6 +15,7 @@
     "build:dev": "cross-env NODE_ENV=test node ./bin/build.js",
     "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix",
     "check": "tsc --noEmit",
     "format": "prettier --write ./src",
     "test": "pnpm playwright test",

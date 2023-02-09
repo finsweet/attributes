@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Keep original content',
     description: 'Custom Slider Dots are placed in the Custom Slider Nav, and the originals are preserved.',
@@ -869,3 +869,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;

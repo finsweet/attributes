@@ -1,11 +1,11 @@
 import type {
-  CMSList,
-  CMSItem,
-  createCMSListInstances,
-  createCMSListInstance,
   addItemsAnimation,
   addListAnimation,
   checkCMSCoreVersion,
+  CMSItem,
+  CMSList,
+  createCMSListInstance,
+  createCMSListInstances,
 } from '..';
 
 /**

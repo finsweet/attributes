@@ -1,5 +1,11 @@
 # @finsweet/attributes-codehighlight
 
+## 1.5.1
+
+### Patch Changes
+
+- 2930a679: Added copy/paste examples.
+
 ## 1.5.0
 
 ### Minor Changes

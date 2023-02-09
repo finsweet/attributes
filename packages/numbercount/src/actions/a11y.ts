@@ -1,8 +1,8 @@
 import {
   ARIA_DESCRIPTION_KEY,
-  ARIA_ROLEDESCRIPTION_KEY,
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
+  ARIA_ROLEDESCRIPTION_KEY,
 } from '$global/constants/a11y';
 
 /**

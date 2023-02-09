@@ -1,2 +1,4 @@
 **/*.js
+!**/build/*.js
+!**/bin/*.js
 **/*.json

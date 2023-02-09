@@ -1,6 +1,6 @@
 import type { AttributeExamples } from '$global/types/examples';
 
-export const examples: AttributeExamples = [
+const examples: AttributeExamples = [
   {
     title: 'Reset, prevent reset and ix-trigger',
     description:
@@ -1246,3 +1246,5 @@ export const examples: AttributeExamples = [
     },
   },
 ];
+
+export default examples;
