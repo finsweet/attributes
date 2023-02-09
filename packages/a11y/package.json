@@ -42,7 +42,7 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "dependencies": {
-    "focus-trap": "^7.0.0",
+    "focus-trap": "^7.2.0",
     "just-debounce": "^1.1.0"
   }
 }

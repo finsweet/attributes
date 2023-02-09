@@ -46,10 +46,10 @@ importers:
 
   packages/a11y:
     specifiers:
-      focus-trap: ^7.0.0
+      focus-trap: ^7.2.0
       just-debounce: ^1.1.0
     dependencies:
-      focus-trap: 7.0.0
+      focus-trap: 7.2.0
       just-debounce: 1.1.0
 
   packages/accordion:
@@ -57,14 +57,14 @@ importers:
 
   packages/animation:
     specifiers:
-      '@motionone/dom': ^10.14.3
-      '@motionone/types': ^10.14.0
-      motion: ^10.14.3
+      '@motionone/dom': ^10.15.5
+      '@motionone/types': ^10.15.1
+      motion: ^10.15.5
     dependencies:
-      motion: 10.14.3
+      motion: 10.15.5
     devDependencies:
-      '@motionone/dom': 10.14.3
-      '@motionone/types': 10.14.0
+      '@motionone/dom': 10.15.5
+      '@motionone/types': 10.15.1
 
   packages/autovideo:
     specifiers: {}
@@ -96,10 +96,10 @@ importers:
   packages/cmsload:
     specifiers:
       just-debounce: ^1.1.0
-      just-throttle: ^4.0.1
+      just-throttle: ^4.2.0
     dependencies:
       just-debounce: 1.1.0
-      just-throttle: 4.1.1
+      just-throttle: 4.2.0
 
   packages/cmsnest:
     specifiers: {}
@@ -124,9 +124,9 @@ importers:
 
   packages/codehighlight:
     specifiers:
-      highlight.js: ^11.4.0
+      highlight.js: ^11.7.0
     devDependencies:
-      highlight.js: 11.6.0
+      highlight.js: 11.7.0
 
   packages/combobox:
     specifiers:
@@ -148,12 +148,12 @@ importers:
 
   packages/docs:
     specifiers:
-      '@types/marked': ^4.0.3
-      marked: ^4.2.2
+      '@types/marked': ^4.0.8
+      marked: ^4.2.12
     dependencies:
-      marked: 4.2.2
+      marked: 4.2.12
     devDependencies:
-      '@types/marked': 4.0.7
+      '@types/marked': 4.0.8
 
   packages/favcustom:
     specifiers: {}
@@ -176,10 +176,10 @@ importers:
   packages/launchdarkly:
     specifiers:
       launchdarkly-js-client-sdk: ^2.23.0
-      superstruct: ^0.16.7
+      superstruct: ^1.0.3
     dependencies:
       launchdarkly-js-client-sdk: 2.23.0
-      superstruct: 0.16.7
+      superstruct: 1.0.3
 
   packages/linkblockedit:
     specifiers: {}
@@ -195,9 +195,9 @@ importers:
 
   packages/numbercount:
     specifiers:
-      just-throttle: ^4.0.1
+      just-throttle: ^4.2.0
     dependencies:
-      just-throttle: 4.1.1
+      just-throttle: 4.2.0
 
   packages/queryparam:
     specifiers: {}
@@ -325,9 +325,9 @@ importers:
 
   packages/videohls:
     specifiers:
-      hls.js: ^1.2.7
+      hls.js: ^1.3.3
     dependencies:
-      hls.js: 1.2.7
+      hls.js: 1.3.3
 
 packages:
 
@@ -2529,59 +2529,59 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /@motionone/animation/10.14.0:
-    resolution: {integrity: sha512-h+1sdyBP8vbxEBW5gPFDnj+m2DCqdlAuf2g6Iafb1lcMnqjsRXWlPw1AXgvUMXmreyhqmPbJqoNfIKdytampRQ==}
+  /@motionone/animation/10.15.1:
+    resolution: {integrity: sha512-mZcJxLjHor+bhcPuIFErMDNyrdb2vJur8lSfMCsuCB4UyV8ILZLvK+t+pg56erv8ud9xQGK/1OGPt10agPrCyQ==}
     dependencies:
-      '@motionone/easing': 10.14.0
-      '@motionone/types': 10.14.0
-      '@motionone/utils': 10.14.0
-      tslib: 2.4.1
+      '@motionone/easing': 10.15.1
+      '@motionone/types': 10.15.1
+      '@motionone/utils': 10.15.1
+      tslib: 2.5.0
 
-  /@motionone/dom/10.14.3:
-    resolution: {integrity: sha512-tese0zSBsWwxCcs9qGNyynhnQ3/n43F6XI588AUKBIfE9D5ZelzQXOzr/T0+ErsVppXJtyGHviYEnv7KHc9x7Q==}
+  /@motionone/dom/10.15.5:
+    resolution: {integrity: sha512-Xc5avlgyh3xukU9tydh9+8mB8+2zAq+WlLsC3eEIp7Ax7DnXgY7Bj/iv0a4X2R9z9ZFZiaXK3BO0xMYHKbAAdA==}
     dependencies:
-      '@motionone/animation': 10.14.0
-      '@motionone/generators': 10.14.0
-      '@motionone/types': 10.14.0
-      '@motionone/utils': 10.14.0
+      '@motionone/animation': 10.15.1
+      '@motionone/generators': 10.15.1
+      '@motionone/types': 10.15.1
+      '@motionone/utils': 10.15.1
       hey-listen: 1.0.8
-      tslib: 2.4.1
+      tslib: 2.5.0
 
-  /@motionone/easing/10.14.0:
-    resolution: {integrity: sha512-2vUBdH9uWTlRbuErhcsMmt1jvMTTqvGmn9fHq8FleFDXBlHFs5jZzHJT9iw+4kR1h6a4SZQuCf72b9ji92qNYA==}
+  /@motionone/easing/10.15.1:
+    resolution: {integrity: sha512-6hIHBSV+ZVehf9dcKZLT7p5PEKHGhDwky2k8RKkmOvUoYP3S+dXsKupyZpqx5apjd9f+php4vXk4LuS+ADsrWw==}
     dependencies:
-      '@motionone/utils': 10.14.0
-      tslib: 2.4.1
+      '@motionone/utils': 10.15.1
+      tslib: 2.5.0
 
-  /@motionone/generators/10.14.0:
-    resolution: {integrity: sha512-6kRHezoFfIjFN7pPpaxmkdZXD36tQNcyJe3nwVqwJ+ZfC0e3rFmszR8kp9DEVFs9QL/akWjuGPSLBI1tvz+Vjg==}
+  /@motionone/generators/10.15.1:
+    resolution: {integrity: sha512-67HLsvHJbw6cIbLA/o+gsm7h+6D4Sn7AUrB/GPxvujse1cGZ38F5H7DzoH7PhX+sjvtDnt2IhFYF2Zp1QTMKWQ==}
     dependencies:
-      '@motionone/types': 10.14.0
-      '@motionone/utils': 10.14.0
-      tslib: 2.4.1
+      '@motionone/types': 10.15.1
+      '@motionone/utils': 10.15.1
+      tslib: 2.5.0
 
-  /@motionone/svelte/10.14.3:
-    resolution: {integrity: sha512-fHyyyGJRkHsfE2IAg+6YU0BiMT/Jz5OAMpJvBZs3oGfwsgdqSms4YtLW22Ecs87e59hPZ26SqWCHad6enRfD9A==}
+  /@motionone/svelte/10.15.5:
+    resolution: {integrity: sha512-Xyxtgp7BlVnSBwcoFmXGHUVnpNktzeXsEifu2NJJWc7VGuxutDsBZxNdz80qvpLIC5MeBa1wh7GGegZzTm1msg==}
     dependencies:
-      '@motionone/dom': 10.14.3
-      tslib: 2.4.1
+      '@motionone/dom': 10.15.5
+      tslib: 2.5.0
     dev: false
 
-  /@motionone/types/10.14.0:
-    resolution: {integrity: sha512-3bNWyYBHtVd27KncnJLhksMFQ5o2MSdk1cA/IZqsHtA9DnRM1SYgN01CTcJ8Iw8pCXF5Ocp34tyAjY7WRpOJJQ==}
+  /@motionone/types/10.15.1:
+    resolution: {integrity: sha512-iIUd/EgUsRZGrvW0jqdst8st7zKTzS9EsKkP+6c6n4MPZoQHwiHuVtTQLD6Kp0bsBLhNzKIBlHXponn/SDT4hA==}
 
-  /@motionone/utils/10.14.0:
-    resolution: {integrity: sha512-sLWBLPzRqkxmOTRzSaD3LFQXCPHvDzyHJ1a3VP9PRzBxyVd2pv51/gMOsdAcxQ9n+MIeGJnxzXBYplUHKj4jkw==}
+  /@motionone/utils/10.15.1:
+    resolution: {integrity: sha512-p0YncgU+iklvYr/Dq4NobTRdAPv9PveRDUXabPEeOjBLSO/1FNB2phNTZxOxpi1/GZwYpAoECEa0Wam+nsmhSw==}
     dependencies:
-      '@motionone/types': 10.14.0
+      '@motionone/types': 10.15.1
       hey-listen: 1.0.8
-      tslib: 2.4.1
+      tslib: 2.5.0
 
-  /@motionone/vue/10.14.3:
-    resolution: {integrity: sha512-FZ/vefJMDthnzlVQbL2I54WEvDyx720KClxWqmHZZ+wKic+i9XhNCU1qijGcvA3/1sFFp8u9fOqmejEWXSsHmw==}
+  /@motionone/vue/10.15.5:
+    resolution: {integrity: sha512-cUENrLYAolUacHvCgU+8wF9OgSlVutfWbHMLERI/bElCJ+e2YVQvG/CpGhIM5fYOOJzuvg2T2wHmLLmvJoavEw==}
     dependencies:
-      '@motionone/dom': 10.14.3
-      tslib: 2.4.1
+      '@motionone/dom': 10.15.5
+      tslib: 2.5.0
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -2852,8 +2852,8 @@ packages:
     resolution: {integrity: sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==}
     dev: true
 
-  /@types/marked/4.0.7:
-    resolution: {integrity: sha512-eEAhnz21CwvKVW+YvRvcTuFKNU9CV1qH+opcgVK3pIMI6YZzDm6gc8o2vHjldFk6MGKt5pueSB7IOpvpx5Qekw==}
+  /@types/marked/4.0.8:
+    resolution: {integrity: sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==}
     dev: true
 
   /@types/minimatch/5.1.2:
@@ -4871,8 +4871,8 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
-  /focus-trap/7.0.0:
-    resolution: {integrity: sha512-uT4Bl8TwU+5vVAx/DHil/1eVS54k9unqhK/vGy2KSh7esPmqgC0koAB9J2sJ+vtj8+vmiFyGk2unLkhNLQaxoA==}
+  /focus-trap/7.2.0:
+    resolution: {integrity: sha512-v4wY6HDDYvzkBy4735kW5BUEuw6Yz9ABqMYLuTNbzAFPcBOGiGHwwcNVMvUz4G0kgSYh13wa/7TG3XwTeT4O/A==}
     dependencies:
       tabbable: 6.0.1
     dev: false
@@ -5201,13 +5201,13 @@ packages:
       js-tokens: 3.0.2
     dev: true
 
-  /highlight.js/11.6.0:
-    resolution: {integrity: sha512-ig1eqDzJaB0pqEvlPVIpSSyMaO92bH1N2rJpLMN/nX396wTpDA4Eq0uK+7I/2XG17pFaaKE0kjV/XPeGt7Evjw==}
+  /highlight.js/11.7.0:
+    resolution: {integrity: sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==}
     engines: {node: '>=12.0.0'}
     dev: true
 
-  /hls.js/1.2.7:
-    resolution: {integrity: sha512-mD4Po7Q5TPNIYX6G8sDD+RS/xfrWjMjrtp+xPw3Thw8Tq557Vn0wdXIX/Zii28F9ncUMMQPZsGkoCWFna9CZCw==}
+  /hls.js/1.3.3:
+    resolution: {integrity: sha512-4Efu6g90HfFGDuQrkquhDoRpA/4iVpSMcfK9zguJ2qXEUfo5VknZt6rziwwFPHmC2DU3crZ0NtPD0eUqOhFyqg==}
     dev: false
 
   /hosted-git-info/2.8.9:
@@ -6289,8 +6289,8 @@ packages:
     resolution: {integrity: sha512-qpcRocdkUmf+UTNBYx5w6dexX5J31AKK1OmPwH630a83DdVVUIngk55RSAiIGpQyoH0dlr872VHfPjnQnK1qDQ==}
     dev: false
 
-  /just-throttle/4.1.1:
-    resolution: {integrity: sha512-OK1iESPWjZZnKRYpMsaFb0TSAv74OtbB8CiCRA1tNub1/R0S47n7edXsQ64GtpfIuiGVwSjPNLwkePl4owlDug==}
+  /just-throttle/4.2.0:
+    resolution: {integrity: sha512-/iAZv1953JcExpvsywaPKjSzfTiCLqeguUTE6+VmK15mOcwxBx7/FHrVvS4WEErMR03TRazH8kcBSHqMagYIYg==}
     dev: false
 
   /jwa/1.4.1:
@@ -6543,8 +6543,8 @@ packages:
       repeat-string: 1.6.1
     dev: false
 
-  /marked/4.2.2:
-    resolution: {integrity: sha512-JjBTFTAvuTgANXx82a5vzK9JLSMoV6V3LBVn4Uhdso6t7vXrGx7g1Cd2r6NYSsxrYbQGFCMqBDhFHyK5q2UvcQ==}
+  /marked/4.2.12:
+    resolution: {integrity: sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: false
@@ -6676,15 +6676,15 @@ packages:
       fp-ts: 2.12.3
     dev: true
 
-  /motion/10.14.3:
-    resolution: {integrity: sha512-xBbgYho8nPiR2OZOrfJTbJpiiQl0F2PZF6H5ItAeIPJEfA/x0ZwxpFC/gbsKfUv3CFUVAoxCRkTDCJjiZ48dxw==}
+  /motion/10.15.5:
+    resolution: {integrity: sha512-ejP6KioN4pigTGxL93APzOnvtLklParL59UQB2T3HWXQBxFcIp5/7YXFmkgiA6pNKKzjvnLhnonRBN5iSFMnNw==}
     dependencies:
-      '@motionone/animation': 10.14.0
-      '@motionone/dom': 10.14.3
-      '@motionone/svelte': 10.14.3
-      '@motionone/types': 10.14.0
-      '@motionone/utils': 10.14.0
-      '@motionone/vue': 10.14.3
+      '@motionone/animation': 10.15.1
+      '@motionone/dom': 10.15.5
+      '@motionone/svelte': 10.15.5
+      '@motionone/types': 10.15.1
+      '@motionone/utils': 10.15.1
+      '@motionone/vue': 10.15.5
     dev: false
 
   /mri/1.2.0:
@@ -7957,8 +7957,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  /superstruct/0.16.7:
-    resolution: {integrity: sha512-4ZZTrXlP4XzCrgh4vOfPDL6dL7zZm5aPl78eczwFSrwvxtsEnKRrSGID6Sbt0agycUoo4auRdWSNTX+oQ3KFyA==}
+  /superstruct/1.0.3:
+    resolution: {integrity: sha512-8iTn3oSS8nRGn+C2pgXSKPI3jmpm6FExNazNpjvqS6ZUJQCej3PUXEKM8NjHBOs54ExM+LPW/FBRhymrdcCiSg==}
     engines: {node: '>=14.0.0'}
     dev: false
 
@@ -8554,8 +8554,8 @@ packages:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
     dev: true
 
-  /tslib/2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+  /tslib/2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
   /tsutils/3.21.0_typescript@4.9.5:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}

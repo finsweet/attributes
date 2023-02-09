@@ -40,10 +40,10 @@
   },
   "homepage": "https://www.finsweet.com/attributes",
   "devDependencies": {
-    "@motionone/dom": "^10.14.3",
-    "@motionone/types": "^10.14.0"
+    "@motionone/dom": "^10.15.5",
+    "@motionone/types": "^10.15.1"
   },
   "dependencies": {
-    "motion": "^10.14.3"
+    "motion": "^10.15.5"
   }
 }

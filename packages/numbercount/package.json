@@ -41,6 +41,6 @@
     "url": "https://sweetjs.finsweet.com/"
   },
   "dependencies": {
-    "just-throttle": "^4.0.1"
+    "just-throttle": "^4.2.0"
   }
 }

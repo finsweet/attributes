@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import type { LDFlagValue } from 'launchdarkly-js-client-sdk';
 
 async function itBehavesLikeNoPropertyIsSet(page: Page, flags: LDFlagValue) {

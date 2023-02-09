@@ -69,6 +69,8 @@ export const createAnimation = ({ initialStyles, keyframes }: AnimationProps): A
 
     elements = elements.filter((element) => document.body.contains(element));
 
+    if (!elements.length) return;
+
     const { finished } = animate(elements, keyframes, {
       ...animationOptions,
       delay: stagger ? staggerDelay(stagger) : undefined,

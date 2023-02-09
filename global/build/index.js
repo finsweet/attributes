@@ -32,7 +32,7 @@ const defaultBuildSettings = {
 
 /**
  * Defines the build configuration for a single attribute.
- * @typedef {{ entryFile: string; outName: string; format?: import('esbuild').BuildOptions['format'] }} AttributeBuildConfig
+ * @typedef {{ entryFile: string; outName: string; outDir?: string; format?: import('esbuild').BuildOptions['format'] }} AttributeBuildConfig
  */
 
 /**
@@ -48,9 +48,9 @@ export const buildAttribute = async (files) => {
  * Creates the build context for esbuild.
  * @param {AttributeBuildConfig} file
  */
-export const buildFile = async ({ entryFile, outName, format }) => {
+export const buildFile = async ({ entryFile, outName, outDir = '', format }) => {
   const entryPoint = join(directory, entryFile);
-  const outfile = join(directory, `${outName}.js`);
+  const outfile = join(directory, outDir, `${outName}.js`);
 
   const context = await esbuild.context({
     ...defaultBuildSettings,
@@ -59,12 +59,8 @@ export const buildFile = async ({ entryFile, outName, format }) => {
     entryPoints: [entryPoint],
   });
 
-  if (PRODUCTION) {
-    await context.rebuild();
-    return context.dispose();
-  }
-
   if (!DEVELOPMENT) {
+    await context.rebuild();
     return context.dispose();
   }
 

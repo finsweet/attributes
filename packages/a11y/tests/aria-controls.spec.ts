@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://fs-attributes.webflow.io/a11y');
@@ -29,7 +29,7 @@ test.describe('aria-controls', () => {
     await expect(header).not.toHaveAttribute('aria-expanded', /(.*?)/);
   });
 
-  test('Traps focus in doalogs', async ({ page }) => {
+  test('Traps focus in dialogs', async ({ page }) => {
     const modal = page.getByTestId('modal');
     const openModalButton = page.getByTestId('open-modal');
     const closeModalButton = page.getByTestId('close-modal');
