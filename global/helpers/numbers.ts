@@ -80,3 +80,19 @@ export const adjustValueToStep = (value: number, step: number, precision?: numbe
 
   return setDecimalPrecision(floor, precision);
 };
+
+/**
+ * Format number to international locale string or fallback to default browser locale
+ * @param number - number to format
+ * @param locale - locale to format number to
+ * @returns formatted number
+ */
+export const formatNumber = (number: number, locale?: string) => {
+  if (!Intl.NumberFormat || !number || !navigator.language) return number;
+
+  const browserLocale = navigator.language;
+
+  const formatter = new Intl.NumberFormat(locale || browserLocale);
+
+  return Number(formatter.format(number));
+};

@@ -1,4 +1,4 @@
-import { getInstanceIndex } from '$global/helpers';
+import { formatNumber, getInstanceIndex } from '$global/helpers';
 
 import { ATTRIBUTES, DEFAULT_WPM, queryElement } from './utils/constants';
 
@@ -20,5 +20,5 @@ export const initReadTime = (timeElement: Element) => {
 
   const readTime = wordsCount / wpm;
 
-  timeElement.textContent = !decimals && readTime < 0.5 ? '1' : readTime.toFixed(decimals);
+  timeElement.textContent = readTime < 0.5 ? '1' : formatNumber(readTime).toFixed(decimals);
 };
