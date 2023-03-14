@@ -78,7 +78,7 @@ export class Handle {
     setHandleStyles(element);
     setHandleA11Y(element, inputElement);
 
-    this.setValue(startValue);
+    this.setValue(inputElement?.value ? parseFloat(inputElement.value) : startValue);
     this.destroy = this.listenEvents();
   }
 
