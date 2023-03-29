@@ -1,5 +1,7 @@
 import type { CMSItem } from '$packages/cmscore';
 
+import { findAndReplaceHtmlContent } from '../utils/findAndReplaceHtmlContent';
+
 /**
  * Adds/removes highlighting to the maching prop elements of a specific `CMSItem`.
  *
@@ -28,9 +30,11 @@ export const toggleHighlight = ({ props }: CMSItem) => {
 
       const { filterValue, highlightCSSClass } = existingHighlightData;
 
-      const regex = new RegExp(filterValue || propValue, 'gi');
-
-      element.innerHTML = originalHTML.replace(regex, `<span class="${highlightCSSClass}">$&</span>`);
+      element.innerHTML = findAndReplaceHtmlContent(
+        filterValue || propValue,
+        originalHTML,
+        `<span class="${highlightCSSClass}">$&</span>`
+      );
     }
   }
 };
