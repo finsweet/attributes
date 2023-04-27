@@ -262,7 +262,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('Default Product Template', () => {
   //before each test
   test.beforeEach(async ({ page }) => {
-    await page.goto('/packages/shopify/tests/fixtures/product-template?id=6782381752381');
+    await page.goto('/packages/shopify/tests/fixtures/product-template.html?id=6782381752381');
   });
   test('Product binding', async ({ page }) => {
     await testProductAttribute(page);
@@ -276,7 +276,7 @@ test.describe('Default Product Template', () => {
 test.describe('Custom slug with Product Template', () => {
   //before each test
   test.beforeEach(async ({ page }) => {
-    await page.goto('/packages/shopify/tests/fixtures/custom-product-slug?id=6782381752381');
+    await page.goto('/packages/shopify/tests/fixtures/custom-product-slug.html?id=6782381752381');
   });
   test('Product binding', async ({ page }) => {
     await testProductAttribute(page);
