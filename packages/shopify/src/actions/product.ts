@@ -1,3 +1,5 @@
+import { cloneNode } from '@finsweet/ts-utils';
+
 import {
   ATTRIBUTES,
   IMAGE,
@@ -15,6 +17,8 @@ import { handleCollectionLink, handleProductLink } from './util';
 
 /**
  * Defines the actions to update element properties.
+ * @param element is the element to update.
+ * @param value is the value to set.
  */
 const propertyActions: Record<string, (element: HTMLElement, value: ProductValue) => void> = {
   [IMAGE]: (element: HTMLElement, value: ProductValue) => {
@@ -34,10 +38,10 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
       scope: element,
     });
 
-    if (template) {
-      const templateParent = template.parentElement as HTMLElement;
+    if (template && template.parentElement) {
+      const templateParent = template.parentElement;
       tags.forEach((tag) => {
-        const clone = template.cloneNode(true) as HTMLElement;
+        const clone = cloneNode(template, true);
         const tagText = queryElement<HTMLElement>(PRODUCT_TAG_TEXT, {
           scope: clone,
         });
@@ -54,9 +58,10 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
 };
 
 /**
- *
+ * Bind the product data to the elements.
  * @param parentElement that contains the elements to update.
  * @param product is the product data.
+ * @param options are the binding options.
  */
 export const bindProductDataGraphQL = (
   parentElement: HTMLElement,
@@ -84,6 +89,10 @@ export const bindProductDataGraphQL = (
     variantMaps[variant.title] = variant;
   });
 
+  /**
+   * Bind the product variant data to the elements.
+   * @param variant is the variant data.
+   */
   function bindProductVariant(variant: Variant) {
     const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
     const discount = 0;
@@ -129,24 +138,22 @@ export const bindProductDataGraphQL = (
     handleCollectionLink(parentElement, { productOptions: options });
   }
 
-  // By default, bind the first variant
-  bindProductVariant(variants.nodes[0]);
-
   const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
     scope: parentElement,
   });
-  if (!firstTemplate) {
+  if (!firstTemplate || !firstTemplate.parentElement) {
     return;
   }
 
-  const templateParent = firstTemplate.parentElement as HTMLElement;
+  const templateParent = firstTemplate.parentElement;
   templateParent.innerHTML = '';
-  const template = firstTemplate.cloneNode(true) as HTMLElement;
+  const template = cloneNode(firstTemplate, true);
 
   const selectedVariantKey = product.options.map(() => '');
 
+  const firstOptionInputs: HTMLInputElement[] = [];
   product.options.forEach((option, index) => {
-    const clone = template.cloneNode(true) as HTMLElement;
+    const clone = cloneNode(template, true);
     const optionName = queryElement<HTMLElement>('optionname', {
       scope: clone,
     });
@@ -154,48 +161,49 @@ export const bindProductDataGraphQL = (
       optionName.innerText = option.name;
     }
 
-    // handle variantlist
+    // handle variant list
     const variantList = queryElement<HTMLElement>('variantlist', {
       scope: clone,
     });
-    const selectElement = clone.querySelector('select') as HTMLSelectElement;
+    const selectElement = clone.querySelector('select');
 
-    if (variantList) {
+    if (variantList && variantList.children.length > 0) {
       // use the first element as template
       const childNode = variantList.children[0];
-      const template = childNode.cloneNode(true) as HTMLElement;
+      const template = cloneNode(childNode, true);
+
       variantList.innerHTML = '';
       option.values.forEach((value) => {
-        const clone = template.cloneNode(true) as HTMLElement;
-        const input = clone.querySelector('input') as HTMLInputElement;
-        const label = clone.querySelector(`[for='${input.name}']`) as HTMLLabelElement;
-        input.value = value;
-        label.innerText = value;
-        // update the name with the index
-        input.setAttribute('name', `${input.name}-${index}`);
-        label.setAttribute('for', `${input.name}-${index}`);
-
-        input.addEventListener('change', () => {
-          selectedVariantKey[index] = value;
-          const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
-          if (variant) {
-            bindProductVariant(variant);
+        const clone = cloneNode(template, true);
+        const input = clone.querySelector('input');
+        if (input) {
+          const label = clone.querySelector(`[for='${input.name}']`);
+          if (label instanceof HTMLElement) {
+            label.innerText = value;
+            label.setAttribute('for', `${input.name}-${index}`);
           }
-        });
+          input.value = value;
+          input.setAttribute('name', `${input.name}-${index}`);
+          input.addEventListener('change', () => {
+            selectedVariantKey[index] = value;
+            const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
+            if (variant) {
+              bindProductVariant(variant);
+            }
+          });
+        }
         variantList.appendChild(clone);
       });
 
       // select the first one
       const firstInput = variantList.querySelector('input') as HTMLInputElement;
-      setTimeout(() => {
-        firstInput.click();
-      }, 500);
+      if (firstInput) {
+        firstOptionInputs.push(firstInput);
+      }
     } else if (selectElement) {
       selectElement.innerHTML = '';
       option.values.forEach((value) => {
-        const optionElement = document.createElement('option');
-        optionElement.value = value;
-        optionElement.innerText = value;
+        const optionElement = new Option(value, value);
         selectElement.appendChild(optionElement);
       });
       selectElement.addEventListener('change', () => {
@@ -209,5 +217,10 @@ export const bindProductDataGraphQL = (
     }
 
     templateParent.appendChild(clone);
+  });
+
+  // By default, select the first option of each variant
+  firstOptionInputs.forEach((input) => {
+    input.click();
   });
 };

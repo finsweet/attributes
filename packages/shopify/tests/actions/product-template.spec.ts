@@ -51,7 +51,7 @@ const productResponse = `{
 						"currencyCode": "GBP"
 					},
 					"image": {
-						"url": "https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973"
+						"url": "https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159974"
 					},
 					"weight": 500.0,
 					"weightUnit": "GRAMS"
@@ -97,17 +97,17 @@ const productResponse = `{
 					"title": "Medium / Purple",
 					"unitPrice": null,
 					"price": {
-						"amount": "11.99",
+						"amount": "31.99",
 						"currencyCode": "GBP"
 					},
 					"compareAtPrice": {
-						"amount": "10.99",
+						"amount": "30.99",
 						"currencyCode": "GBP"
 					},
 					"image": {
 						"url": "https://cdn.shopify.com/s/files/1/0571/7003/4749/products/purple-fs-shopify-01.png?v=1653159976"
 					},
-					"weight": 500.0,
+					"weight": 508.0,
 					"weightUnit": "GRAMS"
 				}, {
 					"id": "gid://shopify/ProductVariant/39949739065405",
@@ -144,6 +144,9 @@ const productResponse = `{
 	}
 }`;
 
+const productTemplatePath = '/packages/shopify/tests/fixtures/product-template.html';
+const customSlugProductTemplatePath = '/packages/shopify/tests/fixtures/custom-product-slug.html';
+
 export const productRoute = (page: Page): Promise<void> =>
   page.route('https://finsweet-art-shop.myshopify.com/api/2022-10/graphql.json', (route) => {
     route.fulfill({
@@ -154,99 +157,117 @@ export const productRoute = (page: Page): Promise<void> =>
     });
   });
 
-const expectedValues: { [key in ProductAttribute]: (_: Page) => Promise<void> } = {
-  title: async (page: Page) => {
+const expectedValues: { [key in ProductAttribute]: (_: Page, value: ProductValue) => Promise<void> } = {
+  title: async (page: Page, title: ProductValue) => {
     const locator = await page.locator(`css=[fs-shopify-element="title"]`);
-    await expect(locator).toContainText(['Oakley Sal', 'Oakley Sal']);
+    await expect(locator).toHaveText(title);
   },
-  description: async function (page: Page) {
+  description: async function (page: Page, description: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="description"]`);
-    await expect(locator).toContainText([
-      'A set of words that is complete in itself, typically containing a subject and predicate, conveying a statement, question, exclamation, or command, and consisting of a main clause and sometimes one or more subordinate clauses',
-    ]);
+    await expect(locator).toHaveText(description);
   },
-  handle: async function (page: Page) {
+  handle: async function (page: Page, handle: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="handle"]`);
-    await expect(locator).toContainText('oakley-sal');
+    await expect(locator).toHaveText(handle);
   },
-  created: async function (page: Page) {
+  created: async function (page: Page, created: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="created"]`);
-    await expect(locator).toContainText('2022-05-21T17:33:16Z');
+    await expect(locator).toHaveText(created);
   },
-  updated: async function (page: Page) {
+  updated: async function (page: Page, updated: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="updated"]`);
-    await expect(locator).toContainText('2022-11-07T19:12:24Z');
+    await expect(locator).toHaveText(updated);
   },
-  published: async function (page: Page) {
+  published: async function (page: Page, published: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="published"]`);
-    await expect(locator).toContainText('2022-05-25T16:51:56Z');
+    await expect(locator).toHaveText(published);
   },
-  image: async function (page: Page) {
+  image: async function (page: Page, image: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="image"]`);
     const src = await locator.evaluate((e) => (e as HTMLElement).getAttribute('src'));
-    await expect(src).toBe(
-      'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973'
-    );
+    await expect(src).toBe(image);
   },
-  thumbnail: async function (page: Page) {
+  thumbnail: async function (page: Page, thumbnail: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="thumbnail"]`);
     const src = await locator.evaluate((e) => (e as HTMLElement).getAttribute('src'));
-    await expect(src).toBe(
-      'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973'
-    );
+    await expect(src).toBe(thumbnail);
   },
-  sku: async function (page: Page) {
+  sku: async function (page: Page, sku: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="sku"]`);
-    await expect(locator).toContainText('FS0001');
+    await expect(locator).toHaveText(sku);
   },
-  price: async function (page: Page) {
+  price: async function (page: Page, price: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="price"]`);
-    await expect(locator).toContainText('7.99');
+    await expect(locator).toHaveText(price);
   },
   compareprice: function () {
     throw new Error('Function not implemented.');
   },
-  discountpercent: async function (page: Page) {
+  discountpercent: async function (page: Page, discountPercent: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="discountpercent"]`);
-    await expect(locator).toContainText('0');
+    await expect(locator).toHaveText(discountPercent);
   },
-  type: async function (page: Page) {
+  type: async function (page: Page, type: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="type"]`);
-    await expect(locator).toContainText('Logo Art');
+    await expect(locator).toHaveText(type);
   },
-  vendor: async function (page: Page) {
+  vendor: async function (page: Page, vendor: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="vendor"]`);
-    await expect(locator).toContainText('Finsweet Art Shop');
+    await expect(locator).toHaveText(vendor);
   },
-  weight: async function (page: Page) {
+  weight: async function (page: Page, weight: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="weight"]`);
-    await expect(locator).toContainText('250');
+    await expect(locator).toHaveText(weight);
   },
-  'tag-list': async function (page: Page) {
+  'tag-list': async function (page: Page, tagList: ProductValue) {
     const locator = page.locator(`css=[fs-shopify-element="tag-text"]`);
-    await expect(locator).toContainText(['Aditya Singh', 'Blessing']);
+    await expect(locator).toHaveText(tagList);
   },
 };
+type ProductValue = string | RegExp | Array<string | RegExp>;
+type ProductExpectedValues = { [key in ProductAttribute]: ProductValue };
 
-const testProductAttribute = async (page: Page) => {
-  const keys = [
-    'title',
-    'description',
-    'handle',
-    'created',
-    'updated',
-    'published',
-    'image',
-    'thumbnail',
-    'sku',
-    'price',
-    'type',
-    'vendor',
-    'weight',
-    'tag-list',
-  ];
-  for (let i = 0; i < keys.length; i++) {
-    await expectedValues[keys[i] as ProductAttribute](page);
+const defaultProductExpectedValues: Partial<ProductExpectedValues> = {
+  title: ['Oakley Sal', 'Oakley Sal'],
+  description: [
+    'A set of words that is complete in itself, typically containing a subject and predicate, conveying a statement, question, exclamation, or command, and consisting of a main clause and sometimes one or more subordinate clauses.',
+  ],
+  handle: 'oakley-sal',
+  created: '2022-05-21T17:33:16Z',
+  updated: '2022-11-07T19:12:24Z',
+  published: '2022-05-25T16:51:56Z',
+  image: 'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973',
+  thumbnail: 'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159973',
+  sku: 'FS0001',
+  price: '7.99',
+  discountpercent: '0',
+  type: 'Logo Art',
+  vendor: 'Finsweet Art Shop',
+  weight: '250',
+  'tag-list': ['Aditya Singh', 'Blessing'],
+};
+
+const productKeys: ProductAttribute[] = [
+  'title',
+  'description',
+  'handle',
+  'created',
+  'updated',
+  'published',
+  'image',
+  'thumbnail',
+  'sku',
+  'price',
+  'discountpercent',
+  'type',
+  'vendor',
+  'weight',
+  'tag-list',
+];
+const testProductAttribute = async (page: Page, defaultExpectedValues = defaultProductExpectedValues) => {
+  for (let i = 0; i < productKeys.length; i++) {
+    if (!defaultExpectedValues[productKeys[i]]) continue;
+    await expectedValues[productKeys[i]](page, defaultExpectedValues[productKeys[i]] as ProductValue);
   }
 };
 
@@ -260,29 +281,100 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Default Product Template', () => {
-  //before each test
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/packages/shopify/tests/fixtures/product-template.html?id=6782381752381');
-  });
+  let queryParams = '?id=6782381752381';
   test('Product binding', async ({ page }) => {
+    await page.goto(`${productTemplatePath}${queryParams}`);
     await testProductAttribute(page);
   });
 
   test('Loader is not shown', async ({ page }) => {
+    await page.goto(`${productTemplatePath}${queryParams}`);
     await testLoader(page);
+  });
+
+  test('It shows the right option names', async ({ page }) => {
+    await page.goto(`${productTemplatePath}${queryParams}`);
+    const locator = page.locator(`css=[fs-shopify-element="option-name"]`);
+    await expect(locator).toHaveText(['Size', 'Color']);
+  });
+
+  test('First option is selected by default', async ({ page }) => {
+    await page.goto(`${productTemplatePath}${queryParams}`);
+
+    // Size option
+    const locator = page.locator(`css=[name="radio-0"]`);
+    await expect(
+      await locator.evaluateAll((nodes) => {
+        return nodes.map((node) => node.parentElement?.querySelector('.w--redirected-checked') !== null);
+      })
+    ).toStrictEqual([true, false, false]);
+
+    // Color option
+    const locator2 = page.locator(`css=[name="radio-1"]`);
+    await expect(
+      await locator2.evaluateAll((nodes) => {
+        return nodes.map((node) => node.parentElement?.querySelector('.w--redirected-checked') !== null);
+      })
+    ).toStrictEqual([true, false]);
+  });
+
+  test('It shows the right product attributes when option is selected', async ({ page }) => {
+    await page.goto(`${productTemplatePath}${queryParams}`);
+
+    // Size option
+    let locator = page.locator(`css=[name="radio-0"]`).nth(1);
+    await locator.click({
+      force: true,
+    });
+
+    await testProductAttribute(page, {
+      ...defaultProductExpectedValues,
+      image: 'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159974',
+      thumbnail: 'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/joe-black-fs-shopify-01.png?v=1653159974',
+      sku: 'FS0002',
+      price: '11.99',
+      weight: '500',
+    });
+
+    // Color option
+    locator = page.locator(`css=[name="radio-1"]`).nth(1);
+    await locator.click({
+      force: true,
+    });
+
+    await testProductAttribute(page, {
+      ...defaultProductExpectedValues,
+      image: 'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/purple-fs-shopify-01.png?v=1653159976',
+      thumbnail: 'https://cdn.shopify.com/s/files/1/0571/7003/4749/products/purple-fs-shopify-01.png?v=1653159976',
+      sku: 'FS0005',
+      price: '31.99',
+      weight: '508',
+    });
+  });
+
+  test('It redirects to 404 page When "id" and "handle" are not provided', async ({ page }) => {
+    queryParams = '';
+    await page.goto(`${productTemplatePath}${queryParams}`);
+    await expect(page).toHaveURL(/.*404.html/);
   });
 });
 
 test.describe('Custom slug with Product Template', () => {
-  //before each test
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/packages/shopify/tests/fixtures/custom-product-slug.html?id=6782381752381');
-  });
+  let queryParams = '?id=6782381752381';
+
   test('Product binding', async ({ page }) => {
+    await page.goto(`${customSlugProductTemplatePath}${queryParams}`);
     await testProductAttribute(page);
   });
 
   test('Loader is not shown', async ({ page }) => {
+    await page.goto(`${customSlugProductTemplatePath}${queryParams}`);
     await testLoader(page);
+  });
+
+  test('It redirects to 404 page When "id" and "handle" are not provided', async ({ page }) => {
+    queryParams = '';
+    await page.goto(`${customSlugProductTemplatePath}${queryParams}`);
+    await expect(page).toHaveURL(/.*custom-404.html/);
   });
 });

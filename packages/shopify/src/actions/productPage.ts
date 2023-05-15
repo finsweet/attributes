@@ -11,7 +11,7 @@ export const productPageInit = async (client: ShopifyClient) => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  const idParamValue = PRODUCT_ID_PREFIX + urlParams.get(id);
+  const idParamValue = urlParams.get(id);
   const handleParamValue = urlParams.get(handle);
   if (!idParamValue && !handleParamValue) {
     window.location.href = redirectURL as string;
@@ -20,8 +20,8 @@ export const productPageInit = async (client: ShopifyClient) => {
 
   try {
     let productGraphQl: ShopifyProduct;
-    if (urlParams.get(id)) {
-      productGraphQl = await client.fetchProductByIDGraphQL(idParamValue);
+    if (idParamValue) {
+      productGraphQl = await client.fetchProductByIDGraphQL(`${PRODUCT_ID_PREFIX}${idParamValue}`);
     } else if (handleParamValue) {
       productGraphQl = await client.fetchProductByHandleGraphQL(handleParamValue);
     } else {
