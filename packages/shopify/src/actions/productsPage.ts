@@ -74,6 +74,13 @@ export const bindCollectionProductsData = async (
   return Promise.resolve(collection);
 };
 
+/**
+ * Bind products to container
+ * @param products array of products
+ * @param template template to clone
+ * @param container container to append products
+ * @param productOptions product options
+ */
 export const bindProducts = (
   products: ShopifyProduct[],
   template: HTMLDivElement,
@@ -87,7 +94,7 @@ export const bindProducts = (
   }
   products.forEach((product) => {
     const productContainer = template.cloneNode(true) as HTMLDivElement;
-    bindProductDataGraphQL(productContainer, product, productOptions);
+    bindProductDataGraphQL(productContainer, product, options);
     container.appendChild(productContainer);
   });
 };

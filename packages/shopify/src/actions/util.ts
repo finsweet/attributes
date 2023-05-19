@@ -34,15 +34,15 @@ export const handleProductLink = (
   id = id.replace(PRODUCT_ID_PREFIX, '');
   const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'product'));
   productLinks.forEach((link) => {
-    let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) as LinkFormat;
-    if (!elementLinkFormat) {
-      elementLinkFormat = linkFormat || LinkFormat.ID;
-    }
+    const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || LinkFormat.ID;
+    const url = new URL(productPage);
+
     if (elementLinkFormat === LinkFormat.HANDLE) {
-      link.href = `${productPage}?handle=${handle}`;
-      return;
+      url.searchParams.set('handle', handle);
+    } else {
+      url.searchParams.set('id', id);
     }
-    link.href = `${productPage}?id=${id}`;
+    link.href = url.toString();
   });
 };
 
@@ -58,19 +58,20 @@ export const handleCollectionLink = (
   }: { productOptions: ShopifyBindingOptions }
 ) => {
   function addLink(link: HTMLAnchorElement) {
-    let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) as LinkFormat;
-    if (!elementLinkFormat) {
-      elementLinkFormat = linkFormat || LinkFormat.ID;
-    }
+    const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || LinkFormat.ID;
+    const url = new URL(collectionPage);
+
     if (elementLinkFormat === LinkFormat.HANDLE && collectionHandle) {
-      link.href = `${collectionPage}?handle=${collectionHandle}`;
-      return;
+      url.searchParams.append('handle', collectionHandle);
+    } else if (collectionId) {
+      url.searchParams.append('id', collectionId.replace(COLLECTION_ID_PREFIX, ''));
     }
-    if (collectionId) link.href = `${collectionPage}?id=${collectionId.replace(COLLECTION_ID_PREFIX, '')}`;
+
+    link.href = url.toString();
   }
 
   if (isHTMLAnchorElement(parentElement)) {
-    addLink(parentElement as HTMLAnchorElement);
+    addLink(parentElement);
     return;
   }
 
@@ -82,10 +83,10 @@ export const handleCollectionLink = (
 
 /**
  *@param options Product options.
-  takes all possible combination of option values and separate them by /, e.g.
-  [{"id":"gid://shopify/ProductOption/8774761119805","name":"Size","values":["Small","Medium","Large"]},{"id":"gid://shopify/ProductOption/8774761152573","name":"Color","values":["Black","Purple"]}]
-  will be converted to ["Small / Black", "Small / Purple", "Medium / Black", "Medium / Purple", "Large / Black", "Large / Purple"]
-  **/
+ takes all possible combination of option values and separate them by /, e.g.
+ [{"id":"gid://shopify/ProductOption/8774761119805","name":"Size","values":["Small","Medium","Large"]},{"id":"gid://shopify/ProductOption/8774761152573","name":"Color","values":["Black","Purple"]}]
+ will be converted to ["Small / Black", "Small / Purple", "Medium / Black", "Medium / Purple", "Large / Black", "Large / Purple"]
+ **/
 export const extractAllPossibleVariants = (options: Option[]) => {
   const variants: string[] = [];
   const variant: string[] = [];

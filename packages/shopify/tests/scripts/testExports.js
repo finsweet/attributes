@@ -9415,7 +9415,7 @@
         "name": "String",
         "kind": "SCALAR"
       };
-      var URL = {
+      var URL2 = {
         "name": "URL",
         "kind": "SCALAR"
       };
@@ -9523,7 +9523,7 @@
       Types.types["Shop"] = Shop;
       Types.types["ShopPolicy"] = ShopPolicy;
       Types.types["String"] = String$1;
-      Types.types["URL"] = URL;
+      Types.types["URL"] = URL2;
       Types.types["UnitPriceMeasurement"] = UnitPriceMeasurement;
       Types.types["UnitPriceMeasurementMeasuredType"] = UnitPriceMeasurementMeasuredType;
       Types.types["UnitPriceMeasurementMeasuredUnit"] = UnitPriceMeasurementMeasuredUnit;
@@ -9861,31 +9861,28 @@
     id = id.replace(PRODUCT_ID_PREFIX, "");
     const productLinks = parentElement.querySelectorAll(getSelector("link", "product"));
     productLinks.forEach((link) => {
-      let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
-      if (!elementLinkFormat) {
-        elementLinkFormat = linkFormat || "id" /* ID */;
-      }
+      const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || "id" /* ID */;
+      const url = new URL(productPage);
       if (elementLinkFormat === "handle" /* HANDLE */) {
-        link.href = `${productPage}?handle=${handle}`;
-        return;
+        url.searchParams.set("handle", handle);
+      } else {
+        url.searchParams.set("id", id);
       }
-      link.href = `${productPage}?id=${id}`;
+      link.href = url.toString();
     });
   };
   var handleCollectionLink = (parentElement, {
     productOptions: { collectionPage, linkFormat, collectionHandle, collectionId }
   }) => {
     function addLink(link) {
-      let elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key);
-      if (!elementLinkFormat) {
-        elementLinkFormat = linkFormat || "id" /* ID */;
-      }
+      const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || "id" /* ID */;
+      const url = new URL(collectionPage);
       if (elementLinkFormat === "handle" /* HANDLE */ && collectionHandle) {
-        link.href = `${collectionPage}?handle=${collectionHandle}`;
-        return;
+        url.searchParams.append("handle", collectionHandle);
+      } else if (collectionId) {
+        url.searchParams.append("id", collectionId.replace(COLLECTION_ID_PREFIX, ""));
       }
-      if (collectionId)
-        link.href = `${collectionPage}?id=${collectionId.replace(COLLECTION_ID_PREFIX, "")}`;
+      link.href = url.toString();
     }
     if (isHTMLAnchorElement(parentElement)) {
       addLink(parentElement);
@@ -10118,7 +10115,7 @@
     }
     products.forEach((product) => {
       const productContainer = template.cloneNode(true);
-      bindProductDataGraphQL(productContainer, product, productOptions);
+      bindProductDataGraphQL(productContainer, product, options);
       container.appendChild(productContainer);
     });
   };
