@@ -73,8 +73,14 @@ export const generateSelectors = <
     }
 
     const elementSelector = `[${ELEMENT_ATTRIBUTE_NAME}="${elementKey}" i]`;
-    const instanceSelector = isNumber(instanceIndex) ? `[${INSTANCE_ATTRIBUTE_NAME}="${instanceIndex}"]` : '';
-    return elementSelector + instanceSelector;
+
+    if (!isNumber(instanceIndex)) {
+      return elementSelector;
+    }
+
+    const instanceSelector = `[${INSTANCE_ATTRIBUTE_NAME}="${instanceIndex}"]`;
+
+    return `${elementSelector}${instanceSelector}, ${instanceSelector} ${elementSelector}`;
   };
 
   /**
