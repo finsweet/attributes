@@ -74,6 +74,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-copyclip');
     }
 
+    case 'countdown': {
+      return import('@finsweet/attributes-countdown');
+    }
+
     case 'countitems': {
       return import('@finsweet/attributes-countitems');
     }

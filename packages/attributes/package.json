@@ -54,6 +54,7 @@
     "@finsweet/attributes-combobox": "workspace:*",
     "@finsweet/attributes-component": "workspace:*",
     "@finsweet/attributes-copyclip": "workspace:*",
+    "@finsweet/attributes-countdown": "workspace:*",
     "@finsweet/attributes-countitems": "workspace:*",
     "@finsweet/attributes-displayvalues": "workspace:*",
     "@finsweet/attributes-favcustom": "workspace:*",

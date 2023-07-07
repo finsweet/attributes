@@ -38,6 +38,8 @@ export const COMPONENT_ATTRIBUTE = 'component';
 
 export const COPY_CLIP_ATTRIBUTE = 'copyclip';
 
+export const COUNTDOWN_ATTRIBUTE = 'countdown';
+
 export const COUNT_ITEMS_ATTRIBUTE = 'countitems';
 
 export const DISPLAY_VALUES_ATTRIBUTE = 'displayvalues';
