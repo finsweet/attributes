@@ -41,6 +41,7 @@ export const createSocialShareInstances = (scope?: HTMLElement) => {
     });
 
     const create = creators[platform];
+
     socialShareButtons.forEach(create);
   }
 };
@@ -49,6 +50,14 @@ export const createSocialShareInstances = (scope?: HTMLElement) => {
  * Holds an instance creator for each platform.
  */
 const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
+  /**
+   * Copy creater
+   */
+  copy() {
+    // doesn't need to store any data and instances are irrelevant
+    return;
+  },
+
   /**
    * Facebook creator.
    * @param trigger

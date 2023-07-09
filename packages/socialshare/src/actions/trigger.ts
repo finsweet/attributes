@@ -10,12 +10,17 @@ import type { SocialShareStoreData, SocialShareTypes } from '../utils/types';
  * @returns A callback to remove the event listener.
  */
 export const listenTriggerClicks = () => {
-  const clickCleanup = addListener(document, 'click', (e) => {
+  const clickCleanup = addListener(document, 'click', async (e) => {
     const { target } = e;
     if (!isElement(target)) return;
 
     for (const key in SOCIAL_SHARE_PLATFORMS) {
       const platform = key as SocialShareTypes;
+
+      // if platform is copy button
+      if (platform === 'copy') {
+        await triggerCopyShare();
+      }
 
       const trigger = target.closest<HTMLElement>(
         getSelector('element', platform, { operator: 'prefixed', caseInsensitive: true })
@@ -30,6 +35,18 @@ export const listenTriggerClicks = () => {
   });
 
   return clickCleanup;
+};
+
+/**
+ * Triggers a copy share
+ */
+const triggerCopyShare = async () => {
+  const windowUrl = window.location.href;
+  try {
+    await navigator.clipboard.writeText(windowUrl);
+  } catch (err) {
+    console.error('Failed to copy', err);
+  }
 };
 
 /**

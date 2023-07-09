@@ -10,6 +10,7 @@ export const LINKEDIN_ELEMENT_KEY = 'linkedin';
 export const TELEGRAM_ELEMENT_KEY = 'telegram';
 export const REDDIT_ELEMENT_KEY = 'reddit';
 export const CONTENT_ELEMENT_KEY = 'content';
+export const COPY_ELEMENT_KEY = 'copy';
 export const URL_ELEMENT_KEY = 'url';
 export const FACEBOOK_HASHTAG_ELEMENT_KEY = 'facebook-hashtags';
 export const TWITTER_HASHTAG_ELEMENT_KEY = 'twitter-hashtags';
@@ -45,6 +46,10 @@ export const ATTRIBUTES = {
        * Defines a Telegram social button
        */
       telegram: generateDynamicAttibuteValue(TELEGRAM_ELEMENT_KEY),
+      /**
+       * Defines a copy social button
+       */
+      copy: generateDynamicAttibuteValue(COPY_ELEMENT_KEY),
       /**
        * Defines a Reddit social button
        */
@@ -103,4 +108,5 @@ export const SOCIAL_SHARE_PLATFORMS = {
   reddit: 'https://www.reddit.com/submit',
   linkedin: 'https://www.linkedin.com//sharing/share-offsite',
   telegram: 'https://t.me/share',
+  copy: '',
 } as const;
