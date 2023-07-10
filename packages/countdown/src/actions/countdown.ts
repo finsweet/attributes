@@ -1,17 +1,19 @@
-import { getTimezoneOffset, setInnerHTML } from '../utils/helpers';
-import { getAttribute, queryElement } from '../utils/selectors';
+import { getInstanceIndex, getTimezoneOffset, setInnerHTML } from '../utils';
+import { getAttribute, queryElement } from '../utils';
 
-export const initCountDown = (countdownElement: Element) => {
+export const initCountDown = (countdownElement: HTMLElement) => {
   let countdownInterval = 0;
   const dateString = getAttribute(countdownElement, 'date');
   if (!dateString) return;
   const timeZone = getAttribute(countdownElement, 'timezone');
+  const instanceIndex = getInstanceIndex(countdownElement);
 
   const monthsElement = queryElement('months', { scope: countdownElement });
   const daysElement = queryElement('days', { scope: countdownElement });
   const hoursElement = queryElement('hours', { scope: countdownElement });
   const minutesElement = queryElement('minutes', { scope: countdownElement });
   const secondsElement = queryElement('seconds', { scope: countdownElement });
+  const showElement = queryElement('complete-show', { instanceIndex });
 
   const futureDate = new Date(dateString);
   const futureOffset = getTimezoneOffset(timeZone);
@@ -23,11 +25,19 @@ export const initCountDown = (countdownElement: Element) => {
     const currentTime = currentDate.getTime() + currentOffset;
     const timeDifference = futureTime - currentTime;
 
-    const months = futureDate.getMonth() - currentDate.getMonth();
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    if (timeDifference <= 0) {
+      countdownComplete();
+      return;
+    }
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const months = Math.floor(days / 30);
     const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    if (monthsElement) {
+      days = days % 30;
+    }
 
     setInnerHTML(monthsElement, months.toString());
     setInnerHTML(daysElement, days.toString());
@@ -36,14 +46,22 @@ export const initCountDown = (countdownElement: Element) => {
     setInnerHTML(secondsElement, seconds.toString());
   };
 
-  function startCountdown() {
+  const startCountdown = () => {
     updateCountdown();
     countdownInterval = setInterval(updateCountdown, 1000);
-  }
+  };
 
-  function stopCountdown() {
+  const stopCountdown = () => {
     clearInterval(countdownInterval);
-  }
+  };
+
+  const countdownComplete = () => {
+    if (showElement) {
+      showElement.style.display = 'block';
+    }
+    countdownElement.style.display = 'none';
+    stopCountdown();
+  };
 
   // Start the countdown initially
   startCountdown();

@@ -1,7 +1,7 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initCountDown } from './actions/countdown';
-import { queryAllElements } from './utils/selectors';
+import { queryAllElements } from './utils';
 
 /**
  * Inits the attribute.
