@@ -1,6 +1,10 @@
 import { getInstanceIndex, getTimezoneOffset, setInnerHTML } from '../utils';
 import { getAttribute, queryElement } from '../utils';
 
+/**
+ * Inits a timer countdown.
+ * @param countdownElement
+ */
 export const initCountDown = (countdownElement: HTMLElement) => {
   let countdownInterval = 0;
   const dateString = getAttribute(countdownElement, 'date');
@@ -19,6 +23,9 @@ export const initCountDown = (countdownElement: HTMLElement) => {
   const futureOffset = getTimezoneOffset(timeZone);
   const futureTime = futureDate.getTime() + futureOffset;
 
+  /**
+   Updates timer elements values
+   */
   const updateCountdown = () => {
     const currentDate = new Date();
     const currentOffset = getTimezoneOffset(timeZone);
