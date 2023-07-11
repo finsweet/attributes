@@ -1,4 +1,4 @@
-import { addListener, isElement } from '@finsweet/ts-utils';
+import { addListener, Debug, isElement } from '@finsweet/ts-utils';
 
 import { getSelector, SOCIAL_SHARE_PLATFORMS } from '../utils/constants';
 import { stores } from '../utils/stores';
@@ -45,7 +45,7 @@ const triggerCopyShare = async () => {
   try {
     await navigator.clipboard.writeText(windowUrl);
   } catch (err) {
-    console.error('Failed to copy', err);
+    Debug.alert('MESSAGE_TO_SHOW', 'error');
   }
 };
 
