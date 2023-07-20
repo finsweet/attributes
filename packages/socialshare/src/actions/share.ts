@@ -67,25 +67,47 @@ export function createTelegramShare({ type, content, url, width, height }: Socia
   );
 }
 
+export function createCopyShare(type: SocialShareTypes) {
+  return createSocialShare(type);
+}
+
+/**
+ * This function returns an object which is set in a store mapped to the particular social share element
+ * @param type
+ * @param params
+ * @param width
+ * @param height
+ * @returns
+ */
 function createSocialShare(
   type: SocialShareTypes,
-  params: { [key: string]: string | null },
-  width: number,
-  height: number
-): SocialShareStoreData {
+  params?: { [key: string]: string | null },
+  width?: number,
+  height?: number
+): SocialShareStoreData | undefined {
+  // if type of social share is copy, we don't need a definate height or width
+  if (type === 'copy') {
+    const shareUrl = window.location.href;
+    return {
+      height: 0,
+      width: 0,
+      type,
+      shareUrl,
+    };
+  }
   const urlSocialMedia = SOCIAL_SHARE_PLATFORMS[type];
 
   const shareUrl = new URL(urlSocialMedia);
-  const shareParams = Object.entries(params);
-
-  for (const [key, value] of shareParams) {
-    if (value) shareUrl.searchParams.append(key, value);
+  if (params && height && width) {
+    const shareParams = Object.entries(params);
+    for (const [key, value] of shareParams) {
+      if (value) shareUrl.searchParams.append(key, value);
+    }
+    return {
+      height,
+      width,
+      type,
+      shareUrl,
+    };
   }
-
-  return {
-    height,
-    width,
-    type,
-    shareUrl,
-  };
 }

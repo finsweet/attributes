@@ -1,4 +1,4 @@
-import { addListener, Debug, isElement } from '@finsweet/ts-utils';
+import { addListener, isElement } from '@finsweet/ts-utils';
 
 import { getSelector, SOCIAL_SHARE_PLATFORMS } from '../utils/constants';
 import { stores } from '../utils/stores';
@@ -17,11 +17,6 @@ export const listenTriggerClicks = () => {
     for (const key in SOCIAL_SHARE_PLATFORMS) {
       const platform = key as SocialShareTypes;
 
-      // if platform is copy button
-      if (platform === 'copy') {
-        await triggerCopyShare();
-      }
-
       const trigger = target.closest<HTMLElement>(
         getSelector('element', platform, { operator: 'prefixed', caseInsensitive: true })
       );
@@ -29,6 +24,13 @@ export const listenTriggerClicks = () => {
       if (!trigger) continue;
 
       const socialShareData = stores[platform].get(trigger);
+
+      // use case when the trigger button is copy button
+      if (socialShareData?.type === 'copy') {
+        // we are sure that the url will be a string as it comes from copy
+        triggerCopyShare(socialShareData.shareUrl as string);
+        break;
+      }
       if (socialShareData) triggerSocialShare(socialShareData);
       break;
     }
@@ -39,13 +41,13 @@ export const listenTriggerClicks = () => {
 
 /**
  * Triggers a copy share
+ * @param url
  */
-const triggerCopyShare = async () => {
-  const windowUrl = window.location.href;
+const triggerCopyShare = async (url: string) => {
   try {
-    await navigator.clipboard.writeText(windowUrl);
+    await navigator.clipboard.writeText(url);
   } catch (err) {
-    Debug.alert('MESSAGE_TO_SHOW', 'error');
+    console.error(err);
   }
 };
 

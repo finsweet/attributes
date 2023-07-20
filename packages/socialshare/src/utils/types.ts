@@ -28,7 +28,7 @@ export interface PinterestSocialShare extends SocialShare {
 }
 
 export type SocialShareStoreData = Pick<SocialShare, 'height' | 'width' | 'type'> & {
-  shareUrl: URL;
+  shareUrl: URL | string;
 };
 
 export type SocialShareStore = Map<HTMLElement, SocialShareStoreData>;

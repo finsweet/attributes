@@ -2,6 +2,7 @@ import { getInstanceIndex } from '$global/helpers';
 
 import { collectFacebookData, collectPinterestData, collectSocialData, collectTwitterData } from './actions/collect';
 import {
+  createCopyShare,
   createFacebookShare,
   createLinkedinShare,
   createPinterestShare,
@@ -52,10 +53,11 @@ export const createSocialShareInstances = (scope?: HTMLElement) => {
 const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   /**
    * Copy creater
+   * @param trigger
    */
-  copy() {
-    // doesn't need to store any data and instances are irrelevant
-    return;
+  copy(trigger) {
+    const shareData = createCopyShare('copy');
+    if (shareData) stores.copy.set(trigger, shareData);
   },
 
   /**
@@ -72,8 +74,7 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
     const facebook = collectFacebookData(trigger, instanceIndex, cmsListItem);
 
     const shareData = createFacebookShare(facebook);
-
-    stores.facebook.set(trigger, shareData);
+    if (shareData) stores.facebook.set(trigger, shareData);
   },
 
   /**
@@ -91,7 +92,7 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
 
     const shareData = createTwitterShare(twitter);
 
-    stores.twitter.set(trigger, shareData);
+    if (shareData) stores.twitter.set(trigger, shareData);
   },
 
   /**
@@ -109,7 +110,7 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
 
     const shareData = createPinterestShare(pinterest);
 
-    stores.pinterest.set(trigger, shareData);
+    if (shareData) stores.pinterest.set(trigger, shareData);
   },
 
   /**
@@ -127,7 +128,7 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
 
     const shareData = createTelegramShare(telegram);
 
-    stores.telegram.set(trigger, shareData);
+    if (shareData) stores.telegram.set(trigger, shareData);
   },
 
   /**
@@ -145,7 +146,7 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
 
     const shareData = createLinkedinShare(linkedin);
 
-    stores.linkedin.set(trigger, shareData);
+    if (shareData) stores.linkedin.set(trigger, shareData);
   },
 
   /**
@@ -163,6 +164,6 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
 
     const shareData = createRedditShare(reddit);
 
-    stores.reddit.set(trigger, shareData);
+    if (shareData) stores.reddit.set(trigger, shareData);
   },
 };
