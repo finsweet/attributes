@@ -219,9 +219,10 @@ function collectSize(button: HTMLElement, selector: string, defaultValue: number
  * @returns
  */
 function createSocialShareUrl(type: SocialShareTypes, params: { [key: string]: string | null } = {}): URL {
-  const urlSocialMedia = SOCIAL_SHARE_PLATFORMS[type];
+  const getShareUrl = SOCIAL_SHARE_PLATFORMS[type];
 
-  const shareUrl = new URL(urlSocialMedia);
+  const url = getShareUrl();
+  const shareUrl = new URL(url);
 
   const shareParams = Object.entries(params);
 
