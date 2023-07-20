@@ -27,6 +27,10 @@ export const ATTRIBUTES = {
     key: `${ATTRIBUTES_PREFIX}-element`,
     values: {
       /**
+       * Defines a copy social button
+       */
+      copy: COPY_ELEMENT_KEY,
+      /**
        * Defines a Facebook social button
        */
       facebook: generateDynamicAttibuteValue(FACEBOOK_ELEMENT_KEY),
@@ -46,10 +50,6 @@ export const ATTRIBUTES = {
        * Defines a Telegram social button
        */
       telegram: generateDynamicAttibuteValue(TELEGRAM_ELEMENT_KEY),
-      /**
-       * Defines a copy social button
-       */
-      copy: generateDynamicAttibuteValue(COPY_ELEMENT_KEY),
       /**
        * Defines a Reddit social button
        */
@@ -108,5 +108,5 @@ export const SOCIAL_SHARE_PLATFORMS = {
   reddit: 'https://www.reddit.com/submit',
   linkedin: 'https://www.linkedin.com//sharing/share-offsite',
   telegram: 'https://t.me/share',
-  copy: '',
+  copy: window.location.href,
 } as const;

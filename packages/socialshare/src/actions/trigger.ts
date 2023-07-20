@@ -2,7 +2,7 @@ import { addListener, isElement } from '@finsweet/ts-utils';
 
 import { getSelector, SOCIAL_SHARE_PLATFORMS } from '../utils/constants';
 import { stores } from '../utils/stores';
-import type { SocialShareStoreData, SocialShareTypes } from '../utils/types';
+import type { SocialShare, SocialShareTypes } from '../utils/types';
 
 /**
  * Listens for trigger clicks on the document.
@@ -25,14 +25,15 @@ export const listenTriggerClicks = () => {
 
       const socialShareData = stores[platform].get(trigger);
 
-      // use case when the trigger button is copy button
       if (socialShareData?.type === 'copy') {
-        // we are sure that the url will be a string as it comes from copy
-        triggerCopyShare(socialShareData.shareUrl as string);
+        triggerCopyShare(socialShareData.shareUrl);
         break;
       }
-      if (socialShareData) triggerSocialShare(socialShareData);
-      break;
+
+      if (socialShareData) {
+        triggerSocialShare(socialShareData);
+        break;
+      }
     }
   });
 
@@ -43,9 +44,9 @@ export const listenTriggerClicks = () => {
  * Triggers a copy share
  * @param url
  */
-const triggerCopyShare = async (url: string) => {
+const triggerCopyShare = async (url: URL) => {
   try {
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(url.toString());
   } catch (err) {
     console.error(err);
   }
@@ -55,7 +56,11 @@ const triggerCopyShare = async (url: string) => {
  * Triggers a social share.
  * @param storeData
  */
-const triggerSocialShare = ({ width, height, shareUrl }: SocialShareStoreData) => {
+const triggerSocialShare = ({
+  width,
+  height,
+  shareUrl,
+}: Extract<SocialShare, { type: 'linkedin' | 'reddit' | 'telegram' | 'facebook' | 'twitter' | 'pinterest' }>) => {
   const left = window.innerWidth / 2 - width / 2 + window.screenX;
   const top = window.innerHeight / 2 - height / 2 + window.screenY;
   const popParams = `scrollbars=no, width=${width}, height=${height}, top=${top}, left=${left}`;
