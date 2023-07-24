@@ -163,7 +163,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
     el: paginationWrapper,
     type: transformPaginationType(paginationType),
     bulletClass: getPaginationBulletClass(bulletElement || thumbElement),
-    bulletActiveClass: activeBulletClass,
+    bulletActiveClass: activeBulletClass || 'is-active',
     clickable: !!paginationClickable || true,
     renderFraction: (currentClass: string, totalClass: string) => {
       if (!paginationWrapper) return '';
