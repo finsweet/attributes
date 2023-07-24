@@ -86,6 +86,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-favcustom');
     }
 
+    case 'favorite': {
+      return import('@finsweet/attributes-favorite');
+    }
+
     case 'formsubmit': {
       return import('@finsweet/attributes-formsubmit');
     }

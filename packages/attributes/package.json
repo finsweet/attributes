@@ -57,6 +57,7 @@
     "@finsweet/attributes-countitems": "workspace:*",
     "@finsweet/attributes-displayvalues": "workspace:*",
     "@finsweet/attributes-favcustom": "workspace:*",
+    "@finsweet/attributes-favorite": "workspace:*",
     "@finsweet/attributes-formsubmit": "workspace:*",
     "@finsweet/attributes-greenhouse": "workspace:*",
     "@finsweet/attributes-inputactive": "workspace:*",

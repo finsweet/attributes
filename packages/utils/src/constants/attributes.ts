@@ -46,6 +46,8 @@ export const DOCS_ATTRIBUTE = 'docs';
 
 export const FAV_CUSTOM_ATTRIBUTE = 'favcustom';
 
+export const FAVORITE_ATTRIBUTE = 'favorite';
+
 export const FORM_SUBMIT_ATTRIBUTE = 'formsubmit';
 
 export const INPUT_ACTIVE_ATTRIBUTE = 'inputactive';
