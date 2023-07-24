@@ -49,6 +49,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
   const nextSlideClass = getAttribute(sliderItemElement, 'nextslideclass');
   const prevSlideClass = getAttribute(sliderItemElement, 'prevslideclass');
   const activeSlideClass = getAttribute(sliderItemElement, 'activeslideclass');
+  const initial = getAttribute(sliderItemElement, 'initial') || 0;
 
   //Pagination
   const paginationType = getAttribute(sliderElement, 'paginationtype') || 'bullets';
@@ -252,6 +253,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
     simulateTouch: !!draggable,
     slidesPerView: 'auto',
     slidesPerGroup: 1,
+    initialSlide: Number(initial),
     breakpoints: breakpointsOptions,
     centeredSlides: !!centeredSlides,
     pagination: paginationWrapper ? paginationOptions : false,
