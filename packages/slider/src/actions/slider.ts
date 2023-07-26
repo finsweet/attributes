@@ -26,6 +26,7 @@ import {
   queryAllElements,
   queryElement,
   swiperInstancesStore,
+  transformPaginationElementToType,
   transformPaginationType,
 } from '../utils';
 
@@ -52,12 +53,13 @@ export const initSlider = (sliderElement: HTMLElement) => {
   const initial = getAttribute(sliderItemElement, 'initial') || 0;
 
   //Pagination
-  const paginationType = getAttribute(sliderElement, 'paginationtype') || 'bullets';
   const paginationWrapper = queryElement('pagination-wrapper', { instanceIndex }) || undefined;
   const progressWrapper = queryElement('progress-wrapper', { instanceIndex, scope: paginationWrapper });
   const activeProgress = queryElement('progress', { instanceIndex, scope: paginationWrapper });
   const bulletElement = queryElement('bullet', { instanceIndex, scope: paginationWrapper });
   const thumbElement = queryElement('bullet-cms', { instanceIndex, scope: paginationWrapper });
+  const current = queryElement('count-current', { scope: paginationWrapper });
+  const total = queryElement('count-total', { scope: paginationWrapper });
   const paginationClickable = getAttribute(sliderElement, 'paginationclickable');
   const activeBulletClass = bulletElement ? getAttribute(bulletElement, 'bulletactive') : 'is-active';
   const disableSlideNext = nextButton ? getAttribute(nextButton, 'disablednextprev') : true;
@@ -162,14 +164,17 @@ export const initSlider = (sliderElement: HTMLElement) => {
 
   const paginationOptions: PaginationOptions = {
     el: paginationWrapper,
-    type: transformPaginationType(paginationType),
+    type: transformPaginationElementToType({
+      bulletElement: bulletElement,
+      progressElement: progressWrapper,
+      countElement: total,
+      thumbElement: thumbElement,
+    }),
     bulletClass: getPaginationBulletClass(bulletElement || thumbElement),
     bulletActiveClass: activeBulletClass || 'is-active',
     clickable: !!paginationClickable || true,
     renderFraction: (currentClass: string, totalClass: string) => {
       if (!paginationWrapper) return '';
-      const current = queryElement('count-current', { scope: paginationWrapper });
-      const total = queryElement('count-total', { scope: paginationWrapper });
       current?.classList.add(currentClass);
       total?.classList.add(totalClass);
       return paginationWrapper.innerHTML;
@@ -192,7 +197,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
   };
 
   const initThumbnailSwiper = () => {
-    if (!thumbElement || paginationType !== 'thumbs') return;
+    if (!thumbElement) return;
     const wrapper = thumbElement.parentElement;
     return new Swiper(wrapper?.parentElement as HTMLElement, {
       wrapperClass: wrapper?.className,

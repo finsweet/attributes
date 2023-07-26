@@ -19,6 +19,35 @@ export const transformPaginationType = (paginationType: string): PaginationOptio
   PAGINATION_TYPE_ALIASES[paginationType];
 
 /**
+ * Transforms pagination element to pagination Type.
+ * In to type that is supported by Swiper library
+ * @param objectWithElements
+ * @returns Returns Swiper pagination type.
+ */
+export const transformPaginationElementToType = ({
+  bulletElement,
+  progressElement,
+  countElement,
+  thumbElement,
+}: {
+  [key: string]: HTMLElement | null;
+}): PaginationOptions['type'] => {
+  if (bulletElement) {
+    return 'bullets';
+  }
+  if (progressElement) {
+    return 'progressbar';
+  }
+  if (countElement) {
+    return 'fraction';
+  }
+  if (thumbElement) {
+    return 'custom';
+  }
+  return 'bullets';
+};
+
+/**
  * @returns The class required by Swiper library for bullets type pagination
  * @param element
  */
