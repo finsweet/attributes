@@ -27,7 +27,6 @@ import {
   queryElement,
   swiperInstancesStore,
   transformPaginationElementToType,
-  transformPaginationType,
 } from '../utils';
 
 export const initSlider = (sliderElement: HTMLElement) => {
@@ -255,7 +254,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
     loop: effect === 'marquee' ? true : !(!loop || loop === 'false'),
     speed: effect === 'marquee' ? 10000 : Number(speed) || 300,
     direction: direction || 'horizontal',
-    simulateTouch: !!draggable,
+    simulateTouch: draggable === undefined ? true : !!draggable,
     slidesPerView: 'auto',
     slidesPerGroup: 1,
     initialSlide: Number(initial),
