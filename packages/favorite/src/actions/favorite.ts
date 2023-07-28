@@ -1,17 +1,30 @@
-import { getInstanceIndex } from '../utils';
-import { saveToLocalStorage } from '../utils';
+import { getAttribute, queryElement, updateButtonState } from '../utils';
+import { updateLocalStorage } from '../utils';
 
-export const initFavoriteItem = (listitem: Element) => {
-  function handleFavoriteButtonClick(event: any) {
-    const listItemDiv = event.target.closest('.w-dyn-item');
+/**
+ * Initializes the favorite item by setting up event listeners for the like button and handling its state.
+ * @param listItem - The HTML element representing a single item in the favorite list.
+ */
+export const initFavoriteItem = (listItem: Element) => {
+  const likeButton = queryElement('like', { scope: listItem });
+  if (!likeButton) return;
+  const linkElement = listItem.querySelector('a');
+  const hrefValue = linkElement?.getAttribute('href');
+  if (!hrefValue) return;
+  const likeActiveClass = getAttribute(likeButton, 'active');
+  const key = getAttribute(likeButton, 'key') || 'favorite';
 
-    const linkElement = listItemDiv.querySelector('a.heading-style-h3');
+  const handleFavoriteButtonClick = () => {
+    updateLocalStorage(hrefValue, key);
+  };
 
-    if (linkElement) {
-      const hrefValue = linkElement.getAttribute('href');
-      saveToLocalStorage(hrefValue);
-    }
+  if (likeActiveClass) {
+    updateButtonState(likeButton, hrefValue, likeActiveClass, key);
   }
-
-  listitem.addEventListener('click', handleFavoriteButtonClick);
+  likeButton.addEventListener('click', handleFavoriteButtonClick);
+  window.addEventListener('localStorageUpdate', () => {
+    if (likeActiveClass) {
+      updateButtonState(likeButton, hrefValue, likeActiveClass, key);
+    }
+  });
 };

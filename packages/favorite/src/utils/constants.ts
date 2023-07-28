@@ -5,7 +5,9 @@ export const ELEMENTS = [
    * Defines an Swiper elements.
    */
   'list',
+  'list-favorite',
   'remove',
+  'like',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

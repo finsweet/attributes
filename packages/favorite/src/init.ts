@@ -2,15 +2,19 @@ import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-uti
 import { getCollectionElements } from '@finsweet/attributes-utils';
 
 import { initFavoriteItem } from './actions/favorite';
-import { queryAllElements } from './utils';
+import { setListItems } from './actions/list';
+import { queryAllElements, queryElement } from './utils';
 
 /**
- * Inits list items count.
+ * Inits favorite functionality.
  */
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
   const listReferences = queryAllElements('list');
+  const favoriteList = queryElement('list-favorite');
+  const listItem = favoriteList?.querySelector<HTMLElement>('[role="listitem"]');
+  listItem?.remove();
 
   for (const listReference of listReferences) {
     const listElement = getCollectionElements(listReference, 'list') || listReference;
@@ -18,6 +22,14 @@ export const init: FsAttributeInit = async () => {
     for (const item of listElement.children) {
       initFavoriteItem(item);
     }
+  }
+
+  if (favoriteList && listItem) {
+    setListItems(favoriteList, listItem);
+
+    window.addEventListener('localStorageUpdate', () => {
+      setListItems(favoriteList, listItem);
+    });
   }
 
   return {
