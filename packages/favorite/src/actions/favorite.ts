@@ -1,4 +1,4 @@
-import { getAttribute, queryElement, updateButtonState } from '../utils';
+import { getAttribute, queryElement, updateElementsClass } from '../utils';
 import { updateLocalStorage } from '../utils';
 
 /**
@@ -13,18 +13,19 @@ export const initFavoriteItem = (listItem: Element) => {
   if (!hrefValue) return;
   const likeActiveClass = getAttribute(likeButton, 'active');
   const key = getAttribute(likeButton, 'key') || 'favorite';
+  const elementsToUpdate = listItem.querySelectorAll('[fs-favorite-active]');
 
   const handleFavoriteButtonClick = () => {
     updateLocalStorage(hrefValue, key);
   };
 
   if (likeActiveClass) {
-    updateButtonState(likeButton, hrefValue, likeActiveClass, key);
+    updateElementsClass(elementsToUpdate, hrefValue, likeActiveClass, key);
   }
   likeButton.addEventListener('click', handleFavoriteButtonClick);
   window.addEventListener('localStorageUpdate', () => {
     if (likeActiveClass) {
-      updateButtonState(likeButton, hrefValue, likeActiveClass, key);
+      updateElementsClass(elementsToUpdate, hrefValue, likeActiveClass, key);
     }
   });
 };

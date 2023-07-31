@@ -31,17 +31,21 @@ export const removeFromLocalStorage = (link: string, key: string) => {
 
 /**
  * Updates the state of the provided button element based on the presence of the href in the localStorage.
- * @param button - The HTML element representing the button to be updated.
+ * @param elements - The HTML elements representing the elements to be updated.
  * @param href - The href value associated with the button.
  * @param activeClass - The CSS class to be added to the button when the href is present in localStorage.
  * @param key - The key under which the href values are stored in localStorage.
  */
-export const updateButtonState = (button: Element, href: string, activeClass: string, key: string) => {
+export const updateElementsClass = (elements: NodeListOf<Element>, href: string, activeClass: string, key: string) => {
   const favorites = JSON.parse(String(localStorage.getItem(key))) || [];
   if (favorites.includes(href)) {
-    button.classList.add(activeClass);
+    elements.forEach((element) => {
+      element.classList.add(activeClass);
+    });
   } else {
-    button.classList.remove(activeClass);
+    elements.forEach((element) => {
+      element.classList.remove(activeClass);
+    });
   }
 };
 
