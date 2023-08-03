@@ -98,3 +98,34 @@ export const getBreakpointParams = (
   }
   return { slidesPerView, slidesPerGroup, spaceBetween };
 };
+
+/**
+ * Dispatches a click event on all visible slides within the given slider wrapper element.
+ * @param sliderWrapperElement - The DOM element that contains the visible slides.
+ */
+export const dispatchClickOnVisibleSlides = (sliderWrapperElement: Element) => {
+  const visibleSlides = sliderWrapperElement.querySelectorAll('.swiper-slide-visible');
+  const visibleSlidesArray = Array.from(visibleSlides);
+
+  if (visibleSlides.length > 1) visibleSlidesArray.pop();
+
+  const clickEvent = new Event('click', { bubbles: true, cancelable: true });
+
+  visibleSlidesArray.forEach(function (slide) {
+    slide.dispatchEvent(clickEvent);
+  });
+};
+
+/**
+ * Sets 'pointer-events: none' on the specified element and its children, while restoring 'pointer-events: auto' on the children.
+ * @param element - The DOM element to modify the pointer events for.
+ */
+export const setPointerEventsNoneToElementAndChildren = (element: HTMLElement) => {
+  element.style.pointerEvents = 'none';
+
+  const childElements = element.querySelectorAll<HTMLElement>('*');
+
+  for (const childElement of childElements) {
+    childElement.style.pointerEvents = 'auto';
+  }
+};

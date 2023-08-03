@@ -18,6 +18,7 @@ export const ELEMENTS = [
   'popup',
   'progress',
   'progress-wrapper',
+  'interaction',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

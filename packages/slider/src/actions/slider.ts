@@ -18,6 +18,7 @@ import type { PaginationOptions } from 'swiper/types/modules/pagination';
 import type { SwiperOptions } from 'swiper/types/swiper-options';
 
 import {
+  dispatchClickOnVisibleSlides,
   getAttribute,
   getBreakpointParams,
   getInstanceIndex,
@@ -25,6 +26,7 @@ import {
   getPaginationBulletClass,
   queryAllElements,
   queryElement,
+  setPointerEventsNoneToElementAndChildren,
   swiperInstancesStore,
   transformPaginationElementToType,
 } from '../utils';
@@ -50,6 +52,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
   const prevSlideClass = getAttribute(sliderItemElement, 'prevslideclass');
   const activeSlideClass = getAttribute(sliderItemElement, 'activeslideclass');
   const initial = getAttribute(sliderItemElement, 'initial') || 0;
+  const interaction = queryElement('interaction', { scope: sliderElement }) || undefined;
 
   //Pagination
   const paginationWrapper = queryElement('pagination-wrapper', { instanceIndex }) || undefined;
@@ -270,6 +273,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
     fadeEffect: {
       crossFade: true,
     },
+    watchSlidesProgress: true,
     coverflowEffect: {
       depth: Number(coverflowDepth),
       modifier: Number(coverflowModifier),
@@ -314,6 +318,18 @@ export const initSlider = (sliderElement: HTMLElement) => {
 
   const sliderInstance = new Swiper(sliderElement, generalOptions);
   swiperInstancesStore.set(sliderElement, sliderInstance);
+
+  if (interaction && sliderWrapperElement) {
+    const interactionElements = queryAllElements('interaction', { scope: sliderWrapperElement });
+    for (const element of interactionElements) {
+      setPointerEventsNoneToElementAndChildren(element);
+    }
+    sliderInstance.on('slideChange', function () {
+      dispatchClickOnVisibleSlides(sliderWrapperElement);
+    });
+
+    dispatchClickOnVisibleSlides(sliderWrapperElement);
+  }
 
   // Update the popup position when the slider is moved
   sliderInstance.on('slideChange', movePopupWithSlider);
