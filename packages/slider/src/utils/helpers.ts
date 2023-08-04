@@ -100,18 +100,43 @@ export const getBreakpointParams = (
 };
 
 /**
+ * Removes the last element from an array.
+ * @param arr - The input array from which the last element will be removed.
+ */
+export const removeLastElement = <T>(arr: T[]) => {
+  return arr.length > 1 ? arr.slice(0, -1) : [];
+};
+
+/**
  * Dispatches a click event on all visible slides within the given slider wrapper element.
  * @param sliderWrapperElement - The DOM element that contains the visible slides.
+ * @param hasHalfSlide - The DOM element that contains the visible slides.
  */
-export const dispatchClickOnVisibleSlides = (sliderWrapperElement: Element) => {
-  const visibleSlides = sliderWrapperElement.querySelectorAll('.swiper-slide-visible');
-  const visibleSlidesArray = Array.from(visibleSlides);
+export const dispatchClickOnVisibleSlides = (sliderWrapperElement: Element, hasHalfSlide: boolean) => {
+  const visibleSlides = Array.from(sliderWrapperElement.querySelectorAll('.swiper-slide-visible'));
 
-  if (visibleSlides.length > 1) visibleSlidesArray.pop();
+  if (hasHalfSlide) visibleSlides.pop();
 
   const clickEvent = new Event('click', { bubbles: true, cancelable: true });
 
-  visibleSlidesArray.forEach(function (slide) {
+  visibleSlides.forEach(function (slide) {
+    slide.dispatchEvent(clickEvent);
+  });
+};
+
+/**
+ * Dispatches a click event for the disappearing slides in the slider.
+ * @param sliderWrapperElement - The element containing the slider.
+ * @param previousSlides - An array of previous slide elements.
+ */
+export const dispatchClickOnGoneSlides = (sliderWrapperElement: Element, previousSlides: Element[]) => {
+  const goneSlides = previousSlides.filter((element) => {
+    return !element.classList.contains('swiper-slide-visible');
+  });
+
+  const clickEvent = new Event('click', { bubbles: true, cancelable: true });
+
+  goneSlides.forEach(function (slide) {
     slide.dispatchEvent(clickEvent);
   });
 };

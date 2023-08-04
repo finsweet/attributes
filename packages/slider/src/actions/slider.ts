@@ -18,6 +18,7 @@ import type { PaginationOptions } from 'swiper/types/modules/pagination';
 import type { SwiperOptions } from 'swiper/types/swiper-options';
 
 import {
+  dispatchClickOnGoneSlides,
   dispatchClickOnVisibleSlides,
   getAttribute,
   getBreakpointParams,
@@ -26,6 +27,7 @@ import {
   getPaginationBulletClass,
   queryAllElements,
   queryElement,
+  removeLastElement,
   setPointerEventsNoneToElementAndChildren,
   swiperInstancesStore,
   transformPaginationElementToType,
@@ -320,15 +322,25 @@ export const initSlider = (sliderElement: HTMLElement) => {
   swiperInstancesStore.set(sliderElement, sliderInstance);
 
   if (interaction && sliderWrapperElement) {
+    const hasHalfSlide = sliderInstance.params.slidesPerView === 'auto' && sliderInstance.width > 970;
+    let previousVisibleSlides = hasHalfSlide
+      ? removeLastElement(Array.from(sliderWrapperElement.querySelectorAll('.swiper-slide-visible')))
+      : Array.from(sliderWrapperElement.querySelectorAll('.swiper-slide-visible'));
     const interactionElements = queryAllElements('interaction', { scope: sliderWrapperElement });
     for (const element of interactionElements) {
       setPointerEventsNoneToElementAndChildren(element);
     }
     sliderInstance.on('slideChange', function () {
-      dispatchClickOnVisibleSlides(sliderWrapperElement);
+      dispatchClickOnVisibleSlides(sliderWrapperElement, hasHalfSlide);
+
+      dispatchClickOnGoneSlides(sliderWrapperElement, previousVisibleSlides);
+
+      previousVisibleSlides = hasHalfSlide
+        ? removeLastElement(Array.from(sliderWrapperElement.querySelectorAll('.swiper-slide-visible')))
+        : Array.from(sliderWrapperElement.querySelectorAll('.swiper-slide-visible'));
     });
 
-    dispatchClickOnVisibleSlides(sliderWrapperElement);
+    dispatchClickOnVisibleSlides(sliderWrapperElement, hasHalfSlide);
   }
 
   // Update the popup position when the slider is moved
