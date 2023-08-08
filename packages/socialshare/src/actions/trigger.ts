@@ -25,12 +25,7 @@ export const listenTriggerClicks = () => {
 
       const socialShareData = stores[platform].get(trigger);
 
-      if (socialShareData?.type === 'copy') {
-        triggerCopyShare(socialShareData.shareUrl);
-        break;
-      }
-
-      if (socialShareData) {
+      if (socialShareData && socialShareData?.type !== 'copy') {
         triggerSocialShare(socialShareData);
         break;
       }
@@ -38,18 +33,6 @@ export const listenTriggerClicks = () => {
   });
 
   return clickCleanup;
-};
-
-/**
- * Triggers a copy share
- * @param url
- */
-const triggerCopyShare = async (url: URL) => {
-  try {
-    await navigator.clipboard.writeText(url.toString());
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 /**

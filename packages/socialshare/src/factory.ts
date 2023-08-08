@@ -1,15 +1,15 @@
 import { getInstanceIndex } from '$global/helpers';
 
 import {
-  collectFacebookData,
-  collectPinterestData,
-  collectTwitterData,
   collectCopyData,
-  collectTelegramData,
+  collectFacebookData,
   collectLinkedinData,
+  collectPinterestData,
   collectRedditData,
+  collectTelegramData,
+  collectTwitterData,
 } from './actions/collect';
-
+import { configureCopyButton } from './utils/configureCopyButton';
 import { ATTRIBUTES, queryElement, SOCIAL_SHARE_PLATFORMS } from './utils/constants';
 import { getCMSItemWrapper } from './utils/dom';
 import { stores } from './utils/stores';
@@ -57,7 +57,8 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
    */
   copy(trigger) {
     const copy = collectCopyData();
-    stores.copy.set(trigger, copy);
+    const copyUrl = copy.shareUrl.toString();
+    configureCopyButton(trigger, copyUrl);
   },
 
   /**

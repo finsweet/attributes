@@ -2,8 +2,8 @@ import {
   ATTRIBUTES,
   DEFAULT_HEIGHT_SETTING_KEY,
   DEFAULT_WIDTH_SETTING_KEY,
-  SOCIAL_SHARE_PLATFORMS,
   queryElement,
+  SOCIAL_SHARE_PLATFORMS,
 } from './../utils/constants';
 import type {
   CopySocialShare,

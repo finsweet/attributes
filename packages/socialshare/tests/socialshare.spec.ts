@@ -1,7 +1,7 @@
-import { test } from '@playwright/test';
+import { expect, type Locator, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://fs-attributes.webflow.io/socialshare');
+  await page.goto('https://fs-attributes.webflow.io/socialshare');
 });
 
 test.describe('socialshare', () => {
@@ -14,6 +14,33 @@ test.describe('socialshare', () => {
     const reddit1 = page.getByTestId('reddit-1');
     const twitter4 = page.getByTestId('twitter-4').first();
     const pinterest4 = page.getByTestId('pinterest-4').first();
+    const copy1 = page.getByTestId('copy-1');
+    const copy2 = page.getByTestId('copy-2');
+    const copy3 = page.getByTestId('copy-3').first();
+    const copy4 = page.getByTestId('copy-4').first();
+    const currentUrl = await page.url();
+
+    /**
+     * Compares the data-url attribute of the passed copy locator with the page url
+     * @param copyLocator
+     */
+    async function checkCopyFunctionality(copyLocator: Locator) {
+      const dataUrlAttribute = await copyLocator.getAttribute('data-url');
+
+      await expect(dataUrlAttribute).toEqual(currentUrl);
+    }
+
+    await copy1.click();
+    checkCopyFunctionality(copy1);
+
+    await copy2.click();
+    checkCopyFunctionality(copy2);
+
+    await copy3.click();
+    checkCopyFunctionality(copy3);
+
+    await copy4.click();
+    checkCopyFunctionality(copy1);
 
     await facebook1.click();
     await page.context().waitForEvent('page', (p) => p.url().includes('facebook'));
