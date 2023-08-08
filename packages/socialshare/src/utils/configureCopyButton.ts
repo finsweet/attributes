@@ -1,4 +1,4 @@
-import ClipboardJS, { copy } from 'clipboard';
+import ClipboardJS from 'clipboard';
 
 /**
  * Configures clipboard JS api for the passed copy button element and url

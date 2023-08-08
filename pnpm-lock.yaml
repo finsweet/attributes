@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 patchedDependencies:
   body-scroll-lock@4.0.0-beta.0:
     hash: okec7jrxvk2nysywuuwlnnfvtu
@@ -240,7 +244,11 @@ importers:
 
   packages/smartlightbox: {}
 
-  packages/socialshare: {}
+  packages/socialshare:
+    dependencies:
+      clipboard:
+        specifier: ^2.0.11
+        version: 2.0.11
 
   packages/starrating: {}
 
