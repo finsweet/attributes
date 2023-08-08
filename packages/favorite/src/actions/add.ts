@@ -1,11 +1,11 @@
 import { fetchItemDocument, queryElement, removeFromLocalStorage } from '../utils';
 
 /**
- * Adds an item to a favorite list using a provided item template and data.
- * @param favoriteList - The HTML element representing the favorite list container.
- * @param itemTemplate - The HTML element template for the individual item.
- * @param link - The URL link associated with the item.
- * @param key - The unique key used for identification and storage.
+ * Adds an item to a favorite list using a provided template and data.
+ * @param favoriteList - The container element for the favorite list.
+ * @param itemTemplate - The template element used for each item.
+ * @param link - The link associated with the item.
+ * @param key - The key for identifying the item in local storage.
  */
 export const addItemToList = async (
   favoriteList: HTMLElement,
