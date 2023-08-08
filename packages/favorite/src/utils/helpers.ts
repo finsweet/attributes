@@ -1,18 +1,14 @@
+import { ADD_TO_LOCAL_STORAGE, REMOVE_FROM_LOCAL_STORAGE } from './constants';
 /**
  * Updates the localStorage with the provided link for the specified key.
  * @param link - The link to be added or removed from the localStorage.
  * @param key - The key under which the link is stored in localStorage.
  */
-export const updateLocalStorage = (link: string, key: string) => {
+export const addToLocalStorage = (link: string, key: string) => {
   const favorites = (JSON.parse(String(localStorage.getItem(key))) || []) as [string];
-  if (!favorites.includes(link)) {
-    favorites.push(link);
-    localStorage.setItem(key, JSON.stringify(favorites));
-  } else {
-    const updatedFavorites = favorites.filter((item) => item !== link);
-    localStorage.setItem(key, JSON.stringify(updatedFavorites));
-  }
-  const localStorageUpdateEvent = new Event('localStorageUpdate');
+  favorites.push(link);
+  localStorage.setItem(key, JSON.stringify(favorites));
+  const localStorageUpdateEvent = new CustomEvent(ADD_TO_LOCAL_STORAGE, { detail: link });
   window.dispatchEvent(localStorageUpdateEvent);
 };
 
@@ -25,7 +21,7 @@ export const removeFromLocalStorage = (link: string, key: string) => {
   const favorites = (JSON.parse(String(localStorage.getItem(key))) || []) as [string];
   const updatedFavorites = favorites.filter((item) => item !== link);
   localStorage.setItem(key, JSON.stringify(updatedFavorites));
-  const localStorageUpdateEvent = new Event('localStorageUpdate');
+  const localStorageUpdateEvent = new CustomEvent(REMOVE_FROM_LOCAL_STORAGE, { detail: link });
   window.dispatchEvent(localStorageUpdateEvent);
 };
 

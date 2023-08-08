@@ -1,3 +1,3 @@
 export { version } from '../package.json';
 export { init } from './init';
-export { ELEMENTS, SETTINGS } from './utils/constants';
+export { ADD_TO_LOCAL_STORAGE, ELEMENTS, REMOVE_FROM_LOCAL_STORAGE, SETTINGS } from './utils/constants';

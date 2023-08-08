@@ -1,9 +1,11 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 import { getCollectionElements } from '@finsweet/attributes-utils';
 
+import { addItemToList } from './actions/add';
 import { initFavoriteItem } from './actions/favorite';
-import { setListItems } from './actions/list';
-import { queryAllElements, queryElement } from './utils';
+import { removeItemFromList } from './actions/remove';
+import { getAttribute, queryAllElements, queryElement, REMOVE_FROM_LOCAL_STORAGE } from './utils';
+import { ADD_TO_LOCAL_STORAGE } from './utils';
 
 /**
  * Inits favorite functionality.
@@ -25,10 +27,33 @@ export const init: FsAttributeInit = async () => {
   }
 
   if (favoriteList && listItem) {
-    setListItems(favoriteList, listItem);
+    const loader = queryElement('loader');
+    if (loader) loader.style.display = 'none';
+    const key = getAttribute(favoriteList, 'key') || 'favorite';
+    const localStorageData = JSON.parse(String(localStorage.getItem(key))) || [];
 
-    window.addEventListener('localStorageUpdate', () => {
-      setListItems(favoriteList, listItem);
+    for (const link of localStorageData) {
+      if (loader) loader.style.display = 'block';
+      await addItemToList(favoriteList, listItem, link, key);
+      if (loader) loader.style.display = 'none';
+    }
+
+    window.addEventListener(ADD_TO_LOCAL_STORAGE, async (event) => {
+      const customEvent = event as CustomEvent<string>;
+      if (customEvent.detail) {
+        if (loader) loader.style.display = 'block';
+        await addItemToList(favoriteList, listItem, customEvent.detail, key);
+        if (loader) loader.style.display = 'none';
+      }
+    });
+
+    window.addEventListener(REMOVE_FROM_LOCAL_STORAGE, async (event) => {
+      const customEvent = event as CustomEvent<string>;
+      if (customEvent.detail) {
+        if (loader) loader.style.display = 'block';
+        await removeItemFromList(favoriteList, customEvent.detail);
+        if (loader) loader.style.display = 'none';
+      }
     });
   }
 

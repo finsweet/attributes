@@ -1,5 +1,12 @@
-import { getAttribute, queryElement, updateElementsClass } from '../utils';
-import { updateLocalStorage } from '../utils';
+import {
+  ADD_TO_LOCAL_STORAGE,
+  getAttribute,
+  queryElement,
+  REMOVE_FROM_LOCAL_STORAGE,
+  removeFromLocalStorage,
+  updateElementsClass,
+} from '../utils';
+import { addToLocalStorage } from '../utils';
 
 /**
  * Initializes the favorite item by setting up event listeners for the like button and handling its state.
@@ -16,14 +23,25 @@ export const initFavoriteItem = (listItem: Element) => {
   const elementsToUpdate = listItem.querySelectorAll('[fs-favorite-active]');
 
   const handleFavoriteButtonClick = () => {
-    updateLocalStorage(hrefValue, key);
+    const favorites = JSON.parse(String(localStorage.getItem(key))) || [];
+    if (favorites.includes(hrefValue)) {
+      removeFromLocalStorage(hrefValue, key);
+    } else {
+      addToLocalStorage(hrefValue, key);
+    }
   };
 
   if (likeActiveClass) {
     updateElementsClass(elementsToUpdate, hrefValue, likeActiveClass, key);
   }
   likeButton.addEventListener('click', handleFavoriteButtonClick);
-  window.addEventListener('localStorageUpdate', () => {
+  window.addEventListener(ADD_TO_LOCAL_STORAGE, () => {
+    if (likeActiveClass) {
+      updateElementsClass(elementsToUpdate, hrefValue, likeActiveClass, key);
+    }
+  });
+
+  window.addEventListener(REMOVE_FROM_LOCAL_STORAGE, () => {
     if (likeActiveClass) {
       updateElementsClass(elementsToUpdate, hrefValue, likeActiveClass, key);
     }

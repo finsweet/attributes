@@ -1,0 +1,59 @@
+import { fetchItemDocument, queryElement, removeFromLocalStorage } from '../utils';
+
+/**
+ * Adds an item to a favorite list using a provided item template and data.
+ * @param favoriteList - The HTML element representing the favorite list container.
+ * @param itemTemplate - The HTML element template for the individual item.
+ * @param link - The URL link associated with the item.
+ * @param key - The unique key used for identification and storage.
+ */
+export const addItemToList = async (
+  favoriteList: HTMLElement,
+  itemTemplate: HTMLElement,
+  link: string,
+  key: string
+) => {
+  const itemDocument = await fetchItemDocument(link);
+  if (itemDocument) {
+    const elementsWithData = itemDocument.querySelectorAll('[fs-favorite-field]');
+    const elementData = {} as { [key: string]: string };
+    elementsWithData.forEach((element) => {
+      const attributeValue = element.getAttribute('fs-favorite-field');
+      if (!attributeValue) return;
+      let content;
+      if (element.tagName.toLowerCase() === 'img') {
+        content = element.getAttribute('src') || '';
+      } else {
+        content = element.textContent?.trim() || '';
+      }
+      elementData[attributeValue] = content;
+    });
+
+    if (itemTemplate) {
+      const elementCopy = itemTemplate.cloneNode(true) as HTMLElement;
+      const fieldsWithContent = elementCopy.querySelectorAll('[fs-favorite-field]');
+      const removeButton = queryElement('remove', { scope: elementCopy });
+      fieldsWithContent.forEach((element) => {
+        const fieldName = element.getAttribute('fs-favorite-field');
+        if (!fieldName) return;
+        switch (element.tagName.toLowerCase()) {
+          case 'img':
+            element.setAttribute('srcset', elementData[fieldName]);
+            element.setAttribute('src', elementData[fieldName]);
+            break;
+
+          case 'a':
+            element.setAttribute('href', link);
+            element.textContent = elementData[fieldName] || '';
+            break;
+
+          default:
+            element.textContent = elementData[fieldName] || '';
+            break;
+        }
+      });
+      removeButton?.addEventListener('click', () => removeFromLocalStorage(link, key));
+      favoriteList.appendChild(elementCopy);
+    }
+  }
+};

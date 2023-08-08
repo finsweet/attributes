@@ -8,6 +8,7 @@ export const ELEMENTS = [
   'list-favorite',
   'remove',
   'like',
+  'loader',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
@@ -15,3 +16,6 @@ export const SETTINGS = {
   field: { key: 'field' },
   active: { key: 'active' },
 } as const satisfies AttributeSettings;
+
+export const ADD_TO_LOCAL_STORAGE = 'addToLocalStorageUpdate';
+export const REMOVE_FROM_LOCAL_STORAGE = 'removeFromLocalStorageUpdate';
