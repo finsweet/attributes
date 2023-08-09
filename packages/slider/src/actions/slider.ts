@@ -313,9 +313,9 @@ export const initSlider = (sliderElement: HTMLElement) => {
       multipleActiveThumbs: false,
     },
     containerModifierClass: 'fs-',
-    slideNextClass: nextSlideClass,
-    slidePrevClass: prevSlideClass,
-    slideActiveClass: activeSlideClass,
+    slideNextClass: nextSlideClass || 'fs-next-slide',
+    slidePrevClass: prevSlideClass || 'fs-prev-slide',
+    slideActiveClass: activeSlideClass || 'fs-active-slide',
   };
 
   const sliderInstance = new Swiper(sliderElement, generalOptions);
