@@ -1,4 +1,6 @@
-import { fetchItemDocument, queryElement, removeFromLocalStorage } from '../utils';
+import { fetchPageDocument } from '@finsweet/attributes-utils';
+
+import { queryElement, removeFromLocalStorage } from '../utils';
 
 /**
  * Adds an item to a favorite list using a provided template and data.
@@ -13,7 +15,7 @@ export const addItemToList = async (
   link: string,
   key: string
 ) => {
-  const itemDocument = await fetchItemDocument(link);
+  const itemDocument = await fetchPageDocument(link);
   if (itemDocument) {
     const elementsWithData = itemDocument.querySelectorAll('[fs-favorite-field]');
     const elementData = {} as { [key: string]: string };

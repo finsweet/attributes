@@ -44,23 +44,3 @@ export const updateElementsClass = (elements: NodeListOf<Element>, href: string,
     });
   }
 };
-
-/**
- * Fetches the item as document by url.
- * @param link - The link from which to fetch the item info.
- * @returns DOM Document or null in case of an error.
- */
-export const fetchItemDocument = async (link: string) => {
-  try {
-    const response = await fetch(window.location.origin + link);
-    if (!response.ok) {
-      throw new Error('Network response error');
-    }
-    const htmlString = await response.text();
-    const parser = new DOMParser();
-    return parser.parseFromString(htmlString, 'text/html');
-  } catch (error) {
-    console.error('Error fetching item info:', error);
-    return null;
-  }
-};
