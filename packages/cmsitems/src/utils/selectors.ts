@@ -1,4 +1,4 @@
-import { generateSelectors, CMS_ITEMS_ATTRIBUTE } from '@finsweet/attributes-utils';
+import { CMS_ITEMS_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-utils';
 
 import { ELEMENTS, SETTINGS } from './constants';
 

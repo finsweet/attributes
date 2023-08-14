@@ -18,13 +18,15 @@ export const initBreakpoints = (listElement: HTMLElement) => {
     300: getAttribute(listElement, 'mobileportrait'),
   };
 
-  const sortedBreakpoints = Object.keys(breakpoints).sort((a, b) => b - a);
+  const sortedBreakpoints = Object.keys(breakpoints)
+    .sort((a, b) => Number(b) - Number(a))
+    .map((key) => parseInt(key) as keyof typeof breakpoints);
 
   let itemsPerRow = breakpoints[sortedBreakpoints[0]];
 
   const updateItemsPerRow = () => {
     for (const breakpoint of sortedBreakpoints) {
-      if (window.innerWidth <= breakpoint) {
+      if (window.innerWidth <= Number(breakpoint)) {
         itemsPerRow = breakpoints[breakpoint];
         listElement.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
       } else {
