@@ -53,6 +53,7 @@
     "@finsweet/attributes-codehighlight": "workspace:*",
     "@finsweet/attributes-combobox": "workspace:*",
     "@finsweet/attributes-component": "workspace:*",
+    "@finsweet/attributes-consent": "workspace:*",
     "@finsweet/attributes-copyclip": "workspace:*",
     "@finsweet/attributes-countitems": "workspace:*",
     "@finsweet/attributes-displayvalues": "workspace:*",

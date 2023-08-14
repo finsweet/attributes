@@ -11,10 +11,13 @@ export const ELEMENTS = [
   'progress-active',
   'pagination-wrapper',
   'bullet',
-  'pagination-current',
-  'pagination-total',
+  'count-current',
+  'count-total',
   'scrollbar',
+  'scrollbar-wrapper',
   'popup',
+  'progress',
+  'progress-wrapper',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

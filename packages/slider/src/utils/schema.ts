@@ -234,7 +234,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       key: 'pagination-wrapper',
       name: 'Pagination Wrapper',
       description: 'Defines the Pagination Wrapper element.',
-      allowedTypes: ['Block'],
+      allowedTypes: [''],
       group: SCHEMA_GROUPS.pagination.key,
     },
     {

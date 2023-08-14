@@ -45,21 +45,22 @@ export const initSlider = (sliderElement: HTMLElement) => {
   const autoHeight = getAttribute(sliderItemElement, 'autoheight');
   const loop = getAttribute(sliderItemElement, 'loop');
   const draggable = getAttribute(sliderItemElement, 'draggable');
-  const scrollbar = getAttribute(sliderItemElement, 'scrollbar');
   const direction = getAttribute(sliderItemElement, 'direction') as 'horizontal' | 'vertical';
   const nextSlideClass = getAttribute(sliderItemElement, 'nextslideclass');
   const prevSlideClass = getAttribute(sliderItemElement, 'prevslideclass');
   const activeSlideClass = getAttribute(sliderItemElement, 'activeslideclass');
-  const disableSlideClass = getAttribute(sliderItemElement, 'disablednextprev');
 
   //Pagination
+  const paginationType = getAttribute(sliderElement, 'paginationtype') || 'bullets';
   const paginationWrapper = queryElement('pagination-wrapper', { instanceIndex }) || undefined;
-  const activeProgressBar = queryElement('progress-active', { instanceIndex, scope: paginationWrapper });
+  const progressWrapper = queryElement('progress-wrapper', { instanceIndex, scope: paginationWrapper });
+  const activeProgress = queryElement('progress', { instanceIndex, scope: paginationWrapper });
   const bulletElement = queryElement('bullet', { instanceIndex, scope: paginationWrapper });
   const thumbElement = queryElement('bullet-cms', { instanceIndex, scope: paginationWrapper });
-  const paginationType = getAttribute(sliderElement, 'paginationtype') || 'bullets';
   const paginationClickable = getAttribute(sliderElement, 'paginationclickable');
-  const activeBulletClass = bulletElement ? getAttribute(bulletElement, 'bulletactive') : undefined;
+  const activeBulletClass = bulletElement ? getAttribute(bulletElement, 'bulletactive') : 'is-active';
+  const disableSlideNext = nextButton ? getAttribute(nextButton, 'disablednextprev') : true;
+  const disableSlidePrev = prevButton ? getAttribute(prevButton, 'disablednextprev') : true;
 
   //Autoplay
   const autoPlay = getAttribute(sliderItemElement, 'autoplay');
@@ -88,6 +89,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
   const lightBoxPopups = queryAllElements('popup', { instanceIndex });
 
   //Scrollbar
+  const scrollbarWrapper = queryElement('scrollbar-wrapper', { instanceIndex });
   const scrollbarElement = queryElement('scrollbar', { instanceIndex });
 
   //Effects
@@ -165,23 +167,26 @@ export const initSlider = (sliderElement: HTMLElement) => {
     clickable: !!paginationClickable || true,
     renderFraction: (currentClass: string, totalClass: string) => {
       if (!paginationWrapper) return '';
-      const current = queryElement('pagination-current', { scope: paginationWrapper });
-      const total = queryElement('pagination-total', { scope: paginationWrapper });
+      const current = queryElement('count-current', { scope: paginationWrapper });
+      const total = queryElement('count-total', { scope: paginationWrapper });
       current?.classList.add(currentClass);
       total?.classList.add(totalClass);
       return paginationWrapper.innerHTML;
     },
-    progressbarFillClass: activeProgressBar?.className,
+    progressbarFillClass: progressWrapper?.className,
     renderProgressbar() {
-      if (!activeProgressBar) return '';
-      activeProgressBar.style.transformOrigin = 'left top';
-      activeProgressBar.style.width = '100%';
-      return activeProgressBar.outerHTML;
+      if (!progressWrapper || !activeProgress || !paginationWrapper) return '';
+      progressWrapper.style.transformOrigin = 'left top';
+      paginationWrapper.style.width = '100%';
+      progressWrapper.style.width = '100%';
+      activeProgress.style.width = '100%';
+      return progressWrapper.outerHTML;
     },
   };
 
   const scrollOptions = {
-    el: scrollbarElement,
+    el: scrollbarWrapper,
+    dragClass: scrollbarElement?.className,
     draggable: true,
   };
 
@@ -241,7 +246,7 @@ export const initSlider = (sliderElement: HTMLElement) => {
     wrapperClass: sliderWrapperElement?.className,
     slideClass: sliderItemElement?.classList[0],
     autoHeight: !!autoHeight,
-    loop: effect === 'marquee' ? true : !!loop,
+    loop: effect === 'marquee' ? true : !(!loop || loop === 'false'),
     speed: effect === 'marquee' ? 10000 : Number(speed) || 300,
     direction: direction || 'horizontal',
     simulateTouch: !!draggable,
@@ -251,10 +256,10 @@ export const initSlider = (sliderElement: HTMLElement) => {
     centeredSlides: !!centeredSlides,
     pagination: paginationWrapper ? paginationOptions : false,
     navigation: {
-      nextEl: nextButton,
-      prevEl: prevButton,
+      nextEl: !disableSlideNext ? nextButton : null,
+      prevEl: !disableSlidePrev ? prevButton : null,
     },
-    scrollbar: scrollbar ? scrollOptions : false,
+    scrollbar: scrollbarWrapper ? scrollOptions : false,
     effect: effect,
     fadeEffect: {
       crossFade: true,
@@ -293,15 +298,14 @@ export const initSlider = (sliderElement: HTMLElement) => {
     thumbs: {
       swiper: initThumbnailSwiper(),
       slideThumbActiveClass: getPaginationActiveThumbClass(thumbElement) || 'fs-is-active',
+      multipleActiveThumbs: false,
     },
     containerModifierClass: 'fs-',
     slideNextClass: nextSlideClass,
     slidePrevClass: prevSlideClass,
     slideActiveClass: activeSlideClass,
-    noSwipingClass: disableSlideClass,
   };
 
-  //console.log(generalOptions)
   const sliderInstance = new Swiper(sliderElement, generalOptions);
   swiperInstancesStore.set(sliderElement, sliderInstance);
 

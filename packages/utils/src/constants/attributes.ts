@@ -36,6 +36,8 @@ export const COMBO_BOX_ATTRIBUTE = 'combobox';
 
 export const COMPONENT_ATTRIBUTE = 'component';
 
+export const CONSENT_ATTRIBUTE = 'consent';
+
 export const COPY_CLIP_ATTRIBUTE = 'copyclip';
 
 export const COUNT_ITEMS_ATTRIBUTE = 'countitems';
