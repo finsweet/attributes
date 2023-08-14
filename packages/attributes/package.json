@@ -43,6 +43,7 @@
     "@finsweet/attributes-cmscombine": "workspace:*",
     "@finsweet/attributes-cmsfilter": "workspace:*",
     "@finsweet/attributes-cmsload": "workspace:*",
+    "@finsweet/attributes-cmsitems": "workspace:*",
     "@finsweet/attributes-cmsnest": "workspace:*",
     "@finsweet/attributes-cmsprevnext": "workspace:*",
     "@finsweet/attributes-cmsselect": "workspace:*",

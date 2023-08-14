@@ -14,6 +14,8 @@ export const CMS_CSS_ATTRIBUTE = 'cmscss';
 
 export const CMS_FILTER_ATTRIBUTE = 'cmsfilter';
 
+export const CMS_ITEMS_ATTRIBUTE = 'cmsitems';
+
 export const CMS_LOAD_ATTRIBUTE = 'cmsload';
 
 export const CMS_NEST_ATTRIBUTE = 'cmsnest';
