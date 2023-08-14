@@ -1,5 +1,10 @@
 import { getAttribute } from '../utils';
 
+/**
+ * Initializes breakpoints for a grid layout based on window width and element attributes.
+ * @param listElement - The element containing attributes for different breakpoints.
+ * @returns An object with a clean method to remove the resize event listener.
+ */
 export const initBreakpoints = (listElement: HTMLElement) => {
   if (!listElement) return;
 
