@@ -1,4 +1,4 @@
-import { expect, type Locator, test } from '@playwright/test';
+import { expect, type Locator, test, webkit } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('https://fs-attributes.webflow.io/socialshare');
@@ -14,33 +14,57 @@ test.describe('socialshare', () => {
     const reddit1 = page.getByTestId('reddit-1');
     const twitter4 = page.getByTestId('twitter-4').first();
     const pinterest4 = page.getByTestId('pinterest-4').first();
-    const copy1 = page.getByTestId('copy-1');
-    const copy2 = page.getByTestId('copy-2');
-    const copy3 = page.getByTestId('copy-3').first();
-    const copy4 = page.getByTestId('copy-4').first();
-    const currentUrl = await page.url();
+
+    let currentUrl = await page.url();
+    const inputEl = page.getByTestId('input');
+    const cmsNextPageButton = page.getByTestId('loadmore');
 
     /**
-     * Compares the data-url attribute of the passed copy locator with the page url
-     * @param copyLocator
+     * This function tests the copy url funcyionality
+     * @param copySelector Selector of the copy button to be tested
+     * @param nextPageTriggered Boolean param to refresh page url if load more button is clicked
      */
-    async function checkCopyFunctionality(copyLocator: Locator) {
-      const dataUrlAttribute = await copyLocator.getAttribute('data-url');
+    async function testCopyUrl(copySelector: string, nextPageTriggered = false) {
+      if (nextPageTriggered) {
+        currentUrl = await page.url();
+      }
 
-      await expect(dataUrlAttribute).toEqual(currentUrl);
+      // Get the copy button instance and click it
+      const copyButton = await page.getByTestId(copySelector).first();
+      await copyButton.click();
+
+      // focus on the input element to paste
+      await inputEl.focus();
+
+      // Simulate paste event using keyboard press
+      const isMac = await page.evaluate(() => window.navigator.platform.toString().toLowerCase() === 'macintel');
+      const modifier = isMac ? 'Meta' : 'Control';
+      await page.keyboard.press(`${modifier}+KeyC`);
+      await page.keyboard.press(`${modifier}+KeyV`);
+
+      // Wait for the paste event to be processed
+      await page.waitForTimeout(100);
+
+      // Retrieve the input value and check against page url
+      const inputValue = await inputEl.evaluate((input) => (input as HTMLInputElement).value);
+      await expect(inputValue).toEqual(currentUrl);
+
+      // clear the input field
+      await inputEl.fill('');
     }
 
-    await copy1.click();
-    checkCopyFunctionality(copy1);
+    await testCopyUrl('copy-1');
 
-    await copy2.click();
-    checkCopyFunctionality(copy2);
+    await testCopyUrl('copy-2');
 
-    await copy3.click();
-    checkCopyFunctionality(copy3);
+    await testCopyUrl('copy-3');
 
-    await copy4.click();
-    checkCopyFunctionality(copy1);
+    await testCopyUrl('copy-4');
+
+    // check copy url functionality on the next page for CMS load more
+    await cmsNextPageButton.click();
+    await page.waitForLoadState('domcontentloaded');
+    await testCopyUrl('copy-1', true);
 
     await facebook1.click();
     await page.context().waitForEvent('page', (p) => p.url().includes('facebook'));

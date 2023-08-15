@@ -11,7 +11,4 @@ export const configureCopyButton = (copyButton: HTMLElement, copyUrl: string) =>
       return copyUrl;
     },
   });
-
-  // setting data-url attribute for testing purposes
-  copyButton.setAttribute('data-url', copyUrl);
 };
