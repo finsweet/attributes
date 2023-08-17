@@ -60,6 +60,7 @@
     "@finsweet/attributes-favcustom": "workspace:*",
     "@finsweet/attributes-formsubmit": "workspace:*",
     "@finsweet/attributes-greenhouse": "workspace:*",
+    "@finsweet/attributes-inheritclass": "workspace:*",
     "@finsweet/attributes-inputactive": "workspace:*",
     "@finsweet/attributes-inputcounter": "workspace:*",
     "@finsweet/attributes-launchdarkly": "workspace:*",

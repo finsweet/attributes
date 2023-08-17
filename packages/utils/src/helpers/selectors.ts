@@ -24,7 +24,6 @@ export const generateSelectors = <
    */
   const getSettingAttributeName = (settingKey: keyof SettingsDefinition) => {
     const { key } = settings[settingKey];
-
     return `fs-${attributeKey}-${key}`;
   };
 

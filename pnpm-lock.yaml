@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -152,6 +152,9 @@ importers:
       '@finsweet/attributes-greenhouse':
         specifier: workspace:*
         version: link:../greenhouse
+      '@finsweet/attributes-inheritclass':
+        specifier: workspace:*
+        version: link:../inheritclass
       '@finsweet/attributes-inputactive':
         specifier: workspace:*
         version: link:../inputactive
@@ -453,6 +456,18 @@ importers:
       '@finsweet/attributes-cmsfilter':
         specifier: workspace:*
         version: link:../cmsfilter
+
+  packages/inheritclass:
+    dependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      swiper:
+        specifier: ^10.0.2
+        version: 10.0.2
 
   packages/inputactive:
     dependencies:

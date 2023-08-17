@@ -98,6 +98,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-greenhouse');
     }
 
+    case 'inheritclass': {
+      return import('@finsweet/attributes-inheritclass');
+    }
+
     case 'inputactive': {
       return import('@finsweet/attributes-inputactive');
     }

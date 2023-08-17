@@ -50,6 +50,8 @@ export const FAV_CUSTOM_ATTRIBUTE = 'favcustom';
 
 export const FORM_SUBMIT_ATTRIBUTE = 'formsubmit';
 
+export const INHERIT_CLASS_ATTRIBUTE = 'inheritclass';
+
 export const INPUT_ACTIVE_ATTRIBUTE = 'inputactive';
 
 export const INPUT_COUNTER_ATTRIBUTE = 'inputcounter';
