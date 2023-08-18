@@ -4,16 +4,20 @@ import { initInheritClass } from './actions/inherit';
 import { getSettingSelector } from './utils';
 
 /**
- * Inits the slider attribute.
+ * Inits the inheritclass attribute.
  */
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
   const listenerSelector = getSettingSelector('listener');
-  const parentElements = document.querySelectorAll<HTMLElement>(listenerSelector);
+  const parentElements = Array.from(document.querySelectorAll<HTMLElement>(listenerSelector));
 
   parentElements.forEach((element) => initInheritClass(element));
+  const inheritInstances = parentElements.map((list) => initInheritClass(list));
 
   return {
-    result: [],
+    result: inheritInstances,
+    destroy() {
+      for (const inheritInstance of inheritInstances) inheritInstance?.disconnect();
+    },
   };
 };
