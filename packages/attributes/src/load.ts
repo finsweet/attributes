@@ -98,6 +98,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-greenhouse');
     }
 
+    case 'hideempty': {
+      return import('@finsweet/attributes-hideempty');
+    }
+
     case 'inputactive': {
       return import('@finsweet/attributes-inputactive');
     }
