@@ -1,5 +1,5 @@
 import { WHATSAPP_BASE_URL } from './utils/constants';
-import { formatUrl } from './utils/helpers';
+import { formatPhoneNumber, formatUrl } from './utils/helpers';
 import { getAttribute, getInstanceIndex, queryElement } from './utils/selectors';
 
 export const initWhatsappInstance = (buttonElement: Element) => {
@@ -18,6 +18,10 @@ export const initWhatsappInstance = (buttonElement: Element) => {
 
   if (!phone || !message) return; //todo: throw new Error('Missing phone or message attribute');
 
-  buttonElement.setAttribute('href', formatUrl(`${WHATSAPP_BASE_URL}/${phone}`, { text: message }));
+  // format phone number and url
+  phone = formatPhoneNumber(phone);
+  const url = formatUrl(`${WHATSAPP_BASE_URL}/${phone}`, { text: message });
+
+  buttonElement.setAttribute('href', url);
   buttonElement.setAttribute('target', '_blank');
 };

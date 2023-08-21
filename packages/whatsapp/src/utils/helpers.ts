@@ -6,3 +6,7 @@ export const formatUrl = (url: string, params: { [key: string]: string }): strin
 
   return urlObject.href;
 };
+
+export const formatPhoneNumber = (phoneNumber: string): string => {
+  return phoneNumber.replace(/[^0-9+]/g, '');
+};
