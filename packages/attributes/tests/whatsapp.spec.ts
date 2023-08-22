@@ -1,47 +1,61 @@
-import { expect, test } from '@playwright/test';
+import { type ElementHandle, expect, test } from '@playwright/test';
+
+import { waitAttributeLoaded } from './utils';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://dev-attributes-whatsapp.webflow.io'); //todo: change to webflow dev url
+  await page.goto('https://dev-attributes-whatsapp.webflow.io');
 });
 
+// reusable function to get common attributes and logs
+async function getAttributesAndLogs(button: ElementHandle<HTMLAnchorElement>) {
+  const ahref = (await button.getAttribute('href')) ?? '';
+  expect(ahref).toBeTruthy();
+  expect(ahref).toContain('https://wa.me/');
+
+  const url = new URL(ahref);
+  const [, phoneNumber] = url.pathname.split('/');
+  const message = url.searchParams.get('text');
+
+  return { phoneNumber, message };
+}
+
 test.describe('whatsapp', () => {
-  test('Validates whatsapp anchor tags', async ({ page }) => {
-    await page.waitForSelector('a[fs-whatsapp-element="button"]');
+  test('Validates static attributes for whatsapp anchor tags', async ({ page }) => {
+    await waitAttributeLoaded(page, 'whatsapp');
+    const whatsappButtons = (await page.$$('a[fs-whatsapp-element="button"]')) as ElementHandle<HTMLAnchorElement>[];
 
-    const whatsappButtons = await page.$$('a[fs-whatsapp-element="button"]');
-
-    // Loop through each WhatsApp button
     for (const button of whatsappButtons) {
-      const ahref = await button.getAttribute('href');
-      if (ahref === '#' || ahref === '') return; // Fail if href is '#'
+      const { phoneNumber, message } = await getAttributesAndLogs(button);
 
-      const href: URL = ahref as unknown as URL; // Get the 'href' attribute
+      const expectedPhoneNumber = await button.getAttribute('fs-whatsapp-phone');
+      const expectedMessage = await button.getAttribute('fs-whatsapp-message');
 
-      // convert href to a URL object
-      const url = new URL(href);
-
-      const expectedPhoneNumber = await button.getAttribute('fs-whatsapp-phone'); // Get 'fs-whatsapp-phone' attribute
-      const expectedMessage = await button.getAttribute('fs-whatsapp-message'); // Get 'fs-whatsapp-message' attribute
-
-      // Extract phone number and message from the URL
-      const urlSearchParams = url.searchParams;
-      const phoneNumber = url.pathname.split('/')[0];
-      const message = urlSearchParams.get('text');
-
-      // Validate phone number and message using expect
-      expect(phoneNumber).toBe(expectedPhoneNumber);
-      expect(message).toBe(expectedMessage);
-
-      // Validate nested elements
-      const phoneElement = await button.$('[fs-whatsapp-element="phone"]');
-      const messageElement = await button.$('[fs-whatsapp-element="message"]');
-
-      if (phoneElement) {
-        expect(await phoneElement.textContent()).toBe(phoneNumber);
+      if (expectedPhoneNumber && expectedMessage) {
+        expect(phoneNumber).toBe(expectedPhoneNumber);
+        expect(message).toBe(expectedMessage);
       }
+    }
+  });
 
-      if (messageElement) {
-        expect(await messageElement.textContent()).toBe(message);
+  test('Validates dynamic attributes for whatsapp anchor tags', async ({ page }) => {
+    await waitAttributeLoaded(page, 'whatsapp');
+    const whatsappButtons = (await page.$$('a[fs-whatsapp-element="button"]')) as ElementHandle<HTMLAnchorElement>[];
+
+    for (const button of whatsappButtons) {
+      const { phoneNumber, message } = await getAttributesAndLogs(button);
+
+      const phoneElement: ElementHandle<Element> | null = await button.$('div[fs-whatsapp-element="phone"]');
+      const messageElement: ElementHandle<Element> | null = await button.$('div[fs-whatsapp-element="message"]');
+
+      if (phoneElement && messageElement) {
+        const dynamicMessage = (await messageElement.textContent()) ?? '';
+        expect(dynamicMessage).toBeTruthy();
+
+        const dynamicPhone = (await phoneElement.textContent()) ?? '';
+        expect(dynamicPhone).toBeTruthy();
+
+        expect(dynamicPhone).toBe(phoneNumber);
+        expect(dynamicMessage).toBe(message);
       }
     }
   });
