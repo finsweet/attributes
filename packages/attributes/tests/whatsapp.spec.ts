@@ -13,8 +13,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('whatsapp', () => {
-  // Skip this test on webkit because it doesn't work
-  test.fixme(({ browserName }) => browserName === 'webkit');
 
   // Static attributes test
   test('Validates static attributes for whatsapp anchor tags', async () => {
