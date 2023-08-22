@@ -2,6 +2,11 @@ import { WHATSAPP_BASE_URL } from './utils/constants';
 import { formatPhoneNumber, formatUrl } from './utils/helpers';
 import { getAttribute, getInstanceIndex, queryElement } from './utils/selectors';
 
+/**
+ * Initialize a WhatsApp button element instance
+ * @param buttonElement  The button element to initialize
+ * @returns  The initialized button element
+ */
 export const initWhatsappInstance = (buttonElement: Element) => {
   // static
   let phone = getAttribute(buttonElement, 'phone');
