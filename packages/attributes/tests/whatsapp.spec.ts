@@ -13,7 +13,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('whatsapp', () => {
-
   // Static attributes test
   test('Validates static attributes for whatsapp anchor tags', async () => {
     // Loop through all whatsapp buttons and validate the attributes
