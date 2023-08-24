@@ -14,10 +14,10 @@ export const formatUrl = (url: string, params: { [key: string]: string }): strin
 };
 
 /**
- * Formats a phone number by removing all non-numeric characters
+ * Formats a phone number by removing all non-numeric characters and appending +
  * @param phoneNumber The phone number to format
  * @returns The formatted phone number
  */
 export const formatPhoneNumber = (phoneNumber: string): string => {
-  return phoneNumber.replace(/[^0-9+]/g, '');
+  return '+' + phoneNumber.replace(/[^0-9]/g, '');
 };
