@@ -1,5 +1,6 @@
 import { getCollectionElements } from '@finsweet/attributes-utils';
 
+import { DisplayController } from '../../../consent/src/components';
 import {
   getActiveClassAttributeValue,
   getAttribute,
@@ -13,6 +14,7 @@ export const initTabs = (menu: HTMLElement) => {
   const instanceIndex = getInstanceIndex(menu);
   const content = queryElement('content', { instanceIndex });
   const querySupport = getAttribute(menu, 'querytabs');
+  const effect = (getAttribute(menu, 'effect') || 'fade') as 'fade' | 'slide-up' | 'slide-down';
   const customNamesElements = queryAllElements('name', { instanceIndex, scope: menu });
   const customNames = customNamesElements.map((element) => element.textContent?.replace(/\s/g, '-'));
 
@@ -36,13 +38,19 @@ export const initTabs = (menu: HTMLElement) => {
     return;
   }
 
-  const setTab = (index: number) => {
-    contentItems.forEach((contentItem) => {
+  const setTab = async (index: number) => {
+    contentItems.forEach(async (contentItem) => {
       contentItem.style.display = 'none';
       contentItem.classList.remove(contentActiveClass);
     });
 
-    contentItems[index].style.display = 'flex';
+    const dsiplay = new DisplayController({
+      element: contentItems[index],
+      displayProperty: 'flex',
+      animation: effect,
+    });
+
+    dsiplay.show();
     contentItems[index].classList.add(contentActiveClass);
 
     menuItems.forEach((item) => {
