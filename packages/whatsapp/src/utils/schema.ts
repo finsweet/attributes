@@ -1,6 +1,6 @@
 import type { Schema, SchemaSettings } from '@finsweet/attributes-utils';
 
-import { ELEMENTS, SETTINGS } from './constants';
+import { ELEMENTS, SETTINGS } from '.';
 
 const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   phone: {

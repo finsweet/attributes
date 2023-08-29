@@ -1,7 +1,7 @@
 import { type FsAttributeInit, isNotEmpty, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initWhatsappInstance } from './factory';
-import { queryAllElements } from './utils/selectors';
+import { queryAllElements } from './utils';
 
 /**
  * Inits the attribute.

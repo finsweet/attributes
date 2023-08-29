@@ -1,6 +1,4 @@
-import { WHATSAPP_BASE_URL } from './utils/constants';
-import { formatPhoneNumber, formatUrl } from './utils/helpers';
-import { getAttribute, getInstanceIndex, queryElement } from './utils/selectors';
+import { formatPhoneNumber, formatUrl, getAttribute, getInstanceIndex, queryElement, WHATSAPP_BASE_URL } from './utils';
 
 /**
  * Initialize a WhatsApp button element instance
