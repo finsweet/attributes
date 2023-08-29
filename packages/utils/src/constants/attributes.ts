@@ -40,6 +40,8 @@ export const CONSENT_ATTRIBUTE = 'consent';
 
 export const COPY_CLIP_ATTRIBUTE = 'copyclip';
 
+export const COPY_PASTE_ATTRIBUTE = 'copypaste';
+
 export const COUNT_ITEMS_ATTRIBUTE = 'countitems';
 
 export const DISPLAY_VALUES_ATTRIBUTE = 'displayvalues';

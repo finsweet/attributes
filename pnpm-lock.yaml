@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -137,6 +137,9 @@ importers:
       '@finsweet/attributes-copyclip':
         specifier: workspace:*
         version: link:../copyclip
+      '@finsweet/attributes-copypaste':
+        specifier: workspace:*
+        version: link:../copypaste
       '@finsweet/attributes-countitems':
         specifier: workspace:*
         version: link:../countitems
@@ -400,6 +403,12 @@ importers:
       clipboard:
         specifier: ^2.0.11
         version: 2.0.11
+
+  packages/copypaste:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
 
   packages/countitems:
     dependencies:

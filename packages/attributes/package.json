@@ -55,6 +55,7 @@
     "@finsweet/attributes-component": "workspace:*",
     "@finsweet/attributes-consent": "workspace:*",
     "@finsweet/attributes-copyclip": "workspace:*",
+    "@finsweet/attributes-copypaste": "workspace:*",
     "@finsweet/attributes-countitems": "workspace:*",
     "@finsweet/attributes-displayvalues": "workspace:*",
     "@finsweet/attributes-favcustom": "workspace:*",
