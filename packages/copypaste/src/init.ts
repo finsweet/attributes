@@ -1,6 +1,6 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
-import { insertCopiedNode } from './actions';
+import { insertCopiedNode } from './actions/paste';
 import { queryAllElements } from './utils';
 
 /**
