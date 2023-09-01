@@ -5,7 +5,7 @@ import { queryAllElements } from './utils';
 import { swiperInstancesStore } from './utils';
 
 /**
- * Inits the attribute.
+ * Inits the slider attribute.
  */
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();

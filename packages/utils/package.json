@@ -6,6 +6,11 @@
   "sideEffects": false,
   "type": "module",
   "types": "src/index.ts",
+  "scripts": {
+    "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix && prettier --write ./src",
+    "check": "tsc --noEmit"
+  },
   "exports": {
     ".": {
       "types": "./src/index.ts",
