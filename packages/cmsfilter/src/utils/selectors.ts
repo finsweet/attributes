@@ -10,4 +10,5 @@ export const {
   getAttribute,
   hasAttributeValue,
   getSettingSelector,
+  getSettingAttributeName,
 } = generateSelectors(CMS_FILTER_ATTRIBUTE, ELEMENTS, SETTINGS);
