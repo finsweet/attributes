@@ -189,6 +189,7 @@ export const generateSelectors = <
   return {
     getElementSelector,
     getSettingSelector,
+    getSettingAttributeName,
     queryElement,
     queryAllElements,
     getInstanceIndex,

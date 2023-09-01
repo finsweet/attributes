@@ -9,7 +9,7 @@ import type { SortingDirection, SortItemsCallback } from '../utils/types';
  * @param selectElement The {@link HTMLSelectElement}.
  * @param listInstance The {@link CMSList} instance.
  */
-export const initHTMLSelect = async (selectElement: HTMLSelectElement, listInstance: CMSList) => {
+export const initHTMLSelect = (selectElement: HTMLSelectElement, listInstance: CMSList) => {
   let [sortKey, direction] = getSortingParams(selectElement.value);
   let sorting = false;
 
@@ -36,7 +36,7 @@ export const initHTMLSelect = async (selectElement: HTMLSelectElement, listInsta
   });
 
   // Sort items if a sortKey exists on page load
-  if (sortKey) await sortItems();
+  if (sortKey) sortItems();
 
   // Prevent submit events on the form
   const form = selectElement.closest('form');
