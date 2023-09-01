@@ -100,10 +100,7 @@ export const initTabs = (tabWrapper: HTMLElement) => {
     }
   }
 
-  contentItems.forEach((contentItem) => {
-    contentItem.style.display = 'none';
-  });
-  menuItems[0].classList.add(menuActiveClass);
+  setTab(0);
 
   if (querySupport) setInitialTabFromQuery();
 
