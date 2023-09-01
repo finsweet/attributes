@@ -2,20 +2,17 @@
   "name": "@finsweet/attributes",
   "version": "0.0.0",
   "description": "Finsweet Attributes.",
-  "homepage": "https://www.finsweet.com/attributes",
+  "homepage": "https://finsweet.com/attributes",
   "type": "module",
-  "main": "ATTRIBUTE_KEY.js",
+  "main": "dist/index.js",
   "files": [
-    "ATTRIBUTE_KEY.js",
-    "examples.json",
-    "schema.json",
-    "changesets.json"
+    "dist"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx ./bin/build.ts",
     "build": "cross-env NODE_ENV=production tsx ./bin/build.ts",
     "lint": "eslint ./src && prettier --check ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint:fix": "eslint ./src --fix && prettier --write ./src",
     "check": "tsc --noEmit",
     "test": "pnpm playwright test",
     "test:headed": "pnpm playwright test --headed"
@@ -31,7 +28,7 @@
   ],
   "author": {
     "name": "Finsweet",
-    "url": "https://www.finsweet.com/"
+    "url": "https://finsweet.com/"
   },
   "bugs": {
     "url": "https://finsweet.com/attributes/support"

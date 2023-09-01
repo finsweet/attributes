@@ -6,12 +6,11 @@
   "scripts": {
     "dev": "pnpm --filter @finsweet/attributes dev",
     "build": "pnpm --filter @finsweet/attributes build",
-    "check": "pnpm --filter @finsweet/attributes check",
-    "lint": "eslint ./packages && prettier --check ./packages",
-    "lint:fix": "eslint ./packages --fix",
-    "format": "prettier --write ./packages",
-    "test": "pnpm --filter @finsweet/attributes test --workspace-concurrency=1",
-    "test:headed": "pnpm --filter @finsweet/attributes test:headed --workspace-concurrency=1",
+    "check": "pnpm -r check",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "test": "pnpm --filter @finsweet/attributes test",
+    "test:headed": "pnpm --filter @finsweet/attributes test:headed",
     "release": "changeset publish",
     "update": "pnpm update -i -L -r"
   },
