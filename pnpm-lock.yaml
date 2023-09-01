@@ -416,19 +416,6 @@ importers:
         specifier: workspace:*
         version: link:../utils
 
-  packages/docs:
-    dependencies:
-      '@finsweet/attributes-utils':
-        specifier: workspace:*
-        version: link:../utils
-      marked:
-        specifier: ^5.1.0
-        version: 5.1.0
-    devDependencies:
-      '@types/marked':
-        specifier: ^5.0.0
-        version: 5.0.0
-
   packages/favcustom:
     dependencies:
       '@finsweet/attributes-utils':
@@ -1509,10 +1496,6 @@ packages:
 
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
-    dev: true
-
-  /@types/marked@5.0.0:
-    resolution: {integrity: sha512-YcZe50jhltsCq7rc9MNZC/4QB/OnA2Pd6hrOSTOFajtabN+38slqgDDCeE/0F83SjkKBQcsZUj7VLWR0H5cKRA==}
     dev: true
 
   /@types/minimist@1.2.2:
@@ -3023,12 +3006,6 @@ packages:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
     dev: true
-
-  /marked@5.1.0:
-    resolution: {integrity: sha512-z3/nBe7aTI8JDszlYLk7dDVNpngjw0o1ZJtrA9kIfkkHcIF+xH7mO23aISl4WxP83elU+MFROgahqdpd05lMEQ==}
-    engines: {node: '>= 18'}
-    hasBin: true
-    dev: false
 
   /meow@6.1.1:
     resolution: {integrity: sha512-3YffViIt2QWgTy6Pale5QpopX/IvU3LPL03jOTqp6pGj3VjesdO/U8CuHMKpnQr4shCNCM5fd5XFFvIIl6JBHg==}

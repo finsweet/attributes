@@ -12,9 +12,7 @@ export const init: FsAttributeInit = async () => {
 
   const listInstances = createCMSListInstances([getElementSelector('list')]);
 
-  const cleanups = (await Promise.all(listInstances.map((listInstance) => initListSorting(listInstance)))).filter(
-    isNotEmpty
-  );
+  const cleanups = listInstances.map(initListSorting).filter(isNotEmpty);
 
   return {
     result: listInstances,

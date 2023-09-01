@@ -28,8 +28,8 @@ export type FsAttributes = {
    */
   import: (
     solution: FsAttributeKey,
-    settings?: {
-      [k: string]: string | null | undefined;
+    globalSettings?: {
+      [k: string]: string;
     }
   ) => Promise<any> | undefined;
 

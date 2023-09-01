@@ -6,17 +6,19 @@ import { initInfiniteMode } from './modes/infinite';
 import { initPaginationMode } from './modes/pagination';
 import { initRenderAllMode } from './modes/render-all';
 import { SETTINGS } from './utils/constants';
-import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from './utils/selectors';
+import {
+  getAttribute,
+  getInstanceIndex,
+  getSettingAttributeName,
+  hasAttributeValue,
+  queryElement,
+} from './utils/selectors';
 
 // Constants
 const {
   mode: {
     values: { renderAll, infinite, pagination },
   },
-  animation: { key: animationKey },
-  duration: { key: durationKey },
-  easing: { key: easingKey },
-  stagger: { key: staggerKey },
 } = SETTINGS;
 
 /**
@@ -32,8 +34,16 @@ export const initLoadInstance = async (listInstance: CMSList) => {
   const webflowReady = !!Webflow && 'require' in Webflow;
 
   // Get animation config
-  addItemsAnimation(listInstance, { animationKey, durationKey, easingKey, staggerKey });
-  addListAnimation(listInstance, { durationKey, easingKey });
+  addItemsAnimation(listInstance, {
+    animationKey: getSettingAttributeName('animation'),
+    durationKey: getSettingAttributeName('duration'),
+    easingKey: getSettingAttributeName('easing'),
+    staggerKey: getSettingAttributeName('stagger'),
+  });
+  addListAnimation(listInstance, {
+    durationKey: getSettingAttributeName('duration'),
+    easingKey: getSettingAttributeName('easing'),
+  });
 
   // Get commerce config
   const restartCommerce =

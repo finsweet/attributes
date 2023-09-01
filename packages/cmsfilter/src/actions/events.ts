@@ -1,16 +1,10 @@
 import type { CMSItem, CMSList } from '@finsweet/attributes-cmscore';
 
 import type { CMSFilters } from '../components/CMSFilters';
-import { SETTINGS } from '../utils/constants';
+import { getSettingAttributeName } from '../utils/selectors';
 import { displayFilterElements } from './display';
 import { toggleHighlight } from './highlight';
 import { syncFilterKeyResults, updateFilterKeyResults, updateListResults } from './results';
-
-const {
-  field: { key: fieldKey },
-  range: { key: rangeKey },
-  type: { key: typeKey },
-} = SETTINGS;
 
 /**
  * Listens for events on the `CMSList` and triggers the correspondent actions.
@@ -22,7 +16,11 @@ export const listenListEvents = (filtersInstance: CMSFilters, listInstance: CMSL
 
   listInstance.on('shouldcollectprops', (items: CMSItem[]) => {
     for (const item of items) {
-      item.collectProps({ fieldKey, rangeKey, typeKey });
+      item.collectProps({
+        fieldKey: getSettingAttributeName('field'),
+        rangeKey: getSettingAttributeName('range'),
+        typeKey: getSettingAttributeName('type'),
+      });
     }
   });
 
@@ -42,7 +40,11 @@ export const listenListEvents = (filtersInstance: CMSFilters, listInstance: CMSL
 
   listInstance.once('nestinitialitems').then(async (items: CMSItem[]) => {
     for (const item of items) {
-      item.collectProps({ fieldKey, rangeKey, typeKey });
+      item.collectProps({
+        fieldKey: getSettingAttributeName('field'),
+        rangeKey: getSettingAttributeName('range'),
+        typeKey: getSettingAttributeName('type'),
+      });
     }
 
     await filtersInstance.applyFilters(true);
