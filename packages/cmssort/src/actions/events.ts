@@ -1,13 +1,7 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 
-import { SETTINGS } from '../utils/constants';
+import { getSettingAttributeName } from '../utils/selectors';
 import type { SortItemsCallback } from '../utils/types';
-
-// Constants destructuring
-const {
-  field: { key: fieldKey },
-  type: { key: typeKey },
-} = SETTINGS;
 
 /**
  * Reacts to a `CMSList` events.
@@ -16,7 +10,8 @@ const {
  */
 export const listenListEvents = (listInstance: CMSList, sortItems: SortItemsCallback) => {
   listInstance.on('shouldcollectprops', async (newItems) => {
-    for (const item of newItems) item.collectProps({ fieldKey, typeKey });
+    for (const item of newItems)
+      item.collectProps({ fieldKey: getSettingAttributeName('field'), typeKey: getSettingAttributeName('type') });
   });
 
   listInstance.on('shouldsort', async () => {

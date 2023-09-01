@@ -16,16 +16,9 @@ import { assessFilter } from '../actions/filter';
 import { handleFilterInput } from '../actions/input';
 import { getQueryParams, setQueryParams } from '../actions/query';
 import { syncFilterKeyResults, updateFilterKeyResults, updateListResults } from '../actions/results';
-import { SETTINGS } from '../utils/constants';
+import { getSettingAttributeName } from '../utils/selectors';
 import type { FilterElement, FiltersData } from '../utils/types';
 import type { CMSTags } from './CMSTags';
-
-// Constants
-const {
-  field: { key: fieldKey },
-  range: { key: rangeKey },
-  type: { key: typeKey },
-} = SETTINGS;
 
 /**
  * Instance of a `cmsfilter` form that contains all the filter inputs.
@@ -193,7 +186,11 @@ export class CMSFilters {
     this.storeFiltersData();
 
     for (const item of listInstance.items) {
-      item.collectProps({ fieldKey, rangeKey, typeKey });
+      item.collectProps({
+        fieldKey: getSettingAttributeName('field'),
+        rangeKey: getSettingAttributeName('range'),
+        typeKey: getSettingAttributeName('type'),
+      });
     }
 
     updateListResults(this, listInstance);

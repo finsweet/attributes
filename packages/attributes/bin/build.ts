@@ -4,6 +4,8 @@ import * as esbuild from 'esbuild';
 import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
+import { name } from '../package.json';
+
 declare const process: {
   env: {
     NODE_ENV: 'production' | 'development';
@@ -21,6 +23,10 @@ const ENTRY_POINTS = ['src/index.ts'];
 const LIVE_RELOAD = !PRODUCTION;
 const SERVE_PORT = 3000;
 
+const SCRIPT_SRC = PRODUCTION
+  ? `https://cdn.jsdelivr.net/npm/${name}@2`
+  : `http://localhost:${SERVE_PORT}/dist/index.js`;
+
 const buildOptions: esbuild.BuildOptions = {
   bundle: true,
   entryPoints: ENTRY_POINTS,
@@ -29,6 +35,7 @@ const buildOptions: esbuild.BuildOptions = {
   target: PRODUCTION ? 'es2019' : 'esnext',
   define: {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    SCRIPT_SRC: JSON.stringify(SCRIPT_SRC),
     SERVE_PORT: JSON.stringify(SERVE_PORT),
   },
 };
@@ -61,9 +68,7 @@ else {
       servedir: '.',
       port: SERVE_PORT,
     })
-    .then(({ port }) => {
-      console.log(`Serving files at http://localhost:${port}`);
-    });
+    .then(() => console.log(`Serving files at ${SCRIPT_SRC}`));
 }
 
 // Generate schemas
