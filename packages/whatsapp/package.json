@@ -1,0 +1,17 @@
+{
+  "name": "@finsweet/attributes-whatsapp",
+  "version": "1.0.0",
+  "description": "Adds a simple url to an anchor element that creates a new whatsapp chat in a new tab when clicked.",
+  "private": true,
+  "type": "module",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@finsweet/attributes-utils": "workspace:*"
+  }
+}

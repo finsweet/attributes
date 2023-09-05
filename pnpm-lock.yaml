@@ -218,6 +218,9 @@ importers:
       '@finsweet/attributes-videohls':
         specifier: workspace:*
         version: link:../videohls
+      '@finsweet/attributes-whatsapp':
+        specifier: workspace:*
+        version: link:../whatsapp
     devDependencies:
       '@types/node':
         specifier: ^18.16.1
@@ -633,6 +636,12 @@ importers:
       hls.js:
         specifier: ^1.4.5
         version: 1.4.5
+
+  packages/whatsapp:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
 
 packages:
 

@@ -182,6 +182,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-videohls');
     }
 
+    case 'whatsapp': {
+      return import('@finsweet/attributes-whatsapp');
+    }
+
     default: {
       throw `Finsweet Attribute "${solution}" is not supported.`;
     }

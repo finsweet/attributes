@@ -95,3 +95,5 @@ export const TOC_ATTRIBUTE = 'toc';
 export const READ_TIME_ATTRIBUTE = 'readtime';
 
 export const VIDEO_HLS_ATTRIBUTE = 'videohls';
+
+export const WHATSAPP_ATTRIBUTE = 'whatsapp';

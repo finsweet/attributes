@@ -78,7 +78,8 @@
     "@finsweet/attributes-starrating": "workspace:*",
     "@finsweet/attributes-toc": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
-    "@finsweet/attributes-videohls": "workspace:*"
+    "@finsweet/attributes-videohls": "workspace:*",
+    "@finsweet/attributes-whatsapp": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
