@@ -174,6 +174,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-starrating');
     }
 
+    case 'tabs': {
+      return import('@finsweet/attributes-tabs');
+    }
+
     case 'toc': {
       return import('@finsweet/attributes-toc');
     }

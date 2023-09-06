@@ -90,6 +90,8 @@ export const STAR_RATING_ATTRIBUTE = 'starrating';
 
 export const SUPPORT_ATTRIBUTE = 'support';
 
+export const TABS_ATTRIBUTE = 'tabs';
+
 export const TOC_ATTRIBUTE = 'toc';
 
 export const TYPING_ATTRIBUTE = 'typing';

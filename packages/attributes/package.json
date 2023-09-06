@@ -76,6 +76,7 @@
     "@finsweet/attributes-smartlightbox": "workspace:*",
     "@finsweet/attributes-socialshare": "workspace:*",
     "@finsweet/attributes-starrating": "workspace:*",
+    "@finsweet/attributes-tabs": "workspace:*",
     "@finsweet/attributes-toc": "workspace:*",
     "@finsweet/attributes-typing": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
