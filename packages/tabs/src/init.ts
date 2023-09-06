@@ -5,13 +5,14 @@ import { queryAllElements } from './utils';
 
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
-  const menus = queryAllElements('menu');
+  const tabs = queryAllElements('tabs');
 
-  for (const menu of menus) {
-    initTabs(menu);
-  }
+  const tabstInstances = tabs.map((tabWrapper) => initTabs(tabWrapper));
 
   return {
-    result: menus,
+    result: tabs,
+    destroy() {
+      for (const tabInstance of tabstInstances) tabInstance?.clean();
+    },
   };
 };
