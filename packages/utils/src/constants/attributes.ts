@@ -36,6 +36,8 @@ export const COMBO_BOX_ATTRIBUTE = 'combobox';
 
 export const COMPONENT_ATTRIBUTE = 'component';
 
+export const CONSENT_ATTRIBUTE = 'consent';
+
 export const COPY_CLIP_ATTRIBUTE = 'copyclip';
 
 export const COUNT_ITEMS_ATTRIBUTE = 'countitems';
@@ -87,6 +89,8 @@ export const SOCIAL_SHARE_ATTRIBUTE = 'socialshare';
 export const STAR_RATING_ATTRIBUTE = 'starrating';
 
 export const SUPPORT_ATTRIBUTE = 'support';
+
+export const TABS_ATTRIBUTE = 'tabs';
 
 export const TOC_ATTRIBUTE = 'toc';
 
