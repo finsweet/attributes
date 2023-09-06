@@ -32,6 +32,9 @@ export type Schema<Elements extends AttributeElements, Settings extends Attribut
     key: Elements[number];
     name: string;
     description?: string;
+    // TODO: Fix this allowedTypes cannot find name `AnyElement` type error, seems @webflow/designer-extension-typings is not being loaded well
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     allowedTypes?: AnyElement['type'][];
     required?: boolean;
     settings?: SchemaSettings<Settings>[keyof SchemaSettings<Settings>][];

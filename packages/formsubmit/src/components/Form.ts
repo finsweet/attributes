@@ -38,9 +38,9 @@ export class Form {
   private disabled;
   private ixTriggers;
   private resetButtons;
-  private currentRedirectTimeout?: number;
-  private currentResetTimeout?: number;
-  private currentReloadTimeout?: number;
+  private currentRedirectTimeout?: number | ReturnType<typeof setTimeout>;
+  private currentResetTimeout?: number | ReturnType<typeof setTimeout>;
+  private currentReloadTimeout?: number | ReturnType<typeof setTimeout>;
 
   constructor({
     form,

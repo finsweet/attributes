@@ -46,6 +46,11 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    /**
+     * Toggles bypassing page's Content-Security-Policy. Defaults to false.
+     */
+    bypassCSP: true,
   },
 
   /* Configure projects for major browsers */
