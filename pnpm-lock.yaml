@@ -212,6 +212,9 @@ importers:
       '@finsweet/attributes-starrating':
         specifier: workspace:*
         version: link:../starrating
+      '@finsweet/attributes-tabs':
+        specifier: workspace:*
+        version: link:../tabs
       '@finsweet/attributes-toc':
         specifier: workspace:*
         version: link:../toc
@@ -608,6 +611,15 @@ importers:
 
   packages/starrating:
     dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/tabs:
+    dependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
