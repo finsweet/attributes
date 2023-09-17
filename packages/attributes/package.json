@@ -64,6 +64,7 @@
     "@finsweet/attributes-mirrorclick": "workspace:*",
     "@finsweet/attributes-mirrorinput": "workspace:*",
     "@finsweet/attributes-modal": "workspace:*",
+    "@finsweet/attributes-nativesearch": "workspace:*",
     "@finsweet/attributes-numbercount": "workspace:*",
     "@finsweet/attributes-queryparam": "workspace:*",
     "@finsweet/attributes-rangeslider": "workspace:*",

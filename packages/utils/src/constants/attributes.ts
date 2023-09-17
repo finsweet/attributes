@@ -64,6 +64,8 @@ export const MIRROR_INPUT_ATTRIBUTE = 'mirrorinput';
 
 export const MODAL_ATTRIBUTE = 'modal';
 
+export const NATIVE_SEARCH_ATTRIBUTE = 'nativesearch';
+
 export const NUMBER_COUNT_ATTRIBUTE = 'numbercount';
 
 export const LAUNCHDARKLY_ATTRIBUTE = 'launchdarkly';

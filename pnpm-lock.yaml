@@ -173,6 +173,9 @@ importers:
       '@finsweet/attributes-modal':
         specifier: workspace:*
         version: link:../modal
+      '@finsweet/attributes-nativesearch':
+        specifier: workspace:*
+        version: link:../nativesearch
       '@finsweet/attributes-numbercount':
         specifier: workspace:*
         version: link:../numbercount
@@ -484,6 +487,12 @@ importers:
         version: link:../utils
 
   packages/modal:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/nativesearch:
     dependencies:
       '@finsweet/attributes-utils':
         specifier: workspace:*

@@ -126,6 +126,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-modal');
     }
 
+    case 'nativesearch': {
+      return import('@finsweet/attributes-nativesearch');
+    }
+
     case 'numbercount': {
       return import('@finsweet/attributes-numbercount');
     }
