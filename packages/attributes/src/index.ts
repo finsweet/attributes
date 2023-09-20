@@ -1,3 +1,3 @@
-import { initAttributes } from './init';
+import { init } from './init';
 
-initAttributes();
+init();
