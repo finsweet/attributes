@@ -251,7 +251,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       ],
     },
     {
-      key: 'pagination-current',
+      key: 'count-current',
       name: 'Count Current',
       description: 'Defines the Count Current element.',
       allowedTypes: ['Block'],
@@ -264,7 +264,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       ],
     },
     {
-      key: 'pagination-total',
+      key: 'count-total',
       name: 'Count Total',
       description: 'Defines the Count Total element.',
       allowedTypes: ['Block'],

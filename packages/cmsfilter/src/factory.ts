@@ -3,8 +3,14 @@ import { FORM_CSS_CLASSES, type FormBlockElement, parseNumericAttribute } from '
 
 import { CMSFilters } from './components/CMSFilters';
 import { CMSTags } from './components/CMSTags';
-import { DEFAULT_ACTIVE_CSS_CLASS, DEFAULT_DEBOUNCING, DEFAULT_HIGHLIGHT_CSS_CLASS, SETTINGS } from './utils/constants';
-import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from './utils/selectors';
+import { DEFAULT_ACTIVE_CSS_CLASS, DEFAULT_DEBOUNCING, DEFAULT_HIGHLIGHT_CSS_CLASS } from './utils/constants';
+import {
+  getAttribute,
+  getInstanceIndex,
+  getSettingAttributeName,
+  hasAttributeValue,
+  queryElement,
+} from './utils/selectors';
 
 /**
  * Creates a new {@link CMSFilters} instance.
@@ -74,7 +80,10 @@ export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | un
   });
 
   // Add animation
-  addListAnimation(listInstance, { durationKey: SETTINGS.duration.key, easingKey: SETTINGS.easing.key });
+  addListAnimation(listInstance, {
+    durationKey: getSettingAttributeName('duration'),
+    easingKey: getSettingAttributeName('easing'),
+  });
 
   return filtersInstance;
 };

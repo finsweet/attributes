@@ -2,5 +2,12 @@ import { CMS_SORT_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-util
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getElementSelector, queryElement, queryAllElements, getInstanceIndex, getAttribute, hasAttributeValue } =
-  generateSelectors(CMS_SORT_ATTRIBUTE, ELEMENTS, SETTINGS);
+export const {
+  getElementSelector,
+  getSettingAttributeName,
+  queryElement,
+  queryAllElements,
+  getInstanceIndex,
+  getAttribute,
+  hasAttributeValue,
+} = generateSelectors(CMS_SORT_ATTRIBUTE, ELEMENTS, SETTINGS);
