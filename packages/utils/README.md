@@ -463,17 +463,199 @@ This collection of utils is a set of functions that help with common tasks. They
 
 #### 9. HTML
 
+- **unescapeHTML(rawHTML: string)** <br>- Replaces escaped HTML symbols with their original value.
+
+    **Parameters:**
+  
+    > - **rawHTML** - The raw HTML to unescape.
+  
+    **Returns:**
+    > `string` - The unescaped string.
+
 #### 10. Numbers
+
+- **normalizeNumber(value: string)** <br>- Converts a string to a number, removing any invalid symbols like `$` or `,`.
+
+    **Parameters:**
+  
+    > - **value** - The number string to convert.
+  
+    **Returns:**
+    > `number` - The valid number value.
+
+- **parseNumericAttribute(rawValue: string | number | null | undefined,fallback?: number | null)** <br>- Parses a numeric attribute string.
+
+    **Parameters:**
+  
+    > - **rawValue** - The raw string. Example: "20", "-25.3"...
+    > - **fallback** - A value to fall back to when the parsed value is not valid.
+
+    **Returns:**
+    > `number | null` - The parsed number or the fallback value.
+
+- **getDecimalPrecision(value: number)** <br>- Gets the decimal precision of a number.
+
+    **Parameters:**
+  
+    > - **value** - The number to get the decimal precision from.
+  
+    **Returns:**
+    > `number` - The decimal precision.
+
+- **setDecimalPrecision(value: number, precision: number)** <br>- Sets the decimal precision of a number.
+
+    **Parameters:**
+  
+    > - **value** - The number to set the decimal precision to.
+    > - **precision** - The decimal precision to set.
+
+    **Returns:**
+    > `number` - The number with the new decimal precision.
+
+- **adjustValueToStep(value: number, step: number, precision?: number, minRange = 0)** <br>- Adjusts a value to a given step factor.
+
+    **Parameters:**
+  
+    > - **value** - The numeric value to adjust.
+    > - **step** - The increment step.
+    > - **precision** - The step's decimal precision. If not provided, it will be calculated.
+    > - **minRange** - A minimum range value, used for offsetting.
+
+    **Returns:**
+    > `number` - The adjusted value.
 
 #### 11. Props
 
+- **normalizePropKey(propKey?: string | null)** <br>- Normalizes a property key by trimming and converting it to lowercase.
+
+    **Parameters:**
+  
+    > - **propKey** - The property key to normalize.
+  
+    **Returns:**
+    > `string | null` - The normalized property key.
+
 #### 12. Selectors
+
+- **generateSelectors(attributeKey: FsAttributeKey, elements: ElementsDefinition, settings: SettingsDefinition)** <br>- Selector helpers for the defined Attribute Elements and Settings.
+
+    **Parameters:**
+  
+    > - **attributeKey** - The attribute key to generate the selectors for.
+    > - **elements** - The elements definition.
+    > - **settings** - The settings definition.
+
+    **Returns:**
+    > `object<unknown>` - The generated selectors. i.e `getElementSelector`, `getSettingSelector`, `getSettingAttributeName`, `queryElement`, `queryAllElements`, `getInstanceIndex`, `getAttribute`, `hasAttributeValue`,
+
+    **Example:**
+
+    ```js
+    // selectors.ts
+    ...
+    export const { queryElement, queryAllElements, getInstanceIndex } = generateSelectors(
+      EXAMPLE_ATTRIBUTE,
+      ELEMENTS,
+      SETTINGS
+    );
+    ```
 
 #### 13. Urls
 
+- **removeTrailingSlash(value: string)** <br>- Removes the trailing slash from a URL.
+
+    **Parameters:**
+  
+    > - **value** - The URL to remove the trailing slash from.
+  
+    **Returns:**
+    > `string` - The URL without the trailing slash.
+
 #### 14. Wait
 
+- **wait(time: number)** <br>- A promise that resolves after a given amount of time.
+
+    **Parameters:**
+  
+    > - **time** - The amount of time to wait in milliseconds.
+  
+    **Returns:**
+    > `Promise<unknown>` - A promise that resolves after the given amount of time.
+
+- **waitAttributeLoaded(key: FsAttributeKey)** <br>- A promise that resolves when the attribute is loaded.
+
+    **Parameters:**
+  
+    > - **key** - The attribute key to wait for.
+  
+    **Returns:**
+    > `Promise<unknown>` - A promise that resolves when the attribute is loaded.
+
+- **waitWebflowReady()** <br>- A promise that resolves when Webflow has fully loaded.
+
+    **Parameters:**
+  
+    > - None
+  
+    **Returns:**
+    > `Promise<unknown>` - A promise that resolves when Webflow is ready.
+
+- **waitDOMReady()** <br>- A promise that resolves once the DOM is ready.
+
+    **Parameters:**
+  
+    > - None
+  
+    **Returns:**
+    > `Promise<unknown>` - A promise that resolves when the DOM is ready.
+
 #### 15. Webflow
+
+- **getSiteId(page = document)** <br>- Gets the webflow site ID of the website.
+
+    **Parameters:**
+  
+    > - **page** - The page document.
+  
+    **Returns:**
+    > `string | null` - The site ID or `null` if not found.
+
+- **getPublishDate = (page = document)** <br>- Extracts the publish date of a Webflow site.
+
+    **Parameters:**
+  
+    > - **page** - The page to get the publish date from. Defaults to the current page.
+  
+    **Returns:**
+    > `Date | undefined` - The publish date or `undefined` if not found.
+
+- **restartWebflow(modules?: WebflowModule[])** <br>- Restarts the Webflow JS library.
+
+    **Parameters:**
+  
+    > - **modules** - An array of {@link WebflowModule} to restart. If passed, only those modules will be restarted instead of the whole `Webflow` instance. i.e `['ix2','commerce','lightbox','slider','tabs']`
+  
+    **Returns:**
+    > `Promise<void>` - An awaitable promise that is fulfilled when the library has been correctly reinitialized.
+
+- **getCurrentBreakpoint()** <br>- Checks the current breakpoint based on the window media.
+
+    **Parameters:**
+  
+    > - None
+  
+    **Returns:**
+    > `string` - A `{@link WebflowBreakpoint}` string.
+
+- **closeDropdown(dropdownToggle: DropdownToggle, focusToggle = true)** <br>- Closes a webflow dropdown menu.
+
+    **Parameters:**
+  
+    > - **dropdownToggle** - The `DropdownToggle` element.
+    > - **focusToggle** - Whether to focus the toggle element. Defaults to `true`.
+
+    **Returns:**
+    > `void` - Nothing.
 
 ### e). Types
 
