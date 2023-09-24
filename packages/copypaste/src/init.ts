@@ -19,7 +19,7 @@ export const init: FsAttributeInit = async (globalSettings = {}) => {
 
   // Perform a resetIX if specified and globalSettings allow it
   if (globalSettings.resetix === 'true') {
-    await restartWebflow();
+    await restartWebflow(['ix2']);
   }
   return {
     result: {
