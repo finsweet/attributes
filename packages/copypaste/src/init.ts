@@ -1,6 +1,6 @@
 import { type FsAttributeInit, restartWebflow, waitWebflowReady } from '@finsweet/attributes-utils';
 
-import { insertCopiedNode } from './actions/paste';
+import { copyPasteNode, cutPasteNode } from './actions/paste';
 import { queryAllElements } from './utils';
 
 /**
@@ -14,8 +14,8 @@ export const init: FsAttributeInit = async (globalSettings = {}) => {
   const cutTargets = queryAllElements('cut');
 
   // Copy and Move all gathered elements respectively
-  copyTargets.forEach((target) => insertCopiedNode(target));
-  cutTargets.forEach((target) => insertCopiedNode(target));
+  copyTargets.forEach((target) => copyPasteNode(target));
+  cutTargets.forEach((target) => cutPasteNode(target));
 
   // Perform a resetIX if specified and globalSettings allow it
   if (globalSettings.resetix === 'true') {
