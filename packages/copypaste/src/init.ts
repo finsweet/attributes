@@ -17,10 +17,15 @@ export const init: FsAttributeInit = async (globalSettings = {}) => {
   copyTargets.forEach((target) => copyPasteNode(target));
   cutTargets.forEach((target) => cutPasteNode(target));
 
-  // Perform a resetIX if specified and globalSettings allow it
-  if (globalSettings.resetix === 'true') {
-    await restartWebflow(['ix2']);
-  }
+  // init resetix setting
+  const resetIx = globalSettings.resetix === 'true';
+
+  const modulesToRestart: Parameters<typeof restartWebflow>['0'] = ['slider'];
+  if (resetIx) modulesToRestart.push('ix2');
+
+  // Restart ix2 and slider modules
+  await restartWebflow(modulesToRestart);
+
   return {
     result: {
       copyTargets,
