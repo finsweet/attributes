@@ -27,3 +27,6 @@ export const SETTINGS = {
 } as const satisfies AttributeSettings;
 
 export const SEARCH_RESULTS_WRAPPER_CLASS = 'search-result-wrapper';
+
+// The time in milliseconds to wait after the user stops typing before triggering the search
+export const SEARCH_INPUT_DEBOUNCE_TIME = 500;

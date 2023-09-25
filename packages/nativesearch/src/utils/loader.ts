@@ -1,13 +1,21 @@
-export const showLoader = (loaderElement: HTMLElement | null) => {
-  if (!loaderElement) return;
+import { queryElement } from './selectors';
 
-  // set display to block
-  loaderElement.style.display = 'block';
-};
+const loaderElement: HTMLElement | null = queryElement('loader');
 
-export const hideLoader = (loaderElement: HTMLElement | null) => {
-  if (!loaderElement) return;
+export const loader = {
+  element: queryElement('loader'),
 
-  // set display to none
-  loaderElement.style.display = 'none';
+  show() {
+    if (!this.element) return;
+
+    // set display to block
+    this.element.style.display = 'block';
+  },
+
+  hide() {
+    if (!this.element) return;
+
+    // set display to none
+    this.element.style.display = 'none';
+  },
 };
