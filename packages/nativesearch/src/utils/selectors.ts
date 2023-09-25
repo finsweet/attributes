@@ -2,4 +2,8 @@ import { generateSelectors, NATIVE_SEARCH_ATTRIBUTE } from '@finsweet/attributes
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { queryElement, getElementSelector } = generateSelectors(NATIVE_SEARCH_ATTRIBUTE, ELEMENTS, SETTINGS);
+export const { queryElement, queryAllElements, getElementSelector, getAttribute } = generateSelectors(
+  NATIVE_SEARCH_ATTRIBUTE,
+  ELEMENTS,
+  SETTINGS
+);

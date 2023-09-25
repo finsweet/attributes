@@ -1,16 +1,26 @@
 import { isNotEmpty } from '@finsweet/attributes-utils';
 
-import { SEARCH_RESULTS_WRAPPER_CLASS } from '../utils/constants';
-import { loader } from '../utils/loader';
-import { results } from '../utils/results';
-import { queryElement } from '../utils/selectors';
-
 /**
  * Search for a query i.e. /search?query=hello
  * @param query The search query
  * @returns a promise with the search results
  */
-export const searchWebflow = async (query: string) => {
+export const searchWebflow = async ({
+  query,
+  loader,
+  results,
+}: {
+  query: string;
+  loader: {
+    show: () => void;
+    hide: () => void;
+  };
+  results: {
+    show: () => void;
+    hide: () => void;
+    display: (htmlString: string) => void;
+  };
+}) => {
   if (isNotEmpty(query) && query.trim() !== '')
     try {
       loader.show();

@@ -1,8 +1,13 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import {
+  type FsAttributeInit,
+  isHTMLElement,
+  isHTMLInputElement,
+  isNotEmpty,
+  waitWebflowReady,
+} from '@finsweet/attributes-utils';
 
-import { listenSearchInput } from './actions/trigger';
-import { results } from './utils/results';
-import { queryElement } from './utils/selectors';
+import { createNativeSearchInstance } from './factory';
+import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
 
 /**
  * Inits the attribute.
@@ -10,39 +15,36 @@ import { queryElement } from './utils/selectors';
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
-  // hide the results element
-  results.hide();
+  // Get all search input elements
+  const searchInputElements = queryAllElements('input');
 
-  // Listen to input events
-  const cleanup = listenSearchInput();
+  const searchInstances = searchInputElements
+    .map((inputElement) => {
+      if (!isHTMLInputElement(inputElement)) return;
 
-  // get the search input query
-  // show the loader element
-  // search natively for the results
-  // show the results element and append results
-  // hide the loader element if there are no results
+      const searchComponent = inputElement.parentElement as HTMLElement;
+      const customClass = getAttribute(searchComponent, 'addclass');
+      const loaderElement = queryElement<HTMLElement>('loader', { scope: searchComponent });
+      const resultsElement = queryElement<HTMLElement>('results', { scope: searchComponent });
 
-  // Get the input element
-  const inputElement = queryElement<HTMLInputElement>('input');
+      if (!isHTMLElement(loaderElement) || !isHTMLElement(resultsElement)) return;
 
-  // Get the results element
-  const resultsElement = queryElement('results');
-  if (!resultsElement) return;
-  resultsElement.style.display = 'none';
+      // Create options object
+      const searchInstance = createNativeSearchInstance({
+        inputElement,
+        loaderElement,
+        resultsElement,
+        customClass,
+      });
 
-  // Get the loader element
-  const loaderElement = queryElement('loader');
-
-  if (!inputElement) return;
+      return searchInstance;
+    })
+    .filter(isNotEmpty);
 
   return {
-    result: {
-      inputElement,
-      resultsElement,
-      loaderElement,
-    },
+    result: searchInstances,
     destroy() {
-      cleanup();
+      for (const searchInstance of searchInstances) searchInstance.destroy();
     },
   };
 };
