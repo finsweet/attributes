@@ -7,13 +7,6 @@ const SEARCH_QUERY = 'attribute';
 test.beforeEach(async ({ page }) => {
   await page.goto('https://dev-attributes-nativesearch.webflow.io');
   await waitAttributeLoaded(page, 'nativesearch'); // This line causes issues on webkit
-
-  page.on('console', (msg) => {
-    console.log(msg.text());
-  });
-  // page.on('request', (request) => console.log(`Request sent: ${request.url()}`));
-  // const listener = (request) => console.log(`Request finished: ${request.url()}`);
-  // page.on('requestfinished', listener);
 });
 
 test.describe('nativesearch', () => {

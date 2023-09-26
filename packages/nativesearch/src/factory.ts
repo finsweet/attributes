@@ -3,6 +3,14 @@ import { getFormFieldValue } from '@finsweet/attributes-utils';
 import { listenSearchInput } from './actions/trigger';
 import { SEARCH_RESULTS_WRAPPER_CLASS } from './utils/constants';
 
+/**
+ * Creates a native search instance
+ * @param inputElement The input element to listen to
+ * @param loaderElement The loader element to show/hide
+ * @param resultsElement The results element to show/hide
+ * @param customClass The custom class to add to the results element
+ * @returns The native search instance
+ */
 export const createNativeSearchInstance = ({
   inputElement,
   loaderElement,
