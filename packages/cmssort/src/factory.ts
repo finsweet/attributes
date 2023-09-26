@@ -21,7 +21,7 @@ import type { CSSClasses } from './utils/types';
  *
  * @returns A cleanup callback.
  */
-export const initListSorting = async (listInstance: CMSList) => {
+export const initListSorting = (listInstance: CMSList) => {
   const { listOrWrapper } = listInstance;
 
   const instanceIndex = getInstanceIndex(listOrWrapper);
@@ -59,7 +59,7 @@ export const initListSorting = async (listInstance: CMSList) => {
   const isDropdown = firstTrigger.closest<Dropdown>(`.${DROPDOWN_CSS_CLASSES.dropdown}`);
 
   const sortActions = isSelect
-    ? await initHTMLSelect(firstTrigger, listInstance)
+    ? initHTMLSelect(firstTrigger, listInstance)
     : isDropdown
     ? initDropdown(isDropdown, listInstance)
     : initButtons(triggers, listInstance, cssClasses);

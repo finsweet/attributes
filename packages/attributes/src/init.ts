@@ -109,7 +109,7 @@ const initAttribute = async (
     // only if they were not explicitly provided via the API import
     if (!globalSettings && script) {
       const globalSettingsEntries = Object.entries(SETTINGS).reduce<[string, string][]>((acc, [, { key }]) => {
-        const value = script.getAttribute(`fs-${key}`);
+        const value = script.getAttribute(`fs-${attribute}-${key}`);
         if (!value) return acc;
 
         acc.push([key, value]);
