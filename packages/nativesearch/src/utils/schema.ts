@@ -2,6 +2,9 @@ import type { Schema, SchemaSettings } from '@finsweet/attributes-utils';
 
 import { ELEMENTS, SETTINGS } from './constants';
 
+/**
+ * The settings that are available for the Search Attribute.
+ */
 const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   addclass: {
     ...SETTINGS.addclass,
@@ -11,6 +14,9 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   },
 };
 
+/**
+ * The schema for the Search Attribute.
+ */
 export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
   groups: [],
   elements: [

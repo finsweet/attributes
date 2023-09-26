@@ -1,5 +1,8 @@
 import { type AttributeElements, type AttributeSettings } from '@finsweet/attributes-utils';
 
+/**
+ * The elements that are available for the Search Attribute.
+ */
 export const ELEMENTS = [
   /**
    * The native search input the user interacts with.
@@ -15,6 +18,9 @@ export const ELEMENTS = [
   'loader',
 ] as const satisfies AttributeElements;
 
+/**
+ * The settings that are available for the Search Attribute.
+ */
 export const SETTINGS = {
   /**
    * Optionally add a class to all elements of the Search Result Wrapper.
@@ -26,6 +32,7 @@ export const SETTINGS = {
   },
 } as const satisfies AttributeSettings;
 
+// The class name of the search results wrapper
 export const SEARCH_RESULTS_WRAPPER_CLASS = 'search-result-wrapper';
 
 // The time in milliseconds to wait after the user stops typing before triggering the search
