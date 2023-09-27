@@ -17,6 +17,7 @@ export class BeforeAfterSlider {
   private isDragging: boolean;
   private cursorX: number;
   private cursorOffsetX: number;
+  private mover: HTMLElement;
 
   /**
    * Creates an instance of BeforeAfterSlider.
@@ -33,15 +34,14 @@ export class BeforeAfterSlider {
     this.afterElement = options.afterElement;
     this.handleElement = options.handleElement;
     this.mode = options.mode;
+
+    this.mover = document.createElement('div') as HTMLElement;
   }
 
   /**
    * Inits the BeforeAfterSlider.
    */
   init() {
-    const wrapperWidth = this.wrapper.getBoundingClientRect().width;
-    const wrapperHeight = this.wrapper.getBoundingClientRect().height;
-
     // style `before` label
     const beforeLabel = this.beforeElement.querySelector('div') as HTMLElement;
     if (beforeLabel) {
@@ -64,45 +64,109 @@ export class BeforeAfterSlider {
       afterLabel.style.fontSize = '14px';
     }
 
-    // Clip the `after` element
-    this.afterElement.style.clip = `rect(0px, ${wrapperWidth}px, 9999px, ${wrapperWidth / 2}px)`;
+    // todo: elsH[i] => this.handleElement
+    const wrapperWidth = this.wrapper.getBoundingClientRect().width;
+    const moverWidth = this.handleElement?.getBoundingClientRect().width ?? 0;
+
+    const { width, height } = this.afterElement.getBoundingClientRect();
+
+    if (this.handleElement) {
+      // this.handleElement.style.left = `${width / 2 - moverWidth / 2}px`;
+      // this.handleElement?.style.top = `${height / 2 - moverWidth / 2}px`;
+      // this.handleElement.style.position = 'absolute';
+      // this.wrapper.appendChild(this.handleElement);
+
+      // create a new element inside the wrapper
+      this.mover.style.position = 'absolute';
+      this.mover.style.display = 'flex';
+      this.mover.style.justifyContent = 'center';
+      this.mover.style.alignItems = 'center';
+      this.mover.style.top = `0px`;
+      this.mover.style.left = `${width / 2 - moverWidth / 2}px`;
+      this.mover.style.width = `${moverWidth}px`;
+      this.mover.style.height = `${height}px`;
+      this.mover.style.background = 'rgba(255,255,255,0)';
+      this.mover.style.zIndex = '200';
+
+      this.wrapper.appendChild(this.mover);
+
+      // append the handle to the mover
+      this.mover.appendChild(this.handleElement);
+
+      // add class to the handle and modify class to have :after and :before pseudo elements
+      this.mover.classList.add('mover');
+      // modify :before and :after pseudo elements
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .mover::before {
+          top: 0;
+          transform: translateX(-50%);
+          width: 1px;
+          height: 100%;
+        }
+        .mover::after {
+          top: 50%;
+          transform: translate(-50%,-50%);
+          width: 5px;
+          height: 33%;
+          border-radius: 5px;
+        }
+        .mover::before,
+        .mover::after {
+          position: absolute;
+          left: 50%;
+          content: '';
+          // background: #fff;
+          cursor: --webkit-grab;
+          cursor: grab;
+        }
+      `;
+      this.wrapper.appendChild(style);
+    }
+
+    // Clip the `after` element since its on top of the `before` element
+    this.afterElement.style.clip = `rect(0px, ${width}px, 9999px, ${width / 2}px)`;
 
     // Position the handle to the center of the wrapper
-    if (this.handleElement) {
-      this.wrapper.style.display = 'flex';
-      this.wrapper.style.justifyContent = 'center';
-      this.wrapper.style.alignItems = 'center';
+    // if (this.handleElement) {
+    //   this.wrapper.style.display = 'flex';
+    //   this.wrapper.style.justifyContent = 'center';
+    //   this.wrapper.style.alignItems = 'center';
 
-      // Teleport the handle to inside the wrapper
-      this.wrapper.appendChild(this.handleElement);
+    //   // Teleport the handle to inside the wrapper
+    //   this.wrapper.appendChild(this.handleElement);
 
-      // Position the handle to the center of the wrapper
-      this.handleElement.style.cursor = 'grab';
-      //z-index
-      this.handleElement.style.zIndex = '2'; // just in case
-    }
+    //   // Position the handle to the center of the wrapper
+    //   this.handleElement.style.cursor = 'grab';
+    //   //z-index
+    //   this.handleElement.style.zIndex = '2'; // just in case
+    // }
 
     // Add event listeners
     if (this.handleElement) {
       console.log('mode: ', this.mode);
       // Grab
-      addListener(this.handleElement, 'touchstart', this.handleTouchHold);
+      addListener(this.mover, 'touchstart', this.handleTouchStart);
       if (this.mode === 'hover') {
-        addListener(this.handleElement, 'mouseenter', this.handleMouseDown);
+        // is hover mode
+        addListener(this.mover, 'mouseenter', this.handleMouseDown);
       } else {
-        addListener(this.handleElement, 'mousedown', this.handleMouseDown);
+        // is drag mode
+        addListener(this.mover, 'mousedown', this.handleMouseDown);
       }
 
       // Drag
-      addListener(this.handleElement, 'mousemove', this.handleMouseMove);
-      addListener(this.handleElement, 'touchmove', this.handleTouchMove);
+      addListener(this.mover, 'mousemove', this.handleMouseMove);
+      addListener(this.mover, 'touchmove', this.handleTouchMove);
 
       // Release
-      addListener(this.handleElement, 'touchend', this.handleMouseUp);
+      addListener(this.mover, 'touchend', this.handleMouseUp);
       if (this.mode === 'hover') {
-        addListener(this.handleElement, 'mouseleave', this.handleMouseUp);
+        // is hover mode
+        addListener(this.mover, 'mouseleave', this.handleMouseUp);
       } else {
-        addListener(this.handleElement, 'mouseup', this.handleMouseUp);
+        // is drag mode
+        addListener(this.mover, 'mouseup', this.handleMouseUp);
       }
     }
 
@@ -114,28 +178,58 @@ export class BeforeAfterSlider {
     // e.preventDefault();
     this.isDragging = true;
     this.cursorX = e.clientX;
-    this.handleElement.style.cursor = 'grabbing';
-    console.log('mouseDown');
+    this.mover.style.cursor = 'grabbing';
+    console.log(`mouseDown:
+    this.cursorX = e.clientX; //${e.clientX};
+    console.log(this.cursorX) //${this.cursorX}`);
   };
 
-  // Touch Hold
-  handleTouchHold = (e: TouchEvent) => {
+  // Mouse Move
+  handleMouseMove = (e: MouseEvent) => {
+    const { width } = this.afterElement.getBoundingClientRect();
+    if (!this.isDragging) return;
+    // this.mover.style.cursor = 'grabbing';
+    this.mover.style.left = parseInt(this.mover.style.left) + (e.clientX - this.cursorX) + 'px';
+    this.cursorX = e.clientX;
+    this.afterElement.style.clip = `rect(0px, ${width}px, 9999px, ${this.mover.getBoundingClientRect().width / 2 + parseInt(this.mover.style.left)
+      }px)`;
+  };
+
+  // handleMouseMove = (e: MouseEvent) => {
+  //   e.preventDefault();
+  //   if (!this.isDragging) return;
+  //   const offsetX = e.clientX - this.cursorX; // current mouse position - initial mouse position (offset)
+  //   // this.cursorX = e.clientX; // update initial mouse position to current mouse position
+  //   this.wrapper.style.left = parseInt(this.wrapper.style.left) + (e.clientX - X) + 'px';
+  //   this.cursorOffsetX = e.clientX - offsetX; // current mouse position - offset
+  //   this.handleElement.style.transform = `translateX(${this.cursorOffsetX}px)`;
+  //   console.warn(`mouseMove:
+  //   const newX = e.clientX - this.cursorX; // (${e.clientX} - ${this.cursorX} = ${newX})
+  //   this.cursorOffsetX = e.clientX - newX; // (${e.clientX} - ${newX} = ${this.cursorOffsetX})
+  //   this.handleElement.style.transform = 'translateX(\${newX}px)'; // transform: 'translateX(${newX}px)'
+  //   `);
+  // };
+
+  // Mouse Up
+  handleMouseUp = (e: MouseEvent | TouchEvent) => {
+    // e.preventDefault();
+    // if (!this.isDragging) return;
+    this.isDragging = false;
+    this.handleElement.style.cursor = 'grab';
+    console.log('mouseUp', {
+      cursorX: this.cursorX,
+      cursorOffsetX: this.cursorOffsetX,
+    });
+  };
+
+  // Touch Start
+  handleTouchStart = (e: TouchEvent) => {
     // e.preventDefault();
     this.isDragging = true;
     // Get the horizontal coordinate of the touch
     this.cursorX = e.touches[0].clientX;
     this.handleElement.style.cursor = 'grabbing';
-    console.log('touchHold');
-  };
-
-  // Mouse Move
-  handleMouseMove = (e: MouseEvent) => {
-    // e.preventDefault();
-    if (!this.isDragging) return;
-    const newX = e.clientX - this.cursorX;
-    this.cursorOffsetX = e.clientX - newX;
-    this.handleElement.style.transform = `translateX(${newX}px)`;
-    console.log('mouseMove');
+    console.log('touchStart');
   };
 
   // Touch Move
@@ -148,11 +242,12 @@ export class BeforeAfterSlider {
     console.log('touchMove');
   };
 
-  // Mouse Up
-  handleMouseUp = (e: MouseEvent | TouchEvent) => {
-    if (!this.isDragging) return;
+  // Touch End
+  handleTouchEnd = (e: TouchEvent) => {
+    // e.preventDefault();
     this.isDragging = false;
     this.handleElement.style.cursor = 'grab';
-    console.log('mouseUp');
+    console.log('touchEnd');
+  };
   };
 }
