@@ -21,22 +21,25 @@ export const searchWebflow = async ({
     display: (htmlString: string) => void;
   };
 }) => {
-  if (isNotEmpty(query.trim()))
-    try {
-      loader.show();
-      // Fetch the search results
-      const response = await fetch(`/search?query=${query}`);
+  if (!query.trim().length) {
+    results.hide();
+    return;
+  }
 
-      // Get the html response and parse it to a DOM element
-      const htmlString = await response.text();
+  try {
+    loader.show();
+    // Fetch the search results
+    const response = await fetch(`/search?query=${query}`);
 
-      // Display the results
-      results.display(htmlString);
-    } catch (error) {
-      // reportError(error);
-    } finally {
-      results.show();
-      loader.hide();
-    }
-  else results.hide();
+    // Get the html response and parse it to a DOM element
+    const htmlString = await response.text();
+
+    // Display the results
+    results.display(htmlString);
+  } catch (error) {
+    // reportError(error);
+  } finally {
+    results.show();
+    loader.hide();
+  }
 };
