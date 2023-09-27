@@ -21,7 +21,7 @@ export const searchWebflow = async ({
     display: (htmlString: string) => void;
   };
 }) => {
-  if (isNotEmpty(query) && query.trim() !== '')
+  if (isNotEmpty(query.trim()))
     try {
       loader.show();
       // Fetch the search results
