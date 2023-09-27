@@ -2,17 +2,35 @@ import { type AttributeElements, type AttributeSettings } from '@finsweet/attrib
 
 export const ELEMENTS = [
   /**
-   * This is an element example definition.
+   * The target for the before and after slider component.
    */
-  'example',
+  'wrapper',
+  /**
+   * The before image for the before and after slider component.
+   */
+  'before',
+  /**
+   * The after image for the before and after slider component.
+   */
+  'after',
+  /**
+   * The handle for the before and after slider component.
+   */
+  'handle',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
   /**
-   * Defines a setting example definition.
+   * The mode of the before and after slider component.
    */
-  example: {
-    key: 'example',
-    values: { value: 'value' },
+  mode: {
+    key: 'mode',
+    values: { drag: 'drag', hover: 'hover' },
+  },
+  /**
+   * The instance number
+   */
+  instance: {
+    key: 'instance',
   },
 } as const satisfies AttributeSettings;

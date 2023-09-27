@@ -17,6 +17,7 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-utils": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*",
+    "beerslider": "^1.0.3"
   }
 }
