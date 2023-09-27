@@ -142,7 +142,7 @@ export const generateSelectors = <
     SettingValues = SettingsDefinition[SettingKey]['values'],
     SettingValue = SettingValues extends Record<string, string>
       ? FilterInvalid extends true
-        ? keyof SettingValues
+        ? SettingValues[keyof SettingValues]
         : string
       : string
   >(

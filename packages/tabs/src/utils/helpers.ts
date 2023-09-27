@@ -1,3 +1,4 @@
+import { activeTabClass } from './constants';
 import { getAttribute } from './selectors';
 
 /**
@@ -5,7 +6,7 @@ import { getAttribute } from './selectors';
  * @param element - The element to search within.
  * @returns The value of the 'activeclass' attribute if found, or null if not found.
  */
-export function getActiveClassAttributeValue(element: Element): string | null {
+export function getActiveClassAttributeValue(element: Element): string {
   const activeClassValue = getAttribute(element, 'activeclass');
   if (activeClassValue) {
     return activeClassValue;
@@ -17,7 +18,7 @@ export function getActiveClassAttributeValue(element: Element): string | null {
       return childValue;
     }
   }
-  return null;
+  return activeTabClass;
 }
 
 /**

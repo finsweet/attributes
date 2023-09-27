@@ -7,6 +7,7 @@ export const ELEMENTS = [
   'scroll-anchor',
   'name',
   'timer-interaction',
+  'omit',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
@@ -17,3 +18,5 @@ export const SETTINGS = {
   timerstopclick: { key: 'timerstopclick' },
   timerstart: { key: 'timerstart', values: { scrollintoview: 'scroll-into-view', load: 'load', click: 'click' } },
 } as const satisfies AttributeSettings;
+
+export const activeTabClass = 'is-tabs-active';

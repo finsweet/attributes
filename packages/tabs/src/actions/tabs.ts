@@ -1,4 +1,4 @@
-import { getCollectionElements } from '@finsweet/attributes-utils';
+import { getCollectionElements, simulateEvent } from '@finsweet/attributes-utils';
 
 import { DisplayController } from '../../../consent/src/components';
 import {
@@ -11,6 +11,8 @@ import {
   type TTimer,
 } from '../utils';
 import { setPointerEventsNoneToElementAndChildren } from '../utils';
+import { getElementSelector } from '../utils';
+import { activeTabClass } from '../utils/constants';
 
 export const initTabs = (tabWrapper: HTMLElement) => {
   const menu = queryElement('menu', { scope: tabWrapper });
@@ -21,12 +23,12 @@ export const initTabs = (tabWrapper: HTMLElement) => {
   }
 
   const querySupport = getAttribute(menu, 'querytabs');
-  const effect = (getAttribute(menu, 'effect') || 'fade') as TEffects;
+  const effect = getAttribute(menu, 'effect', true) || 'fade';
   const customNamesElements = queryAllElements('name', { scope: menu });
   const customNames = customNamesElements.map((element) => element.textContent?.replace(/\s/g, '-'));
   const timer = getAttribute(menu, 'timer');
   const timerStopClick = getAttribute(menu, 'timerstopclick');
-  const timerStart = (getAttribute(menu, 'timerstart') || 'load') as TTimer;
+  const timerStart = getAttribute(menu, 'timerstart', true) || 'load';
   let intervalId: number | null = null;
   const interactionElements = queryAllElements('timer-interaction', { scope: tabWrapper });
 
@@ -34,19 +36,17 @@ export const initTabs = (tabWrapper: HTMLElement) => {
     setPointerEventsNoneToElementAndChildren(element);
   }
 
-  const menuActiveClass = getActiveClassAttributeValue(menu) || 'is-active';
-  const contentActiveClass = getActiveClassAttributeValue(content) || 'is-active';
+  const menuActiveClass = getActiveClassAttributeValue(menu) || activeTabClass;
+  const contentActiveClass = getActiveClassAttributeValue(content) || activeTabClass;
 
   const scrollAnchor = queryElement('scroll-anchor');
 
-  const menuItems =
-    getCollectionElements(menu, 'items') ||
-    Array.from(menu.children).filter((menuItem) => {
-      return menuItem.getAttribute('fs-tabs-element') !== 'omit';
-    });
+  const menuItems = getCollectionElements(menu, 'items') || [
+    ...menu.querySelectorAll(`:scope > :not(${getElementSelector('omit')})`),
+  ];
   const contentItems = getCollectionElements(content, 'items') || Array.from(content.children);
 
-  if (!menuItems || !contentItems) {
+  if (!menuItems.length || !contentItems.length) {
     return;
   }
 
@@ -78,8 +78,7 @@ export const initTabs = (tabWrapper: HTMLElement) => {
 
   const handleTabs = (index: number) => {
     setTab(index);
-    const clickEvent = new Event('click', { bubbles: true, cancelable: true });
-    interactionElements[index]?.dispatchEvent(clickEvent);
+    simulateEvent(interactionElements[index], 'click');
     if (intervalId && timerStopClick !== 'false') {
       window.clearInterval(intervalId);
       intervalId = null;
