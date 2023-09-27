@@ -170,6 +170,8 @@ export class BeforeAfterSlider {
       }
     }
 
+    addListener(window, 'resize', this.handleResize);
+
     return this;
   }
 
@@ -249,5 +251,21 @@ export class BeforeAfterSlider {
     this.handleElement.style.cursor = 'grab';
     console.log('touchEnd');
   };
+
+  handleResize = () => {
+    const moverWidth = this.mover.getBoundingClientRect().width;
+    const { width } = this.afterElement.getBoundingClientRect();
+    const { height } = this.afterElement.getBoundingClientRect();
+    this.mover.style.left = width / 2 - moverWidth / 2 + 'px';
+    // mine move
+    // this.afterElement.style.clip = `rect(0px, ${width}px, ${this.mover.getBoundingClientRect().height}px, ${this.mover.getBoundingClientRect().width / 2 + parseInt(this.mover.style.left)
+    // mine resize
+    this.afterElement.style.clip = `rect(0px, ${width}px, ${height}px,${width / 2}px)`; // rect(top, right, bottom, left
+
+    // theirs move
+    // this.nextElementSibling.style.clip = "rect(0px, " + (this.getBoundingClientRect().width / 2 + parseInt(this.style.left)) + "px, " + this.getBoundingClientRect().height + "px, 0px)";
+    // }
+    // theirs resize
+    // imgLeft.style.clip = "rect(0px, " + width / 2 + "px, " + height + "px, 0px)";
   };
 }
