@@ -33,7 +33,7 @@ export const searchWebflow = async ({
       // Display the results
       results.display(htmlString);
     } catch (error) {
-      reportError(error);
+      // reportError(error);
     } finally {
       results.show();
       loader.hide();
