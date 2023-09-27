@@ -14,6 +14,7 @@ export const createBeforeAfterInstance = (
     beforeElement,
     afterElement,
     handleElement,
+    mode: modeOption,
   };
 
   console.log('new BeforeAfterSlider');
