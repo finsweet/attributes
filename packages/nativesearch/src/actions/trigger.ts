@@ -1,6 +1,7 @@
 import { addListener, getFormFieldValue } from '@finsweet/attributes-utils';
+import debounce from 'just-debounce';
 
-import { debounce } from '../utils/debounce';
+import { SEARCH_INPUT_DEBOUNCE_TIME } from '../utils';
 import { searchWebflow } from './search';
 
 /**
@@ -30,7 +31,12 @@ export const listenSearchInput = ({
   const inputCleanup = addListener(
     searchElement,
     'input',
-    debounce(() => searchWebflow({ query: getFormFieldValue(searchElement), loader, results }))
+    debounce(
+      () => searchWebflow({ query: getFormFieldValue(searchElement), loader, results }),
+      SEARCH_INPUT_DEBOUNCE_TIME,
+      true,
+      true
+    )
   );
 
   return inputCleanup;

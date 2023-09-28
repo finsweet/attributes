@@ -17,6 +17,7 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-utils": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*",
+    "just-debounce": "1.1.0"
   }
 }

@@ -497,6 +497,9 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+      just-debounce:
+        specifier: ^1.1.0
+        version: 1.1.0
 
   packages/numbercount:
     dependencies:
