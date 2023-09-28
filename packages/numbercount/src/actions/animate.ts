@@ -2,11 +2,11 @@ import { valueToString } from '../utils/helpers';
 
 /**
  * Animates a number element.
- * @param numberElement
- * @param start
- * @param end
- * @param duration
- * @param locale
+ * @param {Element} numberElement - The element where the number will be displayed.
+ * @param {number} start - The starting number.
+ * @param {number} end - The ending number.
+ * @param {number} duration - The duration of the animation in milliseconds.
+ * @param {string | true | null} locale - The locale for formatting the number.
  */
 export const animateNumberCount = (
   numberElement: Element,
@@ -14,24 +14,24 @@ export const animateNumberCount = (
   end: number,
   duration: number,
   locale?: string | true | null
-) => {
-  const increment = (end - start) / duration;
+): void => {
+  let startTime: number | null = null;
+  const step = (timestamp: number) => {
+    if (startTime === null) startTime = timestamp;
+    const elapsed = timestamp - startTime;
 
-  let value = start;
+    const progress = Math.min(elapsed / duration, 1);
+    const value = start + (end - start) * progress;
 
-  const animate = () => {
-    if (value < end) {
-      const newValue = value + increment;
-      const flooredValue = Math.floor(newValue);
+    numberElement.textContent = valueToString(Math.floor(value), locale);
 
-      numberElement.textContent = valueToString(flooredValue, locale);
-      value = newValue;
-    } else {
-      numberElement.textContent = valueToString(end, locale);
+    if (progress < 1) {
+      requestAnimationFrame(step);
+      return;
     }
+
+    numberElement.textContent = valueToString(end, locale);
   };
 
-  for (let i = 0; i <= duration; i++) {
-    setTimeout(animate, i);
-  }
+  requestAnimationFrame(step);
 };
