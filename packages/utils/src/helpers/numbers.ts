@@ -80,3 +80,45 @@ export const adjustValueToStep = (value: number, step: number, precision?: numbe
 
   return setDecimalPrecision(floor, precision);
 };
+
+/**
+ * Format number to international locale string or fallback to default browser locale.
+ * @param {number} number - Number to format.
+ * @param {string} [locale] - Locale to format number to.
+ * @param {number} [decimals] - Number of decimal places.
+ * @param {boolean} [isTimeInMinutes] - Whether the number represents time in minutes.
+ * @returns {string} Formatted number as a string.
+ */
+export const formatNumberToLocale = (
+  number: number,
+  locale: string,
+  decimals?: number,
+  isTimeInMinutes?: boolean
+): string => {
+  let language: string = locale;
+
+  if (locale === 'auto') {
+    language = navigator.language;
+  }
+
+  const options: Intl.NumberFormatOptions = {};
+  if (decimals !== undefined) {
+    options.minimumFractionDigits = decimals;
+    options.maximumFractionDigits = decimals;
+  }
+
+  const formatter = new Intl.NumberFormat(language, options);
+
+  if (isTimeInMinutes) {
+    // format the number as a time duration in minutes
+
+    return number.toLocaleString(language, {
+      ...options,
+      style: 'unit',
+      unit: 'minute', // TODO: support other units
+      unitDisplay: 'long',
+    });
+  }
+
+  return formatter.format(number);
+};
