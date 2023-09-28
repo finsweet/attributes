@@ -34,3 +34,14 @@ export const SETTINGS = {
     key: 'instance',
   },
 } as const satisfies AttributeSettings;
+
+export const DEFAULTS = {
+  /**
+   * The mode of the before and after slider component.
+   */
+  mode: 'drag', // 'drag' | 'hover',
+  /**
+   * The start position of the before and after slider component.
+   */
+  start: '50', // 0 - 100 (percentage)
+} as const;
