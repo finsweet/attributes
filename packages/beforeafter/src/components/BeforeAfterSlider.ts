@@ -59,8 +59,7 @@ export class BeforeAfterSlider {
     // create a drag zone
     this.dragZoneEl = document.createElement('div');
 
-    // append the dragZone to the wrapper
-    this.wrapperEl.appendChild(this.dragZoneEl);
+    const dragHandleWidth = this.dragHandleEl?.getBoundingClientRect().width ?? 50;
 
     // append the dragHandle to the dragZone if it exists
     if (this.dragHandleEl) {
@@ -73,7 +72,17 @@ export class BeforeAfterSlider {
       right: afterWidth,
       left: (this.start * afterWidth) / 100 || afterWidth / 2, //calculate the left position
     };
-    this.dragZoneEl.style.left = `${clip.left}px`;
+
+    console.log('dragHandleWidth', dragHandleWidth);
+
+    this.dragZoneEl.style.width = `${dragHandleWidth}px`;
+    console.log('this.dragZoneEl.style.width', this.dragZoneEl.style.width);
+    this.dragZoneEl.style.left = `${clip.left - dragHandleWidth / 2}px`;
+    console.log('this.dragZoneEl.style.left', this.dragZoneEl.style.left);
+
+    // append the dragZone to the wrapper
+    this.wrapperEl.appendChild(this.dragZoneEl);
+
     this.clipAtPosition(clip);
 
     // // set the mode
@@ -100,12 +109,13 @@ export class BeforeAfterSlider {
       }
     });
     addListener(this.wrapperEl, 'mousedown', (e: MouseEvent) => {
-      if (e.target === this.dragZoneEl) {
+      // check if target is the drag zone or is a child of the drag zone
+      if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
         this.onDragZoneGrab(e);
       }
     });
     addListener(this.wrapperEl, 'mouseup', (e: MouseEvent) => {
-      if (e.target === this.dragZoneEl) {
+      if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
         this.onDragZoneRelease(e);
       }
     });
@@ -113,7 +123,7 @@ export class BeforeAfterSlider {
     addListener(this.wrapperEl, 'mousemove', (e: MouseEvent) => {
       if (this.interactionMode === 'hover') {
         this.onWrapperHoverDrag(e);
-      } else if (e.target === this.dragZoneEl) {
+      } else if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
         this.onDragZoneDrag(e);
       }
     });
@@ -326,7 +336,7 @@ export class BeforeAfterSlider {
         justify-content: center;
         top: 0;
         left: ${afterWidth / 2 - dragHandleWidth / 2}px;
-        width: ${dragHandleWidth}px;
+        // width: ${dragHandleWidth}px;
         height: ${afterHeight}px;
         background: rgba(0, 0, 0, 0.0);
         z-index: 1;
