@@ -44,4 +44,12 @@ export const DEFAULTS = {
    * The start position of the before and after slider component.
    */
   start: '50', // 0 - 100 (percentage)
+  /**
+   * Dragzone width
+   */
+  dragzoneWidth: '100', // px | %
+  /**
+   * Dragzone background
+   */
+  dragzoneBackground: 'rgba(0, 0, 0, 0.0)', // rgba(255, 0, 0, 0.9)
 } as const;
