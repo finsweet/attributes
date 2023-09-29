@@ -185,6 +185,17 @@ export class BeforeAfterSlider {
   private onWrapperEnter = (e: MouseEvent | TouchEvent): void => {
     this.isDragging = true;
     this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+
+    //get mouse cursor position in relation to the element
+    const rect = this.wrapperEl.getBoundingClientRect();
+    this.cursorOffset = this.cursorPosition - rect.left;
+
+    const dragHandleWidth = this.dragHandleEl?.getBoundingClientRect().width ?? 50;
+
+    // Set the initial position of dragZoneEl to where the mouse entered
+    if (this.dragZoneEl) {
+      this.dragZoneEl.style.left = `${this.cursorOffset - dragHandleWidth / 2}px`;
+    }
   };
 
   /**
