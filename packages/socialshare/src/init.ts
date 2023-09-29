@@ -1,9 +1,9 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import { type FsAttributeInit, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
 
-import { listenTriggerClicks } from './actions/trigger';
+import { listenTriggerClicks } from './actions';
 import { createSocialShareInstances } from './factory';
-import { stores } from './utils/stores';
+import { stores } from './utils';
 
 /**
  * Inits the attribute.

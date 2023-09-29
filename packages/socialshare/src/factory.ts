@@ -1,17 +1,28 @@
-import { collectFacebookData, collectPinterestData, collectSocialData, collectTwitterData } from './actions/collect';
+import { isNotEmpty } from '@finsweet/attributes-utils';
+
 import {
+  collectCopyData,
+  collectFacebookData,
+  collectPinterestData,
+  collectSocialData,
+  collectTwitterData,
+  createCopyInstance,
   createFacebookShare,
   createLinkedinShare,
   createPinterestShare,
   createRedditShare,
   createTelegramShare,
   createTwitterShare,
-} from './actions/share';
-import { SOCIAL_SHARE_PLATFORMS } from './utils/constants';
-import { getCMSItemWrapper } from './utils/dom';
-import { getAttribute, getInstanceIndex, queryAllElements } from './utils/selectors';
-import { stores } from './utils/stores';
-import type { SocialShareTypes } from './utils/types';
+} from './actions';
+import {
+  getAttribute,
+  getCMSItemWrapper,
+  getInstanceIndex,
+  queryAllElements,
+  SOCIAL_SHARE_PLATFORMS,
+  type SocialShareTypes,
+  stores,
+} from './utils';
 
 /**
  * Creates a social share instance for all matching elements under a scope.
@@ -39,6 +50,22 @@ export const createSocialShareInstances = (scope?: HTMLElement) => {
  * Holds an instance creator for each platform.
  */
 const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
+  /**
+   * Copy creator
+   * @param trigger
+   */
+  copy(trigger) {
+    if (stores.copy.has(trigger)) return;
+
+    const instanceIndex = getInstanceIndex(trigger);
+
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const copyUrl = collectCopyData(trigger, instanceIndex, cmsListItem);
+
+    createCopyInstance(copyUrl);
+  },
+
   /**
    * Facebook creator.
    * @param trigger
