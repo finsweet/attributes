@@ -1,3 +1,5 @@
+import { addListener, normalizeNumber } from '@finsweet/attributes-utils';
+
 import { type BeforeAfterSliderOptions, DEFAULTS, SETTINGS } from '../utils';
 
 const CLASSNAME = 'before-after-slider';
@@ -65,25 +67,21 @@ export class BeforeAfterSlider {
       this.dragZoneEl.appendChild(this.dragHandleEl);
     }
 
-    // set the start position
-    this.clipStartPosition();
+    // clip at the start position
+    const afterWidth = this.afterEl.getBoundingClientRect().width;
+    const clip = {
+      right: afterWidth,
+      left: (this.start * afterWidth) / 100 || afterWidth / 2, //calculate the left position
+    };
+    this.dragZoneEl.style.left = `${clip.left}px`;
+    this.clipAtPosition(clip);
 
     // // set the mode
     // this.setMode();
   }
 
-  clipStartPosition(): void {
-    // this.beforeEl.style.clipPath = `inset(0 ${100 - this.start}% 0 0)`;
-    // this.afterEl.style.clipPath = `inset(0 0 0 ${this.start}%)`;
-    const afterWidth = this.afterEl.getBoundingClientRect().width;
-    const clip = {
-      top: 0,
-      right: afterWidth,
-      bottom: 9999,
-      left: (this.start * afterWidth) / 100 || afterWidth / 2, //calculate the left position
-    };
-
-    this.afterEl.style.clip = `rect(${clip.top}px, ${clip.right}px, ${clip.bottom}px, ${clip.left}px)`;
+  clipAtPosition(rect: { top?: number; right: number; bottom?: number; left: number }): void {
+    this.afterEl.style.clip = `rect(${rect.top ?? '0'}px, ${rect.right}px, ${rect.bottom ?? '9999'}px, ${rect.left}px)`;
   }
 
   /**
@@ -91,6 +89,34 @@ export class BeforeAfterSlider {
    */
   private initEvents(): void {
     // add the event listeners
+    addListener(this.wrapperEl, 'mouseenter', (e: MouseEvent) => {
+      if (this.interactionMode === 'hover') {
+        this.onWrapperEnter(e);
+      }
+    });
+    addListener(this.wrapperEl, 'mouseleave', (e: MouseEvent) => {
+      if (this.interactionMode === 'hover') {
+        this.onWrapperLeave(e);
+      }
+    });
+    addListener(this.wrapperEl, 'mousedown', (e: MouseEvent) => {
+      if (e.target === this.dragZoneEl) {
+        this.onDragZoneGrab(e);
+      }
+    });
+    addListener(this.wrapperEl, 'mouseup', (e: MouseEvent) => {
+      if (e.target === this.dragZoneEl) {
+        this.onDragZoneRelease(e);
+      }
+    });
+
+    addListener(this.wrapperEl, 'mousemove', (e: MouseEvent) => {
+      if (this.interactionMode === 'hover') {
+        this.onWrapperHoverDrag(e);
+      } else if (e.target === this.dragZoneEl) {
+        this.onDragZoneDrag(e);
+      }
+    });
     // this.wrapperEl.addEventListener('mousemove', this.onMouseMove);
     // this.wrapperEl.addEventListener('mouseleave', this.onMouseLeave);
     // this.wrapperEl.addEventListener('mousedown', this.onMouseDown);
@@ -100,6 +126,87 @@ export class BeforeAfterSlider {
     // this.wrapperEl.addEventListener('touchstart', this.onMouseDown);
     // window.addEventListener('resize', this.onResize);
   }
+
+  /**
+   * Handle the drag zone grab event
+   */
+  private onDragZoneGrab = (e: MouseEvent | TouchEvent): void => {
+    this.isDragging = true;
+    this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+    this.dragZoneEl?.classList.add('grabbing');
+  };
+
+  /**
+   * Handle the drag zone release event
+   */
+  private onDragZoneRelease = (e: MouseEvent | TouchEvent): void => {
+    this.isDragging = false;
+    this.dragZoneEl?.classList.remove('grabbing');
+  };
+
+  /**
+   * Handle the drag zone drag event
+   */
+  private onDragZoneDrag = (e: MouseEvent | TouchEvent): void => {
+    if (!this.isDragging || !this.dragZoneEl) return;
+
+    const { width } = this.afterEl.getBoundingClientRect();
+
+    this.dragZoneEl.style.left =
+      parseInt(this.dragZoneEl.style.left) +
+      ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
+      'px';
+    this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+    // this.start = (parseInt(this.dragHandleEl.style.left) / width) * 100;
+    // this.clipAtStartPosition();
+
+    const clip = {
+      top: 0,
+      right: width,
+      bottom: 9999,
+      left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+    };
+    this.clipAtPosition(clip);
+  };
+
+  /**
+   * Handle the hover event
+   */
+  private onWrapperEnter = (e: MouseEvent | TouchEvent): void => {
+    this.isDragging = true;
+    this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+  };
+
+  /**
+   * Handle the drag on hover event
+   */
+  private onWrapperLeave = (e: MouseEvent | TouchEvent): void => {
+    this.isDragging = false;
+  };
+
+  /**
+   * Handle the drag on hover event
+   */
+  private onWrapperHoverDrag = (e: MouseEvent | TouchEvent): void => {
+    if (!this.isDragging || !this.dragZoneEl) return;
+    const { width } = this.afterEl.getBoundingClientRect();
+
+    this.dragZoneEl.style.left =
+      parseInt(this.dragZoneEl.style.left) +
+      ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
+      'px';
+    this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+    // this.start = (parseInt(this.dragHandleEl.style.left) / width) * 100;
+    // this.clipAtStartPosition();
+
+    const clip = {
+      top: 0,
+      right: width,
+      bottom: 9999,
+      left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+    };
+    this.clipAtPosition(clip);
+  };
 
   /**
    * Initialize the styles
@@ -128,6 +235,8 @@ export class BeforeAfterSlider {
 
       styleEl.setAttribute('before-after-slider', '');
 
+      // wrapper
+      this.appendWrapperStyles(styleEl);
       // label
       this.appendLabelStyles(styleEl);
       // drag-zone
@@ -136,6 +245,30 @@ export class BeforeAfterSlider {
       // append the style element to the head
       document.head.appendChild(styleEl);
     }
+  }
+
+  private appendWrapperStyles(styleEl: HTMLStyleElement): void {
+    styleEl.appendChild(
+      document.createTextNode(`
+      
+      /**
+       * Wrapper
+       */
+      .${CLASSNAME} {
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none;    /* Firefox */
+        -ms-user-select: none;     /* IE/Edge */
+      }
+
+      .${CLASSNAME} .grabbing {
+        cursor: grabbing!important;
+      }
+
+      `)
+    );
   }
 
   private appendLabelStyles(styleEl: HTMLStyleElement): void {
@@ -195,7 +328,7 @@ export class BeforeAfterSlider {
         left: ${afterWidth / 2 - dragHandleWidth / 2}px;
         width: ${dragHandleWidth}px;
         height: ${afterHeight}px;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.0);
         z-index: 1;
         cursor: grab;
       }
