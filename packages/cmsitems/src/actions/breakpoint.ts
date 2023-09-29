@@ -34,6 +34,14 @@ export const initBreakpoints = (listElement: HTMLElement) => {
     }
   }
 
+  for (const breakpoint of sortedBreakpoints.reverse()) {
+    if (breakpoints[breakpoint]) {
+      lastDefinedValue = breakpoints[breakpoint];
+    } else if (lastDefinedValue) {
+      breakpoints[breakpoint] = lastDefinedValue;
+    }
+  }
+
   let visibleItems = breakpoints[sortedBreakpoints[0]];
 
   const updateItemsPerRow = () => {
@@ -51,6 +59,8 @@ export const initBreakpoints = (listElement: HTMLElement) => {
         item.style.display = 'none';
       }
     });
+
+    //console.log(visibleItems)
   };
 
   updateItemsPerRow();
