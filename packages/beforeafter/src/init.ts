@@ -1,7 +1,7 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { createBeforeAfterInstance } from './factory';
-import { getAttribute, getInstanceIndex, queryAllElements, queryElement } from './utils/selectors';
+import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
 
 /**
  * Inits the attribute.
@@ -19,21 +19,13 @@ export const init: FsAttributeInit = async () => {
 
     const afterElement = queryElement('after', { scope: wrapper });
 
-    const handleElement = queryElement('handle', { scope: wrapper.parentElement ?? undefined });
+    const handleElement = queryElement('handle', { scope: wrapper.parentElement ?? undefined }) ?? undefined;
 
     if (!beforeElement || !afterElement) {
-      console.warn('BeforeAfterSlider: missing elements before, after or handle');
       return;
     }
 
-    return createBeforeAfterInstance(
-      wrapper,
-      beforeElement,
-      afterElement,
-      handleElement,
-      modeOption,
-      getInstanceIndex(wrapper)
-    );
+    return createBeforeAfterInstance(wrapper, beforeElement, afterElement, handleElement, modeOption);
   });
 
   return {

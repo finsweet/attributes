@@ -1,6 +1,6 @@
-import { addListener, normalizeNumber } from '@finsweet/attributes-utils';
+import { addListener } from '@finsweet/attributes-utils';
 
-import { type BeforeAfterSliderOptions, DEFAULTS, ELEMENTS, SETTINGS } from '../utils';
+import { type BeforeAfterSliderOptions, DEFAULTS, SETTINGS } from '../utils';
 
 const CLASSNAME = 'before-after-slider';
 /**
@@ -61,8 +61,6 @@ export class BeforeAfterSlider {
     // create a drag zone
     this.dragZoneEl = document.createElement('div');
 
-    // const dragHandleWidth = this.dragHandleEl?.getBoundingClientRect().width ?? 50;
-
     // append the dragHandle to the dragZone if it exists
     if (this.dragHandleEl) {
       this.dragZoneEl.appendChild(this.dragHandleEl);
@@ -77,21 +75,13 @@ export class BeforeAfterSlider {
       left: (this.start * afterWidth) / 100 || afterWidth / 2, //calculate the left position
     };
 
-    // console.log('dragHandleWidth', dragHandleWidth);
-
-    // this.dragZoneEl.style.width = `${dragHandleWidth}px`;
     this.dragZoneEl.style.width = DEFAULTS.dragzoneWidth;
-    console.log('this.dragZoneEl.style.width', this.dragZoneEl.style.width);
     this.dragZoneEl.style.left = `${clip.left - this.dragZoneWidth / 2}px`;
-    console.log('this.dragZoneEl.style.left', this.dragZoneEl.style.left);
 
     // append the dragZone to the wrapper
     this.wrapperEl.appendChild(this.dragZoneEl);
 
     this.clipAtPosition(clip);
-
-    // // set the mode
-    // this.setMode();
   }
 
   clipAtPosition(rect: { top?: number; right: number; bottom?: number; left: number }): void {
@@ -108,9 +98,9 @@ export class BeforeAfterSlider {
         this.onWrapperEnter(e);
       }
     });
-    addListener(this.wrapperEl, 'mouseleave', (e: MouseEvent) => {
+    addListener(this.wrapperEl, 'mouseleave', () => {
       if (this.interactionMode === 'hover') {
-        this.onWrapperLeave(e);
+        this.onWrapperLeave();
       }
     });
     addListener(this.wrapperEl, 'mousedown', (e: MouseEvent) => {
@@ -121,7 +111,7 @@ export class BeforeAfterSlider {
     });
     addListener(this.wrapperEl, 'mouseup', (e: MouseEvent) => {
       if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
-        this.onDragZoneRelease(e);
+        this.onDragZoneRelease();
       }
     });
 
@@ -132,14 +122,6 @@ export class BeforeAfterSlider {
         this.onDragZoneDrag(e);
       }
     });
-    // this.wrapperEl.addEventListener('mousemove', this.onMouseMove);
-    // this.wrapperEl.addEventListener('mouseleave', this.onMouseLeave);
-    // this.wrapperEl.addEventListener('mousedown', this.onMouseDown);
-    // this.wrapperEl.addEventListener('mouseup', this.onMouseUp);
-    // this.wrapperEl.addEventListener('touchmove', this.onMouseMove);
-    // this.wrapperEl.addEventListener('touchend', this.onMouseLeave);
-    // this.wrapperEl.addEventListener('touchstart', this.onMouseDown);
-    // window.addEventListener('resize', this.onResize);
   }
 
   /**
@@ -154,7 +136,7 @@ export class BeforeAfterSlider {
   /**
    * Handle the drag zone release event
    */
-  private onDragZoneRelease = (e: MouseEvent | TouchEvent): void => {
+  private onDragZoneRelease = (): void => {
     this.isDragging = false;
     this.dragZoneEl?.classList.remove('grabbing');
   };
@@ -172,8 +154,6 @@ export class BeforeAfterSlider {
       ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
       'px';
     this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-    // this.start = (parseInt(this.dragHandleEl.style.left) / width) * 100;
-    // this.clipAtStartPosition();
 
     const clip = {
       top: 0,
@@ -195,8 +175,6 @@ export class BeforeAfterSlider {
     const rect = this.wrapperEl.getBoundingClientRect();
     this.cursorOffset = this.cursorPosition - rect.left;
 
-    // const dragHandleWidth = this.dragHandleEl?.getBoundingClientRect().width ?? 50;
-
     // Set the initial position of dragZoneEl to where the mouse entered
     if (this.dragZoneEl) {
       this.dragZoneEl.style.left = `${this.cursorOffset - this.dragZoneWidth / 2}px`;
@@ -206,7 +184,7 @@ export class BeforeAfterSlider {
   /**
    * Handle the drag on hover event
    */
-  private onWrapperLeave = (e: MouseEvent | TouchEvent): void => {
+  private onWrapperLeave = (): void => {
     this.isDragging = false;
   };
 
@@ -222,8 +200,6 @@ export class BeforeAfterSlider {
       ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
       'px';
     this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-    // this.start = (parseInt(this.dragHandleEl.style.left) / width) * 100;
-    // this.clipAtStartPosition();
 
     const clip = {
       top: 0,
@@ -337,7 +313,6 @@ export class BeforeAfterSlider {
     // todo: extract variables
     const afterWidth = this.afterEl.getBoundingClientRect().width;
     const afterHeight = this.afterEl.getBoundingClientRect().height;
-    // const dragHandleWidth = this.dragHandleEl?.getBoundingClientRect().width || 10;
 
     styleEl.appendChild(
       document.createTextNode(`
