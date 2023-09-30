@@ -83,9 +83,9 @@ test.describe('beforeafter', () => {
 
     const element = page.locator(getElementSelector('wrapper'));
     await element.first().innerHTML(); // flakiness fix
-    const slider = element.nth(1);
+    const slider = element.nth(2);
 
-    const handle = element.locator(getElementSelector('handle')).nth(1);
+    const handle = element.locator(getElementSelector('handle')).nth(2);
 
     const initialHandlePosition = await handle.boundingBox();
 
@@ -117,9 +117,9 @@ test.describe('beforeafter', () => {
 
     const element = page.locator(getElementSelector('wrapper'));
     await element.first().innerHTML(); // flakiness fix
-    const slider = element.nth(1);
+    const slider = element.last();
 
-    const handle = element.locator(getElementSelector('handle')).nth(1);
+    const handle = element.locator(getElementSelector('handle')).last();
 
     const initialHandlePosition = await handle.boundingBox();
 
