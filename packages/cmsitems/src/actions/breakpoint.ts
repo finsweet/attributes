@@ -34,7 +34,7 @@ export const initBreakpoints = (listElement: HTMLElement) => {
     }
   }
 
-  for (const breakpoint of sortedBreakpoints.reverse()) {
+  for (const breakpoint of [...sortedBreakpoints].reverse()) {
     if (breakpoints[breakpoint]) {
       lastDefinedValue = breakpoints[breakpoint];
     } else if (lastDefinedValue) {
@@ -48,8 +48,6 @@ export const initBreakpoints = (listElement: HTMLElement) => {
     for (const breakpoint of sortedBreakpoints) {
       if (window.innerWidth <= Number(breakpoint)) {
         visibleItems = breakpoints[breakpoint];
-      } else {
-        break;
       }
     }
     items.forEach((item, index) => {
@@ -59,8 +57,6 @@ export const initBreakpoints = (listElement: HTMLElement) => {
         item.style.display = 'none';
       }
     });
-
-    //console.log(visibleItems)
   };
 
   updateItemsPerRow();
