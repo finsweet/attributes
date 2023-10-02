@@ -215,6 +215,9 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+      '@finsweet/attributes-validation':
+        specifier: workspace:*
+        version: link:../validation
       '@finsweet/attributes-videohls':
         specifier: workspace:*
         version: link:../videohls
@@ -621,6 +624,21 @@ importers:
       '@motionone/types':
         specifier: ^10.15.1
         version: 10.15.1
+
+  packages/validation:
+    dependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      pristinejs:
+        specifier: ^1.1.0
+        version: 1.1.0
+      swiper:
+        specifier: ^10.0.2
+        version: 10.0.2
 
   packages/videohls:
     dependencies:
@@ -3267,6 +3285,10 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
+
+  /pristinejs@1.1.0:
+    resolution: {integrity: sha512-ardy/YEaZr5E1l0YM2eOkeQx0KoenQjBa7HkfX4Dt0PmqKhZUfyAIT9Qk23vGv4vvvWy/zb/eBe6sSsKUtahrg==}
+    dev: false
 
   /pseudomap@1.0.2:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}

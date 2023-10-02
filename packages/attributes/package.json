@@ -78,6 +78,7 @@
     "@finsweet/attributes-starrating": "workspace:*",
     "@finsweet/attributes-toc": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
+    "@finsweet/attributes-validation": "workspace:*",
     "@finsweet/attributes-videohls": "workspace:*"
   },
   "devDependencies": {

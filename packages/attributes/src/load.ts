@@ -178,6 +178,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-toc');
     }
 
+    case 'validation': {
+      return import('@finsweet/attributes-validation');
+    }
+
     case 'videohls': {
       return import('@finsweet/attributes-videohls');
     }
