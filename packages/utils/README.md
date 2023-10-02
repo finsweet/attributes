@@ -42,46 +42,175 @@ This package is a collection of internal utils used by the Finsweet Attributes p
 
 Below is a list of all the util collections included in this package. Each util is a function that can be imported and used in your code.
 
-### a). Animations
+### A). Animations
 
 #### 1. Factory
 
+- **createAnimation({ initialStyles, keyframes }: AnimationProps)** <br>- Creates a new animation and returns the animation name.
+
+  **Parameters:**
+
+  > - **initialStyles** - The initial styles of the animation.
+  > - **keyframes** - The keyframes of the animation.
+
+  **Returns:**
+  > `AnimationFunction` - The animation functions that can be used to animate an element. i.e { prepareIn, animateIn, animateOut }
+
 #### 2. Types
 
-### b). Components
+- **AnimationProps**
+- **AnimationFunctions**
+- **Animation**
+- **AnimationsObject**
+- **Easings**
+
+### B). Components
 
 #### 1. Copy JSON Button
 
+- **class CopyJSONButton**
+  
+    **Parameters:**
+  
+    > - **element**: HTMLElement
+    > - **copyData**: Record<string, unknown>
+    > - **successText**: string
+    > - **errorText**: string
+    > - **notificationDuration**: number
+    > - **successCSSClass**: string
+
 #### 2. Interaction
 
-### c). Constants
+- **interface InteractionParams**
+- **class Interaction**
+
+    **Methods:**
+
+    > - **trigger(click?: 'first' | 'second')**: Promise<boolean>
+    > - **isActive()**: boolean
+    > - **isRunning()**: boolean
+    > - **untilFinished()**: Promise<unknown>
+
+### C). Constants
 
 #### 1. a11y
 
+i. ARIA_ROLE_KEY : `string`
+ii. ARIA_ROLE_VALUES : `{slider: string; listbox: string; option: string; columnheader: string; link: string; marquee: string; button: string; radiogroup: string; dialog: string;}`
+iii. TABINDEX_KEY : `string`
+iv. ARIA_LABEL_KEY : `string`
+v. ARIA_LABELLEDBY_KEY : `string`
+vi. ARIA_VALUENOW_KEY : `string`
+vii. ARIA_VALUEMIN_KEY : `string`
+viii. ARIA_VALUEMAX_KEY : `string`
+ix. ARIA_SELECTED_KEY  : `string`
+x. ARIA_HASPOPUP_KEY : `string`
+xi. ARIA_MULTISELECTABLE_KEY : `string`
+xii. ARIA_EXPANDED_KEY : `string`
+xiii. ARIA_CURRENT_KEY : `string`
+xiv. ARIA_ACTIVEDESCENDANT_KEY : `string`
+xv. ARIA_PRESSED_KEY : `string`
+xvi. ARIA_CONTROLS_KEY : `string`
+xvii. ARIA_OWNS_KEY : `string`
+xviii. ARIA_ROLEDESCRIPTION_KEY : `string`
+xix. ARIA_DESCRIPTION_KEY : `string`
+xx. ARIA_HIDDEN_KEY : `string`
+xxi. AUTOCOMPLETE_KEY : `string`
+xxii. AUTOCAPITALIZE_KEY : `string`
+xxiii. ARIA_AUTOCOMPLETE_KEY : `string`
+xxiv. ROLE_KEY : `string`
+xxv. REQUIRED_KEY : `string`
+xxvi. NAME_KEY : `string`
+xxvii. ARIA_SETSIZE_KEY : `string`
+xxviii. ARIA_POSINSET_KEY : `string`
+xxix. ID_KEY : `string`
+xxx. ARIA_MODAL_KEY : `string`
+xxxi. ARIA_MODAL_VALUES : `{true: string;}`
+xxxii. ARIA_SORT_KEY : `string`
+xxxiii. ARIA_SORT_VALUES : `{ascending: string; descending: string;}`
+xxxiv. CONTENT_EDITABLE_KEY : `string`
+
 #### 2. Attributes
+
+i. A11Y_ATTRIBUTE : `string`
+ii. ACCORDION_ATTRIBUTE : `string`
+iii. ANIMATION_ATTRIBUTE : `string`
+iv. AUTO_VIDEO_ATTRIBUTE : `string`
+v. CMS_ATTRIBUTE_ATTRIBUTE : `string`
+vi. CMS_COMBINE_ATTRIBUTE : `string`
+vii. CMS_CSS_ATTRIBUTE : `string`
+viii. CMS_FILTER_ATTRIBUTE : `string`
+ix. CMS_LOAD_ATTRIBUTE : `string`
+x. CMS_NEST_ATTRIBUTE : `string`
+xi. CMS_PREV_NEXT_ATTRIBUTE : `string`
+xii. CMS_STATIC_ATTRIBUTE : `string`
+xiii. CMS_SELECT_ATTRIBUTE : `string`
+xiv. CMS_SLIDER_ATTRIBUTE : `string`
+xv. CMS_SORT_ATTRIBUTE : `string`
+xvi. CMS_TABS_ATTRIBUTE : `string`
+xvii. CODE_HIGHLIGHT_ATTRIBUTE : `string`
+xviii. COMBO_BOX_ATTRIBUTE : `string`
+xix. COMPONENT_ATTRIBUTE : `string`
+xx. CONSENT_ATTRIBUTE : `string`
+xxi. COPY_CLIP_ATTRIBUTE : `string`
+xxii. COUNT_ITEMS_ATTRIBUTE : `string`
+xxiii. DISPLAY_VALUES_ATTRIBUTE : `string`
+xxiv. DOCS_ATTRIBUTE : `string`
+xxv. FAV_CUSTOM_ATTRIBUTE : `string`
+xxvi. FORM_SUBMIT_ATTRIBUTE : `string`
+xxvii. INPUT_ACTIVE_ATTRIBUTE : `string`
+xxviii. INPUT_COUNTER_ATTRIBUTE : `string`
+xxix. GREENHOUSE_ATTRIBUTE : `string`
+xxx. LINK_BLOCK_EDIT_ATTRIBUTE : `string`
+xxxi. MIRROR_CLICK_ATTRIBUTE : `string`
+xxxii. MIRROR_INPUT_ATTRIBUTE : `string`
+xxxiii. MODAL_ATTRIBUTE : `string`
+xxxiv. NUMBER_COUNT_ATTRIBUTE : `string`
+xxxv. LAUNCHDARKLY_ATTRIBUTE : `string`
+xxxvi. QUERY_PARAM_ATTRIBUTE : `string`
+xxxvii. RANGE_SLIDER_ATTRIBUTE : `string`
+xxxviii. RICH_TEXT_ATTRIBUTE : `string`
+xxxix. SCROLL_DISABLE_ATTRIBUTE : `string`
+xl. SELECT_CUSTOM_ATTRIBUTE : `string`
+xli. SLIDER_ATTRIBUTE : `string`
+xlii. SLIDER_DOTS_ATTRIBUTE : `string`
+xliii. SMART_LIGHTBOX_ATTRIBUTE : `string`
+xliv. SOCIAL_SHARE_ATTRIBUTE : `string`
+xlv. STAR_RATING_ATTRIBUTE : `string`
+xlvi. SUPPORT_ATTRIBUTE : `string`
+xlvii. TOC_ATTRIBUTE : `string`
+xlviii. READ_TIME_ATTRIBUTE : `string`
+xlix. VIDEO_HLS_ATTRIBUTE : `string`
 
 #### 3. Keyboard
 
+i. SPACE_KEY : `string`
+ii. ENTER_KEY : `string`
+iii. ESCAPE_KEY : `string`
+iv. TAB_KEY : `string`
+v. CLICK : `string`
+vi. BACKSPACE_KEY : `string`
+vii. ARROW_UP_KEY : `string`
+viii. ARROW_DOWN_KEY : `string`
+ix. ARROW_RIGHT_KEY : `string`
+x. ARROW_LEFT_KEY : `string`
+
 #### 4. Webflow
 
-##### **`CMS_CSS_CLASSES`**
+i. CURRENT_CSS_CLASS : `string`
+ii. RICH_TEXT_BLOCK_CSS_CLASS : `string`
+iii. HTML_EMBED_CSS_CLASS : `string`
+iv. SLIDER_CSS_CLASSES : `{slider: string; slide: string; sliderMask: string; sliderNav: string; sliderDot: string; activeSliderDot: string;}`
+v. TABS_CSS_CLASSES : `{tabs: string; tabsContent: string; tabPane: string; tabsMenu: string; tabLink: string; activeTab: string;}`
+vi. NAVBAR_CSS_CLASSES : `{navMenu: string;}`
+vii. CMS_CSS_CLASSES : `{wrapper: string; list: string; item: string; paginationWrapper: string; paginationNext: string; paginationPrevious: string; pageCount: string; emptyState: string;}`
+viii. FORM_CSS_CLASSES : `{formBlock: string; checkboxField: string; checkboxInput: string; radioField: string; radioInput: string; checkboxOrRadioLabel: string; checkboxOrRadioFocus: string; checkboxOrRadioChecked: string; successMessage: string; errorMessage: string;}`
+ix. DROPDOWN_CSS_CLASSES : `{dropdown: string; dropdownToggle: string; dropdownList: string;}`
+x. COMMERCE_CSS_CLASSES : `{addToCartForm: string;}`
+xi. LIGHTBOX_CSS_CLASSES : `{trigger: string;}`
+xii. WEBFLOW_BREAKPOINTS : `Map<WebflowBreakpoint, string>`
 
-An object containing the CSS classes used by the CMS. This is used to identify CMS elements in the DOM.
-
-```js
-{
-  wrapper: 'w-dyn-list',
-  list: 'w-dyn-items',
-  item: 'w-dyn-item',
-  paginationWrapper: 'w-pagination-wrapper',
-  paginationNext: 'w-pagination-next',
-  paginationPrevious: 'w-pagination-previous',
-  pageCount: 'w-page-count',
-  emptyState: 'w-dyn-empty',
-}
-```
-
-### d). Helpers
+### D). Helpers
 
 This collection of utils is a set of functions that help with common tasks. They are not specific to any particular part of the codebase.
 
@@ -657,21 +786,94 @@ This collection of utils is a set of functions that help with common tasks. They
     **Returns:**
     > `void` - Nothing.
 
-### e). Types
+### E). Types
 
 #### 1. Base
 
+- **FsAttributeKey** <br>- A string that represents the key of an attribute.
+- **AttributeElements** <br>- An object that represents the elements of an attribute.
+- **AttributeSettings** <br>- An object that represents the settings of an attribute.
+- **FsAttributes** <br>- An object that represents the attributes instance.
+- **FsAttributesCallback**
+- **FsAttributeControls**
+-**FsAttributeInit**
+
 #### 2. Changesets
+
+- **AttributeChangesets**
 
 #### 3. DOM
 
+- **FormField**
+
 #### 4. Examples
+
+- **AttributeExamples**
 
 #### 5. Schemas
 
+- **SchemaGroups**
+- **SchemaSettings<Settings extends AttributeSettings>**
+- **Schema<Elements extends AttributeElements, Settings extends AttributeSettings>**
+
 #### 6. Utils
 
+- **Entry<T>**
+- **MapEntries<MapToConvert>**
+
 #### 7. Webflow
+
+// Includes methods of the Webflow.js object
+
+- **WebflowModule**
+- **Webflow extends Pick<Callback[], 'push'>**
+
+// CMS
+
+- **CollectionListWrapperElement**
+- **CollectionListElement**
+- **CollectionItemElement**
+- **CollectionEmptyElement**
+- **PaginationWrapperElement**
+- **PaginationButtonElement**
+- **PageCountElement**
+
+// Forms
+
+- **FormBlockElement**
+- **FormSuccessElement**
+- **FormErrorElement**
+
+// Sliders
+
+- **SliderElement**
+- **SliderMaskElement**
+- **SlideElement**
+- **SliderArrowElement**
+- **SliderNavElement**
+- **SliderDotElement**
+
+// Tabs
+
+- **TabsElement**
+- **TabsMenuElement**
+- **TabLinkElement**
+- **TabsContentElement**
+- **TabPaneElement**
+
+// Rich Text Block
+
+- **RichTextBlockElement**
+
+// Dropdowns
+
+- **Dropdown**
+- **DropdownToggle**
+- **DropdownList**
+
+// The default Webflow Breakpoint names.
+
+- **WebflowBreakpoint** <br>- `'main' | 'medium' | 'small' | 'tiny'`
 
 ## ✍️ Authors
 
