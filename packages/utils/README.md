@@ -95,120 +95,120 @@ Below is a list of all the util collections included in this package. Each util 
 
 #### 1. a11y
 
-i. ARIA_ROLE_KEY : `string`
-ii. ARIA_ROLE_VALUES : `{slider: string; listbox: string; option: string; columnheader: string; link: string; marquee: string; button: string; radiogroup: string; dialog: string;}`
-iii. TABINDEX_KEY : `string`
-iv. ARIA_LABEL_KEY : `string`
-v. ARIA_LABELLEDBY_KEY : `string`
-vi. ARIA_VALUENOW_KEY : `string`
-vii. ARIA_VALUEMIN_KEY : `string`
-viii. ARIA_VALUEMAX_KEY : `string`
-ix. ARIA_SELECTED_KEY  : `string`
-x. ARIA_HASPOPUP_KEY : `string`
-xi. ARIA_MULTISELECTABLE_KEY : `string`
-xii. ARIA_EXPANDED_KEY : `string`
-xiii. ARIA_CURRENT_KEY : `string`
-xiv. ARIA_ACTIVEDESCENDANT_KEY : `string`
-xv. ARIA_PRESSED_KEY : `string`
-xvi. ARIA_CONTROLS_KEY : `string`
-xvii. ARIA_OWNS_KEY : `string`
-xviii. ARIA_ROLEDESCRIPTION_KEY : `string`
-xix. ARIA_DESCRIPTION_KEY : `string`
-xx. ARIA_HIDDEN_KEY : `string`
-xxi. AUTOCOMPLETE_KEY : `string`
-xxii. AUTOCAPITALIZE_KEY : `string`
-xxiii. ARIA_AUTOCOMPLETE_KEY : `string`
-xxiv. ROLE_KEY : `string`
-xxv. REQUIRED_KEY : `string`
-xxvi. NAME_KEY : `string`
-xxvii. ARIA_SETSIZE_KEY : `string`
-xxviii. ARIA_POSINSET_KEY : `string`
-xxix. ID_KEY : `string`
-xxx. ARIA_MODAL_KEY : `string`
-xxxi. ARIA_MODAL_VALUES : `{true: string;}`
-xxxii. ARIA_SORT_KEY : `string`
-xxxiii. ARIA_SORT_VALUES : `{ascending: string; descending: string;}`
-xxxiv. CONTENT_EDITABLE_KEY : `string`
+i. ARIA_ROLE_KEY : `string`<br>
+ii. ARIA_ROLE_VALUES : `{slider: string; listbox: string; option: string; columnheader: string; link: string; marquee: string; button: string; radiogroup: string; dialog: string;}`<br>
+iii. TABINDEX_KEY : `string`<br>
+iv. ARIA_LABEL_KEY : `string`<br>
+v. ARIA_LABELLEDBY_KEY : `string`<br>
+vi. ARIA_VALUENOW_KEY : `string`<br>
+vii. ARIA_VALUEMIN_KEY : `string`<br>
+viii. ARIA_VALUEMAX_KEY : `string`<br>
+ix. ARIA_SELECTED_KEY  : `string`<br>
+x. ARIA_HASPOPUP_KEY : `string`<br>
+xi. ARIA_MULTISELECTABLE_KEY : `string`<br>
+xii. ARIA_EXPANDED_KEY : `string`<br>
+xiii. ARIA_CURRENT_KEY : `string`<br>
+xiv. ARIA_ACTIVEDESCENDANT_KEY : `string`<br>
+xv. ARIA_PRESSED_KEY : `string`<br>
+xvi. ARIA_CONTROLS_KEY : `string`<br>
+xvii. ARIA_OWNS_KEY : `string`<br>
+xviii. ARIA_ROLEDESCRIPTION_KEY : `string`<br>
+xix. ARIA_DESCRIPTION_KEY : `string`<br>
+xx. ARIA_HIDDEN_KEY : `string`<br>
+xxi. AUTOCOMPLETE_KEY : `string`<br>
+xxii. AUTOCAPITALIZE_KEY : `string`<br>
+xxiii. ARIA_AUTOCOMPLETE_KEY : `string`<br>
+xxiv. ROLE_KEY : `string`<br>
+xxv. REQUIRED_KEY : `string`<br>
+xxvi. NAME_KEY : `string`<br>
+xxvii. ARIA_SETSIZE_KEY : `string`<br>
+xxviii. ARIA_POSINSET_KEY : `string`<br>
+xxix. ID_KEY : `string`<br>
+xxx. ARIA_MODAL_KEY : `string`<br>
+xxxi. ARIA_MODAL_VALUES : `{true: string;}`<br>
+xxxii. ARIA_SORT_KEY : `string`<br>
+xxxiii. ARIA_SORT_VALUES : `{ascending: string; descending: string;}`<br>
+xxxiv. CONTENT_EDITABLE_KEY : `string`<br>
 
 #### 2. Attributes
 
-i. A11Y_ATTRIBUTE : `string`
-ii. ACCORDION_ATTRIBUTE : `string`
-iii. ANIMATION_ATTRIBUTE : `string`
-iv. AUTO_VIDEO_ATTRIBUTE : `string`
-v. CMS_ATTRIBUTE_ATTRIBUTE : `string`
-vi. CMS_COMBINE_ATTRIBUTE : `string`
-vii. CMS_CSS_ATTRIBUTE : `string`
-viii. CMS_FILTER_ATTRIBUTE : `string`
-ix. CMS_LOAD_ATTRIBUTE : `string`
-x. CMS_NEST_ATTRIBUTE : `string`
-xi. CMS_PREV_NEXT_ATTRIBUTE : `string`
-xii. CMS_STATIC_ATTRIBUTE : `string`
-xiii. CMS_SELECT_ATTRIBUTE : `string`
-xiv. CMS_SLIDER_ATTRIBUTE : `string`
-xv. CMS_SORT_ATTRIBUTE : `string`
-xvi. CMS_TABS_ATTRIBUTE : `string`
-xvii. CODE_HIGHLIGHT_ATTRIBUTE : `string`
-xviii. COMBO_BOX_ATTRIBUTE : `string`
-xix. COMPONENT_ATTRIBUTE : `string`
-xx. CONSENT_ATTRIBUTE : `string`
-xxi. COPY_CLIP_ATTRIBUTE : `string`
-xxii. COUNT_ITEMS_ATTRIBUTE : `string`
-xxiii. DISPLAY_VALUES_ATTRIBUTE : `string`
-xxiv. DOCS_ATTRIBUTE : `string`
-xxv. FAV_CUSTOM_ATTRIBUTE : `string`
-xxvi. FORM_SUBMIT_ATTRIBUTE : `string`
-xxvii. INPUT_ACTIVE_ATTRIBUTE : `string`
-xxviii. INPUT_COUNTER_ATTRIBUTE : `string`
-xxix. GREENHOUSE_ATTRIBUTE : `string`
-xxx. LINK_BLOCK_EDIT_ATTRIBUTE : `string`
-xxxi. MIRROR_CLICK_ATTRIBUTE : `string`
-xxxii. MIRROR_INPUT_ATTRIBUTE : `string`
-xxxiii. MODAL_ATTRIBUTE : `string`
-xxxiv. NUMBER_COUNT_ATTRIBUTE : `string`
-xxxv. LAUNCHDARKLY_ATTRIBUTE : `string`
-xxxvi. QUERY_PARAM_ATTRIBUTE : `string`
-xxxvii. RANGE_SLIDER_ATTRIBUTE : `string`
-xxxviii. RICH_TEXT_ATTRIBUTE : `string`
-xxxix. SCROLL_DISABLE_ATTRIBUTE : `string`
-xl. SELECT_CUSTOM_ATTRIBUTE : `string`
-xli. SLIDER_ATTRIBUTE : `string`
-xlii. SLIDER_DOTS_ATTRIBUTE : `string`
-xliii. SMART_LIGHTBOX_ATTRIBUTE : `string`
-xliv. SOCIAL_SHARE_ATTRIBUTE : `string`
-xlv. STAR_RATING_ATTRIBUTE : `string`
-xlvi. SUPPORT_ATTRIBUTE : `string`
-xlvii. TOC_ATTRIBUTE : `string`
-xlviii. READ_TIME_ATTRIBUTE : `string`
-xlix. VIDEO_HLS_ATTRIBUTE : `string`
+i. A11Y_ATTRIBUTE : `string`<br>
+ii. ACCORDION_ATTRIBUTE : `string`<br>
+iii. ANIMATION_ATTRIBUTE : `string`<br>
+iv. AUTO_VIDEO_ATTRIBUTE : `string`<br>
+v. CMS_ATTRIBUTE_ATTRIBUTE : `string`<br>
+vi. CMS_COMBINE_ATTRIBUTE : `string`<br>
+vii. CMS_CSS_ATTRIBUTE : `string`<br>
+viii. CMS_FILTER_ATTRIBUTE : `string`<br>
+ix. CMS_LOAD_ATTRIBUTE : `string`<br>
+x. CMS_NEST_ATTRIBUTE : `string`<br>
+xi. CMS_PREV_NEXT_ATTRIBUTE : `string`<br>
+xii. CMS_STATIC_ATTRIBUTE : `string`<br>
+xiii. CMS_SELECT_ATTRIBUTE : `string`<br>
+xiv. CMS_SLIDER_ATTRIBUTE : `string`<br>
+xv. CMS_SORT_ATTRIBUTE : `string`<br>
+xvi. CMS_TABS_ATTRIBUTE : `string`<br>
+xvii. CODE_HIGHLIGHT_ATTRIBUTE : `string`<br>
+xviii. COMBO_BOX_ATTRIBUTE : `string`<br>
+xix. COMPONENT_ATTRIBUTE : `string`<br>
+xx. CONSENT_ATTRIBUTE : `string`<br>
+xxi. COPY_CLIP_ATTRIBUTE : `string`<br>
+xxii. COUNT_ITEMS_ATTRIBUTE : `string`<br>
+xxiii. DISPLAY_VALUES_ATTRIBUTE : `string`<br>
+xxiv. DOCS_ATTRIBUTE : `string`<br>
+xxv. FAV_CUSTOM_ATTRIBUTE : `string`<br>
+xxvi. FORM_SUBMIT_ATTRIBUTE : `string`<br>
+xxvii. INPUT_ACTIVE_ATTRIBUTE : `string`<br>
+xxviii. INPUT_COUNTER_ATTRIBUTE : `string`<br>
+xxix. GREENHOUSE_ATTRIBUTE : `string`<br>
+xxx. LINK_BLOCK_EDIT_ATTRIBUTE : `string`<br>
+xxxi. MIRROR_CLICK_ATTRIBUTE : `string`<br>
+xxxii. MIRROR_INPUT_ATTRIBUTE : `string`<br>
+xxxiii. MODAL_ATTRIBUTE : `string`<br>
+xxxiv. NUMBER_COUNT_ATTRIBUTE : `string`<br>
+xxxv. LAUNCHDARKLY_ATTRIBUTE : `string`<br>
+xxxvi. QUERY_PARAM_ATTRIBUTE : `string`<br>
+xxxvii. RANGE_SLIDER_ATTRIBUTE : `string`<br>
+xxxviii. RICH_TEXT_ATTRIBUTE : `string`<br>
+xxxix. SCROLL_DISABLE_ATTRIBUTE : `string`<br>
+xl. SELECT_CUSTOM_ATTRIBUTE : `string`<br>
+xli. SLIDER_ATTRIBUTE : `string`<br>
+xlii. SLIDER_DOTS_ATTRIBUTE : `string`<br>
+xliii. SMART_LIGHTBOX_ATTRIBUTE : `string`<br>
+xliv. SOCIAL_SHARE_ATTRIBUTE : `string`<br>
+xlv. STAR_RATING_ATTRIBUTE : `string`<br>
+xlvi. SUPPORT_ATTRIBUTE : `string`<br>
+xlvii. TOC_ATTRIBUTE : `string`<br>
+xlviii. READ_TIME_ATTRIBUTE : `string`<br>
+xlix. VIDEO_HLS_ATTRIBUTE : `string`<br>
 
 #### 3. Keyboard
 
-i. SPACE_KEY : `string`
-ii. ENTER_KEY : `string`
-iii. ESCAPE_KEY : `string`
-iv. TAB_KEY : `string`
-v. CLICK : `string`
-vi. BACKSPACE_KEY : `string`
-vii. ARROW_UP_KEY : `string`
-viii. ARROW_DOWN_KEY : `string`
-ix. ARROW_RIGHT_KEY : `string`
-x. ARROW_LEFT_KEY : `string`
+i. SPACE_KEY : `string`<br>
+ii. ENTER_KEY : `string`<br>
+iii. ESCAPE_KEY : `string`<br>
+iv. TAB_KEY : `string`<br>
+v. CLICK : `string`<br>
+vi. BACKSPACE_KEY : `string`<br>
+vii. ARROW_UP_KEY : `string`<br>
+viii. ARROW_DOWN_KEY : `string`<br>
+ix. ARROW_RIGHT_KEY : `string`<br>
+x. ARROW_LEFT_KEY : `string`<br>
 
 #### 4. Webflow
 
-i. CURRENT_CSS_CLASS : `string`
-ii. RICH_TEXT_BLOCK_CSS_CLASS : `string`
-iii. HTML_EMBED_CSS_CLASS : `string`
-iv. SLIDER_CSS_CLASSES : `{slider: string; slide: string; sliderMask: string; sliderNav: string; sliderDot: string; activeSliderDot: string;}`
-v. TABS_CSS_CLASSES : `{tabs: string; tabsContent: string; tabPane: string; tabsMenu: string; tabLink: string; activeTab: string;}`
-vi. NAVBAR_CSS_CLASSES : `{navMenu: string;}`
-vii. CMS_CSS_CLASSES : `{wrapper: string; list: string; item: string; paginationWrapper: string; paginationNext: string; paginationPrevious: string; pageCount: string; emptyState: string;}`
-viii. FORM_CSS_CLASSES : `{formBlock: string; checkboxField: string; checkboxInput: string; radioField: string; radioInput: string; checkboxOrRadioLabel: string; checkboxOrRadioFocus: string; checkboxOrRadioChecked: string; successMessage: string; errorMessage: string;}`
-ix. DROPDOWN_CSS_CLASSES : `{dropdown: string; dropdownToggle: string; dropdownList: string;}`
-x. COMMERCE_CSS_CLASSES : `{addToCartForm: string;}`
-xi. LIGHTBOX_CSS_CLASSES : `{trigger: string;}`
-xii. WEBFLOW_BREAKPOINTS : `Map<WebflowBreakpoint, string>`
+i. CURRENT_CSS_CLASS : `string`<br>
+ii. RICH_TEXT_BLOCK_CSS_CLASS : `string`<br>
+iii. HTML_EMBED_CSS_CLASS : `string`<br>
+iv. SLIDER_CSS_CLASSES : `{slider: string; slide: string; sliderMask: string; sliderNav: string; sliderDot: string; activeSliderDot: string;}`<br>
+v. TABS_CSS_CLASSES : `{tabs: string; tabsContent: string; tabPane: string; tabsMenu: string; tabLink: string; activeTab: string;}`<br>
+vi. NAVBAR_CSS_CLASSES : `{navMenu: string;}`<br>
+vii. CMS_CSS_CLASSES : `{wrapper: string; list: string; item: string; paginationWrapper: string; paginationNext: string; paginationPrevious: string; pageCount: string; emptyState: string;}`<br>
+viii. FORM_CSS_CLASSES : `{formBlock: string; checkboxField: string; checkboxInput: string; radioField: string; radioInput: string; checkboxOrRadioLabel: string; checkboxOrRadioFocus: string; checkboxOrRadioChecked: string; successMessage: string; errorMessage: string;}`<br>
+ix. DROPDOWN_CSS_CLASSES : `{dropdown: string; dropdownToggle: string; dropdownList: string;}`<br>
+x. COMMERCE_CSS_CLASSES : `{addToCartForm: string;}`<br>
+xi. LIGHTBOX_CSS_CLASSES : `{trigger: string;}`<br>
+xii. WEBFLOW_BREAKPOINTS : `Map<WebflowBreakpoint, string>`<br>
 
 ### D). Helpers
 
