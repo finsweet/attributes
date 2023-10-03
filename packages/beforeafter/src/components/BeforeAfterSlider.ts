@@ -119,8 +119,11 @@ export class BeforeAfterSlider {
       addListener(this.wrapperEl, 'mousemove', (e: MouseEvent) => {
         if (this.interactionMode === 'hover') {
           this.onWrapperHoverDrag(e);
-        } else if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
+          return;
+        } 
+        if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
           this.onDragZoneDrag(e);
+          return;
         }
       }),
     ];
