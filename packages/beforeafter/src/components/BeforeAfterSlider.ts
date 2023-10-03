@@ -16,6 +16,7 @@ export class BeforeAfterSlider {
   private cursorOffset = 0;
   private dragZoneEl?: HTMLElement;
   private dragZoneWidth = 100;
+  private cleanups = null;
 
   /**
    * Passed Props
@@ -91,37 +92,38 @@ export class BeforeAfterSlider {
   /**
    * Initialize the events
    */
-  private initEvents(): void {
-    // add the event listeners
-    addListener(this.wrapperEl, 'mouseenter', (e: MouseEvent) => {
-      if (this.interactionMode === 'hover') {
-        this.onWrapperEnter(e);
-      }
-    });
-    addListener(this.wrapperEl, 'mouseleave', () => {
-      if (this.interactionMode === 'hover') {
-        this.onWrapperLeave();
-      }
-    });
-    addListener(this.wrapperEl, 'mousedown', (e: MouseEvent) => {
-      // check if target is the drag zone or is a child of the drag zone
-      if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
-        this.onDragZoneGrab(e);
-      }
-    });
-    addListener(this.wrapperEl, 'mouseup', (e: MouseEvent) => {
-      if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
-        this.onDragZoneRelease();
-      }
-    });
-
-    addListener(this.wrapperEl, 'mousemove', (e: MouseEvent) => {
-      if (this.interactionMode === 'hover') {
-        this.onWrapperHoverDrag(e);
-      } else if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
-        this.onDragZoneDrag(e);
-      }
-    });
+  initEvents(): Array<() => void> {
+    return [
+      // add the event listeners
+      addListener(this.wrapperEl, 'mouseenter', (e: MouseEvent) => {
+        if (this.interactionMode === 'hover') {
+          this.onWrapperEnter(e);
+        }
+      }),
+      addListener(this.wrapperEl, 'mouseleave', () => {
+        if (this.interactionMode === 'hover') {
+          this.onWrapperLeave();
+        }
+      }),
+      addListener(this.wrapperEl, 'mousedown', (e: MouseEvent) => {
+        // check if target is the drag zone or is a child of the drag zone
+        if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
+          this.onDragZoneGrab(e);
+        }
+      }),
+      addListener(this.wrapperEl, 'mouseup', (e: MouseEvent) => {
+        if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
+          this.onDragZoneRelease();
+        }
+      }),
+      addListener(this.wrapperEl, 'mousemove', (e: MouseEvent) => {
+        if (this.interactionMode === 'hover') {
+          this.onWrapperHoverDrag(e);
+        } else if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
+          this.onDragZoneDrag(e);
+        }
+      }),
+    ];
   }
 
   /**
@@ -240,7 +242,7 @@ export class BeforeAfterSlider {
       // wrapper
       this.appendWrapperStyles(styleEl);
       // label
-      this.appendLabelStyles(styleEl);
+      // this.appendLabelStyles(styleEl);
       // drag-zone
       this.appendDragzoneStyles(styleEl);
 

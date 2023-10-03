@@ -34,7 +34,9 @@ export const init: FsAttributeInit = async () => {
   return {
     result: instances,
     destroy: () => {
-      // handle destroy
+      instances.forEach((instance) => {
+        instance?.initEvents().forEach((cleanup) => cleanup());
+      });
     },
   };
 };
