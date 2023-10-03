@@ -120,7 +120,7 @@ export class BeforeAfterSlider {
         if (this.interactionMode === 'hover') {
           this.onWrapperHoverDrag(e);
           return;
-        } 
+        }
         if (e.target === this.dragZoneEl || this.dragZoneEl?.contains(e.target as Node)) {
           this.onDragZoneDrag(e);
           return;
