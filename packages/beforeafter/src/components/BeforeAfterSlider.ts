@@ -16,7 +16,7 @@ export class BeforeAfterSlider {
   private cursorOffset = 0;
   private dragZoneEl?: HTMLElement;
   private dragZoneWidth = 100;
-  private cleanups = null;
+  public cleanups: Array<() => void> = [];
 
   /**
    * Passed Props
@@ -49,7 +49,7 @@ export class BeforeAfterSlider {
   public init(): this {
     this.dragZoneWidth = parseInt(DEFAULTS.dragzoneWidth) ?? this.dragHandleEl?.getBoundingClientRect().width;
     this.initElements();
-    this.initEvents();
+    this.cleanups = this.initEvents();
     this.initStyles();
 
     return this;
@@ -92,7 +92,7 @@ export class BeforeAfterSlider {
   /**
    * Initialize the events
    */
-  initEvents(): Array<() => void> {
+  private initEvents(): Array<() => void> {
     return [
       // add the event listeners
       addListener(this.wrapperEl, 'mouseenter', (e: MouseEvent) => {
@@ -149,24 +149,50 @@ export class BeforeAfterSlider {
   /**
    * Handle the drag zone drag event
    */
+  // private onDragZoneDrag = (e: MouseEvent | TouchEvent): void => {
+  //   if (!this.isDragging || !this.dragZoneEl) return;
+
+  //   const { width } = this.afterEl.getBoundingClientRect();
+
+  //   this.dragZoneEl.style.left =
+  //     parseInt(this.dragZoneEl.style.left) +
+  //     ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
+  //     'px';
+  //   this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+
+  //   const clip = {
+  //     top: 0,
+  //     right: width,
+  //     bottom: 9999,
+  //     left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+  //   };
+  //   this.clipAtPosition(clip);
+  // };
+
+  private update
+
   private onDragZoneDrag = (e: MouseEvent | TouchEvent): void => {
-    if (!this.isDragging || !this.dragZoneEl) return;
+    const update = () => {
+      if (!this.isDragging || !this.dragZoneEl) return;
+      const { width } = this.afterEl.getBoundingClientRect();
 
-    const { width } = this.afterEl.getBoundingClientRect();
+      this.dragZoneEl.style.left =
+        parseInt(this.dragZoneEl.style.left) +
+        ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
+        'px';
+      this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
 
-    this.dragZoneEl.style.left =
-      parseInt(this.dragZoneEl.style.left) +
-      ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
-      'px';
-    this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-
-    const clip = {
-      top: 0,
-      right: width,
-      bottom: 9999,
-      left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+      const clip = {
+        top: 0,
+        right: width,
+        bottom: 9999,
+        left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+      };
+      this.clipAtPosition(clip);
     };
-    this.clipAtPosition(clip);
+
+    // use requestAnimationFrame for optimal performance
+    requestAnimationFrame(update);
   };
 
   /**
@@ -197,22 +223,27 @@ export class BeforeAfterSlider {
    * Handle the drag on hover event
    */
   private onWrapperHoverDrag = (e: MouseEvent | TouchEvent): void => {
-    if (!this.isDragging || !this.dragZoneEl) return;
-    const { width } = this.afterEl.getBoundingClientRect();
+    const update = () => {
+      if (!this.isDragging || !this.dragZoneEl) return;
+      const { width } = this.afterEl.getBoundingClientRect();
 
-    this.dragZoneEl.style.left =
-      parseInt(this.dragZoneEl.style.left) +
-      ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
-      'px';
-    this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+      this.dragZoneEl.style.left =
+        parseInt(this.dragZoneEl.style.left) +
+        ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
+        'px';
+      this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
 
-    const clip = {
-      top: 0,
-      right: width,
-      bottom: 9999,
-      left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+      const clip = {
+        top: 0,
+        right: width,
+        bottom: 9999,
+        left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
+      };
+      this.clipAtPosition(clip);
     };
-    this.clipAtPosition(clip);
+
+    // use requestAnimationFrame for optimal performance
+    requestAnimationFrame(update);
   };
 
   /**
