@@ -1,6 +1,7 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { createBeforeAfterInstance } from './factory';
+import type { SETTINGS } from './utils';
 import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
 
 /**
@@ -12,20 +13,22 @@ export const init: FsAttributeInit = async () => {
   const beforeAfterWrappers = queryAllElements('wrapper');
 
   //loop through all the wrappers and create an instance for each
-  const instances = beforeAfterWrappers.forEach((wrapper) => {
-    const modeOption: 'drag' | 'hover' | undefined = getAttribute(wrapper, 'mode');
-
+  const instances = beforeAfterWrappers.map((wrapper) => {
     const beforeElement = queryElement('before', { scope: wrapper });
 
     const afterElement = queryElement('after', { scope: wrapper });
 
     const handleElement = queryElement('handle', { scope: wrapper.parentElement ?? undefined }) ?? undefined;
 
+    // whether to use drag or hover mode
+    const mode: keyof typeof SETTINGS.mode.values | undefined = getAttribute(wrapper, 'mode');
+
+    // if no before or after element, return
     if (!beforeElement || !afterElement) {
       return;
     }
 
-    return createBeforeAfterInstance(wrapper, beforeElement, afterElement, handleElement, modeOption);
+    return createBeforeAfterInstance(wrapper, beforeElement, afterElement, handleElement, mode);
   });
 
   return {

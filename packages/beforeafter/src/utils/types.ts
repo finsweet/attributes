@@ -22,3 +22,18 @@ export interface BeforeAfterSliderOptions {
    */
   interactionMode?: keyof typeof SETTINGS.mode.values;
 }
+
+export interface BeforeAfterSliderState {
+  isDragging: boolean;
+  isHovering: boolean;
+  cursorPosition: number;
+  cursorOffset: number;
+  dragZoneEl: HTMLElement | null;
+  dragZoneWidth: number;
+  wrapperEl?: HTMLElement;
+  start: number;
+  beforeEl?: HTMLElement;
+  afterEl?: HTMLElement;
+  dragHandleEl?: HTMLElement | undefined;
+  interactionMode: keyof typeof SETTINGS.mode.values;
+}
