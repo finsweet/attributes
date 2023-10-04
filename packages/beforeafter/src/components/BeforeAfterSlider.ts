@@ -11,7 +11,6 @@ export class BeforeAfterSlider {
    * Internal Props
    */
   private isDragging = false;
-  private isHovering = false;
   private cursorPosition = 0;
   private cursorOffset = 0;
   private dragZoneEl?: HTMLElement;
@@ -149,28 +148,6 @@ export class BeforeAfterSlider {
   /**
    * Handle the drag zone drag event
    */
-  // private onDragZoneDrag = (e: MouseEvent | TouchEvent): void => {
-  //   if (!this.isDragging || !this.dragZoneEl) return;
-
-  //   const { width } = this.afterEl.getBoundingClientRect();
-
-  //   this.dragZoneEl.style.left =
-  //     parseInt(this.dragZoneEl.style.left) +
-  //     ((e instanceof MouseEvent ? e.clientX : e.touches[0].clientX) - this.cursorPosition) +
-  //     'px';
-  //   this.cursorPosition = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-
-  //   const clip = {
-  //     top: 0,
-  //     right: width,
-  //     bottom: 9999,
-  //     left: this.dragZoneEl.getBoundingClientRect().width / 2 + parseInt(this.dragZoneEl.style.left), //calculate the left position
-  //   };
-  //   this.clipAtPosition(clip);
-  // };
-
-  private update
-
   private onDragZoneDrag = (e: MouseEvent | TouchEvent): void => {
     const update = () => {
       if (!this.isDragging || !this.dragZoneEl) return;
@@ -275,8 +252,7 @@ export class BeforeAfterSlider {
 
       // wrapper
       this.appendWrapperStyles(styleEl);
-      // label
-      // this.appendLabelStyles(styleEl);
+
       // drag-zone
       this.appendDragzoneStyles(styleEl);
 
@@ -303,40 +279,6 @@ export class BeforeAfterSlider {
 
       .${CLASSNAME} .grabbing {
         cursor: grabbing!important;
-      }
-
-      `)
-    );
-  }
-
-  private appendLabelStyles(styleEl: HTMLStyleElement): void {
-    styleEl.appendChild(
-      document.createTextNode(`
-      
-      /**
-       * All labels
-       */
-      .${CLASSNAME}__before > div,
-      .${CLASSNAME}__after > div {
-        position: absolute;
-        top: 8px;
-        color: #fff;
-        font-size: 12px;
-        text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-      }
-
-      /**
-       * Before Label
-       */
-      .${CLASSNAME}__before > div {
-        left: 8px;
-      }
-
-      /**
-       * After Label
-       */
-      .${CLASSNAME}__after > div {
-        right: 8px;
       }
 
       `)
