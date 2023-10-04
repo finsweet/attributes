@@ -43,10 +43,7 @@ export const collectionPageInit = async (client: ShopifyClient) => {
       scope: collectionContainer,
     }) as HTMLDivElement;
     productListElement.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
-    const collection = await bindCollectionProductsData(client, productListElement, handleParamValue);
-    if (collection) {
-      bindCollectionData(collection, document.body);
-    }
+    await bindCollectionProductsData(client, productListElement, handleParamValue, document.body);
   } catch (e) {
     console.log('collectionPageInit', e);
   }
@@ -63,7 +60,7 @@ export const bindCollectionData = (
   parentElement: HTMLElement,
   scopeToExclude?: HTMLElement
 ) => {
-  const { id, description, handle, title, image, updatedAt } = collection;
+  const { id, description, handle, title, image, updatedAt, products } = collection;
   const url = image?.url || '';
 
   const collectionValues = [id.replace(COLLECTION_ID_PREFIX, ''), title, description, handle, url, updatedAt];

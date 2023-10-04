@@ -10,8 +10,7 @@ import {
   PRODUCTS_VARIANT_SEPARATOR,
   queryElement,
 } from '../utils/constants';
-import type { ShopifyBindingOptions } from '../utils/types';
-import type { Option } from '../utils/types';
+import type { Option, ShopifyBindingOptions } from '../utils/types';
 
 export const hideLoader = () => {
   const matchedElements = queryElement<HTMLElement>(LOADER, {
@@ -35,7 +34,9 @@ export const handleProductLink = (
   const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'product'));
   productLinks.forEach((link) => {
     const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || LinkFormat.ID;
-    const url = new URL(productPage);
+    const { protocol, hostname } = window.location;
+    const fullURLStr = protocol + hostname + productPage;
+    const url = new URL(fullURLStr);
 
     if (elementLinkFormat === LinkFormat.HANDLE) {
       url.searchParams.set('handle', handle);
@@ -59,7 +60,9 @@ export const handleCollectionLink = (
 ) => {
   function addLink(link: HTMLAnchorElement) {
     const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || LinkFormat.ID;
-    const url = new URL(collectionPage);
+    const { protocol, hostname } = window.location;
+    const fullURLStr = protocol + hostname + collectionPage;
+    const url = new URL(fullURLStr);
 
     if (elementLinkFormat === LinkFormat.HANDLE && collectionHandle) {
       url.searchParams.append('handle', collectionHandle);

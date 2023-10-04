@@ -58,6 +58,73 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
 };
 
 /**
+ * Bind the product variant data to the elements.
+ * @param variant is the variant data.
+ */
+export function bindProductVariant(
+  parentElement: HTMLElement,
+  product: ShopifyProduct,
+  variant: Variant,
+  options: ShopifyBindingOptions
+) {
+  const {
+    id,
+    title,
+    description,
+    handle,
+    createdAt,
+    updatedAt,
+    publishedAt,
+    vendor,
+    productType,
+    featuredImage,
+    tags,
+  } = product;
+  const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
+  const discount = 0;
+  const typeValue = productType;
+  const productImage = (image || featuredImage).url;
+
+  const productValues = [
+    title,
+    description,
+    handle,
+    createdAt,
+    updatedAt,
+    publishedAt,
+    productImage,
+    productImage,
+    sku,
+    price.amount,
+    compareAtPrice?.amount,
+    discount || 0,
+    typeValue,
+    vendor,
+    weight,
+    weightUnit,
+    tags,
+    options.collectionName || '',
+  ];
+
+  productAttributes.forEach((attribute: string, index: number) => {
+    const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
+      scope: parentElement,
+      all: true,
+    });
+
+    matchedElements.forEach((element) => {
+      if (propertyActions[attribute]) {
+        propertyActions[attribute](element, productValues[index] as string);
+        return;
+      }
+      element.innerHTML = String(productValues[index]);
+    });
+  });
+  handleProductLink(parentElement, { id, handle, productOptions: options });
+  handleCollectionLink(parentElement, { productOptions: options });
+}
+
+/**
  * Bind the product data to the elements.
  * @param parentElement that contains the elements to update.
  * @param product is the product data.
@@ -68,75 +135,13 @@ export const bindProductDataGraphQL = (
   product: ShopifyProduct,
   options: ShopifyBindingOptions
 ) => {
-  const {
-    id,
-    title,
-    description,
-    handle,
-    createdAt,
-    updatedAt,
-    publishedAt,
-    variants,
-    vendor,
-    productType,
-    featuredImage,
-    tags,
-  } = product;
+  const { variants } = product;
 
   const variantMaps: { [k: string]: Variant } = {};
 
   variants.nodes.forEach((variant) => {
     variantMaps[variant.title] = variant;
   });
-
-  /**
-   * Bind the product variant data to the elements.
-   * @param variant is the variant data.
-   */
-  function bindProductVariant(variant: Variant) {
-    const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
-    const discount = 0;
-    const typeValue = productType;
-    const productImage = (image || featuredImage).url;
-
-    const productValues = [
-      title,
-      description,
-      handle,
-      createdAt,
-      updatedAt,
-      publishedAt,
-      productImage,
-      productImage,
-      sku,
-      price.amount,
-      compareAtPrice?.amount,
-      discount || 0,
-      typeValue,
-      vendor,
-      weight,
-      weightUnit,
-      tags,
-      options.collectionName || '',
-    ];
-
-    productAttributes.forEach((attribute: string, index: number) => {
-      const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
-        scope: parentElement,
-        all: true,
-      });
-
-      matchedElements.forEach((element) => {
-        if (propertyActions[attribute]) {
-          propertyActions[attribute](element, productValues[index] as string);
-          return;
-        }
-        element.innerText = String(productValues[index]);
-      });
-    });
-    handleProductLink(parentElement, { id, handle, productOptions: options });
-    handleCollectionLink(parentElement, { productOptions: options });
-  }
 
   const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
     scope: parentElement,
@@ -188,7 +193,7 @@ export const bindProductDataGraphQL = (
             selectedVariantKey[index] = value;
             const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
             if (variant) {
-              bindProductVariant(variant);
+              bindProductVariant(parentElement, product, variant, options);
             }
           });
         }
@@ -210,7 +215,7 @@ export const bindProductDataGraphQL = (
         selectedVariantKey[index] = selectElement.value;
         const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
         if (variant) {
-          bindProductVariant(variant);
+          bindProductVariant(parentElement, product, variant, options);
         }
       });
       selectElement.dispatchEvent(new Event('change'));

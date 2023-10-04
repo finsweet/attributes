@@ -9862,7 +9862,9 @@
     const productLinks = parentElement.querySelectorAll(getSelector("link", "product"));
     productLinks.forEach((link) => {
       const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || "id" /* ID */;
-      const url = new URL(productPage);
+      const { protocol, hostname } = window.location;
+      const fullURLStr = protocol + hostname + productPage;
+      const url = new URL(fullURLStr);
       if (elementLinkFormat === "handle" /* HANDLE */) {
         url.searchParams.set("handle", handle);
       } else {
@@ -9876,7 +9878,9 @@
   }) => {
     function addLink(link) {
       const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || "id" /* ID */;
-      const url = new URL(collectionPage);
+      const { protocol, hostname } = window.location;
+      const fullURLStr = protocol + hostname + collectionPage;
+      const url = new URL(fullURLStr);
       if (elementLinkFormat === "handle" /* HANDLE */ && collectionHandle) {
         url.searchParams.append("handle", collectionHandle);
       } else if (collectionId) {
@@ -9928,7 +9932,7 @@
       }
     }
   };
-  var bindProductDataGraphQL = (parentElement, product, options) => {
+  function bindProductVariant(parentElement, product, variant, options) {
     const {
       id,
       title,
@@ -9937,57 +9941,57 @@
       createdAt,
       updatedAt,
       publishedAt,
-      variants,
       vendor,
       productType,
       featuredImage,
       tags
     } = product;
+    const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
+    const discount = 0;
+    const typeValue = productType;
+    const productImage = (image || featuredImage).url;
+    const productValues = [
+      title,
+      description,
+      handle,
+      createdAt,
+      updatedAt,
+      publishedAt,
+      productImage,
+      productImage,
+      sku,
+      price.amount,
+      compareAtPrice?.amount,
+      discount || 0,
+      typeValue,
+      vendor,
+      weight,
+      weightUnit,
+      tags,
+      options.collectionName || ""
+    ];
+    productAttributes.forEach((attribute, index) => {
+      const matchedElements = queryElement(attribute, {
+        scope: parentElement,
+        all: true
+      });
+      matchedElements.forEach((element) => {
+        if (propertyActions[attribute]) {
+          propertyActions[attribute](element, productValues[index]);
+          return;
+        }
+        element.innerHTML = String(productValues[index]);
+      });
+    });
+    handleProductLink(parentElement, { id, handle, productOptions: options });
+    handleCollectionLink(parentElement, { productOptions: options });
+  }
+  var bindProductDataGraphQL = (parentElement, product, options) => {
+    const { variants } = product;
     const variantMaps = {};
     variants.nodes.forEach((variant) => {
       variantMaps[variant.title] = variant;
     });
-    function bindProductVariant(variant) {
-      const { sku, price, compareAtPrice, image, weight, weightUnit } = variant;
-      const discount = 0;
-      const typeValue = productType;
-      const productImage = (image || featuredImage).url;
-      const productValues = [
-        title,
-        description,
-        handle,
-        createdAt,
-        updatedAt,
-        publishedAt,
-        productImage,
-        productImage,
-        sku,
-        price.amount,
-        compareAtPrice?.amount,
-        discount || 0,
-        typeValue,
-        vendor,
-        weight,
-        weightUnit,
-        tags,
-        options.collectionName || ""
-      ];
-      productAttributes.forEach((attribute, index) => {
-        const matchedElements = queryElement(attribute, {
-          scope: parentElement,
-          all: true
-        });
-        matchedElements.forEach((element) => {
-          if (propertyActions[attribute]) {
-            propertyActions[attribute](element, productValues[index]);
-            return;
-          }
-          element.innerText = String(productValues[index]);
-        });
-      });
-      handleProductLink(parentElement, { id, handle, productOptions: options });
-      handleCollectionLink(parentElement, { productOptions: options });
-    }
     const firstTemplate = queryElement("optiontemplate", {
       scope: parentElement
     });
@@ -10030,7 +10034,7 @@
               selectedVariantKey[index] = value;
               const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
               if (variant) {
-                bindProductVariant(variant);
+                bindProductVariant(parentElement, product, variant, options);
               }
             });
           }
@@ -10050,7 +10054,7 @@
           selectedVariantKey[index] = selectElement.value;
           const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
           if (variant) {
-            bindProductVariant(variant);
+            bindProductVariant(parentElement, product, variant, options);
           }
         });
         selectElement.dispatchEvent(new Event("change"));
@@ -10073,16 +10077,16 @@
       console.log("productsPageInit", e);
     }
   };
-  var bindCollectionProductsData = async (client, container, collectionHandle) => {
+  var bindCollectionProductsData = async (client, productListContainer, collectionHandle, collectionContainer) => {
     const selector = getSelector("collectionId");
     const { productPage, collectionPage } = client.getParams();
-    const firstChild = container.firstElementChild;
+    const firstChild = productListContainer.firstElementChild;
     const template = firstChild.cloneNode(true);
-    container.innerHTML = "";
-    const collectionId = getAttribute(container, "collectionId");
-    const productLimit = getAttribute(container, "productLimit") || DEFAULT_PRODUCTS_LIMIT;
-    const sortKey = getAttribute(container, "sort");
-    const productSort = sortOptions[sortKey] || sortOptions.position;
+    productListContainer.innerHTML = "";
+    const collectionId = getAttribute(productListContainer, "collectionId");
+    const productLimit = getAttribute(productListContainer, "productLimit") || DEFAULT_PRODUCTS_LIMIT;
+    const sortKey = getAttribute(productListContainer, "sort");
+    const productSort = sortKey ? sortOptions[sortKey] : sortOptions.position;
     let collection;
     if (collectionHandle) {
       collection = await client.fetchCollectionByHandle(collectionHandle, Number(productLimit), productSort);
@@ -10095,10 +10099,13 @@
     } else {
       return null;
     }
+    if (collectionContainer) {
+      bindCollectionData(collection, document.body);
+    }
     const {
       products: { nodes: products }
     } = collection;
-    bindProducts(products, template, container, {
+    bindProducts(products, template, productListContainer, {
       productPage,
       collectionPage,
       collectionId,
@@ -10115,8 +10122,11 @@
     }
     products.forEach((product) => {
       const productContainer = template.cloneNode(true);
-      bindProductDataGraphQL(productContainer, product, options);
+      if (!productContainer) {
+        return;
+      }
       container.appendChild(productContainer);
+      bindProductVariant(productContainer, product, product.variants.nodes[0], options);
     });
   };
 
@@ -10146,16 +10156,13 @@
         scope: collectionContainer
       });
       productListElement.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
-      const collection = await bindCollectionProductsData(client, productListElement, handleParamValue);
-      if (collection) {
-        bindCollectionData(collection, document.body);
-      }
+      await bindCollectionProductsData(client, productListElement, handleParamValue, document.body);
     } catch (e) {
       console.log("collectionPageInit", e);
     }
   };
   var bindCollectionData = (collection, parentElement, scopeToExclude) => {
-    const { id, description, handle, title, image, updatedAt } = collection;
+    const { id, description, handle, title, image, updatedAt, products } = collection;
     const url = image?.url || "";
     const collectionValues = [id.replace(COLLECTION_ID_PREFIX, ""), title, description, handle, url, updatedAt];
     collectionAttributes.forEach((attribute, index) => {

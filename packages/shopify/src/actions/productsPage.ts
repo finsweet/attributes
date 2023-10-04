@@ -15,7 +15,8 @@ import type {
   ShopifyCollectionWithProducts,
   ShopifyProduct,
 } from '../utils/types';
-import { bindProductDataGraphQL } from './product';
+import { bindCollectionData } from './collectionPage';
+import { bindProductVariant } from './product';
 
 export const productsPageInit = async (client: ShopifyClient) => {
   try {
@@ -30,23 +31,24 @@ export const productsPageInit = async (client: ShopifyClient) => {
 
 export const bindCollectionProductsData = async (
   client: ShopifyClient,
-  container: HTMLDivElement,
-  collectionHandle?: string
+  productListContainer: HTMLDivElement,
+  collectionHandle?: string,
+  collectionContainer?: HTMLElement
 ): Promise<ShopifyCollection | null> => {
   const selector = getSelector('collectionId');
   const { productPage, collectionPage } = client.getParams();
   // get first child as template
-  const firstChild = container.firstElementChild as HTMLDivElement;
+  const firstChild = productListContainer.firstElementChild as HTMLDivElement;
   // clone template
   const template = firstChild.cloneNode(true) as HTMLDivElement;
   // remove all children
-  container.innerHTML = '';
+  productListContainer.innerHTML = '';
 
-  const collectionId = getAttribute(container, 'collectionId') as string;
-  const productLimit = getAttribute(container, 'productLimit') || DEFAULT_PRODUCTS_LIMIT;
+  const collectionId = getAttribute(productListContainer, 'collectionId') as string;
+  const productLimit = getAttribute(productListContainer, 'productLimit') || DEFAULT_PRODUCTS_LIMIT;
 
-  const sortKey = getAttribute(container, 'sort') as string;
-  const productSort = sortOptions[sortKey] || sortOptions.position;
+  const sortKey = getAttribute(productListContainer, 'sort');
+  const productSort = sortKey ? sortOptions[sortKey] : sortOptions.position;
 
   let collection: ShopifyCollectionWithProducts;
   if (collectionHandle) {
@@ -60,11 +62,14 @@ export const bindCollectionProductsData = async (
   } else {
     return null;
   }
+  if (collectionContainer) {
+    bindCollectionData(collection, document.body);
+  }
 
   const {
     products: { nodes: products },
   } = collection;
-  bindProducts(products, template, container, {
+  bindProducts(products, template, productListContainer, {
     productPage: productPage as string,
     collectionPage: collectionPage as string,
     collectionId,
@@ -93,8 +98,11 @@ export const bindProducts = (
     options.linkFormat = linkFormat as LinkFormat;
   }
   products.forEach((product) => {
-    const productContainer = template.cloneNode(true) as HTMLDivElement;
-    bindProductDataGraphQL(productContainer, product, options);
+    const productContainer = template.cloneNode(true);
+    if (!productContainer) {
+      return;
+    }
     container.appendChild(productContainer);
+    bindProductVariant(productContainer as HTMLElement, product, product.variants.nodes[0], options);
   });
 };
