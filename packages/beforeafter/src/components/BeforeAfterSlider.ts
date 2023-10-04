@@ -5,6 +5,14 @@ import { type BeforeAfterSliderOptions, DEFAULTS, SETTINGS } from '../utils';
 const CLASSNAME = 'before-after-slider';
 /**
  * A better before/after slider
+ * @class BeforeAfterSlider
+ * @param {HTMLElement} wrapper - The wrapper element
+ * @param {BeforeAfterSliderOptions} options - The options
+ * @param {string} [options.start] - The start position of the slider
+ * @param {string} [options.mode] - The interaction mode of the slider
+ * @param {string} [options.dragHandle] - The drag handle element
+ * @param {string} [options.before] - The before element
+ * @param {string} [options.after] - The after element
  */
 export class BeforeAfterSlider {
   /**
@@ -44,6 +52,8 @@ export class BeforeAfterSlider {
 
   /**
    * Initialize the component
+   * @returns this
+   * @memberof BeforeAfterSlider
    */
   public init(): this {
     this.dragZoneWidth = parseInt(DEFAULTS.dragzoneWidth) ?? this.dragHandleEl?.getBoundingClientRect().width;
@@ -56,6 +66,7 @@ export class BeforeAfterSlider {
 
   /**
    * Initialize the elements
+   * @returns void
    */
   private initElements(): void {
     // create a drag zone
@@ -84,12 +95,23 @@ export class BeforeAfterSlider {
     this.clipAtPosition(clip);
   }
 
+  /**
+   * Clip the after element at the given position
+   * @param rect - The position to clip at
+   * @param rect.top - The top position
+   * @param rect.right - The right position
+   * @param rect.bottom - The bottom position
+   * @param rect.left - The left position
+   * @returns void
+   */
   clipAtPosition(rect: { top?: number; right: number; bottom?: number; left: number }): void {
     this.afterEl.style.clip = `rect(${rect.top ?? '0'}px, ${rect.right}px, ${rect.bottom ?? '9999'}px, ${rect.left}px)`;
   }
 
   /**
    * Initialize the events
+   * @returns An array of cleanup functions
+   * @memberof BeforeAfterSlider
    */
   private initEvents(): Array<() => void> {
     return [
@@ -138,6 +160,8 @@ export class BeforeAfterSlider {
 
   /**
    * Handle the drag zone grab event
+   * @param e - The event
+   * @returns void
    */
   private onDragZoneGrab = (e: MouseEvent | TouchEvent): void => {
     this.isDragging = true;
@@ -147,6 +171,7 @@ export class BeforeAfterSlider {
 
   /**
    * Handle the drag zone release event
+   * @returns void
    */
   private onDragZoneRelease = (): void => {
     this.isDragging = false;
@@ -155,6 +180,8 @@ export class BeforeAfterSlider {
 
   /**
    * Handle the drag zone drag event
+   * @param e - The event
+   * @returns void
    */
   private onDragZoneDrag = (e: MouseEvent | TouchEvent): void => {
     const update = () => {
@@ -182,6 +209,8 @@ export class BeforeAfterSlider {
 
   /**
    * Handle the hover event
+   * @param e - The event
+   * @returns void
    */
   private onWrapperEnter = (e: MouseEvent | TouchEvent): void => {
     this.isDragging = true;
@@ -199,6 +228,7 @@ export class BeforeAfterSlider {
 
   /**
    * Handle the drag on hover event
+   * @returns void
    */
   private onWrapperLeave = (): void => {
     this.isDragging = false;
@@ -206,6 +236,8 @@ export class BeforeAfterSlider {
 
   /**
    * Handle the drag on hover event
+   * @param e - The event
+   * @returns void
    */
   private onWrapperHoverDrag = (e: MouseEvent | TouchEvent): void => {
     const update = () => {
@@ -233,6 +265,7 @@ export class BeforeAfterSlider {
 
   /**
    * Initialize the styles
+   * @returns void
    */
   private initStyles(): void {
     // set the wrapper styles
@@ -269,6 +302,11 @@ export class BeforeAfterSlider {
     }
   }
 
+  /**
+   * Append the wrapper styles
+   * @param styleEl The style element to append the styles to
+   * @returns void
+   */
   private appendWrapperStyles(styleEl: HTMLStyleElement): void {
     styleEl.appendChild(
       document.createTextNode(`
@@ -293,6 +331,11 @@ export class BeforeAfterSlider {
     );
   }
 
+  /**
+   * Append the drag zone styles
+   * @param styleEl The style element to append the styles to
+   * @returns void
+   */
   private appendDragzoneStyles(styleEl: HTMLStyleElement): void {
     if (!this.dragZoneEl) return;
 
