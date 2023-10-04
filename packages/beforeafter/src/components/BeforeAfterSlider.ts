@@ -365,7 +365,7 @@ export class BeforeAfterSlider {
         left: ${afterWidth / 2 - this.dragZoneWidth / 2}px;
         // width: ${this.dragZoneWidth}px;
         height: ${afterHeight}px;
-        background: ${DEFAULTS.dragzoneBackground ?? 'rgba(0, 0, 0, 0.0)'};
+        background: ${DEFAULTS.dragzoneBackground};
         z-index: 1;
         cursor: grab;
       }
