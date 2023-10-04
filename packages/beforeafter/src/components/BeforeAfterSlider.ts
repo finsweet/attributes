@@ -125,6 +125,14 @@ export class BeforeAfterSlider {
           return;
         }
       }),
+      addListener(window, 'resize', () => {
+        if (!this.dragZoneEl || !this.afterEl) return;
+        const moverWidth = this.dragZoneEl.getBoundingClientRect().width;
+        const { width } = this.afterEl.getBoundingClientRect();
+        const { height } = this.afterEl.getBoundingClientRect();
+        this.dragZoneEl.style.left = width / 2 - moverWidth / 2 + 'px';
+        this.afterEl.style.clip = `rect(0px, ${width}px, ${height}px,${width / 2}px)`; // rect(top, right, bottom, left
+      }),
     ];
   }
 
