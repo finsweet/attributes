@@ -9,12 +9,12 @@ import { queryAllElements } from './utils';
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
-  const tabs = queryAllElements('form');
+  const forms = queryAllElements('form');
 
-  const formInstances = tabs.map((wrapper) => initFormValidation(wrapper));
+  const formInstances = forms.map((wrapper) => initFormValidation(wrapper));
 
   return {
-    result: tabs,
+    result: forms,
     destroy() {
       for (const formInstance of formInstances) formInstance?.clean();
     },

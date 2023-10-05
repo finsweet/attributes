@@ -2,8 +2,11 @@ import { generateSelectors, VALIDATION_ATTRIBUTE } from '@finsweet/attributes-ut
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getAttribute, getInstanceIndex, queryAllElements, queryElement, getSettingSelector ,getSettingAttributeName } = generateSelectors(
-  VALIDATION_ATTRIBUTE,
-  ELEMENTS,
-  SETTINGS
-);
+export const {
+  getAttribute,
+  getInstanceIndex,
+  queryAllElements,
+  queryElement,
+  getSettingSelector,
+  getSettingAttributeName,
+} = generateSelectors(VALIDATION_ATTRIBUTE, ELEMENTS, SETTINGS);
