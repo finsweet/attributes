@@ -22,7 +22,7 @@ export const initFavoriteItem = (listItem: Element) => {
   const key = getAttribute(likeButton, 'key') || 'favorite';
   const elementsToUpdate = listItem.querySelectorAll('[fs-favorite-active]');
 
-  const handleFavoriteButtonClick = () => {
+  const handleFavoriteButtonClick = async () => {
     const favorites = JSON.parse(String(localStorage.getItem(key))) || [];
     if (favorites.includes(hrefValue)) {
       removeFromLocalStorage(hrefValue, key);

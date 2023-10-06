@@ -13,6 +13,10 @@ import { ADD_TO_LOCAL_STORAGE } from './utils';
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
+  let operationInProgress = false;
+
+  const removeQueue: CustomEvent<string>[] = [];
+
   const listReferences = queryAllElements('list');
   const favoriteList = queryElement('list-favorite');
   const listItem = favoriteList?.querySelector<HTMLElement>('[role="listitem"]');
@@ -42,22 +46,40 @@ export const init: FsAttributeInit = async () => {
       const customEvent = event as CustomEvent<string>;
       if (customEvent.detail) {
         if (loader) loader.style.display = 'block';
-        await addItemToList(favoriteList, listItem, customEvent.detail, key);
-        if (loader) loader.style.display = 'none';
+        try {
+          operationInProgress = true;
+          await addItemToList(favoriteList, listItem, customEvent.detail, key);
+        } finally {
+          operationInProgress = false;
+
+          if (removeQueue.length > 0) {
+            const nextRemoveEvent = removeQueue.shift();
+            if (nextRemoveEvent) await removeItemFromList(favoriteList, nextRemoveEvent.detail);
+          }
+
+          if (loader) loader.style.display = 'none';
+        }
       }
     });
 
     window.addEventListener(REMOVE_FROM_LOCAL_STORAGE, async (event) => {
       const customEvent = event as CustomEvent<string>;
       if (customEvent.detail) {
-        if (loader) loader.style.display = 'block';
-        await removeItemFromList(favoriteList, customEvent.detail);
-        if (loader) loader.style.display = 'none';
+        if (operationInProgress) {
+          removeQueue.push(customEvent);
+        } else {
+          if (loader) loader.style.display = 'block';
+          try {
+            await removeItemFromList(favoriteList, customEvent.detail);
+          } finally {
+            if (loader) loader.style.display = 'none';
+          }
+        }
       }
     });
-  }
 
-  return {
-    result: listReferences,
-  };
+    return {
+      result: listReferences,
+    };
+  }
 };
