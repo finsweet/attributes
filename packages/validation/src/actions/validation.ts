@@ -2,7 +2,8 @@
 //@ts-ignore
 import Pristine from 'pristinejs';
 
-import { getAttribute, getSettingSelector, queryAllElements, queryElement } from '../utils';
+import { getAttribute, getSettingSelector, queryElement } from '../utils';
+import type { IValidationField } from '../utils/types';
 
 /**
  * Initializes form validation for a given wrapper element using Pristine library.
@@ -13,12 +14,13 @@ import { getAttribute, getSettingSelector, queryAllElements, queryElement } from
 export const initFormValidation = (wrapper: HTMLElement) => {
   const form = wrapper.querySelector('form');
   if (!form) return;
-  const submitButton = queryElement('submit');
+  const submitButton = queryElement('submit', { scope: form });
   if (!submitButton) return;
 
   const pristine = new Pristine(form);
 
-  const inputFields = form.querySelectorAll('input, textarea');
+  const inputFields = form.querySelectorAll<HTMLElement>('input:not([type="checkbox"]):not([type="submit"]), textarea');
+  const validationFields: IValidationField[] = [];
 
   const requiredFields = form.querySelectorAll<HTMLInputElement>(getSettingSelector('required'));
   const minValueFields = form.querySelectorAll<HTMLInputElement>(getSettingSelector('minvalue'));
@@ -28,8 +30,37 @@ export const initFormValidation = (wrapper: HTMLElement) => {
   const checkboxFields = form.querySelectorAll<HTMLInputElement>(getSettingSelector('mincheckbox'));
   const rejectFields = form.querySelectorAll<HTMLInputElement>(getSettingSelector('reject'));
 
-  const errorMessages = queryAllElements('error-show', { scope: form });
-  const successMessages = queryAllElements('success-show', { scope: form });
+  // Prepare regular inputs
+  inputFields.forEach((inputElement) => {
+    const parent = inputElement.parentNode;
+
+    if (!parent) return;
+
+    const errorMessages = queryElement('error-show', { scope: parent });
+    const successMessages = queryElement('success-show', { scope: parent });
+
+    const inputErrorPair = {
+      input: inputElement,
+      error: errorMessages,
+      success: successMessages,
+    };
+    validationFields.push(inputErrorPair);
+  });
+
+  // Prepare checkbox inputs
+  checkboxFields.forEach((block) => {
+    const errorMessages = queryElement('error-show', { scope: block });
+    const successMessages = queryElement('success-show', { scope: block });
+    const checkbox = block.querySelector('input[type="checkbox"]');
+
+    const inputErrorPair = {
+      input: checkbox,
+      error: errorMessages,
+      success: successMessages,
+    };
+    validationFields.push(inputErrorPair);
+  });
+
   const validationType = getAttribute(form, 'validate');
   const validateOn = validationType ? validationType.split(',') : ['submit'];
   const debounce = getAttribute(form, 'debounce');
@@ -37,32 +68,27 @@ export const initFormValidation = (wrapper: HTMLElement) => {
   const errorClasses = new Set<string>();
 
   /**
-   * Hides error messages and removes error classes from input fields.
+   * Hides error and success messages and removes error classes from input fields.
    */
-  const hideErrors = () => {
-    errorMessages.forEach((element) => {
-      element.style.display = 'none';
-    });
+  const clearValidation = () => {
+    validationFields.forEach((field) => {
+      if (field.error) field.error.style.display = 'none';
+      if (field.success) field.success.style.display = 'none';
 
-    successMessages.forEach((element) => {
-      element.style.display = 'none';
-    });
-
-    inputFields.forEach((field) => {
-      const errorClass = field.getAttribute('errorclass');
+      const errorClass = field.input.getAttribute('errorclass');
       if (errorClass) errorClasses.add(errorClass);
       errorClasses.forEach((errorClass) => {
-        field.classList.remove(errorClass);
+        field.input.classList.remove(errorClass);
       });
     });
   };
 
-  hideErrors();
+  clearValidation();
 
   requiredFields.forEach((field) => {
     pristine.addValidator(
       field,
-      function (value) {
+      function (value: string) {
         return value !== '';
       },
       'This field is required.'
@@ -115,50 +141,58 @@ export const initFormValidation = (wrapper: HTMLElement) => {
 
   rejectFields.forEach((field) => {
     const reject = getAttribute(field, 'reject');
-    const rejectWords = reject.split(',');
+    const rejectWords = reject?.split(',');
     pristine.addValidator(
       field,
       function (value: string) {
-        return rejectWords.includes(value);
+        return !rejectWords?.some((word) => {
+          const regex = new RegExp(`\\b${word}\\b`, 'i');
+          return regex.test(value);
+        });
       },
       `Please, provide different value.`
     );
   });
 
-  checkboxFields.forEach((block) => {
-    const minCheckbox = getAttribute(block, 'mincheckbox');
-    const checkboxes = block.querySelectorAll('input[type="checkbox"]');
-    pristine.addValidator(
-      block,
-      function () {
-        const checkedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
-        return checkedCheckboxes.length >= Number(minCheckbox);
-      },
-      `Please, select at least ${minCheckbox} checkboxes.`
-    );
+  checkboxFields.forEach((checkboxField) => {
+    const minCheckbox = getAttribute(checkboxField, 'mincheckbox');
+    const checkboxes = checkboxField.querySelectorAll('input[type="checkbox"]');
+    if (checkboxField) {
+      pristine.addValidator(
+        checkboxes[0],
+        function () {
+          const checkedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
+          return checkedCheckboxes.length >= Number(minCheckbox);
+        },
+        `Please, select at least ${minCheckbox} checkboxes.`
+      );
+    }
   });
 
   const validate = () => {
     const valid = pristine.validate();
 
     if (!valid) {
-      inputFields.forEach((field, index) => {
-        const errors = pristine.getErrors(field);
+      validationFields.forEach((field) => {
+        const errors = pristine.getErrors(field.input);
         if (errors.length > 0) {
-          const errorClass = field.getAttribute('errorclass');
+          const errorClass = field.input.getAttribute('errorclass');
           if (errorClass) {
             errorClasses.add(errorClass);
-            field.classList.add(errorClass);
+            field.input.classList.add(errorClass);
           }
-          errorMessages[index].style.display = 'block';
-          const [firstError] = errors;
-          errorMessages[index].innerHTML = firstError;
+          if (field.error) {
+            field.error.style.display = 'block';
+            const [firstError] = errors;
+            field.error.innerHTML = firstError;
+          }
         } else {
-          errorMessages[index].style.display = 'none';
+          if (field.error) field.error.style.display = 'none';
         }
       });
     } else {
-      hideErrors();
+      clearValidation();
+      form.submit();
     }
   };
 
@@ -168,18 +202,18 @@ export const initFormValidation = (wrapper: HTMLElement) => {
   };
 
   if (validateOn.includes('typing')) {
-    inputFields.forEach((field) => {
-      field.addEventListener('input', () => {
+    validationFields.forEach((field) => {
+      field.input.addEventListener('input', () => {
         setTimeout(() => {
           validate();
-        }, debounce || 0);
+        }, Number(debounce) || 0);
       });
     });
   }
 
   if (validateOn.includes('unfocus')) {
-    inputFields.forEach((field) => {
-      field.addEventListener('blur', validate);
+    validationFields.forEach((field) => {
+      field.input.addEventListener('blur', validate);
     });
   }
 
@@ -190,9 +224,9 @@ export const initFormValidation = (wrapper: HTMLElement) => {
   return {
     clean: () => {
       submitButton.removeEventListener('click', onSubmitButtonClick);
-      inputFields.forEach((field) => {
-        field.removeEventListener('typing', validate);
-        field.removeEventListener('blur', validate);
+      validationFields.forEach((field) => {
+        field.input.removeEventListener('typing', validate);
+        field.input.removeEventListener('blur', validate);
       });
       pristine.destroy();
     },
