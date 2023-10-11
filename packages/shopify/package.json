@@ -5,6 +5,7 @@
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
   "type": "module",
+  "types": "src/index.ts",
   "main": "shopify.js",
   "files": [
     "shopify.js",
