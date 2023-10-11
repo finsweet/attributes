@@ -84,6 +84,17 @@ export const productAttributes = [
   PRODUCTS_COLLECTION,
 ];
 
+export const sortOptions: { [k: string]: string } = {
+  position: 'position',
+  'most-recent': 'most-recent',
+  oldest: 'oldest',
+};
+
+export enum LinkFormat {
+  ID = 'id',
+  HANDLE = 'handle',
+}
+
 export const collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
 
 export const QUERY_PARAMS = {
@@ -95,32 +106,72 @@ export const ELEMENTS = [
   'id',
   'title',
   'description',
+  'description-html',
   'handle',
   'created',
   'updated',
   'published',
   'image',
-  'thumbnail',
   'sku',
   'price',
   'compareprice',
   'discountpercent',
+  'discountvalue',
+  'quantity',
+  'collection',
   'type',
+  'status',
   'vendor',
   'weight',
   'weightunit',
+  'shipping',
+  'taxable',
   'tag-list',
-  'tag-template',
+  'tag-item',
   'tag-text',
+  'product',
+  /**
+   * Target parent wrapper where all options and variants are appended. Div Block.
+   */
+  'option-list',
+  /**
+   * Appended option template. Div Block.
+   */
+  'option-template',
+  /**
+   * Appended option text value. For example, Colors
+   */
+  'option-name',
+  /**
+   * Target to append variant-template elements.
+   */
+  'variant-list',
+  'variant-template',
+  'variant-name',
+  /**
+   * Added to a Product List to indicate it will be a Product List used for a cart component.
+   */
+  'cart',
+  /**
+   * Defines the cart wrapper element.
+   */
+  'cart-wrapper',
+  /**
+   * Amount of items inside the cart. Returns Number.
+   */
+  'cart-quantity',
+  'cart-plus',
+  'cart-minus',
+  'cart-remove',
+  'cart-clear',
+
+  // TODO: these below are not in the notion docs, should we add them to docs or remoev them?
+  'thumbnail',
+  'tag-template',
   'loader',
-  'products',
+  'products', // this was explicitly removed. Ref: https://www.notion.so/Documentation-98480be08cc54ba89ee39d3fabbd4ea8?d=21a49eb515954609b1838729e3f55ae0&pvs=4#8c71c03f55c145e09c416946d57702ac
   'products-list',
   'collections-list',
-  'collection',
-  'option-template',
-  'option-name',
-  'variant-list',
-  'collectionId',
   'productsList',
   'optiontemplate',
   'optionname',
@@ -140,12 +191,51 @@ export const SETTINGS = {
   domain: { key: `domain` },
 
   /**
+   * Defines the slug or the url to redirect the user to when something goes wrong on product page
+   */
+  redirectURL: {
+    key: `redirecturl`,
+    values: {
+      default: '/404',
+    },
+  },
+
+  /**
    * Defines the Webflow product page slug
    */
   productPage: {
     key: `productpage`,
     values: {
       default: '/tests/product-template',
+    },
+  },
+
+  /**
+   * Defines the collectionid attribute of List wrapper or Collections list.
+   */
+  collectionId: { key: `${COLLECTION_ID}` },
+
+  /**
+   * Defines the sort order of products/collections that should be returned by the product/collection query
+   */
+  sort: {
+    key: `${COLLECTION_PRODUCT_SORT}`,
+    values: sortOptions,
+  },
+
+  /**
+   * Define the type of link to be user (Product page or Collection page)
+   * **/
+  link: { key: `${LINK}`, values: { product: 'product', collection: 'collection' } },
+
+  /**
+   * Defines the link format of the product page
+   **/
+  linkFormat: {
+    key: `${LINK_FORMAT}`,
+    values: {
+      id: 'id',
+      handle: 'handle',
     },
   },
 
@@ -160,19 +250,47 @@ export const SETTINGS = {
   },
 
   /**
-   * Defines the slug or the url to redirect the user to when something goes wrong on product page
+   * Defines the Webflow category page slug
    */
-  redirectURL: {
-    key: `redirecturl`,
+  categoryPage: {
+    key: `categorypage`,
     values: {
-      default: '/404',
+      default: '/category', // TODO: is this correct? Notion doc says it defaults to /category
     },
   },
 
   /**
-   * Defines the collectionid attribute of List wrapper or Collections list.
+   * Defines the Webflow tag page slug
    */
-  collectionId: { key: `${COLLECTION_ID}` },
+  tagPage: {
+    key: `tagpage`,
+    values: {
+      default: '/tag', // TODO: is this correct? Notion doc says it defaults to /tag
+    },
+  },
+
+  /**
+   * Defines all collections
+   */
+  collections: {
+    key: `collections`,
+    values: {
+      all: 'all',
+      custom: 'custom',
+    },
+  },
+
+  /**
+   * Added to a Product List to indicate it will be a Product List used for a cart component.
+   */
+  type: {
+    key: `type`,
+    values: {
+      cart: 'cart',
+    },
+  },
+
+  // TODO: these are not in the notion docs, should we add or remove them?
 
   /**
    * Defines the limit of products that should be returned by the collection query
@@ -183,33 +301,7 @@ export const SETTINGS = {
    * Defines the limit of collections that should be returned by the collections query
    */
   collectionLimit: { key: `${COLLECTIONS_LIMIT}` },
-
-  /**
-   * Defines the sort order of products/collections that should be returned by the product/collection query
-   */
-  sort: { key: `${COLLECTION_PRODUCT_SORT}` },
-
-  /**
-   * Defines the link format of the product page
-   **/
-  linkFormat: { key: `${LINK_FORMAT}` },
-
-  /**
-   * Define the type of link to be user (Product page or Collection page)
-   * **/
-  link: { key: `${LINK}`, values: { product: 'product', collection: 'collection' } },
 } as const satisfies AttributeSettings;
-
-export const sortOptions: { [k: string]: string } = {
-  position: 'position',
-  'most-recent': 'most-recent',
-  oldest: 'oldest',
-};
-
-export enum LinkFormat {
-  ID = 'id',
-  HANDLE = 'handle',
-}
 
 export const {
   getSettingSelector,

@@ -34,7 +34,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
   },
   [PRODUCT_TAG_LIST]: (element: HTMLElement, value: ProductValue) => {
     const tags = value as string[];
-    const template = queryElement<HTMLElement>(PRODUCT_TAG_TEMPLATE, {
+    const template = queryElement(PRODUCT_TAG_TEMPLATE, {
       scope: element,
     });
 
@@ -42,7 +42,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
       const templateParent = template.parentElement;
       tags.forEach((tag) => {
         const clone = cloneNode(template, true);
-        const tagText = queryElement<HTMLElement>(PRODUCT_TAG_TEXT, {
+        const tagText = queryElement(PRODUCT_TAG_TEXT, {
           scope: clone,
         });
 
@@ -143,7 +143,7 @@ export const bindProductDataGraphQL = (
     variantMaps[variant.title] = variant;
   });
 
-  const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
+  const firstTemplate = queryElement('optiontemplate', {
     scope: parentElement,
   });
   if (!firstTemplate || !firstTemplate.parentElement) {
@@ -201,7 +201,7 @@ export const bindProductDataGraphQL = (
       });
 
       // select the first one
-      const firstInput = variantList.querySelector('input') as HTMLInputElement;
+      const firstInput = variantList.querySelector<HTMLInputElement>('input');
       if (firstInput) {
         firstOptionInputs.push(firstInput);
       }

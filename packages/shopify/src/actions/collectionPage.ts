@@ -8,7 +8,7 @@ import {
   queryElement,
   SETTINGS,
 } from '../utils/constants';
-import type { CollectionAttribute, CollectionValue, ProductAttribute, ShopifyCollection } from '../utils/types';
+import type { CollectionAttribute, CollectionValue, ShopifyCollection } from '../utils/types';
 import { bindCollectionProductsData } from './productsPage';
 
 /**
@@ -38,13 +38,18 @@ export const collectionPageInit = async (client: ShopifyClient) => {
   try {
     document.body.setAttribute(SETTINGS.collectionId.key, idParamValue);
 
-    const collectionContainer = queryElement('collectionId');
+    // TODO: maybe its a collection? or is it looking for collectionId? collectionId is a setting eg: fs-shopify-collectionid="SOME_VALUE" but we can have fs
+    // TODO: ref: https://www.notion.so/Documentation-98480be08cc54ba89ee39d3fabbd4ea8?d=0126dd0137854d2b99e820d2dbee3485&pvs=4#f48cc0a9184d4e7c989ca01f9910a7f4
+    const collectionContainer = queryElement('collection');
 
     if (!collectionContainer) return;
 
-    const productListElement = queryElement<HTMLElement>('products' as ProductAttribute, {
+    const productListElement = queryElement<HTMLDivElement>('products', {
       scope: collectionContainer,
-    }) as HTMLDivElement;
+    });
+
+    if (!productListElement) return;
+
     productListElement.setAttribute(SETTINGS.collectionId.key, idParamValue);
     await bindCollectionProductsData(client, productListElement, handleParamValue, document.body);
   } catch (e) {

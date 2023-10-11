@@ -23,5 +23,19 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       allowedTypes: ['Block'],
       settings: [],
     },
+    {
+      key: 'product',
+      name: 'Product',
+      description: 'Defines a single product',
+      allowedTypes: ['Block'],
+      settings: [],
+    },
+    {
+      key: 'products',
+      name: 'Products',
+      description: 'Defines a list of products',
+      allowedTypes: ['Block'],
+      settings: [SCHEMA_SETTINGS.productLimit, SCHEMA_SETTINGS.sort],
+    },
   ],
 };
