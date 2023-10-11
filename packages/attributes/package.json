@@ -71,6 +71,7 @@
     "@finsweet/attributes-richtext": "workspace:*",
     "@finsweet/attributes-scrolldisable": "workspace:*",
     "@finsweet/attributes-selectcustom": "workspace:*",
+    "@finsweet/attributes-shopify": "workspace:*",
     "@finsweet/attributes-slider": "workspace:*",
     "@finsweet/attributes-sliderdots": "workspace:*",
     "@finsweet/attributes-smartlightbox": "workspace:*",
