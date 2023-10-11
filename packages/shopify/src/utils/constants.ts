@@ -1,8 +1,11 @@
-import { generateSelectors } from '$global/factory';
+import {
+  type AttributeElements,
+  type AttributeSettings,
+  generateSelectors,
+  SHOPIFY_ATTRIBUTE,
+} from '@finsweet/attributes-utils';
 
 export const ATTRIBUTE = 'shopify';
-
-const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
 
 /**
  * Products
@@ -88,96 +91,114 @@ export const QUERY_PARAMS = {
   handle: 'handle',
 };
 
-export const ATTRIBUTES = {
-  element: {
-    key: `${ATTRIBUTES_PREFIX}-element`,
-    values: {
-      id: ID,
-      title: TITLE,
-      description: DESCRIPTION,
-      handle: HANDLE,
-      created: PRODUCT_CREATED,
-      updated: UPDATED,
-      published: PRODUCT_PUBLISHED,
-      image: IMAGE,
-      thumbnail: PRODUCT_THUMBNAIL,
-      sku: PRODUCT_SKU,
-      price: PRODUCT_PRICE,
-      compareprice: PRODUCT_COMPARE_PRICE,
-      discountpercent: PRODUCT_DISCOUNTED_PERCENT,
-      type: PRODUCT_TYPE,
-      vendor: PRODUCT_VENDOR,
-      weight: PRODUCT_WEIGHT,
-      weightunit: PRODUCT_WEIGHT_UNIT,
-      [PRODUCT_TAG_LIST]: PRODUCT_TAG_LIST,
-      [PRODUCT_TAG_TEMPLATE]: PRODUCT_TAG_TEMPLATE,
-      [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
-      loader: LOADER,
-      products: PRODUCTS,
-      productsList: PRODUCTS_LIST,
-      collectionsList: COLLECTIONS_LIST,
-      collection: PRODUCTS_COLLECTION,
-      optiontemplate: PRODUCTS_OPTION_TEMPLATE,
-      optionname: PRODUCTS_OPTION_NAME,
-      variantlist: PRODUCTS_VARIANT_LIST,
-    },
-  },
+export const ELEMENTS = [
+  'id',
+  'title',
+  'description',
+  'handle',
+  'created',
+  'updated',
+  'published',
+  'image',
+  'thumbnail',
+  'sku',
+  'price',
+  'compareprice',
+  'discountpercent',
+  'type',
+  'vendor',
+  'weight',
+  'weightunit',
+  'tag-list',
+  'tag-template',
+  'tag-text',
+  'loader',
+  'products',
+  'products-list',
+  'collections-list',
+  'collection',
+  'option-template',
+  'option-name',
+  'variant-list',
+  'collectionId',
+  'productsList',
+  'optiontemplate',
+  'optionname',
+  'variantlist',
+  'collectionsList',
+] as const satisfies AttributeElements;
 
+export const SETTINGS = {
   /**
    * Defines the storefrontAccessToken provided by Shopify
    */
-  token: { key: `${ATTRIBUTES_PREFIX}-token` },
+  token: { key: `token` },
 
   /**
    * Defines the domain where the Shopify store is hosted
    */
-  domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
+  domain: { key: `domain` },
 
   /**
    * Defines the Webflow product page slug
    */
-  productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: '/tests/product-template' },
+  productPage: {
+    key: `productpage`,
+    values: {
+      default: '/tests/product-template',
+    },
+  },
 
   /**
    * Defines the Webflow collection page slug
    */
-  collectionPage: { key: `${ATTRIBUTES_PREFIX}-collectionpage`, defaultValue: '/tests/collection-template' },
+  collectionPage: {
+    key: `collectionpage`,
+    values: {
+      default: '/tests/collection-template',
+    },
+  },
 
   /**
    * Defines the slug or the url to redirect the user to when something goes wrong on product page
    */
-  redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: '/404' },
+  redirectURL: {
+    key: `redirecturl`,
+    values: {
+      default: '/404',
+    },
+  },
 
   /**
    * Defines the collectionid attribute of List wrapper or Collections list.
    */
-  collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
+  collectionId: { key: `${COLLECTION_ID}` },
 
   /**
    * Defines the limit of products that should be returned by the collection query
    */
-  productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
+  productLimit: { key: `${COLLECTION_PRODUCT_LIMIT}` },
 
   /**
    * Defines the limit of collections that should be returned by the collections query
    */
-  collectionLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTIONS_LIMIT}` },
+  collectionLimit: { key: `${COLLECTIONS_LIMIT}` },
 
   /**
    * Defines the sort order of products/collections that should be returned by the product/collection query
    */
-  sort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
+  sort: { key: `${COLLECTION_PRODUCT_SORT}` },
 
   /**
    * Defines the link format of the product page
    **/
-  linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
+  linkFormat: { key: `${LINK_FORMAT}` },
 
   /**
    * Define the type of link to be user (Product page or Collection page)
    * **/
-  link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: 'product', collection: 'collection' } },
-} as const;
+  link: { key: `${LINK}`, values: { product: 'product', collection: 'collection' } },
+} as const satisfies AttributeSettings;
 
 export const sortOptions: { [k: string]: string } = {
   position: 'position',
@@ -190,4 +211,13 @@ export enum LinkFormat {
   HANDLE = 'handle',
 }
 
-export const [getSelector, queryElement, getAttribute] = generateSelectors(ATTRIBUTES);
+export const {
+  getSettingSelector,
+  getSettingAttributeName,
+  getInstanceIndex,
+  hasAttributeValue,
+  getElementSelector,
+  queryElement,
+  queryAllElements,
+  getAttribute,
+} = generateSelectors(SHOPIFY_ATTRIBUTE, ELEMENTS, SETTINGS);

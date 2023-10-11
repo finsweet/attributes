@@ -1,5 +1,4 @@
-import { sortOptions } from '$packages/shopify/src/utils/constants';
-
+import { sortOptions } from '../utils/constants';
 import { productBody } from './product';
 
 const collectionProperties = `

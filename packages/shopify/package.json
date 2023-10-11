@@ -12,12 +12,9 @@
     "schema.json"
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node ./bin/build.js",
-    "build": "cross-env NODE_ENV=production node ./bin/build.js",
     "lint": "eslint ./src && prettier --check ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint:fix": "eslint ./src --fix && prettier --write ./src",
     "check": "tsc --noEmit",
-    "format": "prettier --write ./src",
     "test": "pnpm playwright test",
     "test:headed": "pnpm playwright test --headed"
   },

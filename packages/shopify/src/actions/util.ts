@@ -1,23 +1,21 @@
-import { isHTMLAnchorElement } from '@finsweet/ts-utils';
+import { isHTMLAnchorElement } from '@finsweet/attributes-utils';
 
 import {
-  ATTRIBUTES,
   COLLECTION_ID_PREFIX,
-  getSelector,
+  getAttribute,
+  getSettingSelector,
   LinkFormat,
   LOADER,
   PRODUCT_ID_PREFIX,
   PRODUCTS_VARIANT_SEPARATOR,
-  queryElement,
+  queryAllElements,
 } from '../utils/constants';
 import type { Option, ShopifyBindingOptions } from '../utils/types';
 
 export const hideLoader = () => {
-  const matchedElements = queryElement<HTMLElement>(LOADER, {
-    all: true,
-  });
+  const matchedElements = queryAllElements(LOADER);
 
-  matchedElements.forEach((element: HTMLElement) => {
+  matchedElements.forEach((element) => {
     element.style.display = 'none';
   });
 };
@@ -31,9 +29,10 @@ export const handleProductLink = (
   }: { id: string; handle: string; productOptions: ShopifyBindingOptions }
 ) => {
   id = id.replace(PRODUCT_ID_PREFIX, '');
-  const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'product'));
+  const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSettingSelector('link', 'product'));
   productLinks.forEach((link) => {
-    const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || LinkFormat.ID;
+    const elementLinkFormat = getAttribute(link, 'linkFormat') || linkFormat || LinkFormat.ID;
+
     const { protocol, hostname } = window.location;
     const fullURLStr = protocol + hostname + productPage;
     const url = new URL(fullURLStr);
@@ -59,7 +58,7 @@ export const handleCollectionLink = (
   }: { productOptions: ShopifyBindingOptions }
 ) => {
   function addLink(link: HTMLAnchorElement) {
-    const elementLinkFormat = link.getAttribute(ATTRIBUTES.linkFormat.key) || linkFormat || LinkFormat.ID;
+    const elementLinkFormat = getAttribute(link, 'linkFormat') || linkFormat || LinkFormat.ID;
     const { protocol, hostname } = window.location;
     const fullURLStr = protocol + hostname + collectionPage;
     const url = new URL(fullURLStr);
@@ -78,7 +77,7 @@ export const handleCollectionLink = (
     return;
   }
 
-  const collectionLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSelector('link', 'collection'));
+  const collectionLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSettingSelector('link', 'collection'));
   collectionLinks.forEach((link) => {
     addLink(link);
   });

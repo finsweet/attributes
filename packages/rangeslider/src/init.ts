@@ -23,6 +23,8 @@ import { queryAllElements } from './utils/selectors';
 export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
+  console.log('We are loading rangeslider');
+
   const wrapperElements = queryAllElements('wrapper');
 
   const rangeSlidersData = wrapperElements.map(initRangeSlider).filter(isNotEmpty);

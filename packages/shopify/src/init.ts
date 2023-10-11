@@ -1,37 +1,40 @@
-import { CMS_ATTRIBUTE_ATTRIBUTE, SHOPIFY_ATTRIBUTE } from '$global/constants/attributes';
-import { awaitAttributesLoad, finalizeAttribute } from '$global/factory';
+import { type FsAttributeInit } from '@finsweet/attributes-utils';
 
 import { initializeClient } from './actions/client';
 import { hideLoaders } from './actions/loaders';
 import { initPages } from './factory';
-import { ATTRIBUTES } from './utils/constants';
-import type { ShopifyAttributeParams } from './utils/types';
+import { SETTINGS } from './utils/constants';
 
 /**
  * Inits the attribute.
  */
-export const init = async (params: ShopifyAttributeParams) => {
-  await awaitAttributesLoad(CMS_ATTRIBUTE_ATTRIBUTE);
+export const init: FsAttributeInit = async () => {
+  console.log('shopify attribute initializing...');
 
-  const { token, domain, productPage, collectionPage, redirectURL } = params;
-  if (!token) {
+  if (!SETTINGS.token) {
     throw new Error('token must be provided');
   }
-  if (!domain) {
+  if (!SETTINGS.domain) {
     throw new Error('domain must be provided');
   }
 
   const client = await initializeClient({
-    token,
-    domain,
-    productPage: productPage || ATTRIBUTES.productPage.defaultValue,
-    collectionPage: collectionPage || ATTRIBUTES.collectionPage.defaultValue,
-    redirectURL: redirectURL || ATTRIBUTES.redirectURL.defaultValue,
+    token: SETTINGS.token.key,
+    domain: SETTINGS.domain.key,
+    productPage: SETTINGS.productPage.key || SETTINGS.productPage.values.default,
+    collectionPage: SETTINGS.collectionPage.key || SETTINGS.collectionPage.values.default,
+    redirectURL: SETTINGS.redirectURL.key || SETTINGS.redirectURL.values.default,
   });
 
   await initPages(client);
 
   hideLoaders();
 
-  return finalizeAttribute(SHOPIFY_ATTRIBUTE, client);
+  return {
+    result: client,
+    destroy() {
+      // Nothing to destroy.
+      return;
+    },
+  };
 };

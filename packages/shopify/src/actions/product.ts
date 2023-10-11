@@ -1,7 +1,6 @@
 import { cloneNode } from '@finsweet/attributes-utils';
 
 import {
-  ATTRIBUTES,
   IMAGE,
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
@@ -10,6 +9,7 @@ import {
   productAttributes,
   PRODUCTS_COLLECTION,
   PRODUCTS_VARIANT_SEPARATOR,
+  queryAllElements,
   queryElement,
 } from '../utils/constants';
 import type { ProductAttribute, ProductValue, ShopifyBindingOptions, ShopifyProduct, Variant } from '../utils/types';
@@ -45,7 +45,8 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
         const tagText = queryElement<HTMLElement>(PRODUCT_TAG_TEXT, {
           scope: clone,
         });
-        clone.removeAttribute(ATTRIBUTES.element.key);
+
+        clone.removeAttribute('fs-shopify-element');
         if (tagText) {
           tagText.innerText = tag;
         }
@@ -107,9 +108,8 @@ export function bindProductVariant(
   ];
 
   productAttributes.forEach((attribute: string, index: number) => {
-    const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
+    const matchedElements = queryAllElements<HTMLElement>(attribute as ProductAttribute, {
       scope: parentElement,
-      all: true,
     });
 
     matchedElements.forEach((element: HTMLElement) => {
@@ -159,7 +159,7 @@ export const bindProductDataGraphQL = (
   const firstOptionInputs: HTMLInputElement[] = [];
   product.options.forEach((option, index) => {
     const clone = cloneNode(template, true);
-    const optionName = queryElement<HTMLElement>('optionname', {
+    const optionName = queryElement('optionname', {
       scope: clone,
     });
     if (optionName) {
@@ -167,7 +167,7 @@ export const bindProductDataGraphQL = (
     }
 
     // handle variant list
-    const variantList = queryElement<HTMLElement>('variantlist', {
+    const variantList = queryElement('variantlist', {
       scope: clone,
     });
     const selectElement = clone.querySelector('select');

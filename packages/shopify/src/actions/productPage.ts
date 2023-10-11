@@ -33,6 +33,6 @@ export const productPageInit = async (client: ShopifyClient) => {
       collectionPage: collectionPage as string,
     });
   } catch (e) {
-    console.log('productPageInit', e);
+    console.error('productPageInit', e);
   }
 };
