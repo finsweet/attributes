@@ -154,6 +154,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-selectcustom');
     }
 
+    case 'shopify': {
+      return import('@finsweet/attributes-shopify');
+    }
+
     case 'slider': {
       return import('@finsweet/attributes-slider');
     }

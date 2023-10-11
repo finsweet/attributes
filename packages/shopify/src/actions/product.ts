@@ -1,4 +1,4 @@
-import { cloneNode } from '@finsweet/ts-utils';
+import { cloneNode } from '@finsweet/attributes-utils';
 
 import {
   ATTRIBUTES,
@@ -112,7 +112,7 @@ export function bindProductVariant(
       all: true,
     });
 
-    matchedElements.forEach((element) => {
+    matchedElements.forEach((element: HTMLElement) => {
       if (propertyActions[attribute]) {
         propertyActions[attribute](element, productValues[index] as string);
         return;
