@@ -37,6 +37,7 @@
     "@finsweet/attributes-a11y": "workspace:*",
     "@finsweet/attributes-accordion": "workspace:*",
     "@finsweet/attributes-autovideo": "workspace:*",
+    "@finsweet/attributes-cleanurl": "workspace:*",
     "@finsweet/attributes-cmscombine": "workspace:*",
     "@finsweet/attributes-cmsfilter": "workspace:*",
     "@finsweet/attributes-cmsload": "workspace:*",

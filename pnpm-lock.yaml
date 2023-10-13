@@ -92,6 +92,9 @@ importers:
       '@finsweet/attributes-autovideo':
         specifier: workspace:*
         version: link:../autovideo
+      '@finsweet/attributes-cleanurl':
+        specifier: workspace:*
+        version: link:../cleanurl
       '@finsweet/attributes-cmscombine':
         specifier: workspace:*
         version: link:../cmscombine
@@ -227,6 +230,12 @@ importers:
         version: 3.12.7
 
   packages/autovideo:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/cleanurl:
     dependencies:
       '@finsweet/attributes-utils':
         specifier: workspace:*

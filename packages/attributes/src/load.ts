@@ -18,6 +18,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-autovideo');
     }
 
+    case 'cleanurl': {
+      return import('@finsweet/attributes-cleanurl');
+    }
+
     case 'cmscombine': {
       return import('@finsweet/attributes-cmscombine');
     }
