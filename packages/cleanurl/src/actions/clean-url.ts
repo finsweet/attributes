@@ -1,35 +1,39 @@
 import type { FsCleanUrlSettings } from '../utils/types';
 
+const ENABLE = 'enable';
 /**
- * Clean the URL by removing the query string and hash.
- * @returns {object} an object of the initial URL and the cleaned URL.
+ * Cleans the current window URL by optionally removing the query string and hash based on provided settings.
+ *
+ * @param {FsCleanUrlSettings} globalSettings - Object that contains settings on whether to remove the query and/or hash
+ * @returns An object containing the initial URL and the cleaned URL.
  */
-export default function cleanUrl(globalSettings: FsCleanUrlSettings): {
-  originalUrl: string;
-  cleanedUrl: string;
-} {
+export default function cleanUrl(globalSettings: FsCleanUrlSettings): { originalUrl: string; cleanedUrl: string } {
   const { location, history } = window;
-
   const { href } = location;
 
+  // Clone URL for manipulation
   const url = new URL(href);
 
+  // Destructure settings for readability
+  const { query, hash } = globalSettings;
+
+  // If no settings are provided, clean both query and hash and return early
   if (Object.keys(globalSettings).length === 0) {
     url.search = '';
     url.hash = '';
-  } else {
-    // Only remove query string if it's enabled.
-    if (globalSettings.query === 'enable') {
-      url.search = '';
-    }
-
-    // Only remove hash if it's enabled.
-    if (globalSettings.hash === 'enable') {
-      url.hash = '';
-    }
+    history.replaceState({}, '', url.toString());
+    return { originalUrl: href, cleanedUrl: url.toString() };
   }
 
-  // Remove the query string and hash.
+  // Conditionally remove query and hash based on settings
+  if (query === ENABLE) {
+    url.search = '';
+  }
+  if (hash === ENABLE) {
+    url.hash = '';
+  }
+
+  // Update the browser history with the cleaned URL
   history.replaceState({}, '', url.toString());
 
   return {
