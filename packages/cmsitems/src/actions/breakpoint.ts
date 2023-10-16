@@ -26,21 +26,21 @@ export const initBreakpoints = (listElement: HTMLElement) => {
 
   let lastDefinedValue: string | undefined;
 
-  for (const breakpoint of sortedBreakpoints) {
-    if (breakpoints[breakpoint]) {
-      lastDefinedValue = breakpoints[breakpoint];
-    } else if (lastDefinedValue) {
-      breakpoints[breakpoint] = lastDefinedValue;
+  const fillUndefinedBreakpoints = (breakpointsArray: typeof sortedBreakpoints) => {
+    for (const breakpoint of breakpointsArray) {
+      if (breakpoints[breakpoint]) {
+        lastDefinedValue = breakpoints[breakpoint];
+      } else if (lastDefinedValue) {
+        breakpoints[breakpoint] = lastDefinedValue;
+      }
     }
-  }
+  };
 
-  for (const breakpoint of [...sortedBreakpoints].reverse()) {
-    if (breakpoints[breakpoint]) {
-      lastDefinedValue = breakpoints[breakpoint];
-    } else if (lastDefinedValue) {
-      breakpoints[breakpoint] = lastDefinedValue;
-    }
-  }
+  //From first to last
+  fillUndefinedBreakpoints(sortedBreakpoints);
+
+  //From last to first
+  fillUndefinedBreakpoints([...sortedBreakpoints].reverse());
 
   let visibleItems = breakpoints[sortedBreakpoints[0]];
 
@@ -61,12 +61,11 @@ export const initBreakpoints = (listElement: HTMLElement) => {
 
   updateItemsPerRow();
 
-  const resizeListener = () => updateItemsPerRow();
-  window.addEventListener('resize', resizeListener);
+  window.addEventListener('resize', updateItemsPerRow);
 
   return {
     clean: () => {
-      window.removeEventListener('resize', resizeListener);
+      window.removeEventListener('resize', updateItemsPerRow);
     },
   };
 };
