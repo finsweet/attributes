@@ -34,13 +34,12 @@ export const removeFromLocalStorage = (link: string, key: string) => {
  */
 export const updateElementsClass = (elements: NodeListOf<Element>, href: string, activeClass: string, key: string) => {
   const favorites = JSON.parse(String(localStorage.getItem(key))) || [];
-  if (favorites.includes(href)) {
-    elements.forEach((element) => {
+  const isInFavorites = favorites.includes(href);
+  elements.forEach((element) => {
+    if (isInFavorites) {
       element.classList.add(activeClass);
-    });
-  } else {
-    elements.forEach((element) => {
-      element.classList.remove(activeClass);
-    });
-  }
+      return;
+    }
+    element.classList.remove(activeClass);
+  });
 };
