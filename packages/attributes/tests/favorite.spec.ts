@@ -12,12 +12,7 @@ test.describe('favorite', () => {
 
     const loader = page.getByTestId('loader');
 
-    const isHidden = await loader.evaluate((element) => {
-      const computedStyle = getComputedStyle(element);
-      return computedStyle.display === 'none';
-    });
-
-    expect(isHidden).toBe(true);
+    await expect(loader).toBeHidden();
   });
 
   test('List should be empty', async ({ page }) => {
