@@ -1,3 +1,4 @@
+import { simulateEvent } from '@finsweet/attributes-utils';
 import type { PaginationOptions } from 'swiper/types/modules/pagination';
 
 import { getAttribute } from './selectors';
@@ -117,10 +118,8 @@ export const dispatchClickOnVisibleSlides = (sliderWrapperElement: Element, hasH
 
   if (hasHalfSlide) visibleSlides.pop();
 
-  const clickEvent = new Event('click', { bubbles: true, cancelable: true });
-
   visibleSlides.forEach(function (slide) {
-    slide.dispatchEvent(clickEvent);
+    simulateEvent(slide, 'click');
   });
 };
 
@@ -134,10 +133,8 @@ export const dispatchClickOnGoneSlides = (sliderWrapperElement: Element, previou
     return !element.classList.contains('swiper-slide-visible');
   });
 
-  const clickEvent = new Event('click', { bubbles: true, cancelable: true });
-
   goneSlides.forEach(function (slide) {
-    slide.dispatchEvent(clickEvent);
+    simulateEvent(slide, 'click');
   });
 };
 

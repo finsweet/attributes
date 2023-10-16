@@ -309,13 +309,13 @@ export const initSlider = (sliderElement: HTMLElement) => {
         : false,
     thumbs: {
       swiper: initThumbnailSwiper(),
-      slideThumbActiveClass: getPaginationActiveThumbClass(thumbElement) || 'fs-is-active',
+      slideThumbActiveClass: getPaginationActiveThumbClass(thumbElement) || 'is-thumb-active',
       multipleActiveThumbs: false,
     },
     containerModifierClass: 'fs-',
-    slideNextClass: nextSlideClass || 'fs-next-slide',
-    slidePrevClass: prevSlideClass || 'fs-prev-slide',
-    slideActiveClass: activeSlideClass || 'fs-active-slide',
+    slideNextClass: nextSlideClass || 'is-slider-next',
+    slidePrevClass: prevSlideClass || 'is-slider-prev',
+    slideActiveClass: activeSlideClass || 'is-slider-active',
   };
 
   const sliderInstance = new Swiper(sliderElement, generalOptions);
