@@ -4,24 +4,15 @@ interface CustomNavigator extends Navigator {
 }
 
 /**
- * Checks if the user has enabled the "Do Not Track" (DNT) preference.
- * @returns {boolean} Returns `true` if the user prefers not to be tracked, or `false` if they allow tracking
+ * Returns true or false based on whether doNotTack is enabled. It also takes into account the
+ * anomalies, such as !bugzilla 887703, which effect versions of Fx 31 and lower. It also handles
+ * IE versions on Windows 7, 8 and 8.1, where the DNT implementation does not honor the spec.
+ * @see https://bugzilla.mozilla.org/show_bug.cgi?id=1217896 for more details
+ * @see https://schalkneethling.medium.com/respect-user-choice-do-not-track-6c13b805b256 for full article on the topic and solution used here
+ * @returns {boolean} `true` if DNT is enabled else `false`
  */
 export const hasEnabledDNT = (): boolean => {
-  'use strict';
-
   const customNavigator: CustomNavigator = navigator;
-  //solution ref: https://schalkneethling.medium.com/respect-user-choice-do-not-track-6c13b805b256
-
-  /**
-   * Returns true or false based on whether doNotTack is enabled. It also takes into account the
-   * anomalies, such as !bugzilla 887703, which effect versions of Fx 31 and lower. It also handles
-   * IE versions on Windows 7, 8 and 8.1, where the DNT implementation does not honor the spec.
-   * @see https://bugzilla.mozilla.org/show_bug.cgi?id=1217896 for more details
-   * @params {string} [dnt] - An optional mock doNotTrack string to ease unit testing.
-   * @params {string} [userAgent] - An optional mock userAgent string to ease unit testing.
-   * @returns {boolean} true if enabled else false
-   */
 
   // for old version of IE we need to use the msDoNotTrack property of navigator
   // on newer versions, and newer platforms, this is doNotTrack but, on the window object
