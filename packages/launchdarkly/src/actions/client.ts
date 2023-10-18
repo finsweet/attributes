@@ -8,7 +8,7 @@ import { initialize, type LDClient } from 'launchdarkly-js-client-sdk';
  * @param clientId
  * @param eventsToTrack
  */
-export const initializeClient = async (clientId: string, eventsToTrack?: string | null): Promise<LDClient> => {
+export const initializeClient = async (clientId: string, eventsToTrack?: string): Promise<LDClient> => {
   const client = initialize(clientId, { anonymous: true });
   await client.waitForInitialization();
 

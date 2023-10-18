@@ -1,16 +1,16 @@
 import { addListAnimation, type CMSList } from '@finsweet/attributes-cmscore';
-import { FORM_CSS_CLASSES, type FormBlockElement, isKeyOf, parseNumericAttribute } from '@finsweet/attributes-utils';
+import { FORM_CSS_CLASSES, type FormBlockElement, parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import { CMSFilters } from './components/CMSFilters';
 import { CMSTags } from './components/CMSTags';
+import { DEFAULT_ACTIVE_CSS_CLASS, DEFAULT_DEBOUNCING, DEFAULT_HIGHLIGHT_CSS_CLASS } from './utils/constants';
 import {
-  DEFAULT_ACTIVE_CSS_CLASS,
-  DEFAULT_DEBOUNCING,
-  DEFAULT_HIGHLIGHT_CSS_CLASS,
-  SETTINGS,
-  TAG_FORMATS,
-} from './utils/constants';
-import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from './utils/selectors';
+  getAttribute,
+  getInstanceIndex,
+  getSettingAttributeName,
+  hasAttributeValue,
+  queryElement,
+} from './utils/selectors';
 
 /**
  * Creates a new {@link CMSFilters} instance.
@@ -80,7 +80,10 @@ export const createCMSFiltersInstance = (listInstance: CMSList): CMSFilters | un
   });
 
   // Add animation
-  addListAnimation(listInstance, { durationKey: SETTINGS.duration.key, easingKey: SETTINGS.easing.key });
+  addListAnimation(listInstance, {
+    durationKey: getSettingAttributeName('duration'),
+    easingKey: getSettingAttributeName('easing'),
+  });
 
   return filtersInstance;
 };
@@ -102,8 +105,7 @@ export const createCMSTagsInstance = async (
   const tagTemplate = queryElement('tag-template', { instanceIndex });
   if (!tagTemplate) return;
 
-  const rawTagsFormat = getAttribute(listOrWrapper, 'tagformat');
-  const globalTagsFormat = isKeyOf(rawTagsFormat, TAG_FORMATS) ? rawTagsFormat : undefined;
+  const globalTagsFormat = getAttribute(listOrWrapper, 'tagformat', true);
 
   const tagsInstance = new CMSTags(tagTemplate, filtersInstance, listInstance, globalTagsFormat);
 

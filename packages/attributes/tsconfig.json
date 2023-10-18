@@ -1,11 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["./**/*.ts", "../../global/base/index.d.ts"],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "$global/*": ["../../global/*"],
-      "$packages/*": ["../../packages/*"]
-    }
+    "types": ["@types/node"]
   }
 }

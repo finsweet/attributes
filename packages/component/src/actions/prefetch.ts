@@ -18,8 +18,8 @@ const componentsPages: Record<string, Document | null> = {};
  */
 export const prefetchComponentsPages = async (
   componentTargetsData: ComponentTargetData[],
-  cachekey?: string | null,
-  cacheversion?: string | null
+  cacheKey?: string,
+  cacheVersion?: string
 ) => {
   const uniqueSourcesToFetch = [
     ...new Set(componentTargetsData.map(({ proxiedSource, source }) => proxiedSource?.href || source.href)),
@@ -28,9 +28,9 @@ export const prefetchComponentsPages = async (
   const pagesData = await Promise.all(
     uniqueSourcesToFetch.map(async (href) => {
       const page = await fetchPageDocument(href, {
+        cacheKey,
         cacheExternal: true,
-        cacheKey: cachekey || undefined,
-        cacheVersion: parseNumericAttribute(cacheversion, 1),
+        cacheVersion: parseNumericAttribute(cacheVersion, 1),
       });
 
       return [href, page] as const;

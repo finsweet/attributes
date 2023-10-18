@@ -5,17 +5,15 @@ import { listenListEvents } from './actions/events';
 import { initButtons } from './modes/buttons';
 import { initDropdown } from './modes/dropdown';
 import { initHTMLSelect } from './modes/select';
-import { DEFAULT_ASC_CLASS, DEFAULT_DESC_CLASS, SETTINGS } from './utils/constants';
-import { getAttribute, getInstanceIndex, queryAllElements, queryElement } from './utils/selectors';
+import { DEFAULT_ASC_CLASS, DEFAULT_DESC_CLASS } from './utils/constants';
+import {
+  getAttribute,
+  getInstanceIndex,
+  getSettingAttributeName,
+  queryAllElements,
+  queryElement,
+} from './utils/selectors';
 import type { CSSClasses } from './utils/types';
-
-// Constants destructuring
-const {
-  field: { key: fieldKey },
-  type: { key: typeKey },
-  duration: { key: durationKey },
-  easing: { key: easingKey },
-} = SETTINGS;
 
 /**
  * Inits sorting on a `CMSList`.
@@ -23,7 +21,7 @@ const {
  *
  * @returns A cleanup callback.
  */
-export const initListSorting = async (listInstance: CMSList) => {
+export const initListSorting = (listInstance: CMSList) => {
   const { listOrWrapper } = listInstance;
 
   const instanceIndex = getInstanceIndex(listOrWrapper);
@@ -34,10 +32,14 @@ export const initListSorting = async (listInstance: CMSList) => {
   const { items } = listInstance;
 
   // Store item props
-  for (const item of items) item.collectProps({ fieldKey, typeKey });
+  for (const item of items)
+    item.collectProps({ fieldKey: getSettingAttributeName('field'), typeKey: getSettingAttributeName('type') });
 
   // Animation
-  addListAnimation(listInstance, { durationKey, easingKey });
+  addListAnimation(listInstance, {
+    durationKey: getSettingAttributeName('duration'),
+    easingKey: getSettingAttributeName('easing'),
+  });
 
   // Scroll Anchor Element
   if (!listInstance.scrollAnchor) {
@@ -57,7 +59,7 @@ export const initListSorting = async (listInstance: CMSList) => {
   const isDropdown = firstTrigger.closest<Dropdown>(`.${DROPDOWN_CSS_CLASSES.dropdown}`);
 
   const sortActions = isSelect
-    ? await initHTMLSelect(firstTrigger, listInstance)
+    ? initHTMLSelect(firstTrigger, listInstance)
     : isDropdown
     ? initDropdown(isDropdown, listInstance)
     : initButtons(triggers, listInstance, cssClasses);

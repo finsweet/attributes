@@ -28,8 +28,8 @@ export type FsAttributes = {
    */
   import: (
     solution: FsAttributeKey,
-    settings?: {
-      [k: string]: string | null | undefined;
+    globalSettings?: {
+      [k: string]: string;
     }
   ) => Promise<any> | undefined;
 
@@ -88,7 +88,7 @@ type AttributeInitResult =
   | undefined;
 
 export type FsAttributeInit<GlobalSettings extends AttributeSettings = AttributeSettings> = (settings?: {
-  [Key in keyof GlobalSettings]?: string | null | undefined;
+  [Key in keyof GlobalSettings]?: string;
 }) => AttributeInitResult | Promise<AttributeInitResult>;
 
 /**

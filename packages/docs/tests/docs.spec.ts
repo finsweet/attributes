@@ -1,5 +1,4 @@
-import type { Page } from '@playwright/test';
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 /**
  * These are some demo tests to showcase Playwright.
@@ -12,7 +11,7 @@ import { expect, test } from '@playwright/test';
 // });
 
 test.describe('Example', () => {
-  test('Example', async ({ page }) => {
+  test('Example', async ({}) => {
     //
   });
 });

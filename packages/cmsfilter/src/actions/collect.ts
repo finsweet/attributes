@@ -2,17 +2,14 @@ import {
   extractCommaSeparatedValues,
   FORM_CSS_CLASSES,
   type FormBlockElement,
-  getObjectEntries,
   isFormField,
   isHTMLInputElement,
-  isKeyOf,
   normalizePropKey,
   parseNumericAttribute,
   sameValues,
 } from '@finsweet/attributes-utils';
 
 import { ensureUniqueFormFieldId } from '../utils/a11y';
-import { MATCHES, MODES, TAG_FORMATS } from '../utils/constants';
 import {
   getAttribute,
   getSettingSelector,
@@ -199,32 +196,23 @@ const collectGlobalFilterSettings = (
   highlightAll: boolean,
   globalHighlightCSSClass: string
 ) => {
-  const rawMatch = getAttribute(element, 'match');
-  const rawTagFormat = getAttribute(element, 'tagformat');
+  const match = getAttribute(element, 'match', true);
+  const tagFormat = getAttribute(element, 'tagformat', true);
+  const tagCategory = getAttribute(element, 'tagcategory');
+  const highlight = highlightAll || hasAttributeValue(element, 'highlight', 'true');
+
   const rawActiveCSSClass = getAttribute(element, 'active');
   const rawDebouncing = getAttribute(element, 'debounce');
   const rawHighlightCSSClass = getAttribute(element, 'highlightclass');
 
-  const match = isKeyOf(rawMatch, MATCHES) ? rawMatch : undefined;
-  const tagFormat = isKeyOf(rawTagFormat, TAG_FORMATS) ? rawTagFormat : undefined;
-  const tagCategory = getAttribute(element, 'tagcategory');
   const activeCSSClass = rawActiveCSSClass || globalActiveCSSClass;
   const debouncing = parseNumericAttribute(rawDebouncing, globalDebouncing);
-  const highlight = highlightAll || hasAttributeValue(element, 'highlight', 'true');
   const highlightCSSClass = rawHighlightCSSClass || globalHighlightCSSClass;
 
-  const rawMode = getAttribute(element, 'range');
+  const rangeMode = getAttribute(element, 'range', true);
 
-  let filterMode: FilterData['mode'] | undefined;
-  let elementMode: FilterElement['mode'] | undefined;
-
-  for (const [key, value] of getObjectEntries(MODES)) {
-    if (isKeyOf(rawMode, value)) {
-      filterMode = key;
-      elementMode = rawMode;
-      break;
-    }
-  }
+  const filterMode = rangeMode ? 'range' : undefined;
+  const elementMode = rangeMode;
 
   // Collect global data
   const globalFilterData: Omit<FilterData, 'elements'> = {

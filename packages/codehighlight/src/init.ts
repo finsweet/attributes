@@ -13,10 +13,10 @@ export const init: FsAttributeInit = async () => {
 
   const referenceElements = queryAllElements('code');
 
-  const theme = referenceElements.reduce<string | null>((theme, referenceElement) => {
+  const theme = referenceElements.reduce<string | undefined>((theme, referenceElement) => {
     theme ||= getAttribute(referenceElement, 'theme');
     return theme;
-  }, null);
+  }, undefined);
 
   const destroyHighlightJSThemeImport = await importHighlightJSTheme(theme);
 

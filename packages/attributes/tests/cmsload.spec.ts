@@ -62,7 +62,6 @@ test.describe('cmsload', () => {
     // Infinite mode
     const collectionWrapper3 = page.locator('[fs-cmsload-element="list-3"]');
     const collectionItems3 = collectionWrapper3.locator('.w-dyn-item');
-    const paginationNext3 = collectionWrapper3.locator('.w-pagination-next');
 
     expect(await collectionItems3.count()).toBe(6);
 

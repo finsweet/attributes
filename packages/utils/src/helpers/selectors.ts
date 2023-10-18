@@ -134,14 +134,38 @@ export const generateSelectors = <
    * @returns The value of an attribute.
    * @param element The element to get the attribute value from, or its closest ancestor that has the attribute.
    * @param settingKey The attribute key.
+   * @param filterInvalid Whether to filter out invalid values. Defaults to `false`.
    */
-  const getAttribute = <SettingKey extends keyof SettingsDefinition>(element: Element, settingKey: SettingKey) => {
+  const getAttribute = <
+    SettingKey extends keyof SettingsDefinition,
+    FilterInvalid extends boolean = false,
+    SettingValues = SettingsDefinition[SettingKey]['values'],
+    SettingValue = SettingValues extends Record<string, string>
+      ? FilterInvalid extends true
+        ? keyof SettingValues
+        : string
+      : string
+  >(
+    element: Element,
+    settingKey: SettingKey,
+    filterInvalid?: FilterInvalid
+  ) => {
     const attributeName = getSettingAttributeName(settingKey);
     const selector = getSettingSelector(settingKey);
 
     const settingElement = element.closest(selector);
 
-    return settingElement?.getAttribute(attributeName) || null;
+    const rawValue = settingElement?.getAttribute(attributeName) || undefined;
+    if (!rawValue) return;
+
+    if (filterInvalid) {
+      const { values = {} } = settings[settingKey];
+
+      if (!Object.values(values).includes(rawValue)) return;
+    }
+
+    const value = rawValue as SettingValue;
+    return value;
   };
 
   /**
@@ -165,6 +189,7 @@ export const generateSelectors = <
   return {
     getElementSelector,
     getSettingSelector,
+    getSettingAttributeName,
     queryElement,
     queryAllElements,
     getInstanceIndex,

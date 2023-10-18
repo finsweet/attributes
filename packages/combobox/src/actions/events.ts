@@ -50,7 +50,7 @@ export const listenEvents = (settings: Settings) => {
     addListener(selectElement, 'change', () => handleSelectChangeEvents(settings)),
 
     addListener(inputElement, 'keyup', (e) => handleInputKeyUpEvents(e, settings)),
-    addListener(inputElement, 'input', (e) => {
+    addListener(inputElement, 'input', () => {
       const dropdownIsOpen = dropdownToggle.getAttribute(ARIA_EXPANDED_KEY) === 'true';
 
       if (!dropdownIsOpen) {

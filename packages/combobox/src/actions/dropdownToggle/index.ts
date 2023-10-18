@@ -8,7 +8,7 @@ import type { Settings } from '../../utils/types';
  * @param e The Event object.
  * @param settings The instance {@link Settings}.
  */
-export const handleDropdownToggleArrowKeyEvents = (e: KeyboardEvent, { optionsStore, optionTemplate }: Settings) => {
+export const handleDropdownToggleArrowKeyEvents = (e: KeyboardEvent, { optionsStore }: Settings) => {
   const { key } = e;
 
   e.stopPropagation();

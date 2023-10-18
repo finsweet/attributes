@@ -1,8 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({}) => {
   // await page.goto('http://fs-attributes.webflow.io/autovideo');
 });
 

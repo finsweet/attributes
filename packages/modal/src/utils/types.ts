@@ -1,8 +1,8 @@
 import type { AnimationFunctions, Easings } from '@finsweet/attributes-utils';
 
-import type { DISPLAY_PROPERTIES } from './constants';
+import type { SETTINGS } from './constants';
 
-export type AnimationDisplayProperty = (typeof DISPLAY_PROPERTIES)[number];
+export type AnimationDisplayProperty = (typeof SETTINGS.display.values)[keyof typeof SETTINGS.display.values];
 
 export interface AnimationSettings {
   actions: AnimationFunctions;

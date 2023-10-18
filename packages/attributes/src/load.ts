@@ -70,6 +70,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-component');
     }
 
+    case 'consent': {
+      return import('@finsweet/attributes-consent');
+    }
+
     case 'copyclip': {
       return import('@finsweet/attributes-copyclip');
     }
@@ -152,6 +156,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'selectcustom': {
       return import('@finsweet/attributes-selectcustom');
+    }
+
+    case 'slider': {
+      return import('@finsweet/attributes-slider');
     }
 
     case 'sliderdots': {

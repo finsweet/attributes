@@ -20,7 +20,7 @@ export async function initStaticInstance(listInstance: CMSList) {
     const rawRepeat = getAttribute(itemElement, 'repeat');
     const repeat = parseNumericAttribute(rawRepeat);
 
-    const staticIndex = order === null ? 0 : parseInt(order);
+    const staticIndex = parseNumericAttribute(order, 0);
     const targetIndex = isNaN(staticIndex) || staticIndex <= 0 ? 0 : staticIndex - 1;
 
     acc.push({

@@ -28,8 +28,8 @@ export const initTOCInstance = (contentsElement: HTMLElement) => {
   const tocItems = populateLinks(headingsData, linksData, tocWrapper);
 
   // Scroll offset
-  const scrollMarginTop = getAttribute(contentsElement, 'offsettop') || undefined;
-  const scrollMarginBottom = getAttribute(contentsElement, 'offsetbottom') || undefined;
+  const scrollMarginTop = getAttribute(contentsElement, 'offsettop');
+  const scrollMarginBottom = getAttribute(contentsElement, 'offsetbottom');
 
   setScrollOffsets(tocItems, { scrollMarginTop, scrollMarginBottom });
 

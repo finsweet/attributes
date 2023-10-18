@@ -1,11 +1,11 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({}) => {
   // await page.goto('http://fs-attributes.webflow.io/autovideo');
 });
 
 test.describe('autovideo', () => {
-  test('Videos are played/paused based on the viewport', async ({ page }) => {
+  test('Videos are played/paused based on the viewport', async ({}) => {
     // const video = page.locator('video').first();
     // await video.scrollIntoViewIfNeeded();
     // const pausedState = await video.evaluate<boolean, HTMLVideoElement>((e) => e.paused);

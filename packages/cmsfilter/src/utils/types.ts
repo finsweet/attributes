@@ -115,7 +115,7 @@ export interface FilterData {
   /**
    * Defines an override for the identifier display in the `category` tag format.
    */
-  tagCategory: string | null;
+  tagCategory?: string;
 }
 
 export type FiltersData = FilterData[];

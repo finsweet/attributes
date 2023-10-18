@@ -14,7 +14,7 @@ export const syncValue = (sourceElement: FormField) => {
   for (const displayTarget of displayTargets) {
     const sourceValue = getFormFieldValue(sourceElement);
 
-    const placeholderValue = getAttribute(displayTarget, 'placeholder');
+    const placeholderValue = getAttribute(displayTarget, 'placeholder') || null;
 
     const displayValue = sourceValue ? sourceValue : placeholderValue;
 

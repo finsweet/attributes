@@ -36,6 +36,8 @@ export const COMBO_BOX_ATTRIBUTE = 'combobox';
 
 export const COMPONENT_ATTRIBUTE = 'component';
 
+export const CONSENT_ATTRIBUTE = 'consent';
+
 export const COPY_CLIP_ATTRIBUTE = 'copyclip';
 
 export const COUNTDOWN_ATTRIBUTE = 'countdown';
@@ -77,6 +79,8 @@ export const RICH_TEXT_ATTRIBUTE = 'richtext';
 export const SCROLL_DISABLE_ATTRIBUTE = 'scrolldisable';
 
 export const SELECT_CUSTOM_ATTRIBUTE = 'selectcustom';
+
+export const SLIDER_ATTRIBUTE = 'slider';
 
 export const SLIDER_DOTS_ATTRIBUTE = 'sliderdots';
 

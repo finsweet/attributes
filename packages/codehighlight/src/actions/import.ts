@@ -10,7 +10,7 @@ let hljsThemeImport: Promise<StyleTag> | undefined;
  * @param theme The theme name.
  * @returns A callback to remove the currently imported theme.
  */
-export const importHighlightJSTheme = async (theme: string | null): Promise<(() => void) | undefined> => {
+export const importHighlightJSTheme = async (theme?: string): Promise<(() => void) | undefined> => {
   if (!theme) return;
 
   if (hljsThemeImport) {
