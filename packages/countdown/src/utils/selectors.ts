@@ -2,7 +2,7 @@ import { COUNTDOWN_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-uti
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getAttribute, queryElement, queryAllElements, getInstanceIndex } = generateSelectors(
+export const { getAttribute, queryElement, queryAllElements, getInstanceIndex, getSettingSelector } = generateSelectors(
   COUNTDOWN_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

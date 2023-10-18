@@ -1,4 +1,4 @@
-import { getInstanceIndex, getTimezoneOffset, setInnerHTML } from '../utils';
+import { getInstanceIndex, getTimezoneOffset, queryAllElements, setInnerHTML } from '../utils';
 import { getAttribute, queryElement } from '../utils';
 
 /**
@@ -12,12 +12,13 @@ export const initCountDown = (countdownElement: HTMLElement) => {
   const timeZone = getAttribute(countdownElement, 'timezone');
   const instanceIndex = getInstanceIndex(countdownElement);
 
-  const monthsElement = queryElement('months', { scope: countdownElement });
-  const daysElement = queryElement('days', { scope: countdownElement });
-  const hoursElement = queryElement('hours', { scope: countdownElement });
-  const minutesElement = queryElement('minutes', { scope: countdownElement });
-  const secondsElement = queryElement('seconds', { scope: countdownElement });
-  const showElement = queryElement('complete-show', { instanceIndex });
+  const monthsElement = queryElement('months', { scope: countdownElement, instanceIndex: instanceIndex });
+  const daysElement = queryElement('days', { scope: countdownElement, instanceIndex: instanceIndex });
+  const hoursElement = queryElement('hours', { scope: countdownElement, instanceIndex: instanceIndex });
+  const minutesElement = queryElement('minutes', { scope: countdownElement, instanceIndex: instanceIndex });
+  const secondsElement = queryElement('seconds', { scope: countdownElement, instanceIndex: instanceIndex });
+  const showElements = queryAllElements('complete-show', { instanceIndex });
+  const hideElements = queryAllElements('complete-hide', { instanceIndex });
 
   const futureDate = new Date(dateString);
   const futureOffset = getTimezoneOffset(timeZone);
@@ -63,10 +64,16 @@ export const initCountDown = (countdownElement: HTMLElement) => {
   };
 
   const countdownComplete = () => {
-    if (showElement) {
-      showElement.style.display = 'block';
+    if (showElements?.length) {
+      showElements.forEach((element) => {
+        element.style.display = 'block';
+      });
     }
-    countdownElement.style.display = 'none';
+    if (hideElements?.length) {
+      hideElements.forEach((element) => {
+        element.style.display = 'none';
+      });
+    }
     stopCountdown();
   };
 
