@@ -1,6 +1,6 @@
+import { SETTINGS } from '../utils/constants';
 import type { FsCleanUrlSettings } from '../utils/types';
 
-const ENABLE = 'enable';
 /**
  * Cleans the current window URL by optionally removing the query string and hash based on provided settings.
  *
@@ -26,10 +26,10 @@ export default function cleanUrl(globalSettings: FsCleanUrlSettings): { original
   }
 
   // Conditionally remove query and hash based on settings
-  if (query === ENABLE) {
+  if (query === SETTINGS.query.values.enable) {
     url.search = '';
   }
-  if (hash === ENABLE) {
+  if (hash === SETTINGS.hash.values.enable) {
     url.hash = '';
   }
 
