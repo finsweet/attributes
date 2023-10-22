@@ -8,22 +8,22 @@ import { SETTINGS } from './utils/constants';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FsAttributeInit = async (settings) => {
   console.log('shopify attribute initializing...');
 
-  if (!SETTINGS.token) {
+  if (!settings?.token) {
     throw new Error('token must be provided');
   }
-  if (!SETTINGS.domain) {
+  if (!settings?.domain) {
     throw new Error('domain must be provided');
   }
 
   const client = await initializeClient({
-    token: SETTINGS.token.key,
-    domain: SETTINGS.domain.key,
-    productPage: SETTINGS.productPage.key || SETTINGS.productPage.values.default,
-    collectionPage: SETTINGS.collectionPage.key || SETTINGS.collectionPage.values.default,
-    redirectURL: SETTINGS.redirectURL.key || SETTINGS.redirectURL.values.default,
+    token: settings.token,
+    domain: settings.domain,
+    productPage: settings.productPage || SETTINGS.productPage.values.default,
+    collectionPage: settings.collectionPage || SETTINGS.collectionPage.values.default,
+    redirectURL: settings.redirectURL || SETTINGS.redirectURL.values.default,
   });
 
   await initPages(client);
