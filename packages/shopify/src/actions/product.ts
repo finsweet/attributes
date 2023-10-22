@@ -1,6 +1,7 @@
 import { cloneNode } from '@finsweet/attributes-utils';
 
 import {
+  ATTRIBUTES,
   IMAGE,
   PRODUCT_TAG_LIST,
   PRODUCT_TAG_TEMPLATE,
@@ -9,7 +10,6 @@ import {
   productAttributes,
   PRODUCTS_COLLECTION,
   PRODUCTS_VARIANT_SEPARATOR,
-  queryAllElements,
   queryElement,
 } from '../utils/constants';
 import type { ProductAttribute, ProductValue, ShopifyBindingOptions, ShopifyProduct, Variant } from '../utils/types';
@@ -34,7 +34,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
   },
   [PRODUCT_TAG_LIST]: (element: HTMLElement, value: ProductValue) => {
     const tags = value as string[];
-    const template = queryElement(PRODUCT_TAG_TEMPLATE, {
+    const template = queryElement<HTMLElement>(PRODUCT_TAG_TEMPLATE, {
       scope: element,
     });
 
@@ -42,11 +42,10 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
       const templateParent = template.parentElement;
       tags.forEach((tag) => {
         const clone = cloneNode(template, true);
-        const tagText = queryElement(PRODUCT_TAG_TEXT, {
+        const tagText = queryElement<HTMLElement>(PRODUCT_TAG_TEXT, {
           scope: clone,
         });
-
-        clone.removeAttribute('fs-shopify-element');
+        clone.removeAttribute(ATTRIBUTES.element.key);
         if (tagText) {
           tagText.innerText = tag;
         }
@@ -108,11 +107,12 @@ export function bindProductVariant(
   ];
 
   productAttributes.forEach((attribute: string, index: number) => {
-    const matchedElements = queryAllElements<HTMLElement>(attribute as ProductAttribute, {
+    const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
       scope: parentElement,
+      all: true,
     });
 
-    matchedElements.forEach((element: HTMLElement) => {
+    matchedElements.forEach((element) => {
       if (propertyActions[attribute]) {
         propertyActions[attribute](element, productValues[index] as string);
         return;
@@ -143,7 +143,7 @@ export const bindProductDataGraphQL = (
     variantMaps[variant.title] = variant;
   });
 
-  const firstTemplate = queryElement('optiontemplate', {
+  const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
     scope: parentElement,
   });
   if (!firstTemplate || !firstTemplate.parentElement) {
@@ -159,7 +159,7 @@ export const bindProductDataGraphQL = (
   const firstOptionInputs: HTMLInputElement[] = [];
   product.options.forEach((option, index) => {
     const clone = cloneNode(template, true);
-    const optionName = queryElement('optionname', {
+    const optionName = queryElement<HTMLElement>('optionname', {
       scope: clone,
     });
     if (optionName) {
@@ -167,7 +167,7 @@ export const bindProductDataGraphQL = (
     }
 
     // handle variant list
-    const variantList = queryElement('variantlist', {
+    const variantList = queryElement<HTMLElement>('variantlist', {
       scope: clone,
     });
     const selectElement = clone.querySelector('select');
@@ -201,7 +201,7 @@ export const bindProductDataGraphQL = (
       });
 
       // select the first one
-      const firstInput = variantList.querySelector<HTMLInputElement>('input');
+      const firstInput = variantList.querySelector('input') as HTMLInputElement;
       if (firstInput) {
         firstOptionInputs.push(firstInput);
       }

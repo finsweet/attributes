@@ -1,11 +1,11 @@
 import type { ShopifyClient } from '../shopifyClient';
 import {
+  ATTRIBUTES,
   COLLECTION_ID_PREFIX,
   DEFAULT_PRODUCTS_LIMIT,
   getAttribute,
   LinkFormat,
-  queryAllElements,
-  SETTINGS,
+  queryElement,
   sortOptions,
 } from '../utils/constants';
 import type {
@@ -19,11 +19,12 @@ import { bindProductVariant } from './product';
 
 export const productsPageInit = async (client: ShopifyClient) => {
   try {
-    const collectionContainers = queryAllElements<HTMLDivElement>('productsList');
-
+    const collectionContainers = queryElement<HTMLDivElement>('productsList', {
+      all: true,
+    });
     await Promise.all(collectionContainers.map((container) => bindCollectionProductsData(client, container)));
   } catch (e) {
-    console.error('productsPageInit', e);
+    console.log('productsPageInit', e);
   }
 };
 
@@ -33,8 +34,8 @@ export const bindCollectionProductsData = async (
   collectionHandle?: string,
   collectionContainer?: HTMLElement
 ): Promise<ShopifyCollection | null> => {
-  // const selector = getSettingSelector('collectionId');
-
+  // TODO: is this selector below being used?
+  // const selector = getSelector('collectionId');
   const { productPage, collectionPage } = client.getParams();
   // get first child as template
   const firstChild = productListContainer.firstElementChild as HTMLDivElement;
@@ -91,7 +92,7 @@ export const bindProducts = (
   container: HTMLDivElement,
   productOptions: ShopifyBindingOptions
 ) => {
-  const linkFormat = container.getAttribute(SETTINGS.linkFormat.key) as string;
+  const linkFormat = container.getAttribute(ATTRIBUTES.linkFormat.key) as string;
   const options = productOptions;
   if (linkFormat) {
     options.linkFormat = linkFormat as LinkFormat;

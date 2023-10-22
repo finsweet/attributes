@@ -87,6 +87,7 @@ const initAttribute = async (
     };
   }
 ) => {
+  console.log('initAttribute', { attribute, script, globalSettings });
   // Ensure that the attribute is only initted once
   if (window.fsAttributes.process.has(attribute)) return;
   window.fsAttributes.process.add(attribute);
@@ -104,6 +105,11 @@ const initAttribute = async (
   // Load Attribute package
   try {
     const { init, version, SETTINGS } = await loadAttribute(attribute);
+    console.log('attribute', {
+      init,
+      version,
+      SETTINGS,
+    });
 
     // Parse global settings from the <script> tag,
     // only if they were not explicitly provided via the API import

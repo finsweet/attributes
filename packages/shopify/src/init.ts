@@ -9,7 +9,7 @@ import { SETTINGS } from './utils/constants';
  * Inits the attribute.
  */
 export const init: FsAttributeInit = async (settings) => {
-  console.log('shopify attribute initializing...');
+  console.log('shopify attribute initializing...', settings);
 
   if (!settings?.token) {
     throw new Error('token must be provided');

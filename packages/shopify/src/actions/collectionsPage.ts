@@ -1,12 +1,14 @@
 import type { ShopifyClient } from '../shopifyClient';
-import { DEFAULT_COLLECTIONS_LIMIT, getAttribute, queryAllElements, sortOptions } from '../utils/constants';
+import { DEFAULT_COLLECTIONS_LIMIT, getAttribute, queryElement, sortOptions } from '../utils/constants';
 import type { ShopifyCollection } from '../utils/types';
 import { bindCollectionData } from './collectionPage';
 import { handleCollectionLink } from './util';
 
 export const collectionsPageInit = async (client: ShopifyClient) => {
   const { collectionPage, productPage } = client.getParams();
-  const collectionContainers = queryAllElements('collectionsList');
+  const collectionContainers = queryElement<HTMLDivElement>('collectionsList', {
+    all: true,
+  });
 
   for (const container of collectionContainers) {
     const collectionsLimit = getAttribute(container, 'collectionLimit') || DEFAULT_COLLECTIONS_LIMIT;
@@ -17,7 +19,7 @@ export const collectionsPageInit = async (client: ShopifyClient) => {
     try {
       collections = await client.fetchAllCollections(Number(collectionsLimit), collectionSort);
     } catch (e) {
-      console.error('productsPageInit', e);
+      console.log('productsPageInit', e);
       return;
     }
 

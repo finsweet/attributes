@@ -1,14 +1,14 @@
 import type { ShopifyClient } from '../shopifyClient';
 import {
+  ATTRIBUTES,
   COLLECTION_ID_PREFIX,
   COLLECTION_IMAGE,
   collectionAttributes,
+  getSelector,
   QUERY_PARAMS,
-  queryAllElements,
   queryElement,
-  SETTINGS,
 } from '../utils/constants';
-import type { CollectionAttribute, CollectionValue, ShopifyCollection } from '../utils/types';
+import type { CollectionAttribute, CollectionValue, ProductAttribute, ShopifyCollection } from '../utils/types';
 import { bindCollectionProductsData } from './productsPage';
 
 /**
@@ -36,24 +36,16 @@ export const collectionPageInit = async (client: ShopifyClient) => {
   }
 
   try {
-    document.body.setAttribute(SETTINGS.collectionId.key, idParamValue);
-
-    // TODO: maybe its a collection? or is it looking for collectionId? collectionId is a setting eg: fs-shopify-collectionid="SOME_VALUE" but we can have fs
-    // TODO: ref: https://www.notion.so/Documentation-98480be08cc54ba89ee39d3fabbd4ea8?d=0126dd0137854d2b99e820d2dbee3485&pvs=4#f48cc0a9184d4e7c989ca01f9910a7f4
-    const collectionContainer = queryElement('collection');
-
-    if (!collectionContainer) return;
-
-    const productListElement = queryElement<HTMLDivElement>('products', {
+    document.body.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
+    const selector = getSelector('collectionId');
+    const collectionContainer = document.querySelector<HTMLDivElement>(`${selector}`) as HTMLDivElement;
+    const productListElement = queryElement<HTMLElement>('products' as ProductAttribute, {
       scope: collectionContainer,
-    });
-
-    if (!productListElement) return;
-
-    productListElement.setAttribute(SETTINGS.collectionId.key, idParamValue);
+    }) as HTMLDivElement;
+    productListElement.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
     await bindCollectionProductsData(client, productListElement, handleParamValue, document.body);
   } catch (e) {
-    console.error('collectionPageInit', e);
+    console.log('collectionPageInit', e);
   }
 };
 
@@ -74,10 +66,10 @@ export const bindCollectionData = (
   const collectionValues = [id.replace(COLLECTION_ID_PREFIX, ''), title, description, handle, url, updatedAt];
 
   collectionAttributes.forEach((attribute: string, index: number) => {
-    const matchedElements = queryAllElements(attribute as CollectionAttribute, {
+    const matchedElements = queryElement<HTMLElement>(attribute as CollectionAttribute, {
       scope: parentElement,
+      all: true,
     });
-
     matchedElements.forEach((element) => {
       if (scopeToExclude && scopeToExclude.contains(element)) return;
       if (propertyActions[attribute]) {

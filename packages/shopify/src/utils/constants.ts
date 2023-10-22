@@ -1,11 +1,10 @@
-import {
-  type AttributeElements,
-  type AttributeSettings,
-  generateSelectors,
-  SHOPIFY_ATTRIBUTE,
-} from '@finsweet/attributes-utils';
+import type { AttributeElements, AttributeSettings } from '@finsweet/attributes-utils';
+
+import { generateSelectors } from './selectors';
 
 export const ATTRIBUTE = 'shopify';
+
+const ATTRIBUTES_PREFIX = `fs-${ATTRIBUTE}`;
 
 /**
  * Products
@@ -84,6 +83,104 @@ export const productAttributes = [
   PRODUCTS_COLLECTION,
 ];
 
+export const collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
+
+export const QUERY_PARAMS = {
+  id: 'id',
+  handle: 'handle',
+};
+
+export const ATTRIBUTES = {
+  element: {
+    key: `${ATTRIBUTES_PREFIX}-element`,
+    values: {
+      id: ID,
+      title: TITLE,
+      description: DESCRIPTION,
+      handle: HANDLE,
+      created: PRODUCT_CREATED,
+      updated: UPDATED,
+      published: PRODUCT_PUBLISHED,
+      image: IMAGE,
+      thumbnail: PRODUCT_THUMBNAIL,
+      sku: PRODUCT_SKU,
+      price: PRODUCT_PRICE,
+      compareprice: PRODUCT_COMPARE_PRICE,
+      discountpercent: PRODUCT_DISCOUNTED_PERCENT,
+      type: PRODUCT_TYPE,
+      vendor: PRODUCT_VENDOR,
+      weight: PRODUCT_WEIGHT,
+      weightunit: PRODUCT_WEIGHT_UNIT,
+      [PRODUCT_TAG_LIST]: PRODUCT_TAG_LIST,
+      [PRODUCT_TAG_TEMPLATE]: PRODUCT_TAG_TEMPLATE,
+      [PRODUCT_TAG_TEXT]: PRODUCT_TAG_TEXT,
+      loader: LOADER,
+      products: PRODUCTS,
+      productsList: PRODUCTS_LIST,
+      collectionsList: COLLECTIONS_LIST,
+      collection: PRODUCTS_COLLECTION,
+      optiontemplate: PRODUCTS_OPTION_TEMPLATE,
+      optionname: PRODUCTS_OPTION_NAME,
+      variantlist: PRODUCTS_VARIANT_LIST,
+    },
+  },
+
+  /**
+   * Defines the storefrontAccessToken provided by Shopify
+   */
+  token: { key: `${ATTRIBUTES_PREFIX}-token` },
+
+  /**
+   * Defines the domain where the Shopify store is hosted
+   */
+  domain: { key: `${ATTRIBUTES_PREFIX}-domain` },
+
+  /**
+   * Defines the Webflow product page slug
+   */
+  productPage: { key: `${ATTRIBUTES_PREFIX}-productpage`, defaultValue: '/tests/product-template' },
+
+  /**
+   * Defines the Webflow collection page slug
+   */
+  collectionPage: { key: `${ATTRIBUTES_PREFIX}-collectionpage`, defaultValue: '/tests/collection-template' },
+
+  /**
+   * Defines the slug or the url to redirect the user to when something goes wrong on product page
+   */
+  redirectURL: { key: `${ATTRIBUTES_PREFIX}-redirecturl`, defaultValue: '/404' },
+
+  /**
+   * Defines the collectionid attribute of List wrapper or Collections list.
+   */
+  collectionId: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_ID}` },
+
+  /**
+   * Defines the limit of products that should be returned by the collection query
+   */
+  productLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_LIMIT}` },
+
+  /**
+   * Defines the limit of collections that should be returned by the collections query
+   */
+  collectionLimit: { key: `${ATTRIBUTES_PREFIX}-${COLLECTIONS_LIMIT}` },
+
+  /**
+   * Defines the sort order of products/collections that should be returned by the product/collection query
+   */
+  sort: { key: `${ATTRIBUTES_PREFIX}-${COLLECTION_PRODUCT_SORT}` },
+
+  /**
+   * Defines the link format of the product page
+   **/
+  linkFormat: { key: `${ATTRIBUTES_PREFIX}-${LINK_FORMAT}` },
+
+  /**
+   * Define the type of link to be user (Product page or Collection page)
+   * **/
+  link: { key: `${ATTRIBUTES_PREFIX}-${LINK}`, values: { product: 'product', collection: 'collection' } },
+} as const;
+
 export const sortOptions: { [k: string]: string } = {
   position: 'position',
   'most-recent': 'most-recent',
@@ -95,90 +192,10 @@ export enum LinkFormat {
   HANDLE = 'handle',
 }
 
-export const collectionAttributes = [ID, TITLE, DESCRIPTION, HANDLE, IMAGE, UPDATED];
+//TODO: remove this and use @finsweet/attributes-utils generateSelectors instead with settings, elements and attribute as params
+export const [getSelector, queryElement, getAttribute] = generateSelectors(ATTRIBUTES);
 
-export const QUERY_PARAMS = {
-  id: 'id',
-  handle: 'handle',
-};
-
-export const ELEMENTS = [
-  'id',
-  'title',
-  'description',
-  'description-html',
-  'handle',
-  'created',
-  'updated',
-  'published',
-  'image',
-  'sku',
-  'price',
-  'compareprice',
-  'discountpercent',
-  'discountvalue',
-  'quantity',
-  'collection',
-  'type',
-  'status',
-  'vendor',
-  'weight',
-  'weightunit',
-  'shipping',
-  'taxable',
-  'tag-list',
-  'tag-item',
-  'tag-text',
-  'product',
-  /**
-   * Target parent wrapper where all options and variants are appended. Div Block.
-   */
-  'option-list',
-  /**
-   * Appended option template. Div Block.
-   */
-  'option-template',
-  /**
-   * Appended option text value. For example, Colors
-   */
-  'option-name',
-  /**
-   * Target to append variant-template elements.
-   */
-  'variant-list',
-  'variant-template',
-  'variant-name',
-  /**
-   * Added to a Product List to indicate it will be a Product List used for a cart component.
-   */
-  'cart',
-  /**
-   * Defines the cart wrapper element.
-   */
-  'cart-wrapper',
-  /**
-   * Amount of items inside the cart. Returns Number.
-   */
-  'cart-quantity',
-  'cart-plus',
-  'cart-minus',
-  'cart-remove',
-  'cart-clear',
-
-  // TODO: these below are not in the notion docs, should we add them to docs or remoev them?
-  'thumbnail',
-  'tag-template',
-  'loader',
-  'products', // this was explicitly removed. Ref: https://www.notion.so/Documentation-98480be08cc54ba89ee39d3fabbd4ea8?d=21a49eb515954609b1838729e3f55ae0&pvs=4#8c71c03f55c145e09c416946d57702ac
-  'products-list',
-  'collections-list',
-  'productsList',
-  'optiontemplate',
-  'optionname',
-  'variantlist',
-  'collectionsList',
-] as const satisfies AttributeElements;
-
+//TODO: update to use these below v2 approach of settings and elements
 export const SETTINGS = {
   /**
    * Defines the storefrontAccessToken provided by Shopify
@@ -303,13 +320,80 @@ export const SETTINGS = {
   collectionLimit: { key: `${COLLECTIONS_LIMIT}` },
 } as const satisfies AttributeSettings;
 
-export const {
-  getSettingSelector,
-  getSettingAttributeName,
-  getInstanceIndex,
-  hasAttributeValue,
-  getElementSelector,
-  queryElement,
-  queryAllElements,
-  getAttribute,
-} = generateSelectors(SHOPIFY_ATTRIBUTE, ELEMENTS, SETTINGS);
+//TODO: update to use these below v2 approach of settings and elements
+export const ELEMENTS = [
+  'id',
+  'title',
+  'description',
+  'description-html',
+  'handle',
+  'created',
+  'updated',
+  'published',
+  'image',
+  'sku',
+  'price',
+  'compareprice',
+  'discountpercent',
+  'discountvalue',
+  'quantity',
+  'collection',
+  'type',
+  'status',
+  'vendor',
+  'weight',
+  'weightunit',
+  'shipping',
+  'taxable',
+  'tag-list',
+  'tag-item',
+  'tag-text',
+  'product',
+  /**
+   * Target parent wrapper where all options and variants are appended. Div Block.
+   */
+  'option-list',
+  /**
+   * Appended option template. Div Block.
+   */
+  'option-template',
+  /**
+   * Appended option text value. For example, Colors
+   */
+  'option-name',
+  /**
+   * Target to append variant-template elements.
+   */
+  'variant-list',
+  'variant-template',
+  'variant-name',
+  /**
+   * Added to a Product List to indicate it will be a Product List used for a cart component.
+   */
+  'cart',
+  /**
+   * Defines the cart wrapper element.
+   */
+  'cart-wrapper',
+  /**
+   * Amount of items inside the cart. Returns Number.
+   */
+  'cart-quantity',
+  'cart-plus',
+  'cart-minus',
+  'cart-remove',
+  'cart-clear',
+
+  // TODO: these below are not in the notion docs, should we add them to docs or remoev them?
+  'thumbnail',
+  'tag-template',
+  'loader',
+  'products', // this was explicitly removed. Ref: https://www.notion.so/Documentation-98480be08cc54ba89ee39d3fabbd4ea8?d=21a49eb515954609b1838729e3f55ae0&pvs=4#8c71c03f55c145e09c416946d57702ac
+  'products-list',
+  'collections-list',
+  'productsList',
+  'optiontemplate',
+  'optionname',
+  'variantlist',
+  'collectionsList',
+] as const satisfies AttributeElements;
