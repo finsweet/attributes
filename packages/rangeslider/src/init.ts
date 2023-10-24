@@ -1,7 +1,7 @@
 import {
   addListener,
   adjustValueToStep,
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   getHiddenParent,
   isNotEmpty,
   isVisible,
@@ -20,7 +20,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const wrapperElements = queryAllElements('wrapper');

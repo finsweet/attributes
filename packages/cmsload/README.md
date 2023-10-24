@@ -4,11 +4,11 @@ Set up load more functionality in Webflow CMS. User click, infinite, pagination,
 
 ## JavaScript API
 
-You can access the `cmsload` instances by pushing a callback into the `window.fsAttributes` object:
+You can access the `cmsload` instances by pushing a callback into the `window.finsweetAttributes` object:
 
 ```typescript
-window.fsAttributes = window.fsAttributes || [];
-window.fsAttributes.push([
+window.finsweetAttributes = window.finsweetAttributes || [];
+window.finsweetAttributes.push([
   'cmsload',
   (listInstances) => {
     console.log('cmsload Successfully loaded!');

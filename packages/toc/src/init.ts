@@ -1,5 +1,5 @@
 import {
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isNotEmpty,
   restartWebflow,
   waitAttributeLoaded,
@@ -13,7 +13,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
   await waitAttributeLoaded('richtext');
 

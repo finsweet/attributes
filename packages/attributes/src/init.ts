@@ -1,4 +1,4 @@
-import { ATTRIBUTES, type FsAttributeKey, type FsAttributesCallback } from '@finsweet/attributes-utils';
+import { ATTRIBUTES, type FinsweetAttributeKey, type FinsweetAttributesCallback } from '@finsweet/attributes-utils';
 
 import { loadAttribute } from './load';
 
@@ -8,22 +8,22 @@ declare const SCRIPT_SRC: string;
  * Inits the Finsweet Attributes library.
  */
 export const init = () => {
-  const { fsAttributes } = window;
+  const { finsweetAttributes } = window;
 
   // Avoid initting the Attributes API more than once.
   // If the API is already initted, just init the individual Attributes and escape.
-  if (fsAttributes && !Array.isArray(fsAttributes)) {
+  if (finsweetAttributes && !Array.isArray(finsweetAttributes)) {
     initAttributes();
     return;
   }
 
   // Collect pre-existing callbacks
-  const callbacks = Array.isArray(fsAttributes) ? (fsAttributes as FsAttributesCallback[]) : [];
+  const callbacks = Array.isArray(finsweetAttributes) ? (finsweetAttributes as FinsweetAttributesCallback[]) : [];
 
   // Init Attributes object
-  window.fsAttributes = window.FsAttributes = {
+  window.finsweetAttributes = window.FinsweetAttributes = {
     solutions: {},
-    process: new Set<FsAttributeKey>(),
+    process: new Set<FinsweetAttributeKey>(),
 
     push(...args) {
       for (const [key, callback] of args) {
@@ -48,7 +48,7 @@ export const init = () => {
   initAttributes();
 
   // Run pre-existing callbacks
-  window.fsAttributes.push(...callbacks);
+  window.finsweetAttributes.push(...callbacks);
 };
 
 /**
@@ -76,7 +76,7 @@ const initAttributes = () => {
  * @returns A Promise that resolves once the Attribute has loaded and executed.
  */
 const initAttribute = async (
-  attribute: FsAttributeKey,
+  attribute: FinsweetAttributeKey,
   {
     script,
     globalSettings,
@@ -88,11 +88,11 @@ const initAttribute = async (
   }
 ) => {
   // Ensure that the attribute is only initted once
-  if (window.fsAttributes.process.has(attribute)) return;
-  window.fsAttributes.process.add(attribute);
+  if (window.finsweetAttributes.process.has(attribute)) return;
+  window.finsweetAttributes.process.add(attribute);
 
   // Init controls
-  const controls = (window.fsAttributes.solutions[attribute] ||= {});
+  const controls = (window.finsweetAttributes.solutions[attribute] ||= {});
 
   controls.loading = new Promise((resolve) => {
     controls.resolve = (value) => {
@@ -128,12 +128,12 @@ const initAttribute = async (
 
     controls.destroy = () => {
       destroy?.();
-      window.fsAttributes.process.delete(attribute);
+      window.finsweetAttributes.process.delete(attribute);
     };
 
     controls.restart = () => {
       controls.destroy?.();
-      return window.fsAttributes.import(attribute, globalSettings);
+      return window.finsweetAttributes.import(attribute, globalSettings);
     };
 
     controls.resolve?.(result);

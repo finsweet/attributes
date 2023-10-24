@@ -1,4 +1,4 @@
-import { type FsAttributeInit, isFormField, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, isFormField, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { collectTargets } from './actions/collect';
 import { listenEvents } from './actions/events';
@@ -8,7 +8,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits click events mirroring.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const sourceElements = queryAllElements('source');

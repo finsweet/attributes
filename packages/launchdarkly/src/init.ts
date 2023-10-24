@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initializeClient } from './actions/client';
 import { hideLoaders } from './actions/loaders';
@@ -8,7 +8,11 @@ import { IS_STAGING, SETTINGS } from './utils/constants';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit<typeof SETTINGS> = async ({ devclientid, prodclientid, eventstotrack } = {}) => {
+export const init: FinsweetAttributeInit<typeof SETTINGS> = async ({
+  devclientid,
+  prodclientid,
+  eventstotrack,
+} = {}) => {
   await waitWebflowReady();
 
   const clientId = IS_STAGING ? devclientid || prodclientid : prodclientid || devclientid;

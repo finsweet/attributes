@@ -10,7 +10,7 @@ import { queryElement } from '../utils/constants';
 export const initCopyButtons = (copyCode: string): void => {
   initCopyScriptButton(copyCode);
 
-  window.fsAttributes[COPY_CLIP_ATTRIBUTE].init?.();
+  window.finsweetAttributes[COPY_CLIP_ATTRIBUTE].init?.();
 };
 
 /**

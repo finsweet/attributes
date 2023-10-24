@@ -6,7 +6,7 @@ Core functionalities of all `cms` Attributes.
 
 Each `cms` attribute uses `cmscore` under the hood, creating an instance of `CMSList`.
 
-All list instances can be accessed from `window.fsAttributes.cms.listInstances`, but the safest way to access an attribute's instance is by using the `window.fsAttributes.push()` method (see each Attribute's docs for more info).
+All list instances can be accessed from `window.finsweetAttributes.cms.listInstances`, but the safest way to access an attribute's instance is by using the `window.finsweetAttributes.push()` method (see each Attribute's docs for more info).
 
 The [`CMSList` instance](#cmslist-instance) has a few properties and methods that can be used to extend its functionalities. You can also subscribe to specific [events](#cmslist-events).
 

@@ -1,4 +1,4 @@
-import type { AttributeElements, AttributeSettings, FsAttributeKey } from '../types';
+import type { AttributeElements, AttributeSettings, FinsweetAttributeKey } from '../types';
 import { isNumber } from './guards';
 
 /**
@@ -11,7 +11,7 @@ export const generateSelectors = <
   ElementsDefinition extends AttributeElements,
   SettingsDefinition extends AttributeSettings
 >(
-  attributeKey: FsAttributeKey,
+  attributeKey: FinsweetAttributeKey,
   elements: ElementsDefinition,
   settings: SettingsDefinition
 ) => {

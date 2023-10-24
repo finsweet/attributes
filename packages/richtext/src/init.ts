@@ -1,5 +1,5 @@
 import {
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   restartWebflow,
   RICH_TEXT_BLOCK_CSS_CLASS,
   type RichTextBlockElement,
@@ -13,7 +13,7 @@ import { getElementSelector, hasAttributeValue } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const rtbElements = [

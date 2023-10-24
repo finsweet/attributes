@@ -9,8 +9,8 @@ import { initAttributeSelect } from './select';
 /**
  * Init
  */
-window.fsAttributes = window.fsAttributes || [];
-window.fsAttributes.push([
+window.finsweetAttributes = window.finsweetAttributes || [];
+window.finsweetAttributes.push([
   'cmsload',
   async ([listInstance]: CMSList[]) => {
     if (!listInstance) return;

@@ -1,10 +1,10 @@
-import { type FsAttributeKey } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeKey } from '@finsweet/attributes-utils';
 
 /**
  * Dynamically loads an attribute package.
  * @param solution
  */
-export const loadAttribute = async (solution: FsAttributeKey) => {
+export const loadAttribute = async (solution: FinsweetAttributeKey) => {
   switch (solution) {
     case 'a11y': {
       return import('@finsweet/attributes-a11y');

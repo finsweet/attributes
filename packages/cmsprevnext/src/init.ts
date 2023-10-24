@@ -1,5 +1,5 @@
 import { type CMSItem, createCMSListInstances } from '@finsweet/attributes-cmscore';
-import { type FsAttributeInit, removeTrailingSlash, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, removeTrailingSlash, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { collectElements } from './actions/collect';
 import { getElementSelector } from './utils/selectors';
@@ -7,7 +7,7 @@ import { getElementSelector } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   let previousPlaceholderFilled = false;
@@ -15,7 +15,7 @@ export const init: FsAttributeInit = async () => {
 
   const listInstances = createCMSListInstances([getElementSelector('list')]);
 
-  const finalize = (): Awaited<ReturnType<FsAttributeInit>> => {
+  const finalize = (): Awaited<ReturnType<FinsweetAttributeInit>> => {
     return {
       result: listInstances,
       destroy() {
