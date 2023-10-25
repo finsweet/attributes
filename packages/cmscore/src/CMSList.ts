@@ -140,6 +140,11 @@ export class CMSList extends Emittery<CMSListEvents> {
   public itemsPerPage: number;
 
   /**
+   * Defines the amount of items per page.
+   */
+  public instanceIndex: string;
+
+  /**
    * Defines the original amount of items per page.
    */
   public originalItemsPerPage: number;
@@ -232,6 +237,17 @@ export class CMSList extends Emittery<CMSListEvents> {
     this.emptyElement = getCollectionElements(wrapper, 'empty');
     const collectionItems = getCollectionElements(wrapper, 'items');
 
+    // instanceIndex is addressed in upcoming fs-list attribute: https://github.com/finsweet/attributes/blob/a581ad330770be7de1f15a5bf7b1c751f4db50d7/packages/list/src/components/List.ts#L183-L184
+    // added this to fix logic issues for now
+    this.instanceIndex = '0';
+
+    const regex = /^fs-.*-instance$/;
+    for (const attr of wrapper.attributes) {
+      if (regex.test(attr.name)) {
+        this.instanceIndex = attr.value;
+      }
+    }
+
     // Pagination
     this.itemsPerPage = this.originalItemsPerPage = collectionItems.length;
     this.totalPages = 1;
@@ -263,6 +279,7 @@ export class CMSList extends Emittery<CMSListEvents> {
   public async addItems(itemElements: CollectionItemElement[], method: 'unshift' | 'push' = 'push'): Promise<void> {
     const { items, list, originalItemsOrder } = this;
 
+    console.log('addItems', { itemElements, method, items, list, originalItemsOrder });
     if (!list) return;
 
     const newItems = itemElements.map((item) => new CMSItem(item, list));
@@ -324,6 +341,7 @@ export class CMSList extends Emittery<CMSListEvents> {
             this.addStaticItems([{ interactive, itemElement: clone, targetIndex: index }]);
 
             index += repeat;
+            console.log('repeat', index, repeat);
           }
         };
 

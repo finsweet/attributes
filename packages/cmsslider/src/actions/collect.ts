@@ -26,7 +26,8 @@ export const collectPopulateData = (listInstances: CMSList[]): [PopulateData[], 
     if (!slider) continue;
 
     // Make sure the populate data exists
-    const data = (populateData[instanceIndex || 0] ||= { listInstances: [], slider });
+    const matchedData = populateData.find((item) => item.instanceIndex === instanceIndex);
+    const data = matchedData || populateData[0] || { listInstances: [], slider };
 
     // Collect the list
     data.listInstances.push(listInstance);

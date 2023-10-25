@@ -66,15 +66,14 @@ export const generateSelectors = <
    */
   const getElementSelector = (
     elementKey?: ElementsDefinition[number],
-    { instanceIndex }: { instanceIndex?: number } = {}
+    { instanceIndex }: { instanceIndex?: string } = {}
   ) => {
     if (!elementKey) {
       return `[${ELEMENT_ATTRIBUTE_NAME}]`;
     }
 
     const elementSelector = `[${ELEMENT_ATTRIBUTE_NAME}="${elementKey}" i]`;
-
-    if (!isNumber(instanceIndex)) {
+    if (!instanceIndex) {
       return elementSelector;
     }
 
@@ -91,7 +90,7 @@ export const generateSelectors = <
    */
   const queryElement = <E extends Element = HTMLElement>(
     elementKey?: ElementsDefinition[number],
-    { instanceIndex, scope = document }: { instanceIndex?: number; scope?: ParentNode } = {}
+    { instanceIndex, scope = document }: { instanceIndex?: string; scope?: ParentNode } = {}
   ) => {
     const selector = getElementSelector(elementKey, { instanceIndex });
 
@@ -106,7 +105,7 @@ export const generateSelectors = <
    */
   const queryAllElements = <E extends Element = HTMLElement>(
     elementKey?: ElementsDefinition[number],
-    { instanceIndex, scope = document }: { instanceIndex?: number; scope?: ParentNode } = {}
+    { instanceIndex, scope = document }: { instanceIndex?: string; scope?: ParentNode } = {}
   ) => {
     const selector = getElementSelector(elementKey, { instanceIndex });
 
@@ -121,11 +120,8 @@ export const generateSelectors = <
     const instanceHolder = element.closest(`[${INSTANCE_ATTRIBUTE_NAME}]`);
     if (!instanceHolder) return;
 
-    const rawInstanceIndex = instanceHolder.getAttribute(INSTANCE_ATTRIBUTE_NAME);
-    if (!rawInstanceIndex) return;
-
-    const instanceIndex = parseInt(rawInstanceIndex);
-    if (isNaN(instanceIndex)) return;
+    const instanceIndex = instanceHolder.getAttribute(INSTANCE_ATTRIBUTE_NAME);
+    if (!instanceIndex) return;
 
     return instanceIndex;
   };
