@@ -2,11 +2,11 @@ import { valueToString } from '../utils/helpers';
 
 /**
  * Animates a number element.
- * @param numberElement
- * @param start
- * @param end
- * @param duration
- * @param locale
+ * @param {Element} numberElement - The element where the number will be displayed.
+ * @param {number} start - The starting number.
+ * @param {number} end - The ending number.
+ * @param {number} duration - The duration of the animation in milliseconds.
+ * @param {string | true | null} locale - The locale for formatting the number.
  */
 export const animateNumberCount = (
   numberElement: Element,

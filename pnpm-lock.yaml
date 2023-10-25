@@ -586,6 +586,9 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+      clipboard:
+        specifier: ^2.0.11
+        version: 2.0.11
     devDependencies:
       '@finsweet/attributes-cmscore':
         specifier: workspace:*
