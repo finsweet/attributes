@@ -23,7 +23,7 @@ export const initWhatsappInstance = (buttonElement: Element) => {
 
   // format phone number and url
   phone = formatPhoneNumber(phone);
-  const url = formatUrl(`${WHATSAPP_BASE_URL}/${phone}`, { text: message });
+  const url = formatUrl(`${WHATSAPP_BASE_URL}/${phone}`, { text: message.trim() });
 
   buttonElement.setAttribute('href', url);
   buttonElement.setAttribute('target', '_blank');
