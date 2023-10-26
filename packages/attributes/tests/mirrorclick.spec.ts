@@ -14,7 +14,7 @@ test.describe('mirrorclick', () => {
 
     await expect(dots.first()).toHaveClass(/w-active/);
 
-    const richArrorMirrorButton = page.locator('[fs-mirrorclick-element="trigger-2"]');
+    const richArrorMirrorButton = page.locator('[fs-mirrorclick-element="trigger"][fs-mirrorclick-instance="2"]');
     await richArrorMirrorButton.click();
 
     await expect(dots.nth(1)).toHaveClass(/w-active/);
