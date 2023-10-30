@@ -1,5 +1,4 @@
 import type { AttributeElements, AttributeSettings, FsAttributeKey } from '../types';
-import { isNumber } from './guards';
 
 /**
  * @returns Selector helpers for the defined Attribute Elements and Settings.

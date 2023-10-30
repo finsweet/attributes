@@ -1,9 +1,9 @@
-import { expect, type Locator, type Page, test } from '@playwright/test';
+import { expect, type Locator, test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://fs-attributes.webflow.io/socialshare-v2');
+  await page.goto('http://fs-attributes.webflow.io/socialshare');
 
   await waitAttributeLoaded(page, 'socialshare');
 

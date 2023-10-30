@@ -1,11 +1,6 @@
-import { formatNumberToLocale, parseNumericAttribute } from '@finsweet/attributes-utils';
 import { expect, test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
-
-const DEFAULT_WPM = 265;
-const DEFAULT_DECIMALS = 0;
-const DEFAULT_LOCALE = 'auto';
 
 test.beforeEach(async ({ page, browser }) => {
   // set locale to es-ES

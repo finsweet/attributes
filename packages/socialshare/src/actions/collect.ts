@@ -44,7 +44,7 @@ export const collectCopyData = (
  */
 export const collectFacebookData = (
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): FacebookSocialShare => {
   const socialData = collectSocialData(trigger, 'facebook', instanceIndex, scope);

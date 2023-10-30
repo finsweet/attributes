@@ -150,6 +150,8 @@ test.describe('combobox', () => {
     await comboboxInput.press('ArrowDown');
     await expect(comboboxNav).toHaveClass(/w--open/);
 
+    await page.waitForTimeout(1000);
+
     const firstOption = comboboxOptions.nth(0);
 
     const activeElement = await page.evaluate(() => document.activeElement?.getAttribute('id'));
