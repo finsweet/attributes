@@ -11,6 +11,7 @@ import {
   FS_CONSENT_CSS,
   getElementSelector,
   type GlobalSettings,
+  hasEnabledDNT,
   queryElement,
   renderComponentsFromSource,
 } from './utils';
@@ -44,6 +45,11 @@ export default class FsCookieConsent {
   private async initComponents() {
     // Check if the user is a bot or has DoNotTrack option active
     const isBot = /bot|crawler|spider|crawling/i.test(navigator.userAgent);
+    const dntEnabled = hasEnabledDNT();
+
+    if (dntEnabled) {
+      Debug.alert(`DoNotTrack is enabled in your browser setting.`, 'warning');
+    }
 
     if (isBot) return;
 

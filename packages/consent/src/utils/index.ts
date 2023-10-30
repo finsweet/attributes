@@ -3,6 +3,7 @@ export * from './constants';
 export * from './cookies';
 export * from './dom';
 export * from './gtm';
+export * from './has-enabled-dnt';
 export * from './selectors';
 export * from './type-guards';
 export * from './types';
