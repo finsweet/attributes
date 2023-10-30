@@ -24,7 +24,7 @@ export default class Store {
   public readonly endpoint?: string | null; // Endpoint where the consents will be POSTed
   public readonly componentsSource?: string | null; // Page where the components are located
   public readonly domain?: string | null; // The domain used to store the consent cookie
-  public readonly resetix?: string | null; // resetix value that determines if restartWebflow() should be called
+  public readonly resetix?: string | null; // resetix value that determines if restartWebflow(["ix2"]) should be called
   private confirmed = false; // True if the user actively confirmed his/her consent
   private consents: Consents = {} as Consents;
   private bannerText = 'empty';

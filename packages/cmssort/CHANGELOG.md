@@ -1,5 +1,11 @@
 # @finsweet/attributes-cmssort
 
+## 1.13.3
+
+### Patch Changes
+
+- b6ccf338: fix: race conditions when cmssort and cmsload are combined, causing some elements to not be sorted correctly under some circumstances.
+
 ## 1.13.2
 
 ### Patch Changes

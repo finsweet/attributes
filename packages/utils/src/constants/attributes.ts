@@ -6,6 +6,8 @@ export const ANIMATION_ATTRIBUTE = 'animation';
 
 export const AUTO_VIDEO_ATTRIBUTE = 'autovideo';
 
+export const CAL_EVENT_ATTRIBUTE = 'calevent';
+
 export const CMS_ATTRIBUTE_ATTRIBUTE = 'cmsattribute';
 
 export const CMS_COMBINE_ATTRIBUTE = 'cmscombine';
@@ -57,6 +59,8 @@ export const INPUT_COUNTER_ATTRIBUTE = 'inputcounter';
 export const GREENHOUSE_ATTRIBUTE = 'greenhouse';
 
 export const LINK_BLOCK_EDIT_ATTRIBUTE = 'linkblockedit';
+
+export const MASONRY_ATTRIBUTE = 'masonry';
 
 export const MIRROR_CLICK_ATTRIBUTE = 'mirrorclick';
 

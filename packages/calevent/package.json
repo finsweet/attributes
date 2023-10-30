@@ -1,7 +1,7 @@
 {
-  "name": "@finsweet/attributes-numbercount",
-  "version": "1.2.1",
-  "description": "Create a number count animation in Webflow.",
+  "name": "@finsweet/attributes-calevent",
+  "version": "1.0.0",
+  "description": "Create custom calendar invites easily on Webflow.",
   "private": true,
   "type": "module",
   "types": "src/index.ts",
@@ -17,7 +17,10 @@
     }
   },
   "dependencies": {
-    "just-throttle": "^4.2.0",
-    "@finsweet/attributes-utils": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*",
+    "dayjs": "^1.11.9"
+  },
+  "devDependencies": {
+    "@finsweet/attributes-cmscore": "workspace:*"
   }
 }

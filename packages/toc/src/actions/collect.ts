@@ -21,6 +21,8 @@ export const collectHeadingsData = ({ children }: HTMLElement) => {
 
   for (let i = children.length - 1; i >= 0; i--) {
     const child = children[i];
+    if (!child) continue;
+
     const headingElement = child.closest<HTMLParagraphElement>(ALLOWED_HEADINGS_SELECTOR);
     if (!headingElement) continue;
 

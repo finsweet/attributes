@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmssort",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "description": "Create advanced and complex no-code sorting for Webflow CMS Collection List content.",
   "private": true,
   "type": "module",
