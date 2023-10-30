@@ -18,6 +18,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-autovideo');
     }
 
+    case 'calevent': {
+      return import('@finsweet/attributes-calevent');
+    }
+
     case 'cmscombine': {
       return import('@finsweet/attributes-cmscombine');
     }
@@ -112,6 +116,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'linkblockedit': {
       return import('@finsweet/attributes-linkblockedit');
+    }
+
+    case 'masonry': {
+      return import('@finsweet/attributes-masonry');
     }
 
     case 'mirrorclick': {
