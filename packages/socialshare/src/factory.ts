@@ -1,5 +1,3 @@
-import { isNotEmpty } from '@finsweet/attributes-utils';
-
 import {
   collectCopyData,
   collectFacebookData,
