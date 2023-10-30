@@ -35,7 +35,15 @@ test.describe('aria-controls', () => {
     await expect(header).not.toHaveAttribute('aria-expanded', /(.*?)/);
   });
 
-  test('Traps focus in dialogs', async ({ page }) => {
+  test('Traps focus in dialogs', async ({ page, browserName }) => {
+    if (browserName === 'webkit') {
+      // Seems like Tab is a browser setting that needs to be enabled first? https://github.com/microsoft/playwright/issues/2114#issue-612491788
+      // another related issue: https://github.com/microsoft/playwright/issues/5609
+      // suggested approach is page.keyboard.press('Alt+Tab'); but that doesn't seem to work either :(
+
+      return;
+    }
+
     await waitAttributeLoaded(page, 'a11y');
 
     const modal = page.getByTestId('modal');
