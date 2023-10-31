@@ -36,7 +36,7 @@ function formatTimes(
  */
 function makeEvent(
   element: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): CalendarEvent {
   const title = getElementTextContent('title', instanceIndex, scope) ?? '';
@@ -65,7 +65,7 @@ function makeEvent(
  */
 export function collectGoogleData(
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): Google {
   const eventDetails = makeEvent(trigger, instanceIndex, scope);
@@ -105,7 +105,7 @@ export function collectGoogleData(
  */
 export function collectOutlookData(
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): Outlook {
   const eventDetails = makeEvent(trigger, instanceIndex, scope);
@@ -136,7 +136,7 @@ export function collectOutlookData(
  */
 export function collectIcsData(
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): Record<string, string | CalendarEventOrganizer | undefined>[] {
   const eventDetails = makeEvent(trigger, instanceIndex, scope);
