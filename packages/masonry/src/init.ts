@@ -14,10 +14,10 @@ export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
   const listReferences = queryAllElements('list');
-  let resizeTimeout;
+  let resizeTimeout: number | undefined;
 
   // Reset function to restore the original state
-  const resetToOriginalState = (element) => {
+  const resetToOriginalState = (element: HTMLElement) => {
     const originalState = originalStates.get(element);
     if (originalState) {
       element.innerHTML = originalState.innerHTML;

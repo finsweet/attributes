@@ -3,7 +3,7 @@
  * @param element - The HTML element to search for images within.
  * @param callback - The callback function to be called when all images are loaded or when the timeout is reached.
  */
-export function preloadImages(element, callback) {
+export function preloadImages(element: HTMLElement, callback: () => void) {
   const images = element.querySelectorAll('img');
   const imageCount = images.length;
 
