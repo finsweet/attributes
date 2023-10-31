@@ -1,6 +1,6 @@
 import { type Entry, getObjectEntries, getObjectKeys, isKeyOf } from '@finsweet/attributes-utils';
 
-import { Debug } from './components';
+import { activateDebug, alert } from './components';
 import {
   CONSENT_ALL,
   CONSENT_REQUIRED,
@@ -9,108 +9,104 @@ import {
   DEFAULT_COOKIE_MAX_AGE,
   type GlobalSettings,
   type IFrameData,
-  type ModeKey,
   MODES,
   type ScriptData,
 } from './utils';
 
+let modeSetting;
+let consents: Consents = {} as Consents;
+let endpointSetting;
+let domainSetting;
+let resetixSetting: string;
+let componentsSource;
+const scripts: ScriptData[] = [];
+const iFrames: IFrameData[] = [];
+let bannerText = 'empty';
+
 /**
  * Stores all the consents, global settings and scripts.
  */
-export default class Store {
-  public readonly mode: ModeKey = 'opt-in'; // Cookie consent mode, opt-in by default
-  public readonly cookieMaxAge: number = 120; // In days; Defaults to 120
-  public readonly debugMode: boolean = true; // Cookie consent mode, opt-in by default
-  public readonly endpoint?: string | null; // Endpoint where the consents will be POSTed
-  public readonly componentsSource?: string | null; // Page where the components are located
-  public readonly domain?: string | null; // The domain used to store the consent cookie
-  public readonly resetix?: string | null; // resetix value that determines if restartWebflow(["ix2"]) should be called
-  private confirmed = false; // True if the user actively confirmed his/her consent
-  private consents: Consents = {} as Consents;
-  private bannerText = 'empty';
-  private scripts: ScriptData[] = [];
-  private iFrames: IFrameData[] = [];
+export const useStore = ({ source, expires, debug, mode, endpoint, domain, resetix }: GlobalSettings) => {
+  let confirmed = false;
 
-  constructor({ source, expires, debug, mode, endpoint, domain, resetix }: GlobalSettings) {
-    if (!endpoint) {
-      console.error('Oops! Finsweet consent element has no endpoint url.');
-      return;
-    }
-
-    // Get the mode
-    this.mode = isKeyOf(mode, MODES) ? mode : 'opt-in';
-
-    switch (this.mode) {
-      case 'informational':
-      case 'opt-out':
-        this.consents = { ...CONSENT_ALL };
-        break;
-      default:
-        this.consents = { ...CONSENT_REQUIRED };
-    }
-
-    // Get the cookie max age
-    this.cookieMaxAge = parseInt(expires || DEFAULT_COOKIE_MAX_AGE);
-
-    // Get the debug mode
-    this.debugMode = debug || false;
-    if (this.debugMode) Debug.activate();
-
-    // Get the endpoint
-    this.endpoint = endpoint;
-
-    // Get the components source
-    this.componentsSource = source;
-
-    // Get the cookies domain
-    this.domain = domain;
-
-    // Get the resetix value
-    this.resetix = resetix;
-
-    // Alert the setup
-    Debug.alert(
-      `The cookie banner is set to ${this.mode} mode with a consent expiry time of ${this.cookieMaxAge} days.${
-        this.endpoint ? `The consents will be POSTed to ${this.endpoint}` : ''
-      }`,
-      'info'
-    );
+  if (!endpoint) {
+    console.error('Oops! Finsweet consent element has no endpoint url.');
+    return;
   }
+
+  // Get the mode
+  modeSetting = isKeyOf(mode, MODES) ? mode : 'opt-in';
+
+  switch (modeSetting) {
+    case 'informational':
+    case 'opt-out':
+      consents = { ...CONSENT_ALL };
+      break;
+    default:
+      consents = { ...CONSENT_REQUIRED };
+  }
+
+  // Get the cookie max age
+  const cookieMaxAge = parseInt(expires || DEFAULT_COOKIE_MAX_AGE);
+
+  // Get the debug mode
+  const debugMode = debug || false;
+  if (debugMode) activateDebug();
+
+  // Get the endpoint
+  endpointSetting = endpoint;
+
+  // Get the components source
+  componentsSource = source;
+
+  // Get the domain
+  domainSetting = domain;
+
+  // Get the resetix
+  resetixSetting = resetix || '';
+
+  // Alert the setup
+  alert(
+    `The cookie banner is set to ${modeSetting} mode with a consent expiry time of ${cookieMaxAge} days.${
+      endpointSetting ? `The consents will be POSTed to ${endpointSetting}` : ''
+    }`,
+    'info'
+  );
 
   /**
    * @returns If the user has already allowed/denied the use of cookies
    */
-  public userHasConfirmed = (): boolean => this.confirmed;
+  const userHasConfirmed = (): boolean => confirmed;
 
   /**
    * Stores a script in memory
    * @param consentKey
    * @param scriptData
    */
-  public storeScript(scriptData: Omit<ScriptData, 'type'>): void {
-    this.scripts.push({ ...scriptData, type: 'script' });
-  }
+  const storeScript = (scriptData: Omit<ScriptData, 'type'>): void => {
+    scripts.push({ ...scriptData, type: 'script' });
+  };
 
   /**
    * Stores a script in memory
    * @param consentKey
    * @param iFrameData
    */
-  public storeIFrame(iFrameData: Omit<IFrameData, 'type'>): void {
-    this.iFrames.push({ ...iFrameData, type: 'iframe' });
-  }
+  const storeIFrame = (iFrameData: Omit<IFrameData, 'type'>): void => {
+    iFrames.push({ ...iFrameData, type: 'iframe' });
+  };
 
   /**
    * @returns The stored scripts and iFrames
    */
-  public getStoredElements = (): (ScriptData | IFrameData)[] => [...this.scripts, ...this.iFrames];
+  const getStoredElements = (): (ScriptData | IFrameData)[] => [...scripts, ...iFrames];
 
   /**
    * @returns The stored elements that can be activated
    */
-  public getActivableElements = (): (ScriptData | IFrameData)[] =>
-    this.getStoredElements().filter(
-      ({ active, categories }) => !active && categories.every((category) => this.consents[category])
+  const getActivableElements = (): (ScriptData | IFrameData)[] =>
+    getStoredElements().filter(
+      ({ active, categories }) => !active && categories.every((category) => consents[category])
     );
 
   /**
@@ -118,7 +114,7 @@ export default class Store {
    * @param newConsents
    * @returns True if any consent was updated
    */
-  public storeConsents(newConsents: Partial<Consents>): ConsentKey[] {
+  const storeConsents = (newConsents: Partial<Consents>): ConsentKey[] => {
     const updatedConsents: ConsentKey[] = [];
 
     // Build an array of the consents that were updated
@@ -126,45 +122,65 @@ export default class Store {
       const newConsent = newConsents[consentKey];
 
       // Avoid storing undefined or not-updated consents
-      if (newConsent === undefined || newConsent === this.consents[consentKey]) return;
+      if (newConsent === undefined || newConsent === consents[consentKey]) return;
 
       // Store the new consent
-      this.consents[consentKey] = newConsent;
+      consents[consentKey] = newConsent;
       updatedConsents.push(consentKey);
     });
 
     // Set the user state to confirmed
-    this.confirmed = true;
+    confirmed = true;
 
     return updatedConsents;
-  }
+  };
 
   /**
    * @returns All the consents
    */
-  public getConsents = (): Consents => this.consents;
+  const getConsents = (): Consents => consents;
 
   /**
    * @returns All the consents as Object.entries()
    */
-  public getConsentsEntries = (): Entry<Consents>[] => getObjectEntries(this.consents);
+  const getConsentsEntries = (): Entry<Consents>[] => getObjectEntries(consents);
 
   /**
    * @returns A single consent value
    * @param consentKey
    */
-  public getConsent = (consentKey: ConsentKey): boolean => this.consents[consentKey];
+  const getConsent = (consentKey: ConsentKey): boolean => consents[consentKey];
 
   /**
    * Store the banner text
    * @param banner
    */
-  public storeBannerText(banner?: HTMLElement): void {
-    if (banner && banner.textContent) this.bannerText = banner.textContent;
-  }
+  const storeBannerText = (banner?: HTMLElement): void => {
+    if (banner && banner.textContent) bannerText = banner.textContent;
+  };
 
   /**
    * @returns The banner text
    */
-  public getBannerText = (): string | null | undefined => this.bannerText;
-}
+  const getBannerText = (): string | null | undefined => bannerText;
+
+  return {
+    getBannerText,
+    storeBannerText,
+    getConsent,
+    getConsentsEntries,
+    getConsents,
+    storeConsents,
+    getActivableElements,
+    getStoredElements,
+    userHasConfirmed,
+    storeIFrame,
+    storeScript,
+    resetix: resetixSetting,
+    componentsSource,
+    mode: modeSetting,
+    cookieMaxAge,
+    endpoint: endpointSetting,
+    domain: domainSetting,
+  };
+};

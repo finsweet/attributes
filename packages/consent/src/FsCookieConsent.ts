@@ -1,9 +1,9 @@
 import { waitDOMReady } from '@finsweet/attributes-utils';
 
-import Component from './components/Component';
-import Debug from './components/Debug';
-import ConsentController from './ConsentController';
-import Store from './Store';
+import { useComponent } from './components/Component';
+import { alert } from './components/Debug';
+import { useConsentController } from './ConsentController';
+import { useStore } from './Store';
 import {
   ACTIONS,
   CONSENT_ALL,
@@ -16,129 +16,132 @@ import {
   renderComponentsFromSource,
 } from './utils';
 
-/**
- * The main component of the consent.
- * Controls all the sub components.
- */
-export default class FsCookieConsent {
-  private readonly consentController;
-  private readonly store: Store;
-  private banner!: Component;
-  private preferences?: Component;
-  private manager?: Component;
+interface Handler {
+  store: ReturnType<typeof useStore>;
+  consentController: ReturnType<typeof useConsentController>;
+  banner: ReturnType<typeof useComponent> | undefined;
+  manager: ReturnType<typeof useComponent> | undefined;
+  preferences: ReturnType<typeof useComponent> | undefined;
+  type?: ReturnType<typeof useComponent>['type'];
+}
 
-  constructor(globalSettings: GlobalSettings) {
-    // Initialize store with attributes values
-    this.store = new Store(globalSettings);
+export const useConsents = (settings: GlobalSettings) => {
+  let banner: ReturnType<typeof useComponent> | undefined;
+  let preferences: ReturnType<typeof useComponent> | undefined;
+  let manager: ReturnType<typeof useComponent> | undefined;
 
-    // Consent controller
-    this.consentController = new ConsentController(this.store);
+  const store = useStore(settings);
 
-    // Init
-    this.initComponents();
-  }
+  if (!store) return;
+
+  const consentController = useConsentController(store);
 
   /**
    * Inits the components.
    * If the fs-consent-source attribute is found, it fetches them from the specified source.
    */
-  private async initComponents() {
+  const initComponents = async () => {
     // Check if the user is a bot or has DoNotTrack option active
     const isBot = /bot|crawler|spider|crawling/i.test(navigator.userAgent);
     const dntEnabled = hasEnabledDNT();
 
     if (dntEnabled) {
-      Debug.alert(`DoNotTrack is enabled in your browser setting.`, 'warning');
+      alert(`DoNotTrack is enabled in your browser setting.`, 'warning');
     }
 
     if (isBot) return;
 
     document.head.insertAdjacentHTML('beforeend', FS_CONSENT_CSS);
 
-    const { store } = this;
-    const { componentsSource } = store;
+    const { componentsSource, resetix } = store;
 
-    if (componentsSource) await renderComponentsFromSource(componentsSource, store?.resetix === 'true');
+    if (componentsSource) await renderComponentsFromSource(componentsSource, resetix === 'true');
 
     await waitDOMReady();
 
     const bannerElement = queryElement('banner');
+
     if (bannerElement) {
-      this.banner = new Component(bannerElement, store);
+      banner = useComponent(bannerElement, store);
     } else {
-      Debug.alert(`No [fs-consent-element="banner"] element was found, it is required to have it!`, 'error');
+      alert(`No [fs-consent-element="banner"] element was found, it is required to have it!`, 'error');
       return;
     }
+
     const preferencesElement = queryElement('preferences');
     if (preferencesElement) {
-      this.preferences = new Component(preferencesElement, store);
+      preferences = useComponent(preferencesElement, store);
     } else {
-      Debug.alert(
+      alert(
         `No [fs-consent-element="preferences"] element was found, did you want to use the Preferences component?`,
         'info'
       );
     }
+
     const managerElement = queryElement('fixed-preferences');
     if (managerElement) {
-      this.manager = new Component(managerElement, store);
+      manager = useComponent(managerElement, store);
     } else {
-      Debug.alert(
+      alert(
         `No [fs-consent-element="fixed-preferences"] element was found, did you want to use the Manager component?`,
         'info'
       );
     }
 
-    const { manager, banner } = this;
-
     // If user has already confirmed, show the manager, otherwise show the banner
     if (store.userHasConfirmed()) manager?.open();
     else banner?.open();
 
-    this.listenEvents();
-  }
+    const params = { store, consentController, banner, manager, preferences };
+    listenEvents(params);
+  };
 
   /**
    * Listens for internal events.
    */
-  private listenEvents() {
+  const listenEvents = (params: Handler) => {
+    const { store, consentController, banner, manager } = params;
     const { allow, deny, submit } = ACTIONS;
     const componentsKeys = ['banner', 'manager', 'preferences'] as const;
-    const { store, consentController, banner, manager } = this;
+
+    if (!consentController) return;
 
     // Listen for click and keydown events
-    document.addEventListener('click', (e) => this.handleMouseAndKeyboard(e));
-    document.addEventListener('keydown', (e) => this.handleMouseAndKeyboard(e));
+    document.addEventListener('click', (e) => handleMouseAndKeyboard(e, params));
+    document.addEventListener('keydown', (e) => handleMouseAndKeyboard(e, params));
 
     // Banner
-    store.storeBannerText(banner?.element);
+    store?.storeBannerText(banner?.element);
 
     // Consent Controller
     consentController.on('updateconsents', () => {
-      componentsKeys.forEach((componentKey) => this[componentKey]?.form?.updateCheckboxes());
+      componentsKeys.forEach((componentKey) => {
+        if (componentKey === params[componentKey]?.type) params[componentKey]?.form?.updateCheckboxes();
+      });
     });
 
     // All Components
     componentsKeys.forEach((componentKey) => {
       // Allow
-      this[componentKey]?.on('allow', () => {
+      params[componentKey]?.on('allow', () => {
         // Debug mode
-        Debug.alert(`Allow button was clicked in the ${componentKey} component.`, 'info');
+        alert(`Allow button was clicked in the ${componentKey} component.`, 'info');
 
         consentController.updateConsents(CONSENT_ALL, allow);
       });
 
       // Deny
-      this[componentKey]?.on('deny', () => {
+      params[componentKey]?.on('deny', () => {
         // Debug mode
-        Debug.alert(`Deny button was clicked in the ${componentKey} component.`, 'info');
+        alert(`Deny button was clicked in the ${componentKey} component.`, 'info');
 
         consentController.updateConsents(CONSENT_REQUIRED, deny);
       });
 
       // Submit
-      this[componentKey]?.on('formsubmit', (newConsents) => {
+      params[componentKey]?.on('formsubmit', (newConsents) => {
         // Debug mode
-        Debug.alert(
+        alert(
           `Consents Form was submitted in the ${componentKey} component with the following consents: ${JSON.stringify(
             newConsents
           )}`,
@@ -150,13 +153,13 @@ export default class FsCookieConsent {
 
       // Close
       if (componentKey !== 'manager') {
-        this[componentKey]?.on('close', () => {
+        params[componentKey]?.on('close', () => {
           // Debug mode
-          Debug.alert(`The ${componentKey} component was closed.`, 'info');
+          alert(`The ${componentKey} component was closed.`, 'info');
 
-          if (store.mode === 'informational') {
+          if (store?.mode === 'informational') {
             // Debug mode
-            Debug.alert(`All cookies were accepted because the mode is set to ${store.mode}.`, 'warning');
+            alert(`All cookies were accepted because the mode is set to ${store.mode}.`, 'warning');
 
             consentController.updateConsents(CONSENT_ALL, allow);
           }
@@ -165,15 +168,15 @@ export default class FsCookieConsent {
         });
       }
     });
-  }
+  };
 
   /**
    * Handles mouse and keyboard events.
    * @param e The event object.
    */
-  private handleMouseAndKeyboard(e: MouseEvent | KeyboardEvent): void {
+  const handleMouseAndKeyboard = (e: MouseEvent | KeyboardEvent, params: Handler) => {
     const { target } = e;
-    const { banner, manager, preferences } = this;
+    const { banner, manager, preferences } = params;
 
     if (!(target instanceof Element)) return;
     if ('key' in e && e.key !== 'Enter') return;
@@ -188,7 +191,13 @@ export default class FsCookieConsent {
       preferences?.open();
 
       // Debug mode
-      Debug.alert(`Open Preferences button was clicked.`, 'info');
+      alert(`Open Preferences button was clicked.`, 'info');
     }
-  }
-}
+  };
+
+  return {
+    initComponents,
+    listenEvents,
+    handleMouseAndKeyboard,
+  };
+};

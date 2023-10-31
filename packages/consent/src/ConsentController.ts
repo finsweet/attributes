@@ -2,8 +2,8 @@ import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
 import Emittery from 'emittery';
 import { nanoid } from 'nanoid';
 
-import { Debug } from './components';
-import Store from './Store';
+import { alert } from './components/Debug';
+import { useStore } from './Store';
 import {
   type Action,
   CONSENTS,
@@ -36,27 +36,12 @@ interface ConsentManagerEvents {
  * - Storing and managing all the consents from the user.
  * - Firing the correspondent scripts and GTM events.
  */
-export default class ConsentController extends Emittery<ConsentManagerEvents> {
-  /**
-   * Create a new Consent Controller instance.
-   * @param store A Store instance where all the data will be stored.
-   */
-  constructor(private store: Store) {
-    super();
+export const useConsentController = (store: ReturnType<typeof useStore>) => {
+  if (!store) return;
 
-    this.loadConsents();
+  const emitter = new Emittery<ConsentManagerEvents>();
 
-    this.storeElements();
-
-    this.applyConsents();
-  }
-
-  /**
-   * Stores all the third party scripts and iFrames
-   */
-  private storeElements() {
-    const { store } = this;
-
+  const storeElements = () => {
     // Get all the scripts and iFrames
     const existingElements = document.querySelectorAll<HTMLScriptElement | HTMLIFrameElement>(
       `script[type="${MAIN_KEY}"], iframe${getSettingSelector('src')}`
@@ -111,23 +96,24 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       }
 
       // Debug mode
-      Debug.alert(`Stored the element: ${element.outerHTML} in the categories: ${categories.join(', ')}`, 'info');
+      alert(`Stored the element: ${element.outerHTML} in the categories: ${categories.join(', ')}`, 'info');
     });
-  }
+  };
 
   /**
    * Loads the stored consents from the cookies
    */
-  private loadConsents() {
+  const loadConsents = () => {
     // Get the consents
     const consents = getConsentsCookie();
+
     if (!consents) return;
 
     // Debug mode
-    Debug.alert(`The following consents were loaded from the stored cookies: ${JSON.stringify(consents)}`, 'info');
+    alert(`The following consents were loaded from the stored cookies: ${JSON.stringify(consents)}`, 'info');
 
     // Store the consents
-    this.store.storeConsents(consents);
+    store.storeConsents(consents);
 
     // If the user updated the consents on the previous page load, remove all cookies before loading the scripts
     const consentsWereUpdated = getUpdatedStateCookie();
@@ -135,17 +121,15 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       removeAllCookies();
 
       // Debug mode
-      Debug.alert('Previously denied cookies have been deleted.', 'info');
+      alert('Previously denied cookies have been deleted.', 'info');
     }
-  }
+  };
 
   /**
    * Activates the correspondent scripts.
    * Fires a GTM event when a consent is activated.
    */
-  private async applyConsents() {
-    const { store } = this;
-
+  const applyConsents = async () => {
     // Activate the correspondent elements
     for (const elementData of store.getActivableElements()) {
       await new Promise((resolve) => {
@@ -186,14 +170,13 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     store.getConsentsEntries().forEach(([consentKey, value]) => {
       if (value) fireUniqueGTMEvent(DYNAMIC_KEYS.gtmEvent(consentKey));
     });
-  }
+  };
 
   /**
    * Updates the stored consents
    * @param consents
    */
-  public updateConsents(consents: Partial<Consents>, action: Action): void {
-    const { store } = this;
+  const updateConsents = (consents: Partial<Consents>, action: Action): void => {
     const { cookieMaxAge, endpoint, domain } = store;
 
     const checkboxEssential = queryElement('checkbox-essential');
@@ -228,12 +211,33 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     // If any consent was updated, set an updatedState cookie and apply the consents
     if (updatedConsents.length) {
       setUpdatedStateCookie(cookieMaxAge, domain);
-      this.applyConsents();
+      applyConsents();
 
       // Debug mode
-      Debug.alert(`The following consents were updated: ${updatedConsents.join(', ')}`, 'info');
+      alert(`The following consents were updated: ${updatedConsents.join(', ')}`, 'info');
     }
 
-    this.emit('updateconsents');
+    emitter.emit('updateconsents');
+  };
+
+  loadConsents();
+
+  storeElements();
+
+  applyConsents();
+
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', () => {
+      storeElements();
+      applyConsents();
+    });
   }
-}
+
+  return {
+    storeElements,
+    loadConsents,
+    applyConsents,
+    updateConsents,
+    on: emitter.on.bind(emitter),
+  };
+};

@@ -1,6 +1,6 @@
 import { type FsAttributeInit, waitDOMReady } from '@finsweet/attributes-utils';
 
-import FsCookieConsent from './FsCookieConsent';
+import { useConsents } from './FsCookieConsent';
 import { SETTINGS } from './utils';
 
 /**
@@ -14,7 +14,11 @@ export const init: FsAttributeInit<typeof SETTINGS> = async (globalSettings = {}
   const debug = debuggerExists && url.origin.includes('webflow.io');
 
   // Init library
-  const instance = new FsCookieConsent({ ...globalSettings, debug });
+  const instance = useConsents({ ...globalSettings, debug });
+
+  if (!instance) return;
+
+  await instance.initComponents();
 
   await waitDOMReady();
 
