@@ -82,6 +82,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-countitems');
     }
 
+    case 'country': {
+      return import('@finsweet/attributes-country');
+    }
+
     case 'displayvalues': {
       return import('@finsweet/attributes-displayvalues');
     }

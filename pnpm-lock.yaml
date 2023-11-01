@@ -140,6 +140,9 @@ importers:
       '@finsweet/attributes-countitems':
         specifier: workspace:*
         version: link:../countitems
+      '@finsweet/attributes-country':
+        specifier: workspace:*
+        version: link:../country
       '@finsweet/attributes-displayvalues':
         specifier: workspace:*
         version: link:../displayvalues
@@ -402,6 +405,12 @@ importers:
         version: 2.0.11
 
   packages/countitems:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/country:
     dependencies:
       '@finsweet/attributes-utils':
         specifier: workspace:*

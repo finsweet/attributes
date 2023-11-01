@@ -42,6 +42,8 @@ export const COPY_CLIP_ATTRIBUTE = 'copyclip';
 
 export const COUNT_ITEMS_ATTRIBUTE = 'countitems';
 
+export const COUNTRY_ATTRIBUTE = 'country';
+
 export const DISPLAY_VALUES_ATTRIBUTE = 'displayvalues';
 
 export const DOCS_ATTRIBUTE = 'docs';
