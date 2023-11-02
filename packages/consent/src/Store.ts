@@ -103,10 +103,11 @@ export const useStore = ({ source, expires, debug, mode, endpoint, domain, reset
   /**
    * @returns The stored elements that can be activated
    */
-  const getActivableElements = (): (ScriptData | IFrameData)[] =>
-    getStoredElements().filter(
-      ({ active, categories }) => !active && categories.every((category) => consents[category])
-    );
+  const getActivableElements = (): (ScriptData | IFrameData)[] => {
+    const stored = getStoredElements();
+
+    return stored.filter(({ active, categories }) => !active && categories.every((category) => consents[category]));
+  };
 
   /**
    * Stores new consents
