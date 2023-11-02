@@ -21,14 +21,13 @@ let resetixSetting: string;
 let componentsSource;
 const scripts: ScriptData[] = [];
 const iFrames: IFrameData[] = [];
-let bannerText = 'empty';
+let bannerText = '';
+let confirmed = false;
 
 /**
  * Stores all the consents, global settings and scripts.
  */
 export const useStore = ({ source, expires, debug, mode, endpoint, domain, resetix }: GlobalSettings) => {
-  let confirmed = false;
-
   if (!endpoint) {
     console.error('Oops! Finsweet consent element has no endpoint url.');
     return;
@@ -155,8 +154,9 @@ export const useStore = ({ source, expires, debug, mode, endpoint, domain, reset
    * Store the banner text
    * @param banner
    */
-  const storeBannerText = (banner?: HTMLElement): void => {
+  const storeBannerText = (banner?: HTMLElement): string => {
     if (banner && banner.textContent) bannerText = banner.textContent;
+    return bannerText;
   };
 
   /**
@@ -165,22 +165,28 @@ export const useStore = ({ source, expires, debug, mode, endpoint, domain, reset
   const getBannerText = (): string | null | undefined => bannerText;
 
   return {
-    getBannerText,
-    storeBannerText,
-    getConsent,
-    getConsentsEntries,
-    getConsents,
-    storeConsents,
-    getActivableElements,
-    getStoredElements,
-    userHasConfirmed,
-    storeIFrame,
-    storeScript,
-    resetix: resetixSetting,
+    bannerText,
     componentsSource,
-    mode: modeSetting,
+    confirmed,
+    consents,
     cookieMaxAge,
-    endpoint: endpointSetting,
-    domain: domainSetting,
+    debugMode,
+    domain,
+    endpoint,
+    getActivableElements,
+    getBannerText,
+    getConsent,
+    getConsents,
+    getConsentsEntries,
+    getStoredElements,
+    iFrames,
+    mode,
+    resetix,
+    scripts,
+    storeBannerText,
+    storeConsents,
+    storeScript,
+    storeIFrame,
+    userHasConfirmed,
   };
 };

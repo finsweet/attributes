@@ -1,5 +1,6 @@
 import type { FsAttributeInit } from '@finsweet/attributes-utils';
 
+import type { UseConsents } from '../FsCookieConsent';
 import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS, SETTINGS } from '.';
 
 // Consents
@@ -42,6 +43,7 @@ declare global {
   interface Window {
     doNotTrack: string | null;
     dataLayer?: { event: string }[];
+    FinsweetCookieConsent: UseConsents;
   }
 }
 

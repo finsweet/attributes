@@ -25,14 +25,22 @@ interface Handler {
   type?: ReturnType<typeof useComponent>['type'];
 }
 
-export const useConsents = (settings: GlobalSettings) => {
-  let banner: ReturnType<typeof useComponent> | undefined;
-  let preferences: ReturnType<typeof useComponent> | undefined;
-  let manager: ReturnType<typeof useComponent> | undefined;
+let banner: ReturnType<typeof useComponent> | undefined;
+let preferences: ReturnType<typeof useComponent> | undefined;
+let manager: ReturnType<typeof useComponent> | undefined;
 
+export interface UseConsents {
+  banner: ReturnType<typeof useComponent> | undefined;
+  manager: ReturnType<typeof useComponent> | undefined;
+  preferences: ReturnType<typeof useComponent> | undefined;
+  store: ReturnType<typeof useStore>;
+  consentController: ReturnType<typeof useConsentController>;
+}
+
+export const useConsents = async (settings: GlobalSettings): Promise<UseConsents> => {
   const store = useStore(settings);
 
-  if (!store) return;
+  if (!store) return {} as UseConsents;
 
   const consentController = useConsentController(store);
 
@@ -88,8 +96,10 @@ export const useConsents = (settings: GlobalSettings) => {
       );
     }
 
+    store.confirmed = store.userHasConfirmed();
+
     // If user has already confirmed, show the manager, otherwise show the banner
-    if (store.userHasConfirmed()) manager?.open();
+    if (store.confirmed) manager?.open();
     else banner?.open();
 
     const params = { store, consentController, banner, manager, preferences };
@@ -111,7 +121,7 @@ export const useConsents = (settings: GlobalSettings) => {
     document.addEventListener('keydown', (e) => handleMouseAndKeyboard(e, params));
 
     // Banner
-    store?.storeBannerText(banner?.element);
+    if (store) store.bannerText = store?.storeBannerText(banner?.element);
 
     // Consent Controller
     consentController.on('updateconsents', () => {
@@ -195,9 +205,13 @@ export const useConsents = (settings: GlobalSettings) => {
     }
   };
 
+  await initComponents();
+
   return {
-    initComponents,
-    listenEvents,
-    handleMouseAndKeyboard,
+    banner,
+    manager,
+    preferences,
+    store,
+    consentController,
   };
 };

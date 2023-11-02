@@ -14,11 +14,12 @@ export const init: FsAttributeInit<typeof SETTINGS> = async (globalSettings = {}
   const debug = debuggerExists && url.origin.includes('webflow.io');
 
   // Init library
-  const instance = useConsents({ ...globalSettings, debug });
+  const instance = await useConsents({ ...globalSettings, debug });
 
   if (!instance) return;
 
-  await instance.initComponents();
+  //todo: maybe change naming of window variable for consents?
+  window.FinsweetCookieConsent = instance;
 
   await waitDOMReady();
 
