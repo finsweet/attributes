@@ -123,7 +123,9 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
    * Fires a GTM event when a consent is activated.
    */
   const applyConsents = async () => {
-    loadConsents();
+    const consents = getConsentsCookie();
+
+    if (consents) store.storeConsents(consents);
 
     // Activate the correspondent elements
     const activables = store.getActivableElements();
@@ -198,7 +200,7 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
     setConsentsCookie(consentId, store.getConsents(), cookieMaxAge, domain);
 
     // POST the consents to the endpoint
-    if (endpoint)
+    if (endpoint) {
       POSTConsentsToEndpoint({
         action,
         endpoint,
@@ -206,7 +208,7 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
         consents: store.getConsents(),
         bannerText: store.getBannerText() || '',
       });
-
+    }
     // If any consent was updated, set an updatedState cookie and apply the consents
     if (updatedConsents.length) {
       setUpdatedStateCookie(cookieMaxAge, domain);

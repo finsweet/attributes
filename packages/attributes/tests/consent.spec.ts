@@ -31,6 +31,15 @@ export const COOKIE_KEYS = {
   consentsUpdated: `${MAIN_KEY}-updated`,
 };
 
+interface ConsentMode {
+  functionality_storage: string;
+  security_storage: string;
+  ad_storage: string;
+  analytics_storage: string;
+  personalization_storage: string;
+  uncategorized_storage: string;
+}
+
 export const DYNAMIC_KEYS = {
   checkbox: (key: string): string => `[${ELEMENT}="checkbox-${key}"]`,
   gtmEvent: (key: string): string => `${key}-activated`,
@@ -138,6 +147,7 @@ test('Attributes Consent', async ({ page, browserName }) => {
   // submit form
   await preferencesForm.dispatchEvent('submit');
 
+  // give time for the form to submit and scripts to be initialized
   await page.waitForTimeout(1000);
 
   await expect(manager).toBeVisible();
@@ -152,6 +162,40 @@ test('Attributes Consent', async ({ page, browserName }) => {
   );
 
   expect(analyticsActivatedEvent).toBeDefined();
+
+  const checkAnalyticsConsentMode = () => {
+    function isConsentArguments(item: IArguments): boolean {
+      const isArguments = Object.prototype.toString.call(item) === '[object Arguments]';
+      const isConsent = item[0] === 'consent';
+      return isArguments && isConsent;
+    }
+
+    let analytisGranted = false;
+
+    const dataLayer = [...(window?.dataLayer || [])];
+
+    // events are always fired with arr.push() so there can exist multiple that matches gtag('consent', 'update', {})
+    // Reverse the array so that the latest events are at the beginning
+    dataLayer.reverse();
+
+    for (const event of dataLayer) {
+      if (isConsentArguments(event)) {
+        const [, , mode] = Array.from(event);
+
+        analytisGranted = (mode as ConsentMode)?.analytics_storage === 'granted';
+
+        // Stop looping after finding the last "consent" argument
+        break;
+      }
+    }
+
+    return analytisGranted;
+  };
+
+  // consent mode for analytics should be granted for GA
+  const analyticsConsentModGranted = await page.evaluate(checkAnalyticsConsentMode);
+
+  expect(analyticsConsentModGranted).toBeTruthy();
 
   await reloadPage(page);
 
@@ -171,6 +215,11 @@ test('Attributes Consent', async ({ page, browserName }) => {
 
   // The Analytics checkbox in the Preferences preserves the checked state.
   await expect(analyticsCheckbox).toBeChecked();
+
+  // on reload the same consent mode for analytics should be granted for GA automatically
+  const analyticsConsentModGrantedOnReload = await page.evaluate(checkAnalyticsConsentMode);
+
+  expect(analyticsConsentModGrantedOnReload).toBeTruthy();
 
   // Clicking "Allow All" selects all the consent checkboxes, closes the Preferences and fires the GA script.
   await page.waitForTimeout(1000);
