@@ -24,7 +24,7 @@ interface ComponentEvents {
   formsubmit: Partial<Consents>;
 }
 
-export const useComponent = (element: HTMLElement, store: ReturnType<typeof useStore>) => {
+export const useComponent = (element: HTMLElement, store: ReturnType<typeof useStore>, selector: string) => {
   let formSetting: ReturnType<typeof useConsentForm> | undefined;
   let scrollableElementSetting: Element | undefined;
   let disableScrollOnOpenSetting = false;
@@ -178,19 +178,6 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
     show(false);
   };
 
-  /**
-   * Identifies the type of component.
-   * @returns The type of component.
-   */
-  const getType = () => {
-    const attr = element.getAttribute('fs-consent-element');
-
-    if (attr === 'banner') return 'banner';
-    if (attr === 'preferences') return 'preferences';
-    if (attr === 'fixed-preferences') return 'manager';
-    return '';
-  };
-
   init();
 
   return {
@@ -200,6 +187,14 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
     on: emitter.on.bind(emitter),
     element,
     form: formSetting,
-    type: getType(),
+    displayController,
+    store,
+    handleAccessibility,
+    handleFormSubmit,
+    handleMouseAndKeyboard,
+    initElements,
+    listenEvents,
+    show,
+    selector: `[fs-consent-element="${selector}"]`,
   };
 };

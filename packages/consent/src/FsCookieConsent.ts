@@ -22,7 +22,6 @@ interface Handler {
   banner: ReturnType<typeof useComponent> | undefined;
   manager: ReturnType<typeof useComponent> | undefined;
   preferences: ReturnType<typeof useComponent> | undefined;
-  type?: ReturnType<typeof useComponent>['type'];
 }
 
 let banner: ReturnType<typeof useComponent> | undefined;
@@ -35,6 +34,8 @@ export interface UseConsents {
   preferences: ReturnType<typeof useComponent> | undefined;
   store: ReturnType<typeof useStore>;
   consentController: ReturnType<typeof useConsentController>;
+  initComponents: () => Promise<void>;
+  listenEvents: (params: Handler) => void;
 }
 
 export const useConsents = async (settings: GlobalSettings): Promise<UseConsents> => {
@@ -70,7 +71,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
     const bannerElement = queryElement('banner');
 
     if (bannerElement) {
-      banner = useComponent(bannerElement, store);
+      banner = useComponent(bannerElement, store, 'banner');
     } else {
       alert(`No [fs-consent-element="banner"] element was found, it is required to have it!`, 'error');
       return;
@@ -78,7 +79,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
 
     const preferencesElement = queryElement('preferences');
     if (preferencesElement) {
-      preferences = useComponent(preferencesElement, store);
+      preferences = useComponent(preferencesElement, store, 'preferences');
     } else {
       alert(
         `No [fs-consent-element="preferences"] element was found, did you want to use the Preferences component?`,
@@ -88,7 +89,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
 
     const managerElement = queryElement('fixed-preferences');
     if (managerElement) {
-      manager = useComponent(managerElement, store);
+      manager = useComponent(managerElement, store, 'fixed-preferences');
     } else {
       alert(
         `No [fs-consent-element="fixed-preferences"] element was found, did you want to use the Manager component?`,
@@ -126,7 +127,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
     // Consent Controller
     consentController.on('updateconsents', () => {
       componentsKeys.forEach((componentKey) => {
-        if (componentKey === params[componentKey]?.type) params[componentKey]?.form?.updateCheckboxes();
+        if (componentKey === params[componentKey]?.selector) params[componentKey]?.form?.updateCheckboxes();
       });
     });
 
@@ -213,5 +214,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
     preferences,
     store,
     consentController,
+    initComponents,
+    listenEvents,
   };
 };

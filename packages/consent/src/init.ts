@@ -18,11 +18,7 @@ export const init: FsAttributeInit<typeof SETTINGS> = async (globalSettings = {}
 
   if (!instance) return;
 
-  //todo: maybe change naming of window variable for consents?
-  window.FinsweetCookieConsent = instance;
-
   await waitDOMReady();
-
   return {
     result: instance,
   };

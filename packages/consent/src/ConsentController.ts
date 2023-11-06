@@ -307,5 +307,7 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
     applyConsents,
     updateConsents,
     on: emitter.on.bind(emitter),
+    setConsentMode,
+    initConsentMode,
   };
 };
