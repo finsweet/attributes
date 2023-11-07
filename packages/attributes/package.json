@@ -1,7 +1,7 @@
 {
   "name": "@finsweet/attributes",
   "version": "0.0.0",
-  "description": "Finsweet Attributes.",
+  "description": "Finsweet Attributes V2.",
   "homepage": "https://finsweet.com/attributes",
   "type": "module",
   "main": "dist/index.js",
