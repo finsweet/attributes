@@ -1,119 +1,75 @@
 import { animations, Interaction, type InteractionParams, isVisible } from '@finsweet/attributes-utils';
 
-// Types
-export interface DisplayControllerParams {
-  /**
-   * The main element. Accepts both an HTMLElement or a string selector.
-   */
+export type DisplayControllerParams = {
   element: HTMLElement;
-
-  /**
-   * If the display must be controlled through a Webflow interaction.
-   */
   interaction?: InteractionParams;
-
-  /**
-   * The display property of the element when displayed.
-   * Not applicable when interaction parameters ara passed to the instance, as it's assumed that the Webflow interaction will set the display property.
-   * Defaults to `block`.
-   */
-  displayProperty?: (typeof DisplayController)['displayProperties'][number];
-
-  /**
-   * Defines a custom animation to be used when showing/hiding the element.
-   */
+  displayProperty?: (typeof displayProperties)[number];
   animation?: keyof typeof animations;
-
-  /**
-   * If set to true, the element will be set to `display: none`.
-   */
   startsHidden?: boolean;
-}
+};
 
-/**
- * Controls showing/hiding an element.
- * Works with Webflow interactions, built-in fade animations or no animations at all.
- */
-export class DisplayController {
-  private readonly interaction;
-  private readonly animation;
-  private readonly displayProperty: Required<DisplayControllerParams>['displayProperty'];
-  private visible;
+export const displayProperties = ['block', 'flex', 'grid', 'inline-block', 'inline'] as const;
 
-  public readonly element: HTMLElement;
-  public static readonly displayProperties = ['block', 'flex', 'grid', 'inline-block', 'inline'] as const;
+export function createDisplayController({
+  element,
+  interaction,
+  displayProperty,
+  animation,
+  startsHidden,
+}: DisplayControllerParams) {
+  let visible: boolean;
 
-  constructor({ element, interaction, displayProperty, animation, startsHidden }: DisplayControllerParams) {
-    // Store properties
-    this.element = element;
-    this.animation = animation;
-    this.displayProperty = displayProperty || 'block';
-
-    // Visibility check
-    if (startsHidden) {
-      this.element.style.display = 'none';
-      this.visible = false;
-    } else this.visible = isVisible(this.element);
-
-    if (interaction) {
-      const { element, duration } = interaction;
-      this.interaction = new Interaction({ element, duration });
-    }
+  if (startsHidden) {
+    element.style.display = 'none';
+    visible = false;
+  } else {
+    visible = isVisible(element);
   }
 
-  /**
-   * @returns If the element is visible
-   */
-  public isVisible = (): boolean => this.visible;
+  let interactionInstance: Interaction | undefined;
+  if (interaction) {
+    const { element, duration } = interaction;
+    interactionInstance = new Interaction({ element, duration });
+  }
 
-  /**
-   * Displays the element
-   * @returns An awaitable promise
-   */
-  public async show(): Promise<void> {
-    if (this.visible) return;
+  const isElementVisible = (): boolean => visible;
 
-    const { interaction, animation, element, displayProperty: display } = this;
+  const show = async (): Promise<void> => {
+    if (visible) return;
 
-    // Interaction
-    if (interaction) {
-      await interaction.trigger('first');
-    }
-    // Animation
-    else if (animation) {
+    const display = displayProperty || 'block';
+
+    if (interactionInstance) {
+      await interactionInstance.trigger('first');
+    } else if (animation) {
       animations[animation].prepareIn(element, { display });
       await animations[animation].animateIn(element, { display });
-    }
-    // No interaction or animation
-    else {
+    } else {
       element.style.display = display;
     }
 
-    this.visible = true;
-  }
+    visible = true;
+  };
 
-  /**
-   * Hides the element
-   * @returns An awaitable promise
-   */
-  public async hide(): Promise<void> {
-    if (!this.visible) return;
+  const hide = async (): Promise<void> => {
+    if (!visible) return;
 
-    const { interaction, animation, element } = this;
-
-    // Interaction
-    if (interaction) {
-      await interaction.trigger('second');
-    }
-    // Animation
-    else if (animation) {
+    if (interactionInstance) {
+      await interactionInstance.trigger('second');
+    } else if (animation) {
       await animations[animation].animateOut(element, { display: 'none' });
-    }
-    // No interaction or animation
-    else {
+    } else {
       element.style.display = 'none';
     }
 
-    this.visible = false;
-  }
+    visible = false;
+  };
+
+  return {
+    element,
+    isElementVisible,
+    show,
+    hide,
+    displayProperty,
+  };
 }

@@ -31,6 +31,15 @@ export const COOKIE_KEYS = {
   consentsUpdated: `${MAIN_KEY}-updated`,
 };
 
+interface ConsentMode {
+  functionality_storage: string;
+  security_storage: string;
+  ad_storage: string;
+  analytics_storage: string;
+  personalization_storage: string;
+  uncategorized_storage: string;
+}
+
 export const DYNAMIC_KEYS = {
   checkbox: (key: string): string => `[${ELEMENT}="checkbox-${key}"]`,
   gtmEvent: (key: string): string => `${key}-activated`,
@@ -101,11 +110,11 @@ test('Attributes Consent', async ({ page, browserName }) => {
   await expect(preferences).not.toBeVisible();
 
   // Clicking the close button closes the Banner, but on page refresh the Banner displays again.
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await bannerClose.dispatchEvent('click');
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await expect(banner).not.toBeVisible();
   await expect(manager).toBeVisible();
@@ -118,27 +127,28 @@ test('Attributes Consent', async ({ page, browserName }) => {
   await expect(preferences).not.toBeVisible();
 
   // Clicking the Preferences button closes the Banner and opens the Preferences.
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await preferencesOpen.dispatchEvent('click');
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await expect(banner).not.toBeVisible();
   await expect(preferences).toBeVisible();
 
   // Selecting the analytics checkbox doesn't fire any scripts, closes the Preferences, opens the Manager, displays the Manager and pushes the 'analytics-activated' event to the dataLayer.
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   // set analyticsCheckbox to checked
   await analyticsCheckbox.dispatchEvent('click');
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   // submit form
   await preferencesForm.dispatchEvent('submit');
 
-  await page.waitForTimeout(250);
+  // give time for the form to submit and scripts to be initialized
+  await page.waitForTimeout(1000);
 
   await expect(manager).toBeVisible();
   await expect(preferences).not.toBeVisible();
@@ -153,18 +163,52 @@ test('Attributes Consent', async ({ page, browserName }) => {
 
   expect(analyticsActivatedEvent).toBeDefined();
 
+  const checkAnalyticsConsentMode = () => {
+    function isConsentArguments(item: IArguments): boolean {
+      const isArguments = Object.prototype.toString.call(item) === '[object Arguments]';
+      const isConsent = item[0] === 'consent';
+      return isArguments && isConsent;
+    }
+
+    let analytisGranted = false;
+
+    const dataLayer = [...(window?.dataLayer || [])];
+
+    // events are always fired with arr.push() so there can exist multiple that matches gtag('consent', 'update', {})
+    // Reverse the array so that the latest events are at the beginning
+    dataLayer.reverse();
+
+    for (const event of dataLayer) {
+      if (isConsentArguments(event)) {
+        const [, , mode] = Array.from(event);
+
+        analytisGranted = (mode as ConsentMode)?.analytics_storage === 'granted';
+
+        // Stop looping after finding the last "consent" argument
+        break;
+      }
+    }
+
+    return analytisGranted;
+  };
+
+  // consent mode for analytics should be granted for GA
+  const analyticsConsentModGranted = await page.evaluate(checkAnalyticsConsentMode);
+
+  expect(analyticsConsentModGranted).toBeTruthy();
+
   await reloadPage(page);
 
   await expect(banner).not.toBeVisible();
   await expect(manager).toBeVisible();
 
   // Clicking the Manager closes it and opens the Preferences.
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   const preferencesOpenTwo = page.locator(BUTTONS.openPreferences).first();
   await preferencesOpenTwo.dispatchEvent('click');
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await expect(manager).not.toBeVisible();
   await expect(preferences).toBeVisible();
@@ -172,8 +216,13 @@ test('Attributes Consent', async ({ page, browserName }) => {
   // The Analytics checkbox in the Preferences preserves the checked state.
   await expect(analyticsCheckbox).toBeChecked();
 
+  // on reload the same consent mode for analytics should be granted for GA automatically
+  const analyticsConsentModGrantedOnReload = await page.evaluate(checkAnalyticsConsentMode);
+
+  expect(analyticsConsentModGrantedOnReload).toBeTruthy();
+
   // Clicking "Allow All" selects all the consent checkboxes, closes the Preferences and fires the GA script.
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await preferencesAllowAll.dispatchEvent('click');
 
@@ -183,20 +232,22 @@ test('Attributes Consent', async ({ page, browserName }) => {
   await expect(personalizationCheckbox).toBeChecked();
   await expect(analyticsCheckbox).toBeChecked();
 
+  await page.waitForTimeout(2000);
+
   expect(await getCookie(page, '_ga')).toBeDefined();
 
   await reloadPage(page);
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   expect(await getCookie(page, '_ga')).toBeDefined();
 
   // Opening the Preferences and clicking Reject All sets the fs-consent-updated cookie
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await preferencesOpen.dispatchEvent('click');
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(1000);
 
   await expect(banner).not.toBeVisible();
   await expect(preferences).toBeVisible();

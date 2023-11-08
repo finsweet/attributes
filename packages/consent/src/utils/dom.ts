@@ -6,7 +6,7 @@ import {
   waitWebflowReady,
 } from '@finsweet/attributes-utils';
 
-import { Debug } from '../components';
+import { alert } from '../components';
 import { type IFrameData, type ScriptData } from '../utils';
 import { getElementSelector } from './selectors';
 
@@ -57,7 +57,7 @@ export const renderComponentsFromSource = async (source: string, resetix: boolea
       await restartWebflow(['ix2']);
     }
   } catch (error) {
-    Debug.alert(`${error}`, 'error');
+    alert(`${error}`, 'error');
   }
 };
 

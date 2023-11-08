@@ -1,4 +1,4 @@
-import { Debug } from '../components';
+import { alert } from '../components';
 
 /**
  * Fire GTM Event, making sure it's unique and has not been fired before
@@ -8,6 +8,6 @@ export const fireUniqueGTMEvent = (eventName: string): void => {
   window.dataLayer = window.dataLayer || [];
   if (!window.dataLayer.find((data) => data.event === eventName)) {
     window.dataLayer.push({ event: eventName });
-    Debug.alert(`The GTM event ${eventName} has been fired.`, 'info');
+    alert(`The GTM event ${eventName} has been fired.`, 'info');
   }
 };
