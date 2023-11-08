@@ -226,13 +226,22 @@ test('Attributes Consent', async ({ page, browserName }) => {
 
   await preferencesAllowAll.dispatchEvent('click');
 
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
+
+  // preference to be closed
+  await expect(preferences).not.toBeVisible();
+
+  // open preferences again
+  await preferencesOpen.dispatchEvent('click');
+
+  await page.waitForTimeout(1000);
+
+  // preferences to be open
+  await expect(preferences).toBeVisible();
 
   await expect(marketingCheckbox).toBeChecked();
   await expect(personalizationCheckbox).toBeChecked();
   await expect(analyticsCheckbox).toBeChecked();
-
-  await page.waitForTimeout(2000);
 
   expect(await getCookie(page, '_ga')).toBeDefined();
 
@@ -243,8 +252,6 @@ test('Attributes Consent', async ({ page, browserName }) => {
   expect(await getCookie(page, '_ga')).toBeDefined();
 
   // Opening the Preferences and clicking Reject All sets the fs-consent-updated cookie
-  await page.waitForTimeout(1000);
-
   await preferencesOpen.dispatchEvent('click');
 
   await page.waitForTimeout(1000);

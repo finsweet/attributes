@@ -196,5 +196,6 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
     listenEvents,
     show,
     selector: `[fs-consent-element="${selector}"]`,
+    type: selector,
   };
 };

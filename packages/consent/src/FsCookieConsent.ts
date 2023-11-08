@@ -127,7 +127,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
     // Consent Controller
     consentController.on('updateconsents', () => {
       componentsKeys.forEach((componentKey) => {
-        if (componentKey === params[componentKey]?.selector) params[componentKey]?.form?.updateCheckboxes();
+        if (componentKey === params[componentKey]?.type) params[componentKey]?.form?.updateCheckboxes();
       });
     });
 
