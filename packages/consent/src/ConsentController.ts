@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { extractCommaSeparatedValues, isNotEmpty } from '@finsweet/attributes-utils';
+import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
 import Emittery from 'emittery';
 import { nanoid } from 'nanoid';
 

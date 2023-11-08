@@ -66,7 +66,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 const reloadPage = async (page: Page) => {
-  await page?.reload();
+  await page.reload();
 
   await waitAttributeLoaded(page, 'consent');
 };
@@ -75,12 +75,7 @@ const reloadPage = async (page: Page) => {
  * We have a single test because the context needs to be preserved between tests.
  * And playwright applies Isolation {@link https://playwright.dev/docs/browser-contexts} by default.
  */
-test('Attributes Consent', async ({ page, browserName }) => {
-  // TODO: skipping webkit tests, for some reason there is a timeout error
-  if (browserName === 'webkit') {
-    return;
-  }
-
+test('Attributes Consent', async ({ page }) => {
   await waitAttributeLoaded(page, 'consent');
 
   const banner = page.locator(COMPONENTS.banner);

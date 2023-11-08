@@ -16,8 +16,6 @@ import {
 let modeSetting;
 let consents: Consents = {} as Consents;
 let endpointSetting;
-let domainSetting;
-let resetixSetting: string;
 let componentsSource;
 const scripts: ScriptData[] = [];
 const iFrames: IFrameData[] = [];
@@ -57,12 +55,6 @@ export const useStore = ({ source, expires, debug, mode, endpoint, domain, reset
 
   // Get the components source
   componentsSource = source;
-
-  // Get the domain
-  domainSetting = domain;
-
-  // Get the resetix
-  resetixSetting = resetix || '';
 
   // Alert the setup
   alert(

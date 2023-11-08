@@ -170,6 +170,8 @@ test.describe('combobox', () => {
 
     await comboboxInput.type('a');
 
+    page.waitForTimeout(1000);
+
     await expect(comboboxNav).toHaveClass(/w--open/);
 
     await comboboxInput.press('ArrowUp');
