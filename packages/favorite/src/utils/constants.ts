@@ -9,6 +9,9 @@ export const ELEMENTS = [
   'remove',
   'like',
   'loader',
+  'counter',
+  'empty',
+  'message',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

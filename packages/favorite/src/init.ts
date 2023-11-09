@@ -34,7 +34,12 @@ export const init: FsAttributeInit = async () => {
     const loader = queryElement('loader');
     if (loader) loader.style.display = 'none';
     const key = getAttribute(favoriteList, 'key') || 'favorite';
+    const counter = queryElement('counter');
+    const empty = queryElement('empty');
+    const message = queryElement('message');
     const localStorageData = JSON.parse(String(localStorage.getItem(key))) || [];
+    if (counter) counter.innerHTML = localStorageData.length;
+    if (empty && localStorageData.length) empty.style.display = 'none';
 
     for (const link of localStorageData) {
       if (loader) loader.style.display = 'block';
@@ -56,8 +61,23 @@ export const init: FsAttributeInit = async () => {
             const nextRemoveEvent = removeQueue.shift();
             if (nextRemoveEvent) await removeItemFromList(favoriteList, nextRemoveEvent.detail);
           }
-
           if (loader) loader.style.display = 'none';
+
+          const localStorageData = JSON.parse(String(localStorage.getItem(key))) || [];
+          if (counter) {
+            counter.innerHTML = localStorageData.length;
+          }
+          if (message) {
+            message.style.display = 'block';
+            setTimeout(() => {
+              message.style.display = 'none';
+            }, 2000);
+          }
+          if (empty && localStorageData.length) {
+            empty.style.display = 'none';
+          } else {
+            empty.style.display = 'flex';
+          }
         }
       }
     });
@@ -74,6 +94,15 @@ export const init: FsAttributeInit = async () => {
           } finally {
             if (loader) loader.style.display = 'none';
           }
+        }
+        const localStorageData = JSON.parse(String(localStorage.getItem(key))) || [];
+        if (counter) {
+          counter.innerHTML = localStorageData.length;
+        }
+        if (empty && localStorageData.length) {
+          empty.style.display = 'none';
+        } else {
+          empty.style.display = 'flex';
         }
       }
     });

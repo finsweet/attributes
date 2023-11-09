@@ -38,7 +38,6 @@ export const addItemToList = async (
     if (itemTemplate) {
       const elementCopy = itemTemplate.cloneNode(true) as HTMLElement;
       const fieldsWithContent = elementCopy.querySelectorAll('[fs-favorite-field]');
-      console.log(fieldsWithContent);
       const removeButton = queryElement('remove', { scope: elementCopy });
       fieldsWithContent.forEach((element) => {
         const fieldName = element.getAttribute('fs-favorite-field');
