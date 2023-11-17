@@ -5,6 +5,8 @@ import { getAttribute, getElementSelector, getInstanceIndex, typingInstancesStor
 export const initTyping = (textElement: HTMLElement) => {
   if (typingInstancesStore.has(textElement)) return;
 
+  textElement.style.display = 'inline-flex';
+
   const instanceIndex = getInstanceIndex(textElement);
   const contentElements = Array.from(
     document.querySelectorAll(getElementSelector('content', { instanceIndex }).replace(/="content"/g, '^="content"'))
