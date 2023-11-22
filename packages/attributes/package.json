@@ -67,6 +67,7 @@
     "@finsweet/attributes-mirrorinput": "workspace:*",
     "@finsweet/attributes-modal": "workspace:*",
     "@finsweet/attributes-numbercount": "workspace:*",
+    "@finsweet/attributes-pagetransition": "workspace:*",
     "@finsweet/attributes-queryparam": "workspace:*",
     "@finsweet/attributes-rangeslider": "workspace:*",
     "@finsweet/attributes-readtime": "workspace:*",

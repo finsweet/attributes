@@ -70,6 +70,8 @@ export const MODAL_ATTRIBUTE = 'modal';
 
 export const NUMBER_COUNT_ATTRIBUTE = 'numbercount';
 
+export const PAGE_TRANSITION_ATTRIBUTE = 'pagetransition';
+
 export const LAUNCHDARKLY_ATTRIBUTE = 'launchdarkly';
 
 export const QUERY_PARAM_ATTRIBUTE = 'queryparam';

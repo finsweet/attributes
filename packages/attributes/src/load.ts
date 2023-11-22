@@ -138,6 +138,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-numbercount');
     }
 
+    case 'pagetransition': {
+      return import('@finsweet/attributes-pagetransition');
+    }
+
     case 'queryparam': {
       return import('@finsweet/attributes-queryparam');
     }
