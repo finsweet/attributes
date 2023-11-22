@@ -2,17 +2,72 @@ import { type AttributeElements, type AttributeSettings } from '@finsweet/attrib
 
 export const ELEMENTS = [
   /**
-   * This is an element example definition.
+   * When hovering over this element, the tooltip content is shown.
+   * This can be applied to any element — Div Block, Text Element, Span, etc.
    */
-  'example',
+  'target',
+
+  /**
+   * The tooltip that shows when hover/click on `target`.
+   * This element will be styled in Webflow (including CSS size properties like max-width)
+   */
+  'tooltip',
+
+  /**
+   * Tooltip template when using tooltips in Rich Text
+   */
+  'tooltip-template',
+
+  /**
+   * Arrow that will be used for tooltip
+   */
+  'arrow',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
   /**
-   * Defines a setting example definition.
+   * Defines whether tooltip should be shown on hover or click.
    */
-  example: {
-    key: 'example',
-    values: { value: 'value' },
+  listener: {
+    key: 'listener',
+    values: { hover: 'hover', click: 'click' },
+  },
+  /**
+   * Defines placement for tooltip relative to toggle.
+   */
+  placement: {
+    key: 'placement',
+    values: {
+      top: 'top',
+      'top-start': 'top-start',
+      'top-end': 'top-end',
+      right: 'right',
+      'right-start': 'right-start',
+      'right-end': 'right-end',
+      bottom: 'bottom',
+      'bottom-start': 'bottom-start',
+      'bottom-end': 'bottom-end',
+      left: 'left',
+      'left-start': 'left-start',
+      'left-end': 'left-end',
+    },
+  },
+  /**
+   * Defines offset for tooltip placement.
+   */
+  offset: {
+    key: 'offset',
+  },
+  /**
+   * Defines padding for tooltip placement.
+   */
+  padding: {
+    key: 'padding',
+  },
+  /**
+   * Defines whether tooltip should flip when there is no space for it.
+   */
+  flip: {
+    key: 'flip',
   },
 } as const satisfies AttributeSettings;

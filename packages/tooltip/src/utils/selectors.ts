@@ -1,5 +1,9 @@
-import { EXAMPLE_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-utils';
+import { generateSelectors, STAR_RATING_ATTRIBUTE, TOOLTIP_ATTRIBUTE } from '@finsweet/attributes-utils';
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const {} = generateSelectors(EXAMPLE_ATTRIBUTE, ELEMENTS, SETTINGS);
+export const { getAttribute, getInstanceIndex, queryElement, getElementSelector, queryAllElements } = generateSelectors(
+  TOOLTIP_ATTRIBUTE,
+  ELEMENTS,
+  SETTINGS
+);
