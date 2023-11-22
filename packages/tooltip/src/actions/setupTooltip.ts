@@ -24,6 +24,9 @@ export const setupTooltip = (
   const listener = getAttribute(toggle, 'listener') || globalSettings.listener || 'hover';
   const canFlip = getAttribute(toggle, 'flip') === 'true' || globalSettings.flip;
 
+  // popup needs a width value https://floating-ui.com/docs/computeposition#initial-layout
+  tooltip.style.width = 'max-content';
+
   // setup floating ui middleware
   const middleware = [
     offset(offsetValue),
