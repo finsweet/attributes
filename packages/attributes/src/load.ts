@@ -185,7 +185,7 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
     case 'toc': {
       return import('@finsweet/attributes-toc');
     }
-    
+
     case 'tooltip': {
       return import('@finsweet/attributes-tooltip');
     }
