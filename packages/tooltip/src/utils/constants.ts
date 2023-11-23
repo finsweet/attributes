@@ -26,6 +26,22 @@ export const ELEMENTS = [
 
 export const SETTINGS = {
   /**
+   * Animation setting
+   */
+  animation: {
+    key: 'animation',
+    values: {
+      fade: 'fade',
+      'slide-up': 'slide-up',
+      'slide-down': 'slide-down',
+      'slide-left': 'slide-left',
+      'slide-right': 'slide-right',
+      grow: 'grow',
+      shrink: 'shrink',
+      spin: 'spin',
+    },
+  },
+  /**
    * Defines whether tooltip should be shown on hover or click.
    */
   listener: {
@@ -63,6 +79,12 @@ export const SETTINGS = {
    */
   padding: {
     key: 'padding',
+  },
+  /**
+   * Defines custom message for richtext element tooltip.
+   */
+  content: {
+    key: 'content',
   },
   /**
    * Defines whether tooltip should flip when there is no space for it.

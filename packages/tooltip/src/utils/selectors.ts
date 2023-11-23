@@ -1,4 +1,4 @@
-import { generateSelectors, STAR_RATING_ATTRIBUTE, TOOLTIP_ATTRIBUTE } from '@finsweet/attributes-utils';
+import { generateSelectors, TOOLTIP_ATTRIBUTE } from '@finsweet/attributes-utils';
 
 import { ELEMENTS, SETTINGS } from './constants';
 

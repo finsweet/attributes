@@ -1,46 +1,47 @@
-import { animations, isNotEmpty } from '@finsweet/attributes-utils';
-import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { animations, isNotEmpty, normalizeNumber } from '@finsweet/attributes-utils';
+import { arrow, autoUpdate, computePosition, flip, offset, type Placement, shift } from '@floating-ui/dom';
 
-import { getAttribute, type TooltipInstance } from '../utils';
+import { getAttribute, type GlobalSettings, rotateArrow, type TooltipInstance } from '../utils';
 
 /**
  * Sets up a tooltip with the specified configuration.
  *
- * @param toggle - The element that triggers the tooltip.
+ * @param target - The element that triggers the tooltip.
  * @param tooltip - The tooltip element that is displayed.
  * @param arrowElement - The arrow element within the tooltip.
  * @param globalSettings - Global settings for the tooltip behavior and appearance.
  * @returns {TooltipInstance} An object containing the tooltip elements and a cleanup function.
  */
 export const setupTooltip = (
-  toggle: HTMLElement,
+  target: HTMLElement,
   tooltip: HTMLElement,
-  arrowElement: HTMLElement,
-  globalSettings: any
+  globalSettings: GlobalSettings,
+  arrowElement?: HTMLElement
 ): TooltipInstance => {
-  const animation: keyof typeof animations = globalSettings.animation || 'fade';
-  const placement = getAttribute(toggle, 'placement') || globalSettings.placement || 'top';
-  const offsetValue = getAttribute(toggle, 'offset') || globalSettings.offset || 6;
-  const listener = getAttribute(toggle, 'listener') || globalSettings.listener || 'hover';
-  const canFlip = getAttribute(toggle, 'flip') === 'true' || globalSettings.flip;
+  const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
+  const placement = (getAttribute(target, 'placement') || globalSettings.placement || 'top') as Placement;
+  const offsetValue = getAttribute(target, 'offset') || globalSettings.offset;
+  const listener = getAttribute(target, 'listener') || globalSettings.listener || 'hover';
+  const canFlip = getAttribute(target, 'flip') === 'true' || globalSettings.flip === 'true';
 
   // popup needs a width value https://floating-ui.com/docs/computeposition#initial-layout
   tooltip.style.width = 'max-content';
 
   // setup floating ui middleware
   const middleware = [
-    offset(offsetValue),
+    offset(offsetValue ? normalizeNumber(offsetValue) : 6),
     canFlip
       ? flip({
           fallbackAxisSideDirection: 'start',
           fallbackStrategy: 'bestFit',
         })
       : undefined,
-    arrow({ element: arrowElement }),
+    shift({ padding: 5 }),
+    arrowElement ? arrow({ element: arrowElement }) : undefined,
   ].filter(isNotEmpty);
 
   const update = () => {
-    computePosition(toggle, tooltip, {
+    computePosition(target, tooltip, {
       placement,
       middleware,
     }).then(({ x, y, placement, middlewareData }) => {
@@ -49,16 +50,22 @@ export const setupTooltip = (
         top: `${y}px`,
       });
 
-      // Accessing the arrow data
+      if (!arrowElement) return;
+
       const { x: arrowX, y: arrowY } = middlewareData.arrow as { x: number; y: number };
 
-      const staticSide =
-        {
-          top: 'bottom',
-          right: 'left',
-          bottom: 'top',
-          left: 'right',
-        }[placement.split('-')[0]] || 'bottom';
+      const position = placement.split('-')[0] as 'top' | 'right' | 'bottom' | 'left';
+
+      if (position) {
+        rotateArrow(arrowElement, position);
+      }
+
+      const staticSide = {
+        top: 'bottom',
+        right: 'left',
+        bottom: 'top',
+        left: 'right',
+      }[position];
 
       Object.assign(arrowElement.style, {
         left: arrowX != null ? `${arrowX}px` : '',
@@ -71,6 +78,14 @@ export const setupTooltip = (
   };
 
   const showTooltip = async () => {
+    if (!animation) {
+      tooltip.style.display = 'block';
+
+      update();
+
+      return;
+    }
+
     animations[animation].prepareIn(tooltip, { display: 'block' });
     await animations[animation].animateIn(tooltip, { display: 'block' });
 
@@ -78,26 +93,32 @@ export const setupTooltip = (
   };
 
   const hideTooltip = async () => {
+    if (!animation) {
+      tooltip.style.display = 'none';
+
+      return;
+    }
+
     await animations[animation].animateOut(tooltip, { display: 'none' });
   };
 
   const options = [
     listener === 'click' ? ['click', showTooltip] : undefined,
     listener === 'hover' ? ['mouseenter', showTooltip] : undefined,
-    listener === 'hover' ? ['mouseleave', hideTooltip] : undefined,
-    listener === 'hover' ? ['focus', showTooltip] : undefined,
+    // ['focus', showTooltip],
+    ['mouseleave', hideTooltip],
     ['blur', hideTooltip],
   ].filter(isNotEmpty);
 
   options.forEach(([event, listener]) => {
-    toggle.addEventListener(
+    target.addEventListener(
       event as string,
 
       listener as EventListener
     );
   });
 
-  const cleanup = autoUpdate(toggle, tooltip, update);
+  const cleanup = autoUpdate(target, tooltip, update);
 
-  return { toggle, tooltip, arrowElement, cleanup };
+  return { target, tooltip, arrowElement, cleanup };
 };

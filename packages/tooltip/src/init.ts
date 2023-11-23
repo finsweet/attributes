@@ -1,37 +1,27 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
-import { setupTooltip } from './actions';
-import { queryAllElements, queryElement, SETTINGS, type TooltipInstance } from './utils';
-
-const initTooltips = (targets: HTMLElement[], globalSettings: any): TooltipInstance[] => {
-  const instances: TooltipInstance[] = [];
-
-  targets.forEach((target) => {
-    const tooltip = queryElement('tooltip', { scope: target });
-    const arrowElement = queryElement('arrow', { scope: target });
-
-    if (!tooltip || !arrowElement || !target) return;
-
-    instances.push(setupTooltip(target, tooltip, arrowElement, globalSettings));
-  });
-
-  return instances;
-};
-
-const cleanupTooltips = (instances: TooltipInstance[]) => {
-  instances.forEach((instance) => instance.cleanup());
-};
+import { cleanupTooltips, initRctTooltips, initTooltips } from './actions';
+import { type GlobalSettings, queryAllElements, SETTINGS, type TooltipInstance } from './utils';
 
 /**
  * Inits the attribute.
  */
 export const init: FsAttributeInit<typeof SETTINGS> = async (globalSettings = {}) => {
-  console.log('Tooltip attribute initialized', globalSettings);
-  const targets = queryAllElements('target');
+  const tooltipInstances: TooltipInstance[] = [] as TooltipInstance[];
 
-  const tooltipInstances = initTooltips(targets, globalSettings);
+  const targets = queryAllElements('target');
+  const rctElements = document.querySelectorAll<HTMLDivElement>('[fs-richtext-element="rich-text"]');
+
+  if (rctElements.length > 0) {
+    const rctInstances = initRctTooltips(Array.from(rctElements), globalSettings as GlobalSettings);
+
+    tooltipInstances.push(...rctInstances);
+  }
+
+  tooltipInstances.push(...initTooltips(targets, globalSettings as GlobalSettings));
 
   await waitWebflowReady();
+
   return {
     result: tooltipInstances,
     destroy() {
