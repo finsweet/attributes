@@ -47,5 +47,3 @@ type FiltersGroup = {
   match: 'and' | 'or';
   filters: FiltersData | FiltersGroup[];
 };
-
-export type ResetData = { rawFilterKey: string | undefined; inputFields: HTMLInputElement[] };
