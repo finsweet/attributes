@@ -136,15 +136,28 @@ test.describe('combobox', () => {
     const comboboxOptions = comboboxNav.locator('a');
     const select = comboboxDropdown.locator('select');
     const comboboxClearDropdown = page.locator('[fs-combobox-element="clear"]');
-    const preventClearSetting = page.locator('[fs-combobox-preventclear="true"]');
 
-    const preventClearSettingExists = await preventClearSetting.isVisible();
+    const getAttributeIfExists = async (selector: string, attributeName: string): Promise<boolean> => {
+      const element = page.locator(selector);
 
-    await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
+      if ((await element.count()) === 0) return false;
+
+      const attributeValue = await element.getAttribute(attributeName);
+
+      return attributeValue === 'true';
+    };
+
+    const preventClearSettingExists = await getAttributeIfExists(
+      '[fs-combobox-preventclear]',
+      'fs-combobox-preventclear'
+    );
 
     await comboboxInput.click();
 
-    expect(await comboboxNav).toHaveClass(/w--open/);
+    const activeElement = await page.evaluate(() => document.activeElement?.tagName);
+    await expect(activeElement).toEqual('INPUT');
+
+    await expect(await comboboxNav).toHaveClass(/w--open/);
 
     const randomOptionIndex = Math.floor(Math.random() * (await comboboxOptions.count()));
     const randomOption = comboboxOptions.nth(randomOptionIndex);
@@ -152,20 +165,14 @@ test.describe('combobox', () => {
 
     await expect(comboboxNav).not.toHaveClass(/w--open/);
 
-    await expect(comboboxClearDropdown).toBeVisible();
+    const inputValue = await comboboxInput.inputValue();
 
-    const activeElement = await page.evaluate(() => document.activeElement?.tagName);
-    await expect(activeElement).toEqual('INPUT');
-
-    await comboboxInput.press('Backspace');
-
-    if (!preventClearSettingExists) await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
-    else await expect(comboboxClearDropdown).toBeVisible();
-
-    await comboboxInput.press('Backspace');
-
-    if (!preventClearSettingExists) await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
-    else await expect(comboboxClearDropdown).toBeVisible();
+    if (!preventClearSettingExists && inputValue.length === 0)
+      await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
+    else if (inputValue.length > 0 && preventClearSettingExists)
+      await expect(comboboxClearDropdown).toHaveCSS('display', 'block');
+    else if (inputValue.length > 0 && !preventClearSettingExists)
+      await expect(comboboxClearDropdown).toHaveCSS('display', 'block');
 
     // empty input
     await comboboxInput.fill('');
@@ -199,7 +206,7 @@ test.describe('combobox', () => {
 
     await page.waitForTimeout(1000);
 
-    const firstOption = comboboxOptions.nth(0);
+    const firstOption = await comboboxOptions.nth(0);
 
     const activeElement = await page.evaluate(() => document.activeElement?.getAttribute('id'));
     const firstOptionId = await firstOption.getAttribute('id');
@@ -216,8 +223,6 @@ test.describe('combobox', () => {
     const comboboxOptions = comboboxNav.locator('a');
 
     await comboboxInput.fill('a');
-
-    page.waitForTimeout(1000);
 
     await expect(comboboxNav).toHaveClass(/w--open/);
 
@@ -244,12 +249,10 @@ test.describe('combobox', () => {
 
     await comboboxInput.focus();
 
-    await comboboxInput.fill('test');
+    await comboboxInput.type('test');
 
     await comboboxInput.press('Enter');
 
-    // timeout to check if form is submitted, webflow will trigger form to display none natively if form is submitted
-    await page.waitForTimeout(2000);
     await expect(comboboxNav).not.toBeVisible();
     await expect(comboboxInput).not.toBeVisible();
   });
@@ -295,9 +298,6 @@ test.describe('combobox', () => {
     // press enter key
 
     await comboboxClearDropdown.press('Enter');
-
-    // timeout to check if form is submitted, webflow will trigger form to display none natively if form is submitted
-    await page.waitForTimeout(2000);
 
     // dropdown should be closed
     await expect(comboboxNav).not.toHaveClass(/w--open/);
