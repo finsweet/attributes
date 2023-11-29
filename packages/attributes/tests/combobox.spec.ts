@@ -35,6 +35,34 @@ test.describe('combobox', () => {
     await expect(comboboxInput).toBeEditable();
   });
 
+  test('Combobox on input if preventclear is true input value is maintained', async ({ page }) => {
+    const comboboxDropdown = page.locator('[fs-combobox-element="dropdown"]');
+    const preventClearSetting = page.locator('[fs-combobox-preventclear="true"]');
+
+    const preventClearSettingExists = await preventClearSetting.isVisible();
+
+    if (!preventClearSettingExists) {
+      return;
+    }
+
+    const comboboxInput = comboboxDropdown.locator('input');
+
+    const comboboxNav = comboboxDropdown.locator('nav');
+
+    await comboboxInput.focus();
+    await comboboxInput.fill('notexistingvalue');
+
+    await expect(comboboxNav).toHaveClass(/w--open/);
+
+    await comboboxNav.press('Escape');
+
+    await expect(comboboxNav).not.toHaveClass(/w--open/);
+
+    const inputValue = await comboboxInput.inputValue();
+
+    await expect(inputValue).toEqual('notexistingvalue');
+  });
+
   test('Combobox opens and closes by clicking on input.', async ({ page }) => {
     const comboboxDropdown = page.locator('[fs-combobox-element="dropdown"]');
     const comboboxInput = comboboxDropdown.locator('input');
@@ -70,17 +98,27 @@ test.describe('combobox', () => {
     const comboboxInput = comboboxDropdown.locator('input');
     const comboboxClearDropdown = page.locator('[fs-combobox-element="clear"]');
     const select = comboboxDropdown.locator('select');
+    const preventClearSetting = page.locator('[fs-combobox-preventclear="true"]');
+
+    const preventClearSettingExists = await preventClearSetting.isVisible();
 
     const comboboxNav = comboboxDropdown.locator('nav');
 
     await comboboxInput.focus();
-    await comboboxInput.type('test');
+    await comboboxInput.fill('test');
 
     await expect(comboboxNav).toHaveClass(/w--open/);
 
     await comboboxNav.press('Escape');
 
     await expect(comboboxNav).not.toHaveClass(/w--open/);
+
+    // if prevent clear is true, input value should not be cleared
+    if (preventClearSettingExists) {
+      await expect(await comboboxInput.inputValue()).toEqual('test');
+
+      return;
+    }
 
     const selectedValue = await select.getAttribute('value');
     if (!selectedValue) {
@@ -98,6 +136,9 @@ test.describe('combobox', () => {
     const comboboxOptions = comboboxNav.locator('a');
     const select = comboboxDropdown.locator('select');
     const comboboxClearDropdown = page.locator('[fs-combobox-element="clear"]');
+    const preventClearSetting = page.locator('[fs-combobox-preventclear="true"]');
+
+    const preventClearSettingExists = await preventClearSetting.isVisible();
 
     await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
 
@@ -117,16 +158,22 @@ test.describe('combobox', () => {
     await expect(activeElement).toEqual('INPUT');
 
     await comboboxInput.press('Backspace');
-    await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
+
+    if (!preventClearSettingExists) await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
+    else await expect(comboboxClearDropdown).toBeVisible();
 
     await comboboxInput.press('Backspace');
-    await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
 
-    await comboboxInput.type('');
+    if (!preventClearSettingExists) await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
+    else await expect(comboboxClearDropdown).toBeVisible();
 
-    await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
+    // empty input
+    await comboboxInput.fill('');
 
+    // press escape
     await comboboxInput.press('Escape');
+
+    await expect(comboboxClearDropdown).toHaveCSS('display', 'none');
 
     await expect(comboboxNav).not.toHaveAttribute('aria-expanded', 'true');
 
@@ -168,7 +215,7 @@ test.describe('combobox', () => {
     const comboboxNav = comboboxDropdown.locator('nav');
     const comboboxOptions = comboboxNav.locator('a');
 
-    await comboboxInput.type('a');
+    await comboboxInput.fill('a');
 
     page.waitForTimeout(1000);
 
@@ -197,7 +244,7 @@ test.describe('combobox', () => {
 
     await comboboxInput.focus();
 
-    await comboboxInput.type('test');
+    await comboboxInput.fill('test');
 
     await comboboxInput.press('Enter');
 
