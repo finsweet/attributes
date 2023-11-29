@@ -70,8 +70,9 @@ export const collectSettings = (referenceElement: HTMLElement) => {
   }
 
   const hideInitial = hasAttributeValue(referenceElement, 'hideinitial', 'true');
+  const preventClear = hasAttributeValue(referenceElement, 'preventClear', 'true');
 
-  initializeAttributes(inputElement, selectElement, navListElement, clearDropdown);
+  initializeAttributes(inputElement, selectElement, navListElement, clearDropdown, preventClear);
   return {
     optionsStore,
     selectElement,
@@ -82,6 +83,7 @@ export const collectSettings = (referenceElement: HTMLElement) => {
     noResultsTemplate,
     optionsList,
     hideInitial,
+    preventClear,
     inputElement,
     clearDropdown,
     defaultOption,
@@ -101,10 +103,11 @@ const initializeAttributes = (
   inputElement: HTMLInputElement,
   selectElement: HTMLSelectElement,
   navListElement: HTMLElement,
-  clearDropdown: HTMLElement
+  clearDropdown: HTMLElement,
+  preventClear: boolean
 ) => {
   inputElement?.parentElement?.setAttribute(TABINDEX_KEY, '-1');
-  inputElement?.removeAttribute(NAME_KEY);
+  if (!preventClear) inputElement?.removeAttribute(NAME_KEY);
   inputElement?.setAttribute(TABINDEX_KEY, '0');
   inputElement?.removeAttribute('data-name');
   if (selectElement.hasAttribute(REQUIRED_KEY)) {

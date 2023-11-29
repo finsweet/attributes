@@ -34,6 +34,11 @@ export const SETTINGS = {
    * Defines if the reset option should be hidden whenever there isn't an active selection.
    */
   hideinitial: { key: 'hideinitial', values: { true: 'true' } },
+
+  /**
+   * If no results were found from `input` field search, it prevents input field from being cleared.
+   */
+  preventClear: { key: 'preventclear', values: { true: 'true' } },
 } as const satisfies AttributeSettings;
 
 export const DROPDOWN_IS_OPEN = 'w--open';

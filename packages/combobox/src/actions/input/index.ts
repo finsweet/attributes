@@ -151,7 +151,7 @@ export const handleInputClickEvents = (e: MouseEvent, settings: Settings) => {
  * @param fromInput Whether the event was triggered from the input element.
  */
 export const handleClearInput = (e: KeyboardEvent | FocusEvent, settings: Settings, fromInput = false) => {
-  const { inputElement, selectElement } = settings;
+  const { inputElement, selectElement, preventClear } = settings;
 
   if (!fromInput) {
     focusOnInput(settings);
@@ -165,7 +165,7 @@ export const handleClearInput = (e: KeyboardEvent | FocusEvent, settings: Settin
 
   if (fromInput) {
     const relatedTarget = (e as FocusEvent).relatedTarget as HTMLElement;
-    if (relatedTarget) return;
+    if (relatedTarget || preventClear) return;
 
     inputElement.value = '';
     selectElement.value = '';
@@ -173,6 +173,8 @@ export const handleClearInput = (e: KeyboardEvent | FocusEvent, settings: Settin
   }
 
   if (!selected) {
+    if (preventClear) return;
+
     inputElement.value = '';
     selectElement.value = '';
   }
