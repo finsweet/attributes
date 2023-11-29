@@ -17,6 +17,11 @@ export const ELEMENTS = [
   'item',
 
   /**
+   * Defines a button to clear a filter or all the filters.
+   */
+  'clear',
+
+  /**
    * Defines a pagination wrapper element.
    */
   'pagination-wrapper',

@@ -14,7 +14,5 @@ export const init: FsAttributeInit = async () => {
 
   lists.map(initList);
 
-  console.log(lists);
-
   return {};
 };

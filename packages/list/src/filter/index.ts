@@ -1,23 +1,36 @@
 import { isFormField } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getAttribute } from '../utils/selectors';
+import { getAttribute, getSettingSelector, queryAllElements } from '../utils/selectors';
+import { clearFilterData } from './clear';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
+import { type ResetData } from './types';
 
 /**
  * Inits loading functionality for the list.
  * @param list
- * @param mode
+ * @param form
  */
 export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Init hook
   list.addHook('filter', (items) => {
     const filters = list.filters.get();
 
-    const filteredItems = filterItems(filters, items);
-    return filteredItems;
+    return filterItems(filters, items);
   });
+
+  const selector = getSettingSelector('field');
+  const formFields = Array.from(form.querySelectorAll<HTMLInputElement>(selector)).filter((item) => isFormField(item));
+  const resetButtonElements = [...queryAllElements('clear', { scope: form })];
+
+  const resetButtonsData: Map<HTMLElement, ResetData> = new Map();
+
+  for (const resetButton of resetButtonElements) {
+    const rawFilterKey = getAttribute(resetButton, 'field');
+    const inputFields = formFields.filter((item) => getAttribute(item, 'field') === rawFilterKey);
+    resetButtonsData.set(resetButton, { rawFilterKey, inputFields });
+  }
 
   // Get filters data
   const filtersData = getFiltersData(form);
@@ -40,5 +53,12 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Trigger the hook when the filters change
   list.filters.subscribe(() => {
     list.triggerHook('filter');
+  });
+
+  // Reset buttons
+  resetButtonsData.forEach((resetData, resetButton) => {
+    resetButton.addEventListener('click', () => {
+      clearFilterData(formFields, resetData);
+    });
   });
 };
