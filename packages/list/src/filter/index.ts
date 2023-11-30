@@ -1,7 +1,7 @@
-import { clearFormField, isFormField } from '@finsweet/attributes-utils';
+import { clearFormField, isFormField, parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getAttribute, getElementSelector, getSettingSelector, queryAllElements } from '../utils/selectors';
+import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
 
@@ -26,17 +26,26 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
 
   list.filters.set(filtersData);
 
+  let debouncedFiltration = 0;
+
   // Listen for changes
   form.addEventListener('input', (e) => {
     const { target } = e;
     if (!isFormField(target)) return;
 
     const rawFieldKey = getAttribute(target, 'field');
+    const debounceValue = parseNumericAttribute(getAttribute(target, 'debounce'), 0);
     if (!rawFieldKey) return;
 
-    const filterData = getFilterData(target);
+    // Avoid unnecessary calls
+    if (debouncedFiltration) {
+      clearTimeout(debouncedFiltration);
+    }
 
-    list.filters.setKey(rawFieldKey, filterData);
+    debouncedFiltration = setTimeout(() => {
+      const filterData = getFilterData(target);
+      list.filters.setKey(rawFieldKey, filterData);
+    }, debounceValue);
   });
 
   // Trigger the hook when the filters change

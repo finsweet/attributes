@@ -127,6 +127,13 @@ export const SETTINGS = {
   },
 
   /**
+   * Debouncing delay for filter.
+   */
+  debounce: {
+    key: 'debounce',
+  },
+
+  /**
    * Defines the ascending CSS class.
    */
   ascclass: {
