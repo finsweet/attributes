@@ -4,6 +4,7 @@ export const ELEMENTS = ['form', 'error-show', 'success-show', 'submit'] as cons
 
 export const SETTINGS = {
   required: { key: 'required', values: { true: 'true' } },
+  type: { key: 'type' },
   validate: { key: 'validate' },
   errorclass: { key: 'errorclass' },
   successclass: { key: 'successclass' },

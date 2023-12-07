@@ -19,7 +19,12 @@ export const initFormValidation = (wrapper: HTMLElement) => {
 
   const pristine = new Pristine(form);
 
+  const textInputSelector = getSettingSelector('type').replace(/[\[\]]/g, '');
   const inputFields = form.querySelectorAll<HTMLElement>('input:not([type="checkbox"]):not([type="submit"]), textarea');
+  const textInputFields = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+    `input[ ${textInputSelector}="text"]`
+  );
+  const letterOnlyRegex = /^[A-Za-z]+$/;
   const validationFields: IValidationField[] = [];
 
   const requiredFields = form.querySelectorAll<HTMLInputElement>(getSettingSelector('required'));
@@ -51,14 +56,16 @@ export const initFormValidation = (wrapper: HTMLElement) => {
   checkboxFields.forEach((block) => {
     const errorMessages = queryElement('error-show', { scope: block });
     const successMessages = queryElement('success-show', { scope: block });
-    const checkbox = block.querySelector('input[type="checkbox"]');
+    const checkboxes = block.querySelectorAll<HTMLElement>('input[type="checkbox"]');
 
-    const inputErrorPair = {
-      input: checkbox,
-      error: errorMessages,
-      success: successMessages,
-    };
-    validationFields.push(inputErrorPair);
+    checkboxes.forEach((checkbox) => {
+      const inputErrorPair = {
+        input: checkbox,
+        error: errorMessages,
+        success: successMessages,
+      };
+      validationFields.push(inputErrorPair);
+    });
   });
 
   const validationType = getAttribute(form, 'validate');
@@ -154,18 +161,30 @@ export const initFormValidation = (wrapper: HTMLElement) => {
     );
   });
 
+  textInputFields.forEach((field) => {
+    pristine.addValidator(
+      field,
+      function (value: string) {
+        return letterOnlyRegex.test(value);
+      },
+      'Please enter only letters.'
+    );
+  });
+
   checkboxFields.forEach((checkboxField) => {
     const minCheckbox = getAttribute(checkboxField, 'mincheckbox');
-    const checkboxes = checkboxField.querySelectorAll('input[type="checkbox"]');
+    const checkboxes = checkboxField.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
     if (checkboxField) {
-      pristine.addValidator(
-        checkboxes[0],
-        function () {
-          const checkedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
-          return checkedCheckboxes.length >= Number(minCheckbox);
-        },
-        `Please, select at least ${minCheckbox} checkboxes.`
-      );
+      checkboxes.forEach((checkbox) => {
+        pristine.addValidator(
+          checkbox,
+          function () {
+            const checkedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
+            return checkedCheckboxes.length >= Number(minCheckbox);
+          },
+          `Please, select at least ${minCheckbox} checkboxes.`
+        );
+      });
     }
   });
 
@@ -192,13 +211,16 @@ export const initFormValidation = (wrapper: HTMLElement) => {
       });
     } else {
       clearValidation();
-      form.submit();
     }
+    return valid;
   };
 
   const onSubmitButtonClick = (event: Event) => {
-    event.preventDefault();
-    validate();
+    const valid = validate();
+
+    if (!valid) {
+      event.preventDefault();
+    }
   };
 
   if (validateOn.includes('typing')) {
