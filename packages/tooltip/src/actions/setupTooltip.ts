@@ -102,7 +102,7 @@ export const setupTooltip = (
     await animations[animation].animateOut(tooltip, { display: 'none' });
   };
 
-  setupTooltipEvents(target, tooltip, showTooltip, hideTooltip, listener);
+  setupTooltipEvents(target, tooltip, showTooltip, hideTooltip, listener, arrowElement);
 
   const cleanup = autoUpdate(target, tooltip, update);
 
@@ -122,7 +122,8 @@ const setupTooltipEvents = (
   tooltip: HTMLElement,
   showTooltip: () => Promise<void>,
   hideTooltip: () => Promise<void>,
-  listener = 'hover'
+  listener = 'hover',
+  arrow: HTMLElement | undefined = undefined
 ): void => {
   // Initialize the tooltip's visibility state
   let isTooltipVisible = false;
@@ -158,6 +159,16 @@ const setupTooltipEvents = (
   target.addEventListener('mouseenter', () => {
     showTooltip();
     isTooltipVisible = true;
+  });
+
+  [tooltip, arrow].forEach((element) => {
+    if (!element) return;
+
+    element.addEventListener('mouseenter', () => {
+      hideTooltip();
+
+      isTooltipVisible = false;
+    });
   });
 
   target.addEventListener('mouseleave', (event) => {
