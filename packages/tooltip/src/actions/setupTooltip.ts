@@ -102,23 +102,70 @@ export const setupTooltip = (
     await animations[animation].animateOut(tooltip, { display: 'none' });
   };
 
-  const options = [
-    listener === 'click' ? ['click', showTooltip] : undefined,
-    listener === 'hover' ? ['mouseenter', showTooltip] : undefined,
-    // ['focus', showTooltip],
-    ['mouseleave', hideTooltip],
-    ['blur', hideTooltip],
-  ].filter(isNotEmpty);
-
-  options.forEach(([event, listener]) => {
-    target.addEventListener(
-      event as string,
-
-      listener as EventListener
-    );
-  });
+  setupTooltipEvents(target, tooltip, showTooltip, hideTooltip, listener);
 
   const cleanup = autoUpdate(target, tooltip, update);
 
   return { target, tooltip, arrowElement, cleanup };
+};
+
+/**
+ * Attaches event listeners to the target and tooltip elements.
+ * @param target The target element that triggers the tooltip.
+ * @param tooltip The tooltip element.
+ * @param showTooltip Function to show the tooltip.
+ * @param hideTooltip Function to hide the tooltip.
+ * @param listener The event listener type.
+ */
+const setupTooltipEvents = (
+  target: HTMLElement,
+  tooltip: HTMLElement,
+  showTooltip: () => Promise<void>,
+  hideTooltip: () => Promise<void>,
+  listener = 'hover'
+): void => {
+  // Initialize the tooltip's visibility state
+  let isTooltipVisible = false;
+
+  if (listener === 'click') {
+    // Toggle tooltip on target click
+    target.addEventListener('click', (event) => {
+      if (isTooltipVisible) {
+        hideTooltip();
+      } else {
+        showTooltip();
+      }
+
+      isTooltipVisible = !isTooltipVisible;
+
+      event.stopPropagation();
+    });
+
+    // Hide tooltip when clicking outside target or tooltip
+    document.addEventListener('click', (event) => {
+      if (!target.contains(event.target as Node) && !tooltip.contains(event.target as Node)) {
+        if (isTooltipVisible) {
+          hideTooltip();
+          isTooltipVisible = false;
+        }
+      }
+    });
+
+    return;
+  }
+
+  // Hover event handling
+  target.addEventListener('mouseenter', () => {
+    showTooltip();
+    isTooltipVisible = true;
+  });
+
+  target.addEventListener('mouseleave', (event) => {
+    // Only hide tooltip if mouse leaves for an element outside the target
+    if (!target.contains(event.relatedTarget as Node)) {
+      hideTooltip();
+
+      isTooltipVisible = false;
+    }
+  });
 };
