@@ -13,4 +13,5 @@ export type GlobalSettings = {
   offset?: string;
   listener?: 'hover' | 'click';
   flip?: string;
+  padding?: string;
 };

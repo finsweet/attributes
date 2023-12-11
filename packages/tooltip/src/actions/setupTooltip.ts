@@ -20,9 +20,12 @@ export const setupTooltip = (
 ): TooltipInstance => {
   const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
   const placement = (getAttribute(target, 'placement') || globalSettings.placement || 'top') as Placement;
+  const arrowPadding = getAttribute(target, 'padding') || globalSettings.padding;
   const offsetValue = getAttribute(target, 'offset') || globalSettings.offset;
   const listener = getAttribute(target, 'listener') || globalSettings.listener || 'hover';
   const canFlip = getAttribute(target, 'flip') === 'true' || globalSettings.flip === 'true';
+
+  const computedArrowPadding = arrowPadding ? normalizeNumber(arrowPadding) || 0 : 0;
 
   // popup needs a width value https://floating-ui.com/docs/computeposition#initial-layout
   tooltip.style.width = 'max-content';
@@ -72,7 +75,7 @@ export const setupTooltip = (
         top: arrowY != null ? `${arrowY}px` : '',
         right: '',
         bottom: '',
-        [staticSide]: '-4px',
+        [staticSide]: `-${computedArrowPadding}px`,
       });
     });
   };
