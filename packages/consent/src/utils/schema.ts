@@ -6,7 +6,8 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   mode: {
     ...SETTINGS.mode,
     name: 'Opt-in',
-    description: 'Defines if the user can opt-in to cookies',
+    description:
+      'Opt-in means the user must explicitly “opt-in” to cookies before they are loaded on the page. Opt-out means cookies are loaded immediately and they can “opt-out” of the loaded cookies.',
     type: 'select',
   },
 
@@ -20,7 +21,7 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     ...SETTINGS.updated,
     name: 'Updated',
     description: 'When cookie is updated, this attribute will be set to true and stored in cookies',
-    type: 'text',
+    type: 'boolean',
   },
   domain: {
     ...SETTINGS.domain,
@@ -58,9 +59,9 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   },
   scroll: {
     ...SETTINGS.scroll,
-    name: 'Scroll',
+    name: 'Disable Scroll',
     description: 'Controls body locks and page scrolling when the Banner is visible',
-    type: 'text',
+    type: 'boolean',
   },
   display: {
     values: {
@@ -95,9 +96,21 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   },
   src: {
     ...SETTINGS.src,
-    name: 'Src',
+    name: 'Script Source',
     description: 'The source url of the script',
     type: 'text',
+  },
+  resetix: {
+    ...SETTINGS.resetix,
+    name: 'Webflow IX',
+    description: 'if set to true, `restartWebflow(["ix2"])` will be called after the consent is updated',
+    type: 'boolean',
+  },
+  animation: {
+    ...SETTINGS.animation,
+    name: 'Animation',
+    description: 'Default animation for the component. Defaults to no animations if not set.',
+    type: 'select',
   },
 };
 
@@ -109,14 +122,14 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Banner',
       description: 'Bottom banner',
       allowedTypes: ['Block'],
-      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.display],
+      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation],
     },
     {
       key: 'preferences',
       name: 'Preferences',
       description: 'Modal Form containing all the preferences and form',
       allowedTypes: ['Block'],
-      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.display],
+      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation],
     },
     {
       key: 'open-preferences',
@@ -129,6 +142,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Fixed Preferences',
       description: 'Toggles preferences modal.',
       allowedTypes: ['Link'],
+      settings: [SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation],
     },
     {
       key: 'allow',
@@ -153,12 +167,6 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Submit',
       description: 'Submit preferences form',
       allowedTypes: ['Link'],
-    },
-    {
-      key: 'interaction',
-      name: 'Interaction',
-      description: 'When added, it activates webflow interaction to the component',
-      allowedTypes: ['Block'],
     },
   ],
 };

@@ -15,23 +15,29 @@ export const animateNumberCount = (
   duration: number,
   locale?: string | true | null
 ) => {
-  const increment = (end - start) / duration;
+  let startTime: number | null = null;
 
-  let value = start;
+  const step = (timestamp: number) => {
+    if (startTime === null) startTime = timestamp;
 
-  const animate = () => {
-    if (value < end) {
-      const newValue = value + increment;
-      const flooredValue = Math.floor(newValue);
+    // Calculate the elapsed time since the animation started.
+    const elapsed = timestamp - startTime;
 
-      numberElement.textContent = valueToString(flooredValue, locale);
-      value = newValue;
-    } else {
-      numberElement.textContent = valueToString(end, locale);
+    const progress = Math.min(elapsed / duration, 1);
+    const value = start + (end - start) * progress;
+
+    numberElement.textContent = valueToString(Math.floor(value), locale);
+
+    // If the animation is not yet complete, request the next frame.
+    if (progress < 1) {
+      requestAnimationFrame(step);
+
+      return;
     }
+
+    // If the progress is 1 (animation complete), set the final value.
+    numberElement.textContent = valueToString(end, locale);
   };
 
-  for (let i = 0; i <= duration; i++) {
-    setTimeout(animate, i);
-  }
+  requestAnimationFrame(step);
 };
