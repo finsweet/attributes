@@ -44,8 +44,15 @@ export const SETTINGS = {
   /**
    * Defines whether tooltip should be shown on hover or click.
    */
-  listener: {
-    key: 'listener',
+  trigger: {
+    key: 'trigger',
+    values: { hover: 'hover', click: 'click' },
+  },
+  /**
+   * Defines whether tooltip should be hidden on hover or click.
+   */
+  triggerout: {
+    key: 'triggerout',
     values: { hover: 'hover', click: 'click' },
   },
   /**

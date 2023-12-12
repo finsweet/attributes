@@ -15,10 +15,16 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     description: 'Defines the flip behavior of the tooltip',
     type: 'text',
   },
-  listener: {
-    ...SETTINGS.listener,
-    name: 'Listener',
-    description: 'Event listener for the tooltip, currently supported is click or Hover. Defaults to hover.',
+  trigger: {
+    ...SETTINGS.trigger,
+    name: 'Trigger',
+    description: 'Event listener that shows the tooltip, currently supported is click or Hover. Defaults to hover.',
+    type: 'text',
+  },
+  triggerout: {
+    ...SETTINGS.triggerout,
+    name: 'Trigger Out',
+    description: 'Event listener that hides the tooltip, currently supported is click or Hover. Defaults to hover.',
     type: 'text',
   },
   offset: {
@@ -71,7 +77,8 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       allowedTypes: ['Block'],
       settings: [
         SCHEMA_SETTINGS.animation,
-        SCHEMA_SETTINGS.listener,
+        SCHEMA_SETTINGS.trigger,
+        SCHEMA_SETTINGS.triggerout,
         SCHEMA_SETTINGS.placement,
         SCHEMA_SETTINGS.offset,
         SCHEMA_SETTINGS.flip,

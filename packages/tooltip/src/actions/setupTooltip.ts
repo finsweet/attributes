@@ -3,6 +3,9 @@ import { arrow, autoUpdate, computePosition, flip, offset, type Placement, shift
 
 import { getAttribute, type GlobalSettings, rotateArrow, type TooltipInstance } from '../utils';
 
+// Global reference to the currently visible tooltip
+let currentVisibleTooltip: { hide: () => Promise<void> } | null = null;
+
 /**
  * Sets up a tooltip with the specified configuration.
  *
@@ -18,21 +21,24 @@ export const setupTooltip = (
   globalSettings: GlobalSettings,
   arrowElement?: HTMLElement
 ): TooltipInstance => {
+  const arrowLen = arrowElement ? arrowElement.offsetWidth : 0;
+  const floatingOffset = Math.sqrt(2 * arrowLen ** 2) / 2;
+
   const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
   const placement = (getAttribute(target, 'placement') || globalSettings.placement || 'top') as Placement;
-  const arrowPadding = getAttribute(target, 'padding') || globalSettings.padding;
-  const offsetValue = getAttribute(target, 'offset') || globalSettings.offset;
-  const listener = getAttribute(target, 'listener') || globalSettings.listener || 'hover';
+  const arrowPadding = getAttribute(target, 'padding') || globalSettings.padding || '0';
+  const offsetValue = getAttribute(target, 'offset') || globalSettings.offset || `${floatingOffset}`;
+  const trigger = getAttribute(target, 'trigger') || globalSettings.trigger || 'hover';
+  const triggerout = getAttribute(target, 'triggerout') || globalSettings.triggerout || 'hover';
   const canFlip = getAttribute(target, 'flip') === 'true' || globalSettings.flip === 'true';
-
-  const computedArrowPadding = arrowPadding ? normalizeNumber(arrowPadding) || 0 : 0;
 
   // popup needs a width value https://floating-ui.com/docs/computeposition#initial-layout
   tooltip.style.width = 'max-content';
+  const normalizedArrowPadding = normalizeNumber(arrowPadding) || 0;
 
   // setup floating ui middleware
   const middleware = [
-    offset(offsetValue ? normalizeNumber(offsetValue) : 6),
+    offset(normalizeNumber(offsetValue)),
     canFlip
       ? flip({
           fallbackAxisSideDirection: 'start',
@@ -40,7 +46,7 @@ export const setupTooltip = (
         })
       : undefined,
     shift({ padding: 5 }),
-    arrowElement ? arrow({ element: arrowElement }) : undefined,
+    arrowElement ? arrow({ element: arrowElement, padding: normalizedArrowPadding }) : undefined,
   ].filter(isNotEmpty);
 
   const update = () => {
@@ -55,28 +61,24 @@ export const setupTooltip = (
 
       if (!arrowElement) return;
 
-      const { x: arrowX, y: arrowY } = middlewareData.arrow as { x: number; y: number };
-
       const position = placement.split('-')[0] as 'top' | 'right' | 'bottom' | 'left';
-
-      if (position) {
-        rotateArrow(arrowElement, position);
-      }
 
       const staticSide = {
         top: 'bottom',
         right: 'left',
         bottom: 'top',
         left: 'right',
-      }[position];
+      }[position] as 'top' | 'right' | 'bottom' | 'left';
 
-      Object.assign(arrowElement.style, {
-        left: arrowX != null ? `${arrowX}px` : '',
-        top: arrowY != null ? `${arrowY}px` : '',
-        right: '',
-        bottom: '',
-        [staticSide]: `-${computedArrowPadding}px`,
-      });
+      if (middlewareData.arrow) {
+        const { x, y } = middlewareData.arrow;
+        Object.assign(arrowElement.style, {
+          left: x != null ? `${x}px` : '',
+          top: y != null ? `${y}px` : '',
+          [staticSide]: `${-(arrowElement.offsetWidth + normalizedArrowPadding) / 2}px`,
+          transform: rotateArrow(position),
+        });
+      }
     });
   };
 
@@ -105,7 +107,7 @@ export const setupTooltip = (
     await animations[animation].animateOut(tooltip, { display: 'none' });
   };
 
-  setupTooltipEvents(target, tooltip, showTooltip, hideTooltip, listener, arrowElement);
+  setupTooltipEvents(target, tooltip, showTooltip, hideTooltip, trigger, triggerout, arrowElement);
 
   const cleanup = autoUpdate(target, tooltip, update);
 
@@ -118,68 +120,61 @@ export const setupTooltip = (
  * @param tooltip The tooltip element.
  * @param showTooltip Function to show the tooltip.
  * @param hideTooltip Function to hide the tooltip.
- * @param listener The event listener type.
+ * @param trigger The event that triggers the tooltip.
+ * @param triggerout The event that hides the tooltip.
+ * @param arrow The arrow element within the tooltip.
  */
 const setupTooltipEvents = (
   target: HTMLElement,
   tooltip: HTMLElement,
   showTooltip: () => Promise<void>,
   hideTooltip: () => Promise<void>,
-  listener = 'hover',
-  arrow: HTMLElement | undefined = undefined
+  trigger = 'hover',
+  triggerout = 'hover',
+  arrowElement?: HTMLElement
 ): void => {
-  // Initialize the tooltip's visibility state
-  let isTooltipVisible = false;
+  // Show tooltip logic
+  const show = async () => {
+    // Hide any currently visible tooltip
+    if (currentVisibleTooltip && currentVisibleTooltip.hide !== hideTooltip) {
+      await currentVisibleTooltip.hide();
+    }
+    await showTooltip();
+    currentVisibleTooltip = { hide: hideTooltip };
+  };
 
-  if (listener === 'click') {
-    // Toggle tooltip on target click
-    target.addEventListener('click', (event) => {
-      if (isTooltipVisible) {
-        hideTooltip();
-      } else {
-        showTooltip();
-      }
+  // Hide tooltip logic
+  const hide = async () => {
+    if (currentVisibleTooltip && currentVisibleTooltip.hide === hideTooltip) {
+      await hideTooltip();
+      currentVisibleTooltip = null;
+    }
+  };
 
-      isTooltipVisible = !isTooltipVisible;
-
-      event.stopPropagation();
-    });
-
-    // Hide tooltip when clicking outside target or tooltip
-    document.addEventListener('click', (event) => {
-      if (!target.contains(event.target as Node) && !tooltip.contains(event.target as Node)) {
-        if (isTooltipVisible) {
-          hideTooltip();
-          isTooltipVisible = false;
-        }
-      }
-    });
-
-    return;
+  // Setup event listeners based on trigger and triggerout
+  if (trigger === 'click') {
+    target.addEventListener('click', show);
+  } else {
+    target.addEventListener('mouseenter', show);
   }
 
-  // Hover event handling
-  target.addEventListener('mouseenter', () => {
-    showTooltip();
-    isTooltipVisible = true;
-  });
-
-  [tooltip, arrow].forEach((element) => {
-    if (!element) return;
-
-    element.addEventListener('mouseenter', () => {
-      hideTooltip();
-
-      isTooltipVisible = false;
+  if (triggerout === 'click') {
+    document.addEventListener('click', async (event) => {
+      if (!target.contains(event.target as Node) && !tooltip.contains(event.target as Node)) {
+        await hide();
+      }
     });
-  });
+  } else {
+    target.addEventListener('mouseleave', hide);
+  }
 
-  target.addEventListener('mouseleave', (event) => {
-    // Only hide tooltip if mouse leaves for an element outside the target
-    if (!target.contains(event.relatedTarget as Node)) {
-      hideTooltip();
+  if (triggerout === 'hover') {
+    [tooltip, arrowElement].filter(isNotEmpty).forEach((element) => {
+      if (!element) return;
 
-      isTooltipVisible = false;
-    }
-  });
+      element.addEventListener('mouseenter', async () => {
+        await hide();
+      });
+    });
+  }
 };

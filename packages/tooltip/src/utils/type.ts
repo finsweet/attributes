@@ -11,7 +11,8 @@ export type GlobalSettings = {
   animation?: keyof typeof animations;
   placement?: string;
   offset?: string;
-  listener?: 'hover' | 'click';
+  trigger?: 'hover' | 'click';
+  triggerout?: 'hover' | 'click';
   flip?: string;
   padding?: string;
 };
