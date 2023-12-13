@@ -16,7 +16,6 @@ let tooltipOpen = false; // Moved outside the function to maintain state across 
 const updateTooltipPosition = (
   clientX: number,
   clientY: number,
-  target: HTMLElement,
   tooltip: HTMLElement,
   animation: keyof typeof animations
 ) => {
@@ -50,17 +49,17 @@ const updateTooltipPosition = (
 };
 
 /**
- * Sets up the floating tooltip for the target element. Adds mouse event listeners
+ * Sets up the virtual tooltip for the target element. Adds mouse event listeners
  * for positioning and showing/hiding the tooltip.
  * @param target The target element to which the tooltip is attached.
  * @param tooltip The tooltip element.
  * @param animation The animation type for showing and hiding the tooltip.
  * @returns A function to clean up the event listeners.
  */
-export const setupFloatingTooltip = (target: HTMLElement, tooltip: HTMLElement, animation: keyof typeof animations) => {
+export const setupVirtualTooltip = (target: HTMLElement, tooltip: HTMLElement, animation: keyof typeof animations) => {
   const mouseMoveHandler = (event: MouseEvent) => {
     const { clientX, clientY } = event;
-    updateTooltipPosition(clientX, clientY, target, tooltip, animation);
+    updateTooltipPosition(clientX, clientY, tooltip, animation);
   };
 
   const mouseLeaveHandler = () => {

@@ -14,6 +14,6 @@ export type GlobalSettings = {
   trigger?: 'hover' | 'click';
   triggerout?: 'hover' | 'click';
   flip?: string;
-  floating?: string;
+  virtual?: string;
   padding?: string;
 };

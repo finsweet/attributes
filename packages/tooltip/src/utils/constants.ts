@@ -100,9 +100,9 @@ export const SETTINGS = {
     key: 'flip',
   },
   /**
-   * Anchors the tooltip relative to any coordinates, tracks mouse movement.
+   * Anchors the tooltip relative to any coordinates, floats the tooltip whilst tracking mouse movement.
    */
-  floating: {
-    key: 'floating',
+  virtual: {
+    key: 'virtual',
   },
 } as const satisfies AttributeSettings;

@@ -15,10 +15,10 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     description: 'Defines the flip behavior of the tooltip',
     type: 'boolean',
   },
-  floating: {
-    ...SETTINGS.floating,
-    name: 'Floating',
-    description: 'Anchors the tooltip relative to any coordinates, tracks mouse movement.',
+  virtual: {
+    ...SETTINGS.virtual,
+    name: 'Virtual',
+    description: 'Anchors the tooltip relative to any coordinates, floats the tooltip whilst tracking mouse movement.',
     type: 'boolean',
   },
   trigger: {

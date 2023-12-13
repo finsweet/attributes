@@ -3,7 +3,7 @@ import { arrow, autoUpdate, computePosition, flip, offset, type Placement, shift
 
 import { getAttribute, type GlobalSettings, rotateArrow, type TooltipInstance } from '../utils';
 import { hideTooltip, showTooltip } from './controls';
-import { setupFloatingTooltip } from './setupFloatingTooltip';
+import { setupVirtualTooltip } from './setupVirtualTooltip';
 
 // Global reference to the currently visible tooltip
 let currentVisibleTooltip: { hide: () => Promise<void> } | null = null;
@@ -23,11 +23,11 @@ export const setupTooltip = (
   globalSettings: GlobalSettings,
   arrowElement?: HTMLElement | null
 ): TooltipInstance => {
-  const floating = getAttribute(target, 'floating') === 'true' || globalSettings.floating === 'true';
+  const virtual = getAttribute(target, 'virtual') === 'true' || globalSettings.virtual === 'true';
   const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
 
-  if (floating) {
-    const cleanup = setupFloatingTooltip(target, tooltip, animation);
+  if (virtual) {
+    const cleanup = setupVirtualTooltip(target, tooltip, animation);
 
     return { target, tooltip, arrowElement: undefined, cleanup };
   }
