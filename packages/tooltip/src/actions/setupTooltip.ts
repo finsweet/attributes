@@ -2,6 +2,8 @@ import { animations, isNotEmpty, normalizeNumber } from '@finsweet/attributes-ut
 import { arrow, autoUpdate, computePosition, flip, offset, type Placement, shift } from '@floating-ui/dom';
 
 import { getAttribute, type GlobalSettings, rotateArrow, type TooltipInstance } from '../utils';
+import { hideTooltip, showTooltip } from './controls';
+import { setupFloatingTooltip } from './setupFloatingTooltip';
 
 // Global reference to the currently visible tooltip
 let currentVisibleTooltip: { hide: () => Promise<void> } | null = null;
@@ -19,12 +21,19 @@ export const setupTooltip = (
   target: HTMLElement,
   tooltip: HTMLElement,
   globalSettings: GlobalSettings,
-  arrowElement?: HTMLElement
+  arrowElement?: HTMLElement | null
 ): TooltipInstance => {
+  const floating = getAttribute(target, 'floating') === 'true' || globalSettings.floating === 'true';
+  const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
+
+  if (floating) {
+    const cleanup = setupFloatingTooltip(target, tooltip, animation);
+
+    return { target, tooltip, arrowElement: undefined, cleanup };
+  }
+
   const arrowLen = arrowElement ? arrowElement.offsetWidth : 0;
   const floatingOffset = Math.sqrt(2 * arrowLen ** 2) / 2;
-
-  const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
   const placement = (getAttribute(target, 'placement') || globalSettings.placement || 'top') as Placement;
   const arrowPadding = getAttribute(target, 'padding') || globalSettings.padding || '0';
   const offsetValue = getAttribute(target, 'offset') || globalSettings.offset || `${floatingOffset}`;
@@ -82,32 +91,16 @@ export const setupTooltip = (
     });
   };
 
-  const showTooltip = async () => {
-    if (!animation) {
-      tooltip.style.display = 'block';
-
-      update();
-
-      return;
-    }
-
-    animations[animation].prepareIn(tooltip, { display: 'block' });
-    await animations[animation].animateIn(tooltip, { display: 'block' });
-
-    update();
+  const tooltipTrigger = {
+    show: () => {
+      return showTooltip(animation, tooltip, update);
+    },
+    hide: () => {
+      return hideTooltip(animation, tooltip);
+    },
   };
 
-  const hideTooltip = async () => {
-    if (!animation) {
-      tooltip.style.display = 'none';
-
-      return;
-    }
-
-    await animations[animation].animateOut(tooltip, { display: 'none' });
-  };
-
-  setupTooltipEvents(target, tooltip, showTooltip, hideTooltip, trigger, triggerout, arrowElement);
+  setupTooltipEvents(target, tooltip, tooltipTrigger.show, tooltipTrigger.hide, trigger, triggerout, arrowElement);
 
   const cleanup = autoUpdate(target, tooltip, update);
 
@@ -131,7 +124,7 @@ const setupTooltipEvents = (
   hideTooltip: () => Promise<void>,
   trigger = 'hover',
   triggerout = 'hover',
-  arrowElement?: HTMLElement
+  arrowElement?: HTMLElement | null
 ): void => {
   // Show tooltip logic
   const show = async () => {

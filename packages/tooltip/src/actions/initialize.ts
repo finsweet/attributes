@@ -14,7 +14,16 @@ export const initTooltips = (targets: HTMLElement[], globalSettings: GlobalSetti
     const tooltip = queryElement('tooltip', { scope: target });
     const arrowElement = queryElement('arrow', { scope: target });
 
-    if (!tooltip || !arrowElement || !target) return;
+    if (!tooltip || !target) return;
+
+    const targetId = target.getAttribute('id') || `tooltip-${Math.floor(Math.random() * 10000)}`;
+
+    tooltip.id = targetId;
+
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.setAttribute('aria-hidden', 'true');
+
+    target.setAttribute('aria-describedby', targetId);
 
     instances.push(setupTooltip(target, tooltip, globalSettings, arrowElement));
   });
