@@ -1,10 +1,10 @@
-import { queryElement } from '../utils/constants';
+import { queryAllElements } from '../utils/selectors';
 
 /**
  * Hides all `fs-shopify-element="loader"` elements.
  */
 export const hideLoaders = () => {
-  const allElements = queryElement<HTMLElement>('loader', { all: true });
+  const allElements = queryAllElements<HTMLElement>('loader');
 
   for (const element of allElements) {
     element.style.display = 'none';

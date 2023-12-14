@@ -1,4 +1,4 @@
-import { type FsAttributeInit } from '@finsweet/attributes-utils';
+import { type FsAttributeInit, waitDOMReady } from '@finsweet/attributes-utils';
 
 import { initializeClient } from './actions/client';
 import { hideLoaders } from './actions/loaders';
@@ -25,6 +25,10 @@ export const init: FsAttributeInit = async (settings) => {
     collectionPage: settings.collectionPage || SETTINGS.collectionPage.values.default,
     redirectURL: settings.redirectURL || SETTINGS.redirectURL.values.default,
   });
+
+  await waitDOMReady();
+
+  console.log('dom is ready, initializing pages...');
 
   await initPages(client);
 

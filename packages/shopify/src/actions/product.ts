@@ -1,17 +1,15 @@
 import { cloneNode } from '@finsweet/attributes-utils';
 
 import {
-  ATTRIBUTES,
   IMAGE,
   PRODUCT_TAG_LIST,
-  PRODUCT_TAG_TEMPLATE,
-  PRODUCT_TAG_TEXT,
   PRODUCT_THUMBNAIL,
   productAttributes,
   PRODUCTS_COLLECTION,
   PRODUCTS_VARIANT_SEPARATOR,
-  queryElement,
+  SHOPIFY_ELEMENT_ATTRIBUTE,
 } from '../utils/constants';
+import { queryAllElements, queryElement } from '../utils/selectors';
 import type { ProductAttribute, ProductValue, ShopifyBindingOptions, ShopifyProduct, Variant } from '../utils/types';
 import { handleCollectionLink, handleProductLink } from './util';
 
@@ -34,7 +32,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
   },
   [PRODUCT_TAG_LIST]: (element: HTMLElement, value: ProductValue) => {
     const tags = value as string[];
-    const template = queryElement<HTMLElement>(PRODUCT_TAG_TEMPLATE, {
+    const template = queryElement<HTMLElement>('tag-template', {
       scope: element,
     });
 
@@ -42,10 +40,10 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
       const templateParent = template.parentElement;
       tags.forEach((tag) => {
         const clone = cloneNode(template, true);
-        const tagText = queryElement<HTMLElement>(PRODUCT_TAG_TEXT, {
+        const tagText = queryElement<HTMLElement>('tag-text', {
           scope: clone,
         });
-        clone.removeAttribute(ATTRIBUTES.element.key);
+        clone.removeAttribute(SHOPIFY_ELEMENT_ATTRIBUTE);
         if (tagText) {
           tagText.innerText = tag;
         }
@@ -107,9 +105,8 @@ export function bindProductVariant(
   ];
 
   productAttributes.forEach((attribute: string, index: number) => {
-    const matchedElements = queryElement<HTMLElement>(attribute as ProductAttribute, {
+    const matchedElements = queryAllElements<HTMLElement>(attribute as ProductAttribute, {
       scope: parentElement,
-      all: true,
     });
 
     matchedElements.forEach((element) => {
