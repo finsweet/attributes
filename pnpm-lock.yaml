@@ -92,6 +92,9 @@ importers:
       '@finsweet/attributes-autovideo':
         specifier: workspace:*
         version: link:../autovideo
+      '@finsweet/attributes-beforeafter':
+        specifier: workspace:*
+        version: link:../beforeafter
       '@finsweet/attributes-calevent':
         specifier: workspace:*
         version: link:../calevent
@@ -243,6 +246,15 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+
+  packages/beforeafter:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      beerslider:
+        specifier: ^1.0.3
+        version: 1.0.3
 
   packages/calevent:
     dependencies:
@@ -1835,6 +1847,12 @@ packages:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: false
 
+  /beerslider@1.0.3:
+    resolution: {integrity: sha512-1XsuTxbspcAR1rxKOJa3qYX3XW9Kf6d+QRUJtDSxsj+yLVSoBRK8ThqpgxhGaxFeBKklrCc0v0UWpifACT7Dbw==}
+    dependencies:
+      core-js: 3.34.0
+    dev: false
+
   /better-path-resolve@1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
     engines: {node: '>=4'}
@@ -1977,6 +1995,11 @@ packages:
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
+
+  /core-js@3.34.0:
+    resolution: {integrity: sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==}
+    requiresBuild: true
+    dev: false
 
   /cross-env@7.0.3:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
