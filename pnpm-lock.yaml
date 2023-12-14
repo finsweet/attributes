@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -529,7 +529,7 @@ importers:
         specifier: workspace:*
         version: link:../utils
       just-debounce:
-        specifier: ^1.1.0
+        specifier: 1.1.0
         version: 1.1.0
 
   packages/numbercount:
