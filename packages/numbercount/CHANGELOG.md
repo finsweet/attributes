@@ -1,5 +1,11 @@
 # @finsweet/attributes-numbercount
 
+## 1.2.1
+
+### Patch Changes
+
+- 98b81a40: fix: ensure numbercount stops at the end value, added requestAnimationFrame api to further improve this animation
+
 ## 1.2.0
 
 ### Minor Changes
