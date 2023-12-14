@@ -1,7 +1,6 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { createBeforeAfterInstance } from './factory';
-import type { SETTINGS } from './utils';
 import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
 
 /**
@@ -21,7 +20,7 @@ export const init: FsAttributeInit = async () => {
     const handleElement = queryElement('handle', { scope: wrapper.parentElement ?? undefined }) ?? undefined;
 
     // whether to use drag or hover mode
-    const mode: keyof typeof SETTINGS.mode.values | undefined = getAttribute(wrapper, 'mode');
+    const mode = getAttribute(wrapper, 'mode', true);
 
     // if no before or after element, return
     if (!beforeElement || !afterElement) {
