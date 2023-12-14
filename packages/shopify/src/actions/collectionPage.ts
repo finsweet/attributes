@@ -1,13 +1,7 @@
 import type { ShopifyClient } from '../shopifyClient';
-import {
-  ATTRIBUTES,
-  COLLECTION_ID_PREFIX,
-  COLLECTION_IMAGE,
-  collectionAttributes,
-  getSelector,
-  QUERY_PARAMS,
-  queryElement,
-} from '../utils/constants';
+import { COLLECTION_ID_PREFIX, COLLECTION_IMAGE, collectionAttributes, QUERY_PARAMS } from '../utils/constants';
+import { extractStringBetweenBrackets } from '../utils/extractStringBetweenBrackets';
+import { getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
 import type { CollectionAttribute, CollectionValue, ProductAttribute, ShopifyCollection } from '../utils/types';
 import { bindCollectionProductsData } from './productsPage';
 
@@ -36,16 +30,22 @@ export const collectionPageInit = async (client: ShopifyClient) => {
   }
 
   try {
-    document.body.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
-    const selector = getSelector('collectionId');
+    const selector = getSettingSelector('collectionid');
+    const sanitizedSelector = extractStringBetweenBrackets(selector);
+
+    document.body.setAttribute(sanitizedSelector, idParamValue);
+
     const collectionContainer = document.querySelector<HTMLDivElement>(`${selector}`) as HTMLDivElement;
+
     const productListElement = queryElement<HTMLElement>('products' as ProductAttribute, {
       scope: collectionContainer,
     }) as HTMLDivElement;
-    productListElement.setAttribute(ATTRIBUTES.collectionId.key, idParamValue);
+
+    productListElement.setAttribute(sanitizedSelector, idParamValue);
+
     await bindCollectionProductsData(client, productListElement, handleParamValue, document.body);
   } catch (e) {
-    console.log('collectionPageInit', e);
+    console.error('collectionPageInit', e);
   }
 };
 
@@ -66,9 +66,8 @@ export const bindCollectionData = (
   const collectionValues = [id.replace(COLLECTION_ID_PREFIX, ''), title, description, handle, url, updatedAt];
 
   collectionAttributes.forEach((attribute: string, index: number) => {
-    const matchedElements = queryElement<HTMLElement>(attribute as CollectionAttribute, {
+    const matchedElements = queryAllElements<HTMLElement>(attribute as CollectionAttribute, {
       scope: parentElement,
-      all: true,
     });
     matchedElements.forEach((element) => {
       if (scopeToExclude && scopeToExclude.contains(element)) return;

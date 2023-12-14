@@ -1,5 +1,5 @@
 import type { LinkFormat } from './constants';
-import type { generateDynamicAttibuteValue } from './selectors';
+import type { generateDynamicAttibuteValue } from './generateDynamicAttibuteValue';
 
 export interface ShopifyAttributeParams {
   /**

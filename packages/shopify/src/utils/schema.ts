@@ -11,6 +11,12 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     description: 'Defines the domain where the Shopify store is hosted',
     type: 'text',
   },
+  collectionid: {
+    ...SETTINGS.collectionid,
+    name: 'Collection ID',
+    description: 'Defines the collection ID',
+    type: 'text',
+  },
 };
 
 export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
@@ -24,18 +30,11 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       settings: [],
     },
     {
-      key: 'product',
-      name: 'Product',
-      description: 'Defines a single product',
+      key: 'collectionid',
+      name: 'Collection Id',
+      description: 'Collection Id',
       allowedTypes: ['Block'],
-      settings: [],
-    },
-    {
-      key: 'products',
-      name: 'Products',
-      description: 'Defines a list of products',
-      allowedTypes: ['Block'],
-      settings: [SCHEMA_SETTINGS.productLimit, SCHEMA_SETTINGS.sort],
+      settings: [SCHEMA_SETTINGS.collectionid],
     },
   ],
 };
