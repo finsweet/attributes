@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
 import Pristine from 'pristinejs';
 
 import { getAttribute, getSettingSelector, queryElement } from '../utils';

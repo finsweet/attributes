@@ -1,6 +1,6 @@
 import { type AttributeElements, type AttributeSettings } from '@finsweet/attributes-utils';
 
-export const ELEMENTS = ['form', 'error-show', 'success-show', 'submit'] as const satisfies AttributeElements;
+export const ELEMENTS = ['form', 'input', 'error-show', 'success-show', 'submit'] as const satisfies AttributeElements;
 
 export const SETTINGS = {
   required: { key: 'required', values: { true: 'true' } },
