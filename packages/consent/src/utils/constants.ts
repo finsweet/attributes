@@ -64,7 +64,7 @@ export const SETTINGS = {
   },
 
   /**
-   * if set to true, `restartWebflow()` will be called after the consent is updated
+   * if set to true, `restartWebflow(["ix2"])` will be called after the consent is updated
    */
   resetix: {
     key: 'resetix',
