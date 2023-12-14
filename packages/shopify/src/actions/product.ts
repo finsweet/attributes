@@ -140,10 +140,12 @@ export const bindProductDataGraphQL = (
     variantMaps[variant.title] = variant;
   });
 
-  const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
+  const firstTemplate = queryElement<HTMLElement>('option-template', {
     scope: parentElement,
   });
+
   if (!firstTemplate || !firstTemplate.parentElement) {
+    console.error('No option-template found for product page.');
     return;
   }
 
@@ -156,7 +158,7 @@ export const bindProductDataGraphQL = (
   const firstOptionInputs: HTMLInputElement[] = [];
   product.options.forEach((option, index) => {
     const clone = cloneNode(template, true);
-    const optionName = queryElement<HTMLElement>('optionname', {
+    const optionName = queryElement<HTMLElement>('option-name', {
       scope: clone,
     });
     if (optionName) {
@@ -164,7 +166,7 @@ export const bindProductDataGraphQL = (
     }
 
     // handle variant list
-    const variantList = queryElement<HTMLElement>('variantlist', {
+    const variantList = queryElement<HTMLElement>('variant-list', {
       scope: clone,
     });
     const selectElement = clone.querySelector('select');

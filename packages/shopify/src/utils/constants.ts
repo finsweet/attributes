@@ -116,9 +116,6 @@ export const ELEMENTS = [
   'variant-list',
   'collectionid',
   'productsList',
-  'optiontemplate',
-  'optionname',
-  'variantlist',
   'collectionsList',
 ] as const satisfies AttributeElements;
 

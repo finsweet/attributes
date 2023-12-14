@@ -3,38 +3,13 @@
   "version": "1.0.0",
   "description": "Integrate Shopify's Buy SDK in no-code using Attributes.",
   "homepage": "https://www.finsweet.com/attributes",
-  "sideEffects": false,
+  "private": true,
   "type": "module",
   "types": "src/index.ts",
-  "main": "shopify.js",
-  "files": [
-    "shopify.js",
-    "examples.json",
-    "schema.json"
-  ],
   "scripts": {
     "lint": "eslint ./src && prettier --check ./src",
     "lint:fix": "eslint ./src --fix && prettier --write ./src",
-    "check": "tsc --noEmit",
-    "test": "pnpm playwright test",
-    "test:headed": "pnpm playwright test --headed"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/finsweet/attributes.git"
-  },
-  "keywords": [
-    "webflow",
-    "attributes",
-    "no code",
-    "shopify"
-  ],
-  "author": {
-    "name": "Finsweet",
-    "url": "https://www.finsweet.com/"
-  },
-  "bugs": {
-    "url": "https://sweetjs.finsweet.com/"
+    "check": "tsc --noEmit"
   },
   "exports": {
     ".": {

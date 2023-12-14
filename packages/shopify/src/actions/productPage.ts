@@ -28,6 +28,9 @@ export const productPageInit = async (client: ShopifyClient) => {
       window.location.href = redirectURL as string;
       return;
     }
+
+    console.log('productGraphQl', productGraphQl);
+
     bindProductDataGraphQL(document.body, productGraphQl, {
       productPage: productPage as string,
       collectionPage: collectionPage as string,

@@ -196,7 +196,7 @@ importers:
         version: link:../selectcustom
       '@finsweet/attributes-shopify':
         specifier: workspace:*
-        version: link:../shopify - Copy
+        version: link:../shopify
       '@finsweet/attributes-slider':
         specifier: workspace:*
         version: link:../slider
@@ -561,19 +561,6 @@ importers:
         version: 1.1.0
 
   packages/shopify:
-    dependencies:
-      '@finsweet/attributes-utils':
-        specifier: workspace:*
-        version: link:../utils
-      shopify-buy:
-        specifier: ^2.18.0
-        version: 2.18.0
-    devDependencies:
-      '@types/shopify-buy':
-        specifier: ^2.10.10
-        version: 2.10.10
-
-  packages/shopify - Copy:
     dependencies:
       '@finsweet/attributes-utils':
         specifier: workspace:*
