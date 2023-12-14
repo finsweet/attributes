@@ -182,7 +182,7 @@ export const SETTINGS = {
   /**
    * Defines the link format of the product page
    **/
-  linkFormat: { key: `${LINK_FORMAT}` },
+  linkformat: { key: `${LINK_FORMAT}` },
 
   /**
    * Define the type of link to be user (Product page or Collection page)

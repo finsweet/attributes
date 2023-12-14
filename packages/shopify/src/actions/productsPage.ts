@@ -2,6 +2,7 @@ import type { ShopifyClient } from '../shopifyClient';
 import { COLLECTION_ID_PREFIX, DEFAULT_PRODUCTS_LIMIT, LinkFormat, sortOptions } from '../utils/constants';
 import { getAttribute, queryAllElements } from '../utils/selectors';
 import type {
+  GlobalSettings,
   ShopifyBindingOptions,
   ShopifyCollection,
   ShopifyCollectionWithProducts,
@@ -10,10 +11,12 @@ import type {
 import { bindCollectionData } from './collectionPage';
 import { bindProductVariant } from './product';
 
-export const productsPageInit = async (client: ShopifyClient) => {
+export const productsPageInit = async (client: ShopifyClient, globalSettings: GlobalSettings) => {
   try {
     const collectionContainers = queryAllElements<HTMLDivElement>('productslist');
-    await Promise.all(collectionContainers.map((container) => bindCollectionProductsData(client, container)));
+    await Promise.all(
+      collectionContainers.map((container) => bindCollectionProductsData(client, container, globalSettings))
+    );
   } catch (e) {
     console.error('Failed to initialize productsPageInit with error:', e);
   }
@@ -22,11 +25,10 @@ export const productsPageInit = async (client: ShopifyClient) => {
 export const bindCollectionProductsData = async (
   client: ShopifyClient,
   productListContainer: HTMLDivElement,
+  globalSettings: GlobalSettings,
   collectionHandle?: string,
   collectionContainer?: HTMLElement
 ): Promise<ShopifyCollection | null> => {
-  // TODO: is this selector below being used?
-  // const selector = getSelector('collectionId');
   const { productPage, collectionPage } = client.getParams();
   // get first child as template
   const firstChild = productListContainer.firstElementChild as HTMLDivElement;
@@ -60,13 +62,19 @@ export const bindCollectionProductsData = async (
   const {
     products: { nodes: products },
   } = collection;
-  bindProducts(products, template, productListContainer, {
-    productPage: productPage as string,
-    collectionPage: collectionPage as string,
-    collectionId,
-    collectionHandle: collection.handle,
-    collectionName: collection.title,
-  });
+  bindProducts(
+    products,
+    template,
+    productListContainer,
+    {
+      productPage: productPage as string,
+      collectionPage: collectionPage as string,
+      collectionId,
+      collectionHandle: collection.handle,
+      collectionName: collection.title,
+    },
+    globalSettings
+  );
   return Promise.resolve(collection);
 };
 
@@ -81,19 +89,25 @@ export const bindProducts = (
   products: ShopifyProduct[],
   template: HTMLDivElement,
   container: HTMLDivElement,
-  productOptions: ShopifyBindingOptions
+  productOptions: ShopifyBindingOptions,
+  globalSettings: GlobalSettings
 ) => {
-  const linkFormat = getAttribute(container, 'linkFormat');
-  const options = productOptions;
-  if (linkFormat) {
-    options.linkFormat = linkFormat as LinkFormat;
+  if (globalSettings.linkformat) {
+    productOptions.linkFormat = globalSettings.linkformat as LinkFormat;
   }
+
   products.forEach((product) => {
     const productContainer = template.cloneNode(true);
     if (!productContainer) {
       return;
     }
     container.appendChild(productContainer);
-    bindProductVariant(productContainer as HTMLElement, product, product.variants.nodes[0], options);
+    bindProductVariant(
+      productContainer as HTMLElement,
+      product,
+      product.variants.nodes[0],
+      productOptions,
+      globalSettings
+    );
   });
 };

@@ -1,11 +1,11 @@
 import type { ShopifyClient } from '../shopifyClient';
 import { DEFAULT_COLLECTIONS_LIMIT, sortOptions } from '../utils/constants';
 import { getAttribute, queryAllElements } from '../utils/selectors';
-import type { ShopifyCollection } from '../utils/types';
+import type { GlobalSettings, ShopifyCollection } from '../utils/types';
 import { bindCollectionData } from './collectionPage';
 import { handleCollectionLink } from './util';
 
-export const collectionsPageInit = async (client: ShopifyClient) => {
+export const collectionsPageInit = async (client: ShopifyClient, globalSettings: GlobalSettings) => {
   const { collectionPage, productPage } = client.getParams();
   const collectionContainers = queryAllElements<HTMLDivElement>('collectionslist');
 
@@ -32,14 +32,18 @@ export const collectionsPageInit = async (client: ShopifyClient) => {
     collections.forEach((collection) => {
       const collectionContainer = template.cloneNode(true) as HTMLDivElement;
       bindCollectionData(collection, collectionContainer);
-      handleCollectionLink(collectionContainer, {
-        productOptions: {
-          collectionId: collection.id,
-          collectionHandle: collection.handle,
-          collectionPage: collectionPage as string,
-          productPage: productPage as string,
+      handleCollectionLink(
+        collectionContainer,
+        {
+          productOptions: {
+            collectionId: collection.id,
+            collectionHandle: collection.handle,
+            collectionPage: collectionPage as string,
+            productPage: productPage as string,
+          },
         },
-      });
+        globalSettings
+      );
       container.appendChild(collectionContainer);
     });
   }

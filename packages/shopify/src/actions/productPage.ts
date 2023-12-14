@@ -1,9 +1,9 @@
 import type { ShopifyClient } from '../shopifyClient';
 import { PRODUCT_ID_PREFIX, QUERY_PARAMS } from '../utils/constants';
-import type { ShopifyProduct } from '../utils/types';
+import type { GlobalSettings, ShopifyProduct } from '../utils/types';
 import { bindProductDataGraphQL } from './product';
 
-export const productPageInit = async (client: ShopifyClient) => {
+export const productPageInit = async (client: ShopifyClient, linkFormat: GlobalSettings) => {
   const { redirectURL, productPage, collectionPage } = client.getParams();
 
   const { id, handle } = QUERY_PARAMS;
@@ -29,10 +29,15 @@ export const productPageInit = async (client: ShopifyClient) => {
       return;
     }
 
-    bindProductDataGraphQL(document.body, productGraphQl, {
-      productPage: productPage as string,
-      collectionPage: collectionPage as string,
-    });
+    bindProductDataGraphQL(
+      document.body,
+      productGraphQl,
+      {
+        productPage: productPage as string,
+        collectionPage: collectionPage as string,
+      },
+      linkFormat
+    );
   } catch (e) {
     console.error('Failed to productPageInit with error:', e);
   }

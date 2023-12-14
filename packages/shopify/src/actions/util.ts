@@ -1,8 +1,8 @@
 import { isHTMLAnchorElement } from '@finsweet/attributes-utils';
 
 import { COLLECTION_ID_PREFIX, LinkFormat, PRODUCT_ID_PREFIX, PRODUCTS_VARIANT_SEPARATOR } from '../utils/constants';
-import { getAttribute, getSettingSelector, queryAllElements } from '../utils/selectors';
-import type { Option, ShopifyBindingOptions } from '../utils/types';
+import { getSettingSelector, queryAllElements } from '../utils/selectors';
+import type { GlobalSettings, Option, ShopifyBindingOptions } from '../utils/types';
 
 export const hideLoader = () => {
   const matchedElements = queryAllElements('loader');
@@ -17,18 +17,18 @@ export const handleProductLink = (
   {
     id,
     handle,
-    productOptions: { productPage, linkFormat },
-  }: { id: string; handle: string; productOptions: ShopifyBindingOptions }
+    productOptions: { productPage },
+  }: { id: string; handle: string; productOptions: ShopifyBindingOptions },
+  globalSettings: GlobalSettings
 ) => {
   id = id.replace(PRODUCT_ID_PREFIX, '');
   const productLinks = parentElement.querySelectorAll<HTMLAnchorElement>(getSettingSelector('link', 'product'));
   productLinks.forEach((link) => {
-    const elementLinkFormat = getAttribute(link, 'linkFormat') || linkFormat || LinkFormat.ID;
     const { protocol, hostname } = window.location;
     const fullURLStr = protocol + hostname + productPage;
     const url = new URL(fullURLStr);
 
-    if (elementLinkFormat === LinkFormat.HANDLE) {
+    if (globalSettings.linkformat === LinkFormat.HANDLE) {
       url.searchParams.set('handle', handle);
     } else {
       url.searchParams.set('id', id);
@@ -40,21 +40,21 @@ export const handleProductLink = (
 /**
  *
  * @param parentElement that contains the elements to update.
+ * @param product is the product data.
+ * @param elementLinkFormat is the link format to use.
  */
 
 export const handleCollectionLink = (
   parentElement: HTMLElement,
-  {
-    productOptions: { collectionPage, linkFormat, collectionHandle, collectionId },
-  }: { productOptions: ShopifyBindingOptions }
+  { productOptions: { collectionPage, collectionHandle, collectionId } }: { productOptions: ShopifyBindingOptions },
+  globalSettings: GlobalSettings
 ) => {
   function addLink(link: HTMLAnchorElement) {
-    const elementLinkFormat = getAttribute(link, 'linkFormat') || linkFormat || LinkFormat.ID;
     const { protocol, hostname } = window.location;
     const fullURLStr = protocol + hostname + collectionPage;
     const url = new URL(fullURLStr);
 
-    if (elementLinkFormat === LinkFormat.HANDLE && collectionHandle) {
+    if (globalSettings.linkformat === LinkFormat.HANDLE && collectionHandle) {
       url.searchParams.append('handle', collectionHandle);
     } else if (collectionId) {
       url.searchParams.append('id', collectionId.replace(COLLECTION_ID_PREFIX, ''));

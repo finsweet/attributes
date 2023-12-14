@@ -2,7 +2,13 @@ import type { ShopifyClient } from '../shopifyClient';
 import { COLLECTION_ID_PREFIX, COLLECTION_IMAGE, collectionAttributes, QUERY_PARAMS } from '../utils/constants';
 import { extractStringBetweenBrackets } from '../utils/extractStringBetweenBrackets';
 import { getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
-import type { CollectionAttribute, CollectionValue, ProductAttribute, ShopifyCollection } from '../utils/types';
+import type {
+  CollectionAttribute,
+  CollectionValue,
+  GlobalSettings,
+  ProductAttribute,
+  ShopifyCollection,
+} from '../utils/types';
 import { bindCollectionProductsData } from './productsPage';
 
 /**
@@ -16,7 +22,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: CollectionVa
   },
 };
 
-export const collectionPageInit = async (client: ShopifyClient) => {
+export const collectionPageInit = async (client: ShopifyClient, globalSettings: GlobalSettings) => {
   const { redirectURL } = client.getParams();
   const { id, handle } = QUERY_PARAMS;
 
@@ -43,7 +49,7 @@ export const collectionPageInit = async (client: ShopifyClient) => {
 
     productListElement.setAttribute(sanitizedSelector, idParamValue);
 
-    await bindCollectionProductsData(client, productListElement, handleParamValue, document.body);
+    await bindCollectionProductsData(client, productListElement, globalSettings, handleParamValue, document.body);
   } catch (e) {
     console.error('collectionPageInit', e);
   }

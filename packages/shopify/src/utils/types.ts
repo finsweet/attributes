@@ -31,6 +31,9 @@ export interface ShopifyAttributeParams {
    */
   redirectURL: string | null;
 }
+export interface GlobalSettings {
+  linkformat: string;
+}
 
 export type ProductAttribute =
   | 'title'

@@ -10,7 +10,14 @@ import {
   SHOPIFY_ELEMENT_ATTRIBUTE,
 } from '../utils/constants';
 import { queryAllElements, queryElement } from '../utils/selectors';
-import type { ProductAttribute, ProductValue, ShopifyBindingOptions, ShopifyProduct, Variant } from '../utils/types';
+import type {
+  GlobalSettings,
+  ProductAttribute,
+  ProductValue,
+  ShopifyBindingOptions,
+  ShopifyProduct,
+  Variant,
+} from '../utils/types';
 import { handleCollectionLink, handleProductLink } from './util';
 
 /**
@@ -63,7 +70,8 @@ export function bindProductVariant(
   parentElement: HTMLElement,
   product: ShopifyProduct,
   variant: Variant,
-  options: ShopifyBindingOptions
+  options: ShopifyBindingOptions,
+  globalSettings: GlobalSettings
 ) {
   const {
     id,
@@ -117,8 +125,8 @@ export function bindProductVariant(
       element.innerHTML = String(productValues[index]);
     });
   });
-  handleProductLink(parentElement, { id, handle, productOptions: options });
-  handleCollectionLink(parentElement, { productOptions: options });
+  handleProductLink(parentElement, { id, handle, productOptions: options }, globalSettings);
+  handleCollectionLink(parentElement, { productOptions: options }, globalSettings);
 }
 
 /**
@@ -126,11 +134,13 @@ export function bindProductVariant(
  * @param parentElement that contains the elements to update.
  * @param product is the product data.
  * @param options are the binding options.
+ * @param globalSettings are the global settings.
  */
 export const bindProductDataGraphQL = (
   parentElement: HTMLElement,
   product: ShopifyProduct,
-  options: ShopifyBindingOptions
+  options: ShopifyBindingOptions,
+  globalSettings: GlobalSettings
 ) => {
   const { variants } = product;
 
@@ -192,7 +202,7 @@ export const bindProductDataGraphQL = (
             selectedVariantKey[index] = value;
             const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
             if (variant) {
-              bindProductVariant(parentElement, product, variant, options);
+              bindProductVariant(parentElement, product, variant, options, globalSettings);
             }
           });
         }
@@ -214,7 +224,7 @@ export const bindProductDataGraphQL = (
         selectedVariantKey[index] = selectElement.value;
         const variant = variantMaps[selectedVariantKey.join(PRODUCTS_VARIANT_SEPARATOR)];
         if (variant) {
-          bindProductVariant(parentElement, product, variant, options);
+          bindProductVariant(parentElement, product, variant, options, globalSettings);
         }
       });
       selectElement.dispatchEvent(new Event('change'));
