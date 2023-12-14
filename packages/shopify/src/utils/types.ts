@@ -48,7 +48,7 @@ export type ProductAttribute =
   | 'type'
   | 'vendor'
   | 'weight'
-  | 'tag-list';
+  | 'taglist';
 
 export type CollectionAttribute = 'title' | 'description' | 'handle' | 'image';
 

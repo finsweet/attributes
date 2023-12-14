@@ -12,10 +12,10 @@ import { bindProductVariant } from './product';
 
 export const productsPageInit = async (client: ShopifyClient) => {
   try {
-    const collectionContainers = queryAllElements<HTMLDivElement>('productsList');
+    const collectionContainers = queryAllElements<HTMLDivElement>('productslist');
     await Promise.all(collectionContainers.map((container) => bindCollectionProductsData(client, container)));
   } catch (e) {
-    console.log('productsPageInit', e);
+    console.error('Failed to initialize productsPageInit with error:', e);
   }
 };
 

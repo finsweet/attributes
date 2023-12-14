@@ -29,13 +29,11 @@ export const productPageInit = async (client: ShopifyClient) => {
       return;
     }
 
-    console.log('productGraphQl', productGraphQl);
-
     bindProductDataGraphQL(document.body, productGraphQl, {
       productPage: productPage as string,
       collectionPage: collectionPage as string,
     });
   } catch (e) {
-    console.log('productPageInit', e);
+    console.error('Failed to productPageInit with error:', e);
   }
 };

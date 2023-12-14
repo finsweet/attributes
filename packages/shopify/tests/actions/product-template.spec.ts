@@ -219,8 +219,8 @@ const expectedValues: { [key in ProductAttribute]: (_: Page, value: ProductValue
     const locator = page.locator(`css=[fs-shopify-element="weight"]`);
     await expect(locator).toHaveText(weight);
   },
-  'tag-list': async function (page: Page, tagList: ProductValue) {
-    const locator = page.locator(`css=[fs-shopify-element="tag-text"]`);
+  taglist: async function (page: Page, tagList: ProductValue) {
+    const locator = page.locator(`css=[fs-shopify-element="tagtext"]`);
     await expect(locator).toHaveText(tagList);
   },
 };
@@ -244,7 +244,7 @@ const defaultProductExpectedValues: Partial<ProductExpectedValues> = {
   type: 'Logo Art',
   vendor: 'Finsweet Art Shop',
   weight: '250',
-  'tag-list': ['Aditya Singh', 'Blessing'],
+  taglist: ['Aditya Singh', 'Blessing'],
 };
 
 const productKeys: ProductAttribute[] = [
@@ -262,7 +262,7 @@ const productKeys: ProductAttribute[] = [
   'type',
   'vendor',
   'weight',
-  'tag-list',
+  'taglist',
 ];
 const testProductAttribute = async (page: Page, defaultExpectedValues = defaultProductExpectedValues) => {
   for (let i = 0; i < productKeys.length; i++) {

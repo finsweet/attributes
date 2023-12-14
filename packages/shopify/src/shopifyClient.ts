@@ -68,6 +68,7 @@ export class ShopifyClient {
     return response.data.collections.nodes as ShopifyCollection[];
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   async makeRequest(query: string, variables: Record<string, string | number>): Promise<any> {
     const response = await fetch('https://' + this.params.domain + '/api/2022-10/graphql.json', {
       method: 'POST',

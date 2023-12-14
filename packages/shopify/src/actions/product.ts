@@ -32,7 +32,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
   },
   [PRODUCT_TAG_LIST]: (element: HTMLElement, value: ProductValue) => {
     const tags = value as string[];
-    const template = queryElement<HTMLElement>('tag-template', {
+    const template = queryElement<HTMLElement>('tagtemplate', {
       scope: element,
     });
 
@@ -40,7 +40,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
       const templateParent = template.parentElement;
       tags.forEach((tag) => {
         const clone = cloneNode(template, true);
-        const tagText = queryElement<HTMLElement>('tag-text', {
+        const tagText = queryElement<HTMLElement>('tagtext', {
           scope: clone,
         });
         clone.removeAttribute(SHOPIFY_ELEMENT_ATTRIBUTE);
@@ -140,12 +140,12 @@ export const bindProductDataGraphQL = (
     variantMaps[variant.title] = variant;
   });
 
-  const firstTemplate = queryElement<HTMLElement>('option-template', {
+  const firstTemplate = queryElement<HTMLElement>('optiontemplate', {
     scope: parentElement,
   });
 
   if (!firstTemplate || !firstTemplate.parentElement) {
-    console.error('No option-template found for product page.');
+    console.error('No template found for product page.');
     return;
   }
 
@@ -158,7 +158,7 @@ export const bindProductDataGraphQL = (
   const firstOptionInputs: HTMLInputElement[] = [];
   product.options.forEach((option, index) => {
     const clone = cloneNode(template, true);
-    const optionName = queryElement<HTMLElement>('option-name', {
+    const optionName = queryElement<HTMLElement>('optionname', {
       scope: clone,
     });
     if (optionName) {
@@ -166,7 +166,7 @@ export const bindProductDataGraphQL = (
     }
 
     // handle variant list
-    const variantList = queryElement<HTMLElement>('variant-list', {
+    const variantList = queryElement<HTMLElement>('variantlist', {
       scope: clone,
     });
     const selectElement = clone.querySelector('select');

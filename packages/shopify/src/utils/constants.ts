@@ -18,14 +18,14 @@ export const PRODUCT_TYPE = 'type';
 export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
 export const PRODUCT_WEIGHT_UNIT = 'weightunit';
-export const PRODUCT_TAG_LIST = 'tag-list';
-export const PRODUCT_TAG_TEMPLATE = 'tag-template';
-export const PRODUCT_TAG_TEXT = 'tag-text';
-export const PRODUCTS_LIST = 'products-list';
+export const PRODUCT_TAG_LIST = 'taglist';
+export const PRODUCT_TAG_TEMPLATE = 'tagtemplate';
+export const PRODUCT_TAG_TEXT = 'tagtext';
+export const PRODUCTS_LIST = 'productslist';
 export const PRODUCTS_COLLECTION = 'collection';
-export const PRODUCTS_OPTION_TEMPLATE = 'option-template';
-export const PRODUCTS_OPTION_NAME = 'option-name';
-export const PRODUCTS_VARIANT_LIST = 'variant-list';
+export const PRODUCTS_OPTION_TEMPLATE = 'optiontemplate';
+export const PRODUCTS_OPTION_NAME = 'optionname';
+export const PRODUCTS_VARIANT_LIST = 'variantlist';
 export const PRODUCTS_VARIANT_SEPARATOR = ' / ';
 
 /**
@@ -47,10 +47,10 @@ export const UPDATED = 'updated';
 export const COLLECTION_CREATED = 'created';
 export const COLLECTION_IMAGE = 'image';
 export const COLLECTION_ID = 'collectionid';
-export const COLLECTION_PRODUCT_LIMIT = 'productlimit';
+export const PRODUCT_LIMIT = 'productlimit';
 export const COLLECTIONS_LIMIT = 'collectionlimit';
 export const COLLECTION_PRODUCT_SORT = 'sort';
-export const COLLECTIONS_LIST = 'collections-list';
+export const COLLECTIONS_LIST = 'collectionslist';
 export const DEFAULT_PRODUCTS_LIMIT = '10';
 export const DEFAULT_COLLECTIONS_LIMIT = '10';
 
@@ -103,20 +103,19 @@ export const ELEMENTS = [
   'vendor',
   'weight',
   'weightunit',
-  'tag-list',
-  'tag-template',
-  'tag-text',
+  'taglist',
+  'tagtemplate',
+  'tagtext',
   'loader',
   'products',
-  'products-list',
-  'collections-list',
+  'collectionslist',
   'collection',
-  'option-template',
-  'option-name',
-  'variant-list',
+  'optiontemplate',
+  'optionname',
+  'variantlist',
   'collectionid',
-  'productsList',
-  'collectionsList',
+  'productslist',
+  'collectionslist',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
@@ -168,7 +167,7 @@ export const SETTINGS = {
   /**
    * Defines the limit of products that should be returned by the collection query
    */
-  productLimit: { key: `${COLLECTION_PRODUCT_LIMIT}` },
+  productLimit: { key: `${PRODUCT_LIMIT}` },
 
   /**
    * Defines the limit of collections that should be returned by the collections query
@@ -201,14 +200,3 @@ export enum LinkFormat {
   ID = 'id',
   HANDLE = 'handle',
 }
-
-// export const {
-//   getSettingSelector,
-//   getSettingAttributeName,
-//   getInstanceIndex,
-//   hasAttributeValue,
-//   getElementSelector,
-//   queryElement,
-//   queryAllElements,
-//   getAttribute,
-// } = generateSelectors(SHOPIFY_ATTRIBUTE, ELEMENTS, SETTINGS);

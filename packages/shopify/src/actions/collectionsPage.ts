@@ -7,7 +7,7 @@ import { handleCollectionLink } from './util';
 
 export const collectionsPageInit = async (client: ShopifyClient) => {
   const { collectionPage, productPage } = client.getParams();
-  const collectionContainers = queryAllElements<HTMLDivElement>('collectionsList');
+  const collectionContainers = queryAllElements<HTMLDivElement>('collectionslist');
 
   for (const container of collectionContainers) {
     const collectionsLimit = getAttribute(container, 'collectionLimit') || DEFAULT_COLLECTIONS_LIMIT;
@@ -18,7 +18,7 @@ export const collectionsPageInit = async (client: ShopifyClient) => {
     try {
       collections = await client.fetchAllCollections(Number(collectionsLimit), collectionSort);
     } catch (e) {
-      console.log('productsPageInit', e);
+      console.error('Failed to fetch collections in collectionsPageInit with error:', e);
       return;
     }
 
