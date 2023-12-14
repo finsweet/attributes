@@ -18,6 +18,14 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-autovideo');
     }
 
+    case 'beforeafter': {
+      return import('@finsweet/attributes-beforeafter');
+    }
+
+    case 'calevent': {
+      return import('@finsweet/attributes-calevent');
+    }
+
     case 'cmscombine': {
       return import('@finsweet/attributes-cmscombine');
     }
@@ -118,6 +126,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-linkblockedit');
     }
 
+    case 'masonry': {
+      return import('@finsweet/attributes-masonry');
+    }
+
     case 'mirrorclick': {
       return import('@finsweet/attributes-mirrorclick');
     }
@@ -128,6 +140,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'modal': {
       return import('@finsweet/attributes-modal');
+    }
+
+    case 'nativesearch': {
+      return import('@finsweet/attributes-nativesearch');
     }
 
     case 'numbercount': {
@@ -180,6 +196,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'toc': {
       return import('@finsweet/attributes-toc');
+    }
+
+    case 'typing': {
+      return import('@finsweet/attributes-typing');
     }
 
     case 'videohls': {
