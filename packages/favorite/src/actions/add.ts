@@ -37,24 +37,37 @@ export const addItemToList = async (
 
     if (itemTemplate) {
       const elementCopy = itemTemplate.cloneNode(true) as HTMLElement;
-      const fieldsWithContent = elementCopy.querySelectorAll('[fs-favorite-field]');
+      const fieldsWithContent = Array.from(elementCopy.querySelectorAll('[fs-favorite-field]'));
       const removeButton = queryElement('remove', { scope: elementCopy });
+
+      if (!fieldsWithContent.some((element) => element.querySelector('a'))) {
+        const linkElement = elementCopy.querySelector('a');
+        if (linkElement) {
+          fieldsWithContent.push(linkElement);
+        }
+      }
+
       fieldsWithContent.forEach((element) => {
         const fieldName = element.getAttribute('fs-favorite-field');
-        if (!fieldName) return;
         switch (element.tagName.toLowerCase()) {
           case 'img':
-            element.setAttribute('srcset', elementData[fieldName][0]);
-            element.setAttribute('src', elementData[fieldName][0]);
+            if (fieldName) {
+              element.setAttribute('srcset', elementData[fieldName][0]);
+              element.setAttribute('src', elementData[fieldName][0]);
+            }
             break;
 
           case 'a':
+            if (fieldName) {
+              element.textContent = elementData[fieldName][0] || '';
+            }
             element.setAttribute('href', link);
-            element.textContent = elementData[fieldName][0] || '';
             break;
 
           default:
-            element.innerHTML = elementData[fieldName]?.map((item) => item.trim()).join('<br>') || 'No items found';
+            if (fieldName) {
+              element.innerHTML = elementData[fieldName]?.map((item) => item.trim()).join('<br>') || 'No items found';
+            }
             break;
         }
       });
