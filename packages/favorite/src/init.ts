@@ -73,10 +73,12 @@ export const init: FsAttributeInit = async () => {
               message.style.display = 'none';
             }, 2000);
           }
-          if (empty && localStorageData.length) {
-            empty.style.display = 'none';
-          } else {
-            empty.style.display = 'flex';
+          if (empty) {
+            if (localStorageData.length) {
+              empty.style.display = 'none';
+            } else {
+              empty.style.display = 'flex';
+            }
           }
         }
       }
@@ -99,10 +101,12 @@ export const init: FsAttributeInit = async () => {
         if (counter) {
           counter.innerHTML = localStorageData.length;
         }
-        if (empty && localStorageData.length) {
-          empty.style.display = 'none';
-        } else {
-          empty.style.display = 'flex';
+        if (empty) {
+          if (localStorageData.length) {
+            empty.style.display = 'none';
+          } else {
+            empty.style.display = 'flex';
+          }
         }
       }
     });
