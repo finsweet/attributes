@@ -39,7 +39,7 @@ const propertyActions: Record<string, (element: HTMLElement, value: ProductValue
   },
   [PRODUCT_TAG_LIST]: (element: HTMLElement, value: ProductValue) => {
     const tags = value as string[];
-    const template = queryElement<HTMLElement>('tagtemplate', {
+    const template = queryElement<HTMLElement>('tagitem', {
       scope: element,
     });
 

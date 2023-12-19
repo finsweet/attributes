@@ -19,7 +19,7 @@ export const PRODUCT_VENDOR = 'vendor';
 export const PRODUCT_WEIGHT = 'weight';
 export const PRODUCT_WEIGHT_UNIT = 'weightunit';
 export const PRODUCT_TAG_LIST = 'taglist';
-export const PRODUCT_TAG_TEMPLATE = 'tagtemplate';
+export const PRODUCT_TAG_ITEM = 'tagitem';
 export const PRODUCT_TAG_TEXT = 'tagtext';
 export const PRODUCTS_LIST = 'productslist';
 export const PRODUCTS_COLLECTION = 'collection';
@@ -104,7 +104,7 @@ export const ELEMENTS = [
   'weight',
   'weightunit',
   'taglist',
-  'tagtemplate',
+  'tagitem',
   'tagtext',
   'loader',
   'products',
