@@ -1,4 +1,4 @@
-import { type FsAttributeInit, isNotEmpty, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, isNotEmpty, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initNumberCount } from './factory';
 import { queryAllElements } from './utils/selectors';
@@ -6,7 +6,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const numberElements = queryAllElements('number');

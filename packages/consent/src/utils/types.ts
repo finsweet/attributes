@@ -1,4 +1,4 @@
-import type { FsAttributeInit } from '@finsweet/attributes-utils';
+import type { FinsweetAttributeInit } from '@finsweet/attributes-utils';
 
 import type { UseConsents } from '../FsCookieConsent';
 import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS, SETTINGS } from '.';
@@ -47,6 +47,6 @@ declare global {
   }
 }
 
-export type GlobalSettings = Parameters<FsAttributeInit<typeof SETTINGS>>['0'] & {
+export type GlobalSettings = Parameters<FinsweetAttributeInit<typeof SETTINGS>>['0'] & {
   debug: boolean;
 };

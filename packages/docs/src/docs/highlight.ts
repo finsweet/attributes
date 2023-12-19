@@ -21,7 +21,7 @@ export const initCodeHighlight = (copyCode: string) => {
 
   codeElement.innerHTML = copyCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt');
 
-  window.fsAttributes[CODE_HIGHLIGHT_ATTRIBUTE].init?.();
+  window.finsweetAttributes[CODE_HIGHLIGHT_ATTRIBUTE].init?.();
 
   return codeElement;
 };

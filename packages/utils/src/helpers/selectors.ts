@@ -1,4 +1,4 @@
-import type { AttributeElements, AttributeSettings, FsAttributeKey } from '../types';
+import type { AttributeElements, AttributeSettings, FinsweetAttributeKey } from '../types';
 
 /**
  * @returns Selector helpers for the defined Attribute Elements and Settings.
@@ -10,7 +10,7 @@ export const generateSelectors = <
   ElementsDefinition extends AttributeElements,
   SettingsDefinition extends AttributeSettings
 >(
-  attributeKey: FsAttributeKey,
+  attributeKey: FinsweetAttributeKey,
   elements: ElementsDefinition,
   settings: SettingsDefinition
 ) => {

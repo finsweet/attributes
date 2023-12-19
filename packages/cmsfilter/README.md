@@ -4,11 +4,11 @@ Create advanced and complex no-code filter systems inside Webflow CMS.
 
 ## JavaScript API
 
-You can access the `cmsfilter` instances by pushing a callback into the `window.fsAttributes` object:
+You can access the `cmsfilter` instances by pushing a callback into the `window.finsweetAttributes` object:
 
 ```typescript
-window.fsAttributes = window.fsAttributes || [];
-window.fsAttributes.push([
+window.finsweetAttributes = window.finsweetAttributes || [];
+window.finsweetAttributes.push([
   'cmsfilter',
   (filterInstances) => {
     console.log('cmsfilter Successfully loaded!');

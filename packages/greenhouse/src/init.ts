@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initJob, initJobsList } from './factory';
 import { DEFAULT_QUERY_PARAM_SETTING_KEY, GH_DEPARTMENT, GH_OFFICE, SETTINGS } from './utils/constants';
@@ -6,7 +6,7 @@ import { DEFAULT_QUERY_PARAM_SETTING_KEY, GH_DEPARTMENT, GH_OFFICE, SETTINGS } f
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit<typeof SETTINGS> = async ({ board, queryparam } = {}) => {
+export const init: FinsweetAttributeInit<typeof SETTINGS> = async ({ board, queryparam } = {}) => {
   await waitWebflowReady();
 
   // init params

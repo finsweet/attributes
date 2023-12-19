@@ -1,11 +1,11 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
-import { type FsAttributeInit, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { queryAllAccordions } from './actions/query';
 import { initAccordionGroups } from './factory';
 import { CMS_LOAD_LIST_ELEMENT_SELECTOR } from './utils/constants';
 
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   // Get all accordions
@@ -23,7 +23,7 @@ export const init: FsAttributeInit = async () => {
   const groupsData = initAccordionGroups(accordions);
 
   // Ensure fs-a11y is present
-  window.fsAttributes.import('a11y');
+  window.finsweetAttributes.import('a11y');
 
   // Finalize
   return {

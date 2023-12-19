@@ -27,6 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   contentsElement.innerHTML = marked.parse(markdown);
 
-  window.fsAttributes.solutions[CODE_HIGHLIGHT_ATTRIBUTE].init?.();
-  window.fsAttributes.solutions[TOC_ATTRIBUTE]?.init?.();
+  window.finsweetAttributes.solutions[CODE_HIGHLIGHT_ATTRIBUTE].init?.();
+  window.finsweetAttributes.solutions[TOC_ATTRIBUTE]?.init?.();
 });

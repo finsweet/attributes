@@ -1,5 +1,5 @@
 import { createCMSListInstances } from '@finsweet/attributes-cmscore';
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { collectCombineData } from './actions/collect';
 import { combineItemsToTarget } from './actions/combine';
@@ -9,7 +9,7 @@ import type { CombineData } from './utils/types';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const listInstances = createCMSListInstances([getElementSelector('list')]);
