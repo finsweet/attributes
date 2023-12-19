@@ -4,6 +4,7 @@ import type { List } from '../components/List';
 import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
+import { handleTags, initTag } from './tag';
 
 /**
  * Inits loading functionality for the list.
@@ -23,6 +24,8 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
 
   // Get filters data
   const filtersData = getFiltersData(form);
+
+  const tagData = initTag();
 
   list.filters.set(filtersData);
 
@@ -51,6 +54,10 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Trigger the hook when the filters change
   list.filters.subscribe(() => {
     list.triggerHook('filter');
+
+    const filters = list.filters.get();
+
+    if (tagData) handleTags(filters, tagData);
   });
 
   // Global click event listener on the form
