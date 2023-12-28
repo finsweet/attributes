@@ -110,6 +110,10 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-inputcounter');
     }
 
+    case 'keypress': {
+      return import('@finsweet/attributes-keypress');
+    }
+
     case 'launchdarkly': {
       return import('@finsweet/attributes-launchdarkly');
     }

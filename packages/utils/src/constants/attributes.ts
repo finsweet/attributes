@@ -56,6 +56,8 @@ export const INPUT_ACTIVE_ATTRIBUTE = 'inputactive';
 
 export const INPUT_COUNTER_ATTRIBUTE = 'inputcounter';
 
+export const KEYPRESS_ATTRIBUTE = 'keypress';
+
 export const GREENHOUSE_ATTRIBUTE = 'greenhouse';
 
 export const LINK_BLOCK_EDIT_ATTRIBUTE = 'linkblockedit';

@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -161,6 +161,9 @@ importers:
       '@finsweet/attributes-inputcounter':
         specifier: workspace:*
         version: link:../inputcounter
+      '@finsweet/attributes-keypress':
+        specifier: workspace:*
+        version: link:../keypress
       '@finsweet/attributes-launchdarkly':
         specifier: workspace:*
         version: link:../launchdarkly
@@ -467,6 +470,12 @@ importers:
         version: link:../utils
 
   packages/inputcounter:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/keypress:
     dependencies:
       '@finsweet/attributes-utils':
         specifier: workspace:*
