@@ -186,6 +186,10 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-toc');
     }
 
+    case 'tooltip': {
+      return import('@finsweet/attributes-tooltip');
+    }
+
     case 'videohls': {
       return import('@finsweet/attributes-videohls');
     }
