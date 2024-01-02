@@ -2,7 +2,7 @@ import { generateSelectors, INHERIT_CLASS_ATTRIBUTE } from '@finsweet/attributes
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getAttribute, getInstanceIndex, getSettingSelector } = generateSelectors(
+export const { getAttribute, getInstanceIndex, getSettingSelector, queryAllElements, queryElement } = generateSelectors(
   INHERIT_CLASS_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

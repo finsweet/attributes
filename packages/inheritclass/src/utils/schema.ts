@@ -10,22 +10,16 @@ const SCHEMA_GROUPS: SchemaGroups = {
 };
 
 const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
-  listener: {
-    ...SETTINGS.listener,
-    name: 'Direction',
-    description: "Defines the direction of the slider's movement.",
-    type: 'text',
-  },
   class: {
     ...SETTINGS.class,
-    name: 'Effect',
-    description: "Defines the effect of the slider's movement.",
+    name: 'Class',
+    description: 'Defines the class to be inherited.',
     type: 'text',
   },
   instance: {
     ...SETTINGS.instance,
-    name: 'Speed',
-    description: "Defines the speed of the slider's movement.",
+    name: 'Instance',
+    description: 'Defines the instance of the element.',
     type: 'text',
   },
 };
@@ -34,13 +28,13 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
   groups: [SCHEMA_GROUPS.general],
   elements: [
     {
-      key: 'inheritclass',
-      name: 'Inherit Class',
-      description: 'Defines the inherit element.',
+      key: 'listener',
+      name: 'Listener',
+      description: 'Defines the listener element.',
       allowedTypes: ['Block'],
       group: SCHEMA_GROUPS.general.key,
       required: true,
-      settings: [SCHEMA_SETTINGS.listener, SCHEMA_SETTINGS.class, SCHEMA_SETTINGS.instance],
+      settings: [SCHEMA_SETTINGS.class, SCHEMA_SETTINGS.instance],
     },
   ],
 };
