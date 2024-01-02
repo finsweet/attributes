@@ -446,15 +446,9 @@ importers:
 
   packages/inheritclass:
     dependencies:
-      '@finsweet/attributes-cmscore':
-        specifier: workspace:*
-        version: link:../cmscore
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
-      swiper:
-        specifier: ^10.0.2
-        version: 10.0.2
 
   packages/inputactive:
     dependencies:

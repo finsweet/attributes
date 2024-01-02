@@ -5,6 +5,11 @@
   "private": true,
   "type": "module",
   "types": "src/index.ts",
+  "scripts": {
+    "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix && prettier --write ./src",
+    "check": "tsc --noEmit"
+  },
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -16,8 +21,6 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-utils": "workspace:*",
-    "@finsweet/attributes-cmscore": "workspace:*",
-    "swiper": "^10.0.2"
+    "@finsweet/attributes-utils": "workspace:*"
   }
 }
