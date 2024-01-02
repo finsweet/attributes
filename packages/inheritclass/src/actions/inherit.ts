@@ -23,6 +23,15 @@ export const initInheritClass = (parentElement: HTMLElement) => {
               childElement.classList.add(inheritClass);
             }
           });
+        } else {
+          // Remove class from all child elements
+          inheritElements.forEach((childElement) => {
+            if (!(Number(getAttribute(childElement, 'instance')) === instanceIndex)) return;
+            const inheritClass = getAttribute(childElement, 'class');
+            if (inheritClass && childElement.classList.contains(inheritClass)) {
+              childElement.classList.remove(inheritClass);
+            }
+          });
         }
       }
     }
