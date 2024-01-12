@@ -37,6 +37,7 @@
     "@finsweet/attributes-a11y": "workspace:*",
     "@finsweet/attributes-accordion": "workspace:*",
     "@finsweet/attributes-autovideo": "workspace:*",
+    "@finsweet/attributes-beforeafter": "workspace:*",
     "@finsweet/attributes-calevent": "workspace:*",
     "@finsweet/attributes-cmscombine": "workspace:*",
     "@finsweet/attributes-cmsfilter": "workspace:*",
@@ -66,6 +67,7 @@
     "@finsweet/attributes-mirrorclick": "workspace:*",
     "@finsweet/attributes-mirrorinput": "workspace:*",
     "@finsweet/attributes-modal": "workspace:*",
+    "@finsweet/attributes-nativesearch": "workspace:*",
     "@finsweet/attributes-numbercount": "workspace:*",
     "@finsweet/attributes-queryparam": "workspace:*",
     "@finsweet/attributes-rangeslider": "workspace:*",
@@ -80,6 +82,7 @@
     "@finsweet/attributes-starrating": "workspace:*",
     "@finsweet/attributes-toc": "workspace:*",
     "@finsweet/attributes-tooltip": "workspace:*",
+    "@finsweet/attributes-typing": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
     "@finsweet/attributes-videohls": "workspace:*"
   },

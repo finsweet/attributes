@@ -18,6 +18,10 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-autovideo');
     }
 
+    case 'beforeafter': {
+      return import('@finsweet/attributes-beforeafter');
+    }
+
     case 'calevent': {
       return import('@finsweet/attributes-calevent');
     }
@@ -134,6 +138,10 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-modal');
     }
 
+    case 'nativesearch': {
+      return import('@finsweet/attributes-nativesearch');
+    }
+
     case 'numbercount': {
       return import('@finsweet/attributes-numbercount');
     }
@@ -188,6 +196,10 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
 
     case 'tooltip': {
       return import('@finsweet/attributes-tooltip');
+    }
+
+    case 'typing': {
+      return import('@finsweet/attributes-typing');
     }
 
     case 'videohls': {
