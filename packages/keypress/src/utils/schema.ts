@@ -15,12 +15,7 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     description: 'Defines a valid CSS selector to target the element to keypress the event.',
     type: 'text',
   },
-  event: {
-    ...SETTINGS.event,
-    name: 'Event',
-    description: 'Defines the event to trigger. (click or hover)',
-    type: 'text',
-  },
+
   delay: {
     ...SETTINGS.delay,
     name: 'Delay',
@@ -37,7 +32,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Target',
       description: 'Defines the element as the target to keypress the fired event.',
       allowedTypes: ['Block'],
-      settings: [SCHEMA_SETTINGS.delay, SCHEMA_SETTINGS.keycode, SCHEMA_SETTINGS.toggle, SCHEMA_SETTINGS.event],
+      settings: [SCHEMA_SETTINGS.delay, SCHEMA_SETTINGS.keycode, SCHEMA_SETTINGS.toggle],
     },
   ],
 };

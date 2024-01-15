@@ -38,7 +38,6 @@ export const handleKeyPress = (
 
       if (checkKeysPressed(event)) {
         const toggleDisplay = () => {
-          console.log('toggleDisplay');
           Array.from(instances).forEach((element) => {
             handleVisibility(element, toggle);
           });

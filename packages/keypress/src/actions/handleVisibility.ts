@@ -1,15 +1,4 @@
-import { animations } from '@finsweet/attributes-utils';
-
 import { queryElement } from '../utils/selectors';
-
-/**
- * Updates accessibility attributes for the target element.
- * @param targetElement The target element element to be positioned.
- * @param isVisible Whether the target element is visible or not.
- */
-const updateTargetElementAccessibility = (targetElement: HTMLElement, isVisible: boolean) => {
-  targetElement.setAttribute('aria-hidden', `${!isVisible}`);
-};
 
 /**
  * This function will toggle the visibility of an element
