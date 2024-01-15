@@ -13,22 +13,6 @@ export const ELEMENTS = [
 
 export const SETTINGS = {
   /**
-   * Animation setting
-   */
-  animation: {
-    key: 'animation',
-    values: {
-      fade: 'fade',
-      'slide-up': 'slide-up',
-      'slide-down': 'slide-down',
-      'slide-left': 'slide-left',
-      'slide-right': 'slide-right',
-      grow: 'grow',
-      shrink: 'shrink',
-      spin: 'spin',
-    },
-  },
-  /**
    * Defines a delay to wait until the click event is replicated on the target.
    */
   delay: { key: 'delay' },
@@ -37,18 +21,6 @@ export const SETTINGS = {
    * Defines the key to trigger the event.
    */
   keycode: { key: 'keycode' },
-
-  /**
-   * Defines the event to trigger. (click or hover)
-   */
-  event: {
-    key: 'event',
-
-    values: {
-      click: 'click',
-      hover: 'hover',
-    },
-  },
 
   /**
    * Defines what will be toggled. (valid CSS selector)

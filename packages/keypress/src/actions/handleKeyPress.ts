@@ -11,7 +11,7 @@ import { handleVisibility } from './handleVisibility';
  */
 export const handleKeyPress = (
   keyCombinationStr: string,
-  animation?: string,
+  instances: NodeListOf<HTMLElement>,
   toggle?: string,
   delay?: string
 ): (() => void) => {
@@ -29,7 +29,7 @@ export const handleKeyPress = (
   });
 
   const checkKeysPressed = (event: KeyboardEvent): boolean =>
-    keyCodes.every((key) => key === event.key || key === (event.keyCode || event.code).toString() || keysPressed[key]);
+    keyCodes.every((key) => key === event.key || key === (event.keyCode || event.which).toString() || keysPressed[key]);
 
   const keyDownHandler = (event: KeyboardEvent) => {
     if (keyCodes.includes(event.key) || keyCodes.includes(event.keyCode.toString())) {
@@ -38,11 +38,9 @@ export const handleKeyPress = (
 
       if (checkKeysPressed(event)) {
         const toggleDisplay = () => {
-          const toggles = document.querySelectorAll<HTMLElement>(toggle);
-          if (!toggles.length) return;
-
-          toggles.forEach((element) => {
-            handleVisibility(element, animation);
+          console.log('toggleDisplay');
+          Array.from(instances).forEach((element) => {
+            handleVisibility(element, toggle);
           });
         };
 
@@ -67,7 +65,7 @@ export const handleKeyPress = (
 
   const keyUpHandler = (event: KeyboardEvent) => {
     keysPressed[event.key] = false;
-    keysPressed[(event.keyCode || event.code).toString()] = false;
+    keysPressed[(event.keyCode || event.which).toString()] = false;
   };
 
   document.addEventListener('keydown', keyDownHandler);

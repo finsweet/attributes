@@ -1,6 +1,6 @@
 import { type FinsweetAttributeInit } from '@finsweet/attributes-utils';
 
-import { handleClickOrHover, handleKeyPress } from './actions';
+import { handleKeyPress } from './actions';
 import type { SETTINGS } from './utils/constants';
 import { isValidCssSelector } from './utils/isValidCssSelector';
 
@@ -8,13 +8,15 @@ import { isValidCssSelector } from './utils/isValidCssSelector';
  * Inits Keypress events.
  */
 export const init: FinsweetAttributeInit<typeof SETTINGS> = async (globalSettings = {}) => {
-  if (!globalSettings?.toggle || (!globalSettings?.keycode && !globalSettings?.event)) {
+  const { toggle, keycode, delay } = globalSettings;
+
+  if (!toggle || !keycode) {
     console.error('Improper keypress attribute config.');
 
     return;
   }
 
-  const validSelector = isValidCssSelector(globalSettings?.toggle);
+  const validSelector = isValidCssSelector(toggle);
 
   if (!validSelector) {
     console.error(
@@ -24,23 +26,17 @@ export const init: FinsweetAttributeInit<typeof SETTINGS> = async (globalSetting
     return;
   }
 
-  const toggles = document.querySelectorAll<HTMLElement>(globalSettings?.toggle);
+  const instances = document.querySelectorAll<HTMLElement>(`.${toggle}`);
 
-  if (toggles.length) {
-    toggles.forEach((element) => {
-      element.style.display = 'none';
-    });
+  if (!instances.length) {
+    console.error(`No elements found for the selector ".${toggle}".`);
+
+    return;
   }
 
   const trigger = () => {
-    // happens globally
-    if (globalSettings?.keycode) {
-      handleKeyPress(globalSettings?.keycode, globalSettings.animation, globalSettings.toggle, globalSettings.delay);
-    }
-
-    handleClickOrHover(globalSettings.animation);
-
-    return;
+    // keypress happens globally
+    handleKeyPress(keycode, instances, toggle, delay);
   };
 
   trigger();

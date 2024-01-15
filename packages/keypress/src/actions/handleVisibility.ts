@@ -14,9 +14,10 @@ const updateTargetElementAccessibility = (targetElement: HTMLElement, isVisible:
 /**
  * This function will toggle the visibility of an element
  * @param element
- * @param animation
+ * @param toggle CSS selector for elements to toggle.
+ * @param reset targets checkbox
  */
-export const handleVisibility = (element: HTMLElement, animation?: string, reset?: boolean) => {
+export const handleVisibility = (element: HTMLElement, toggle: string, reset?: boolean) => {
   const checkbox = queryElement<HTMLInputElement>('checkbox', {
     scope: document,
   });
@@ -27,7 +28,7 @@ export const handleVisibility = (element: HTMLElement, animation?: string, reset
       checkbox.setAttribute('aria-checked', 'false');
     }
 
-    hideTargetElement(element, animation as keyof typeof animations);
+    hideTargetElement(element, toggle);
 
     return;
   }
@@ -38,7 +39,7 @@ export const handleVisibility = (element: HTMLElement, animation?: string, reset
       checkbox.setAttribute('aria-checked', 'true');
     }
 
-    showTargetElement(element, animation as keyof typeof animations);
+    showTargetElement(element, toggle);
 
     return;
   }
@@ -48,7 +49,7 @@ export const handleVisibility = (element: HTMLElement, animation?: string, reset
     checkbox.setAttribute('aria-checked', 'false');
   }
 
-  hideTargetElement(element, animation as keyof typeof animations);
+  hideTargetElement(element, toggle);
 };
 
 /**
@@ -57,17 +58,8 @@ export const handleVisibility = (element: HTMLElement, animation?: string, reset
  * @param animation
  * @returns
  */
-export const showTargetElement = async (targetElement: HTMLElement, animation?: keyof typeof animations) => {
-  if (!animation) {
-    targetElement.style.display = 'block';
-    updateTargetElementAccessibility(targetElement, true);
-
-    return;
-  }
-
-  animations[animation].prepareIn(targetElement, { display: 'block' });
-  await animations[animation].animateIn(targetElement, { display: 'block' });
-  updateTargetElementAccessibility(targetElement, true);
+export const showTargetElement = async (targetElement: HTMLElement, toggle: string) => {
+  targetElement.classList.toggle(toggle);
 };
 
 /**
@@ -76,14 +68,6 @@ export const showTargetElement = async (targetElement: HTMLElement, animation?: 
  * @param animation
  * @returns
  */
-export const hideTargetElement = async (targetElement: HTMLElement, animation?: keyof typeof animations) => {
-  if (!animation) {
-    targetElement.style.display = 'none';
-    updateTargetElementAccessibility(targetElement, false);
-
-    return;
-  }
-
-  await animations[animation].animateOut(targetElement, { display: 'none' });
-  updateTargetElementAccessibility(targetElement, false);
+export const hideTargetElement = async (targetElement: HTMLElement, toggle: string) => {
+  targetElement.classList.toggle(toggle);
 };
