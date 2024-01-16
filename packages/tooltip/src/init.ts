@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { cleanupTooltips, initRctTooltips, initTooltips } from './actions';
 import { type GlobalSettings, queryAllElements, SETTINGS, type TooltipInstance } from './utils';
@@ -6,7 +6,7 @@ import { type GlobalSettings, queryAllElements, SETTINGS, type TooltipInstance }
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit<typeof SETTINGS> = async (globalSettings = {}) => {
+export const init: FinsweetAttributeInit<typeof SETTINGS> = async (globalSettings = {}) => {
   const tooltipInstances: TooltipInstance[] = [] as TooltipInstance[];
 
   const targets = queryAllElements('target');

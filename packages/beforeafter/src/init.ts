@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { createBeforeAfterInstance } from './factory';
 import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
@@ -6,7 +6,7 @@ import { getAttribute, queryAllElements, queryElement } from './utils/selectors'
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const beforeAfterWrappers = queryAllElements('wrapper');
