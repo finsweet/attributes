@@ -56,13 +56,13 @@ export const initTabs = (tabWrapper: HTMLElement) => {
       contentItem.classList.remove(contentActiveClass);
     });
 
-    const dsiplay = new DisplayController({
+    const display = new DisplayController({
       element: contentItems[index],
       displayProperty: 'flex',
       animation: effect,
     });
 
-    dsiplay.show();
+    display.show();
     contentItems[index].classList.add(contentActiveClass);
 
     menuItems.forEach((item) => {
@@ -78,7 +78,9 @@ export const initTabs = (tabWrapper: HTMLElement) => {
 
   const handleTabs = (index: number) => {
     setTab(index);
-    simulateEvent(interactionElements[index], 'click');
+
+    if (interactionElements.length > 0) simulateEvent(interactionElements[index], 'click');
+
     if (intervalId && timerStopClick !== 'false') {
       window.clearInterval(intervalId);
       intervalId = null;
