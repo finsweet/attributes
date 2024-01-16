@@ -1,18 +1,16 @@
 import { getCollectionElements, simulateEvent } from '@finsweet/attributes-utils';
 
-import { DisplayController } from '../../../consent/src/components';
 import {
+  activeTabClass,
   getActiveClassAttributeValue,
   getAttribute,
+  getElementSelector,
   getTabNameFromQuery,
+  handleVisibility,
   queryAllElements,
   queryElement,
-  type TEffects,
-  type TTimer,
+  setPointerEventsNoneToElementAndChildren,
 } from '../utils';
-import { setPointerEventsNoneToElementAndChildren } from '../utils';
-import { getElementSelector } from '../utils';
-import { activeTabClass } from '../utils/constants';
 
 export const initTabs = (tabWrapper: HTMLElement) => {
   const menu = queryElement('menu', { scope: tabWrapper });
@@ -56,13 +54,8 @@ export const initTabs = (tabWrapper: HTMLElement) => {
       contentItem.classList.remove(contentActiveClass);
     });
 
-    const display = new DisplayController({
-      element: contentItems[index],
-      displayProperty: 'flex',
-      animation: effect,
-    });
+    handleVisibility(contentItems[index], effect, 'flex');
 
-    display.show();
     contentItems[index].classList.add(contentActiveClass);
 
     menuItems.forEach((item) => {

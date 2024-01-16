@@ -1,5 +1,61 @@
+import { animations } from '@finsweet/attributes-utils';
+
 import { activeTabClass } from './constants';
 import { getAttribute } from './selectors';
+
+/**
+ * This function will toggle the visibility of tabs and content.
+ * @param element The element to toggle the visibility of.
+ * @param animation The animation to use when showing/hiding the element.
+ * @param displayProperty The display property to use when showing the element.
+ */
+export const handleVisibility = (element: HTMLElement, animation?: string, displayProperty = 'block') => {
+  if (element.style.display === 'none' || element.style.display === '') {
+    showTargetElement(element, displayProperty, animation as keyof typeof animations);
+
+    return;
+  }
+
+  hideTargetElement(element, animation as keyof typeof animations);
+};
+
+/**
+ * Shows the target element with the specified animation if any.
+ * @param targetElement The element to show.
+ * @param displayProperty The display property to use when showing the element.
+ * @param animation The animation to use when showing the element.
+ * @returns
+ */
+export const showTargetElement = async (
+  targetElement: HTMLElement,
+  displayProperty: string,
+  animation?: keyof typeof animations
+) => {
+  if (!animation) {
+    targetElement.style.display = displayProperty;
+
+    return;
+  }
+
+  animations[animation].prepareIn(targetElement, { display: displayProperty });
+  await animations[animation].animateIn(targetElement, { display: displayProperty });
+};
+
+/**
+ * Hides the target element with the specified animation if any.
+ * @param targetElement The element to hide.
+ * @param animation The animation to use when hiding the element.
+ * @returns
+ */
+export const hideTargetElement = async (targetElement: HTMLElement, animation?: keyof typeof animations) => {
+  if (!animation) {
+    targetElement.style.display = 'none';
+
+    return;
+  }
+
+  await animations[animation].animateOut(targetElement, { display: 'none' });
+};
 
 /**
  * Recursively searches for and returns the 'activeclass' attribute value in the given element or its children.
