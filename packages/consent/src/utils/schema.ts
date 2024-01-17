@@ -12,7 +12,7 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
   },
   animationeasing: {
     ...SETTINGS.animationeasing,
-    name: 'Opt-in',
+    name: 'Easing',
     description: 'Animation easing for the component. Defaults to ease if not set.',
     type: 'select',
   },
