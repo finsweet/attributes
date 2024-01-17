@@ -57,6 +57,13 @@ export const SETTINGS = {
    */
   animationeasing: {
     key: 'animationeasing',
+    values: {
+      linear: 'linear',
+      ease: 'ease',
+      'ease-in': 'ease-in',
+      'ease-out': 'ease-out',
+      'ease-in-out': 'ease-in-out',
+    },
   },
 
   /**
