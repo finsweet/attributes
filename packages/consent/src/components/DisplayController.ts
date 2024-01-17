@@ -1,4 +1,4 @@
-import { animations, Interaction, type InteractionParams, isVisible } from '@finsweet/attributes-utils';
+import { animations, type Easings, Interaction, type InteractionParams, isVisible } from '@finsweet/attributes-utils';
 
 export type DisplayControllerParams = {
   element: HTMLElement;
@@ -6,6 +6,8 @@ export type DisplayControllerParams = {
   displayProperty?: (typeof displayProperties)[number];
   animation?: keyof typeof animations;
   startsHidden?: boolean;
+  animationDuration?: number;
+  animationEasing: Easings[number];
 };
 
 export const displayProperties = ['block', 'flex', 'grid', 'inline-block', 'inline'] as const;
@@ -16,6 +18,8 @@ export function createDisplayController({
   displayProperty,
   animation,
   startsHidden,
+  animationDuration,
+  animationEasing,
 }: DisplayControllerParams) {
   let visible: boolean;
 
@@ -43,7 +47,7 @@ export function createDisplayController({
       await interactionInstance.trigger('first');
     } else if (animation) {
       animations[animation].prepareIn(element, { display });
-      await animations[animation].animateIn(element, { display });
+      await animations[animation].animateIn(element, { display, duration: animationDuration, easing: animationEasing });
     } else {
       element.style.display = display;
     }
@@ -57,7 +61,11 @@ export function createDisplayController({
     if (interactionInstance) {
       await interactionInstance.trigger('second');
     } else if (animation) {
-      await animations[animation].animateOut(element, { display: 'none' });
+      await animations[animation].animateOut(element, {
+        display: 'none',
+        duration: animationDuration,
+        easing: animationEasing,
+      });
     } else {
       element.style.display = 'none';
     }
