@@ -10,8 +10,8 @@ test.describe('countitems', () => {
   test('Displays the items count', async ({ page }) => {
     await waitAttributeLoaded(page, 'countitems');
 
-    const value1 = page.getByTestId('value-1');
-    const value2 = page.getByTestId('value-2');
+    const value1 = page.locator('[fs-countitems-element="value"][fs-countitems-instance="one"]');
+    const value2 = page.locator('[fs-countitems-element="value"][fs-countitems-instance="two"]');
 
     await expect(value1).toHaveText('35');
     await expect(value2).toHaveText('6');

@@ -15,11 +15,11 @@ export const highlightText = (htmlString: string, target: string, wrapperClass: 
    * @param {Node} node - The current node to check.
    */
   const traverseAndHighlight = (node: Node) => {
-    let next: Node | null = null;
+    // let next: Node | null = null;
     const childNodesArray = Array.from(node.childNodes);
 
     for (const child of childNodesArray) {
-      next = child.nextSibling;
+      // next = child.nextSibling;
 
       if (child.nodeType === Node.TEXT_NODE) {
         const textContent = child.nodeValue || '';

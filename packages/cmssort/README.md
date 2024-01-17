@@ -4,11 +4,11 @@ Create advanced and complex no-code sorting for Webflow CMS Collection List cont
 
 ## JavaScript API
 
-You can access the `cmssort` instances by pushing a callback into the `window.fsAttributes` object:
+You can access the `cmssort` instances by pushing a callback into the `window.finsweetAttributes` object:
 
 ```typescript
-window.fsAttributes = window.fsAttributes || [];
-window.fsAttributes.push([
+window.finsweetAttributes = window.finsweetAttributes || [];
+window.finsweetAttributes.push([
   'cmssort',
   (listInstances) => {
     console.log('cmssort Successfully loaded!');

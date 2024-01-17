@@ -11,7 +11,7 @@ import { getAttribute, hasAttributeValue } from './utils/selectors';
  * Inits a number count animation.
  * @param numberElement
  */
-export const initNumberCount = (numberElement: Element) => {
+export const initNumberCount = (numberElement: HTMLElement) => {
   const rawStart = getAttribute(numberElement, 'start');
   const rawEnd = getAttribute(numberElement, 'end');
   const rawDuration = getAttribute(numberElement, 'duration');

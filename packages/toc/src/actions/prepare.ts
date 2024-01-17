@@ -9,7 +9,7 @@ import type { LinkData } from '../utils/types';
  *
  * @returns The TOC wrapper element.
  */
-export const prepareTOC = ([{ component: firstLinkComponent }]: LinkData[], instanceIndex?: number) => {
+export const prepareTOC = ([{ component: firstLinkComponent }]: LinkData[], instanceIndex?: string) => {
   const tocWrapper = queryElement('table', { instanceIndex }) || firstLinkComponent.parentElement;
   if (!tocWrapper) return;
 

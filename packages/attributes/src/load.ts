@@ -1,10 +1,10 @@
-import { type FsAttributeKey } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeKey } from '@finsweet/attributes-utils';
 
 /**
  * Dynamically loads an attribute package.
  * @param solution
  */
-export const loadAttribute = async (solution: FsAttributeKey) => {
+export const loadAttribute = async (solution: FinsweetAttributeKey) => {
   switch (solution) {
     case 'a11y': {
       return import('@finsweet/attributes-a11y');
@@ -16,6 +16,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'autovideo': {
       return import('@finsweet/attributes-autovideo');
+    }
+
+    case 'beforeafter': {
+      return import('@finsweet/attributes-beforeafter');
     }
 
     case 'calevent': {
@@ -134,6 +138,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-modal');
     }
 
+    case 'nativesearch': {
+      return import('@finsweet/attributes-nativesearch');
+    }
+
     case 'numbercount': {
       return import('@finsweet/attributes-numbercount');
     }
@@ -184,6 +192,14 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'toc': {
       return import('@finsweet/attributes-toc');
+    }
+
+    case 'tooltip': {
+      return import('@finsweet/attributes-tooltip');
+    }
+
+    case 'typing': {
+      return import('@finsweet/attributes-typing');
     }
 
     case 'videohls': {

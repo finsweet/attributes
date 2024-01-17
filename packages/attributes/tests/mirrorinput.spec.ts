@@ -7,10 +7,14 @@ test.beforeEach(async ({ page }) => {
 });
 
 const getTriggerLocators = (page: Page) =>
-  [1, 2, 3, 4, 5].map((id) => page.locator(`[fs-mirrorinput-element="trigger-${id}"]`));
+  ['one', 'two', 'three', 'four', 'five'].map((id) =>
+    page.locator(`[fs-mirrorinput-element="trigger"][fs-mirrorinput-instance="${id}"]`)
+  );
 
 const getTargetLocators = (page: Page) =>
-  [1, 2, 3, 4, 5].map((id) => page.locator(`[fs-mirrorinput-element="target-${id}"]`));
+  ['one', 'two', 'three', 'four', 'five'].map((id) =>
+    page.locator(`[fs-mirrorinput-element="target"][fs-mirrorinput-instance="${id}"]`)
+  );
 
 test.describe('mirrorinput', () => {
   test("Mirrors each trigger's input", async ({ page }) => {

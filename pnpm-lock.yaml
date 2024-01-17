@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -26,8 +26,8 @@ importers:
         specifier: ^1.3.2
         version: 1.3.2(typescript@5.1.3)
       '@playwright/test':
-        specifier: ^1.35.0
-        version: 1.35.0
+        specifier: ^1.39.0
+        version: 1.39.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.59.11
         version: 5.59.11(@typescript-eslint/parser@5.59.11)(eslint@8.42.0)(typescript@5.1.3)
@@ -92,6 +92,9 @@ importers:
       '@finsweet/attributes-autovideo':
         specifier: workspace:*
         version: link:../autovideo
+      '@finsweet/attributes-beforeafter':
+        specifier: workspace:*
+        version: link:../beforeafter
       '@finsweet/attributes-calevent':
         specifier: workspace:*
         version: link:../calevent
@@ -179,6 +182,9 @@ importers:
       '@finsweet/attributes-modal':
         specifier: workspace:*
         version: link:../modal
+      '@finsweet/attributes-nativesearch':
+        specifier: workspace:*
+        version: link:../nativesearch
       '@finsweet/attributes-numbercount':
         specifier: workspace:*
         version: link:../numbercount
@@ -218,6 +224,12 @@ importers:
       '@finsweet/attributes-toc':
         specifier: workspace:*
         version: link:../toc
+      '@finsweet/attributes-tooltip':
+        specifier: workspace:*
+        version: link:../tooltip
+      '@finsweet/attributes-typing':
+        specifier: workspace:*
+        version: link:../typing
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
@@ -237,6 +249,15 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+
+  packages/beforeafter:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      beerslider:
+        specifier: ^1.0.3
+        version: 1.0.3
 
   packages/calevent:
     dependencies:
@@ -517,6 +538,15 @@ importers:
         specifier: workspace:*
         version: link:../utils
 
+  packages/nativesearch:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      just-debounce:
+        specifier: 1.1.0
+        version: 1.1.0
+
   packages/numbercount:
     dependencies:
       '@finsweet/attributes-utils':
@@ -636,6 +666,26 @@ importers:
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
+
+  packages/tooltip:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@floating-ui/dom':
+        specifier: ^1.5.3
+        version: 1.5.3
+  packages/typing:
+    dependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      typed.js:
+        specifier: ^2.0.16
+        version: 2.0.16
 
   packages/utils:
     dependencies:
@@ -1363,6 +1413,23 @@ packages:
       typescript: 5.1.3
     dev: true
 
+  /@floating-ui/core@1.5.0:
+    resolution: {integrity: sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==}
+    dependencies:
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
+  /@floating-ui/dom@1.5.3:
+    resolution: {integrity: sha512-ClAbQnEqJAKCJOEbbLo5IUlZHkNszqhuxS4fHAVxRPXPya6Ysf2G8KypnYcOTpx6I8xcgF9bbHb6g/2KpbV8qA==}
+    dependencies:
+      '@floating-ui/core': 1.5.0
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
+  /@floating-ui/utils@0.1.6:
+    resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
+    dev: false
+
   /@humanwhocodes/config-array@0.11.11:
     resolution: {integrity: sha512-N2brEuAadi0CcdeMXUkhbZB84eskAc8MEX1By6qEchoVywSgXPIjou4rYsl0V3Hj0ZnuGycGCjdNgockbzeWNA==}
     engines: {node: '>=10.10.0'}
@@ -1524,15 +1591,12 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@playwright/test@1.35.0:
-    resolution: {integrity: sha512-6qXdd5edCBynOwsz1YcNfgX8tNWeuS9fxy5o59D0rvHXxRtjXRebB4gE4vFVfEMXl/z8zTnAzfOs7aQDEs8G4Q==}
+  /@playwright/test@1.39.0:
+    resolution: {integrity: sha512-3u1iFqgzl7zr004bGPYiN/5EZpRUSFddQBra8Rqll5N0/vfpqlP9I9EXqAoGacuAbX6c9Ulg/Cjqglp5VkK6UQ==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      '@types/node': 18.16.1
-      playwright-core: 1.35.0
-    optionalDependencies:
-      fsevents: 2.3.2
+      playwright: 1.39.0
     dev: true
 
   /@types/body-scroll-lock@3.1.0:
@@ -1811,6 +1875,12 @@ packages:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: false
 
+  /beerslider@1.0.3:
+    resolution: {integrity: sha512-1XsuTxbspcAR1rxKOJa3qYX3XW9Kf6d+QRUJtDSxsj+yLVSoBRK8ThqpgxhGaxFeBKklrCc0v0UWpifACT7Dbw==}
+    dependencies:
+      core-js: 3.34.0
+    dev: false
+
   /better-path-resolve@1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
     engines: {node: '>=4'}
@@ -1953,6 +2023,11 @@ packages:
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
+
+  /core-js@3.34.0:
+    resolution: {integrity: sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==}
+    requiresBuild: true
+    dev: false
 
   /cross-env@7.0.3:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
@@ -3302,10 +3377,20 @@ packages:
       find-up: 4.1.0
     dev: true
 
-  /playwright-core@1.35.0:
-    resolution: {integrity: sha512-muMXyPmIx/2DPrCHOD1H1ePT01o7OdKxKj2ebmCAYvqhUy+Y1bpal7B0rdoxros7YrXI294JT/DWw2LqyiqTPA==}
+  /playwright-core@1.39.0:
+    resolution: {integrity: sha512-+k4pdZgs1qiM+OUkSjx96YiKsXsmb59evFoqv8SKO067qBA+Z2s/dCzJij/ZhdQcs2zlTAgRKfeiiLm8PQ2qvw==}
     engines: {node: '>=16'}
     hasBin: true
+    dev: true
+
+  /playwright@1.39.0:
+    resolution: {integrity: sha512-naE5QT11uC/Oiq0BwZ50gDmy8c8WLPRTEWuSSFVG2egBka/1qMoSqYQcROMT9zLwJ86oPofcTH2jBY/5wWOgIw==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.39.0
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: true
 
   /preferred-pm@3.0.3:
@@ -3787,6 +3872,10 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.10
     dev: true
+
+  /typed.js@2.0.16:
+    resolution: {integrity: sha512-IBB52GlJiTUOnomwdVVf7lWgC6gScn8md+26zTHj5oJWA+4pSuclHE76rbGI2hnyO+NT+QXdIUHbfjAY5nEtcw==}
+    dev: false
 
   /typescript@5.1.3:
     resolution: {integrity: sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==}

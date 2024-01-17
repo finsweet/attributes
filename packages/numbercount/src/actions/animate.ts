@@ -13,7 +13,7 @@ export const animateNumberCount = (
   start: number,
   end: number,
   duration: number,
-  locale?: string
+  locale?: string | true | null
 ): void => {
   if (duration <= 0) {
     // Handle cases where duration is zero or negative to prevent infinite loop.

@@ -10,11 +10,11 @@ test.describe('inputcounter', () => {
   test('Initial + step, min, max + increment, decrement, reset', async ({ page }) => {
     await waitAttributeLoaded(page, 'inputcounter');
 
-    const input = page.getByTestId('input');
-    const incrementButton = page.getByTestId('increment');
-    const decrementButton = page.getByTestId('decrement');
-    const resetBtn = page.getByTestId('reset');
-    const clearBtn = page.getByTestId('clear');
+    const input = page.locator('[fs-inputcounter-element="input"][fs-inputcounter-instance="4"]');
+    const incrementButton = page.locator('[fs-inputcounter-element="increment"][fs-inputcounter-instance="4"]');
+    const decrementButton = page.locator('[fs-inputcounter-element="decrement"][fs-inputcounter-instance="4"]');
+    const resetBtn = page.locator('[fs-inputcounter-element="reset"][fs-inputcounter-instance="4"]');
+    const clearBtn = page.locator('[fs-inputcounter-element="clear"][fs-inputcounter-instance="4"]');
 
     let resetButton;
 

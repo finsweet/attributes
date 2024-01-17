@@ -1,4 +1,9 @@
-import { type FsAttributeInit, isNotEmpty, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
+import {
+  type FinsweetAttributeInit,
+  isNotEmpty,
+  waitAttributeLoaded,
+  waitWebflowReady,
+} from '@finsweet/attributes-utils';
 
 import { listenEvents } from './actions/events';
 import { observeElements } from './actions/observe';
@@ -9,7 +14,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
   await waitAttributeLoaded('cmsselect');
 

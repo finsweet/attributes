@@ -27,7 +27,7 @@ export const createSliderDots = async (slider: SliderElement) => {
   if (!sliderNav || !customSliderNav) return;
 
   // Make sure CMSSlider has finished (if existing on the page)
-  const cmsSliderAttribute = window.fsAttributes.process.has('cmsslider');
+  const cmsSliderAttribute = window.finsweetAttributes.process.has('cmsslider');
   if (cmsSliderAttribute) {
     await Promise.all([waitAttributeLoaded('cmsslider'), waitSliderReady(sliderNav)]);
   }

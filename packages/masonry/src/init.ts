@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 import { getCollectionElements } from '@finsweet/attributes-utils';
 
 import { initMasonryLayout } from './actions/masonry';
@@ -7,7 +7,7 @@ import { queryAllElements } from './utils';
 /**
  * Inits masonry functionality.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const listReferences = queryAllElements('list');

@@ -1,6 +1,6 @@
 import type { CMSList } from '@finsweet/attributes-cmscore';
 import {
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isHTMLSelectElement,
   waitAttributeLoaded,
   waitWebflowReady,
@@ -12,7 +12,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const targetElements = queryAllElements('select');

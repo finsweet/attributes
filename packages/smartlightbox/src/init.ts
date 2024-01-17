@@ -1,4 +1,4 @@
-import { addListener, type FsAttributeInit, isElement } from '@finsweet/attributes-utils';
+import { addListener, type FinsweetAttributeInit, isElement } from '@finsweet/attributes-utils';
 
 import { getLightboxElement } from './actions/collect';
 import { moveElementToBody } from './actions/move';
@@ -7,7 +7,7 @@ import { getAttribute, getElementSelector } from './utils/selectors';
 // State
 let restoreUntransformedElement: (() => void) | undefined;
 
-export const init: FsAttributeInit = () => {
+export const init: FinsweetAttributeInit = () => {
   const clickCleanup = addListener(window, 'click', async ({ target }) => {
     if (!isElement(target)) return;
 

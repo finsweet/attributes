@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { queryParamFactory } from './factory';
 import { SETTINGS } from './utils/constants';
@@ -7,7 +7,7 @@ import { getSettingSelector } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const url = new URL(window.location.href);
@@ -23,7 +23,7 @@ export const init: FsAttributeInit = async () => {
 
     queryParamFactory(queryParamElements, paramValue);
 
-    if (window.fsAttributes.process.has('cmsfilter')) {
+    if (window.finsweetAttributes.process.has('cmsfilter')) {
       continue;
     }
 

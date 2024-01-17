@@ -18,13 +18,20 @@ export const toggleDropdown = (settings: Settings) => {
  * @param settings A {@link Settings} element.
  */
 export const toggleDropdownCloseIcon = (settings: Settings) => {
-  const { clearDropdown, inputElement, optionsStore, selectElement } = settings;
+  const { clearDropdown, inputElement, optionsStore, selectElement, preventClear } = settings;
+
+  const inputElValue = inputElement?.value?.toLowerCase();
+
+  if (preventClear && inputElValue) {
+    clearDropdown.style.display = 'block';
+
+    return;
+  }
 
   const selectedOption = optionsStore.find(({ value }) => value === selectElement.value);
 
   if (selectedOption) {
     const selectedText = selectedOption.text.toLowerCase();
-    const inputElValue = inputElement.value?.toLowerCase();
 
     if (!inputElValue) {
       clearDropdown.style.display = 'none';

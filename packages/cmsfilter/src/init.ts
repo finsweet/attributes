@@ -1,5 +1,10 @@
 import { type CMSList, createCMSListInstances } from '@finsweet/attributes-cmscore';
-import { type FsAttributeInit, isNotEmpty, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
+import {
+  type FinsweetAttributeInit,
+  isNotEmpty,
+  waitAttributeLoaded,
+  waitWebflowReady,
+} from '@finsweet/attributes-utils';
 
 import { listenListEvents } from './actions/events';
 import { createCMSFiltersInstance, createCMSTagsInstance } from './factory';
@@ -8,7 +13,7 @@ import { getElementSelector } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
   await waitAttributeLoaded('queryparam');
 

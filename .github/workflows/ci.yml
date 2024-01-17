@@ -9,4 +9,4 @@ jobs:
 
   # Comment this job out if your project doesn't have any tests.
   # Tests:
-  #   uses: finsweet/workflow-ci-test/.github/workflows/test.yml@main
+    # uses: finsweet/workflow-ci-test/.github/workflows/test.yml@main

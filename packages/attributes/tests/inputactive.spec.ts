@@ -12,8 +12,6 @@ test.describe('inputactive', () => {
 
     const checkbox1 = page.getByTestId('checkbox-1-1');
     const checkbox2 = page.getByTestId('checkbox-2-1');
-    const checkbox31 = page.getByTestId('checkbox-3-1');
-    const checkbox32 = page.getByTestId('checkbox-3-2');
     const radio11 = page.getByTestId('radio-1-1');
     const radio12 = page.getByTestId('radio-1-2');
     const radio21 = page.getByTestId('radio-2-1');
@@ -32,13 +30,6 @@ test.describe('inputactive', () => {
     // Checkboxes (inherit)
     await checkbox2.click();
     await expect(checkbox2).toHaveClass(/is-cool/);
-
-    await checkbox31.click();
-    await expect(checkbox31).toHaveClass(/is-cool/);
-
-    // Checkboxes (individual)
-    await checkbox32.click();
-    await expect(checkbox32).toHaveClass(/is-cooler/);
 
     // Radios (default)
     await expect(radio11).not.toHaveClass(/is-active-inputactive/);

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
 import Emittery from 'emittery';
 import { nanoid } from 'nanoid';
 
-import { Debug } from './components';
-import Store from './Store';
+import { alert } from './components/Debug';
+import { useStore } from './Store';
 import {
   type Action,
   CONSENTS,
@@ -22,7 +23,6 @@ import {
   removeAllCookies,
   setConsentsCookie,
   setUpdatedStateCookie,
-  UNCATEGORIZED_CONSENT,
 } from './utils';
 
 // Types
@@ -36,27 +36,12 @@ interface ConsentManagerEvents {
  * - Storing and managing all the consents from the user.
  * - Firing the correspondent scripts and GTM events.
  */
-export default class ConsentController extends Emittery<ConsentManagerEvents> {
-  /**
-   * Create a new Consent Controller instance.
-   * @param store A Store instance where all the data will be stored.
-   */
-  constructor(private store: Store) {
-    super();
+export const useConsentController = (store: ReturnType<typeof useStore>) => {
+  if (!store) return;
 
-    this.loadConsents();
+  const emitter = new Emittery<ConsentManagerEvents>();
 
-    this.storeElements();
-
-    this.applyConsents();
-  }
-
-  /**
-   * Stores all the third party scripts and iFrames
-   */
-  private storeElements() {
-    const { store } = this;
-
+  const storeElements = () => {
     // Get all the scripts and iFrames
     const existingElements = document.querySelectorAll<HTMLScriptElement | HTMLIFrameElement>(
       `script[type="${MAIN_KEY}"], iframe${getSettingSelector('src')}`
@@ -64,24 +49,17 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
 
     // Make sure we store them just once
     const storedElements = store.getStoredElements();
-
-    const unstoredElements = [...existingElements].filter(
-      (existingElement) => !storedElements.find(({ element }) => existingElement === element)
-    );
+    // prettier-ignore
+    const unstoredElements = [...existingElements].filter((existingElement) => !storedElements.find(({ element }) => existingElement === element));
 
     unstoredElements.forEach((element) => {
       // Get the categories
-      let categories = [] as (typeof CONSENTS)[number][];
+      const categories = extractCommaSeparatedValues(
+        getAttribute(element, 'category') || getAttribute(element, 'categories'),
+        true
+      ) as (typeof CONSENTS)[number][];
 
-      if (getAttribute(element, 'categories', true)) {
-        categories = extractCommaSeparatedValues(
-          `${getAttribute(element, 'categories', true)}`,
-          true
-        ) as (typeof CONSENTS)[number][];
-      } else {
-        categories = extractCommaSeparatedValues(`${UNCATEGORIZED_CONSENT}`, true) as (typeof CONSENTS)[number][];
-      }
-
+      // Scripts
       if (element instanceof HTMLScriptElement) {
         store.storeScript({
           categories,
@@ -93,13 +71,13 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       // iFrames
       if (element instanceof HTMLIFrameElement) {
         // Get the src
-        const src = getAttribute(element, 'src', true);
+        const src = getAttribute(element, 'src');
         if (!src) return;
 
         element.src = '';
 
         // Get the placeholder
-        const placeholder = queryElement('placeholder') as HTMLElement;
+        const placeholder = queryElement('placeholder') ?? undefined;
 
         store.storeIFrame({
           categories,
@@ -111,23 +89,24 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       }
 
       // Debug mode
-      Debug.alert(`Stored the element: ${element.outerHTML} in the categories: ${categories.join(', ')}`, 'info');
+      alert(`Stored the element: ${element.outerHTML} in the categories: ${categories.join(', ')}`, 'info');
     });
-  }
+  };
 
   /**
    * Loads the stored consents from the cookies
    */
-  private loadConsents() {
+  const loadConsents = () => {
     // Get the consents
     const consents = getConsentsCookie();
+
     if (!consents) return;
 
     // Debug mode
-    Debug.alert(`The following consents were loaded from the stored cookies: ${JSON.stringify(consents)}`, 'info');
+    alert(`The following consents were loaded from the stored cookies: ${JSON.stringify(consents)}`, 'info');
 
     // Store the consents
-    this.store.storeConsents(consents);
+    store.storeConsents(consents);
 
     // If the user updated the consents on the previous page load, remove all cookies before loading the scripts
     const consentsWereUpdated = getUpdatedStateCookie();
@@ -135,19 +114,23 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       removeAllCookies();
 
       // Debug mode
-      Debug.alert('Previously denied cookies have been deleted.', 'info');
+      alert('Previously denied cookies have been deleted.', 'info');
     }
-  }
+  };
 
   /**
    * Activates the correspondent scripts.
    * Fires a GTM event when a consent is activated.
    */
-  private async applyConsents() {
-    const { store } = this;
+  const applyConsents = async () => {
+    const consents = getConsentsCookie();
+
+    if (consents) store.storeConsents(consents);
 
     // Activate the correspondent elements
-    for (const elementData of store.getActivableElements()) {
+    const activables = store.getActivableElements();
+
+    for (const elementData of activables) {
       await new Promise((resolve) => {
         const { element } = elementData;
         const { src, parentElement } = element;
@@ -183,17 +166,18 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     }
 
     // Fire the correspondent GTM events
-    store.getConsentsEntries().forEach(([consentKey, value]) => {
+    const consentEntries = store.getConsentsEntries();
+
+    consentEntries.forEach(([consentKey, value]) => {
       if (value) fireUniqueGTMEvent(DYNAMIC_KEYS.gtmEvent(consentKey));
     });
-  }
+  };
 
   /**
    * Updates the stored consents
    * @param consents
    */
-  public updateConsents(consents: Partial<Consents>, action: Action): void {
-    const { store } = this;
+  const updateConsents = (consents: Partial<Consents>, action: Action): void => {
     const { cookieMaxAge, endpoint, domain } = store;
 
     const checkboxEssential = queryElement('checkbox-essential');
@@ -216,7 +200,7 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     setConsentsCookie(consentId, store.getConsents(), cookieMaxAge, domain);
 
     // POST the consents to the endpoint
-    if (endpoint)
+    if (endpoint) {
       POSTConsentsToEndpoint({
         action,
         endpoint,
@@ -224,16 +208,106 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
         consents: store.getConsents(),
         bannerText: store.getBannerText() || '',
       });
-
+    }
     // If any consent was updated, set an updatedState cookie and apply the consents
     if (updatedConsents.length) {
       setUpdatedStateCookie(cookieMaxAge, domain);
-      this.applyConsents();
+      applyConsents();
 
       // Debug mode
-      Debug.alert(`The following consents were updated: ${updatedConsents.join(', ')}`, 'info');
+      alert(`The following consents were updated: ${updatedConsents.join(', ')}`, 'info');
     }
 
-    this.emit('updateconsents');
+    emitter.emit('updateconsents');
+  };
+
+  /**
+   * Function to set consent mode and update it based on the consent controller.
+   * Ref: https://www.youtube.com/watch?v=MqAEbshMv84&t=493s
+   * Consent Mode Docs: https://support.google.com/analytics/answer/9976101
+   */
+  const setConsentMode = (): void => {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      // @ts-ignore
+      // eslint-disable-next-line prefer-rest-params
+      dataLayer.push(arguments);
+    }
+
+    const consents = store.getConsents();
+
+    const consentMode = {
+      /**
+       * Example: User language
+       */
+      functionality_storage: consents?.essential ? 'granted' : 'denied',
+
+      /**
+       * Mostly Authorization or Authentication
+       */
+      security_storage: consents?.essential ? 'granted' : 'denied',
+
+      /**
+       * Related to Google Analytics/Ads
+       */
+      ad_storage: consents?.marketing ? 'granted' : 'denied',
+
+      /**
+       * Related to Google Analytics
+       */
+      analytics_storage: consents?.analytics ? 'granted' : 'denied',
+
+      /**
+       * Example: User recommendations
+       */
+      personalization_storage: consents?.personalization ? 'granted' : 'denied',
+
+      /**
+       * Uncategorised: This is not part of the default consent modes, can be added as a custom required consent under GTM consent settings.
+       */
+      uncategorized_storage: consents?.uncategorized ? 'granted' : 'denied',
+    };
+
+    // @ts-ignore
+    gtag('consent', !consents ? 'default' : 'update', {
+      ...consentMode,
+    });
+  };
+
+  /**
+   * Initializes the Consent Mode and updates it when the consent controller changes.
+   * Ref: https://support.google.com/analytics/answer/9976101
+   */
+  const initConsentMode = (): void => {
+    setConsentMode();
+
+    emitter.on('updateconsents', () => {
+      setConsentMode();
+    });
+  };
+
+  loadConsents();
+
+  initConsentMode();
+
+  storeElements();
+
+  applyConsents();
+
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', () => {
+      storeElements();
+      applyConsents();
+    });
   }
-}
+
+  return {
+    storeElements,
+    loadConsents,
+    applyConsents,
+    updateConsents,
+    on: emitter.on.bind(emitter),
+    setConsentMode,
+    initConsentMode,
+  };
+};

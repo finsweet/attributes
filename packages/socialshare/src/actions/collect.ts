@@ -22,7 +22,7 @@ import {
  */
 export const collectCopyData = (
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): SocialShareStoreData => {
   const socialData = collectSocialData(trigger, 'copy', instanceIndex, scope);
@@ -44,7 +44,7 @@ export const collectCopyData = (
  */
 export const collectFacebookData = (
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): FacebookSocialShare => {
   const socialData = collectSocialData(trigger, 'facebook', instanceIndex, scope);
@@ -68,7 +68,7 @@ export const collectFacebookData = (
  */
 export const collectTwitterData = (
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): TwitterSocialShare => {
   const socialData = collectSocialData(trigger, 'twitter', instanceIndex, scope);
@@ -97,7 +97,7 @@ export const collectTwitterData = (
  */
 export const collectPinterestData = (
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): PinterestSocialShare => {
   const socialData = collectSocialData(trigger, 'pinterest', instanceIndex, scope);
@@ -128,7 +128,7 @@ export const collectPinterestData = (
 export const collectSocialData = (
   socialShareButton: HTMLElement,
   elementKey: SocialShareTypes,
-  instanceIndex: number | undefined,
+  instanceIndex: string | undefined,
   scope: HTMLElement | undefined
 ): SocialShare => {
   const width = collectSize(socialShareButton, 'width', DEFAULT_WIDTH_SETTING_KEY);

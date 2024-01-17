@@ -44,5 +44,7 @@ export const createCMSListInstance = (referenceElement: HTMLElement): CMSList | 
   const listInstance = new CMSList(wrapper, index);
   listInstancesStore.set(wrapper, listInstance);
 
+  console.log('listInstance', listInstance);
+
   return listInstance;
 };

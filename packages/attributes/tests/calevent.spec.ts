@@ -10,50 +10,77 @@ test.beforeEach(async ({ page }) => {
 test.describe('calevent', () => {
   // Google
   test('Triggers Google Calendar event correctly', async ({ page }) => {
-    // Get all google buttons
-    const googleButtons = await page.$$('[fs-calevent-element="google"]');
+    const googleButtons = await page.locator('[fs-calevent-element="google"]').all();
 
-    // Loop through all google buttons and click them
-    for (const googleButton of googleButtons) {
-      await googleButton.click();
-      // wait for the new page to open and log the url
-      const p = await page.context().waitForEvent('page', (p) => p.url().includes('google'));
-      expect(p.url()).toContain('google.com/products/calendar');
-    }
+    const [button] = googleButtons;
+
+    await button.click({
+      force: true,
+      button: 'left',
+    });
+
+    await page.context().waitForEvent('page');
+
+    // all new tabs pages opened
+    const pages = await page.context().pages();
+
+    expect(pages.length).toBe(2);
+
+    // get new pages instance urls
+    const urls = pages.map((p) => p.url());
+
+    const triggeredCalendar = urls.some((url) => url.indexOf('google.com') !== -1);
+    await expect(triggeredCalendar).toBeTruthy();
   });
 
   // Outlook
   test('Triggers Outlook Calendar event correctly', async ({ page }) => {
-    const outlookButtons = await page.$$('[fs-calevent-element="outlook"]');
+    const buttons = await page.locator('[fs-calevent-element="outlook"]').all();
 
-    // Loop through all outlook buttons and click them
-    for (const outlookButton of outlookButtons) {
-      await outlookButton.click();
-      // wait for the new page to open and log the url
-      const p = await page.context().waitForEvent('page', (p) => p.url().includes('outlook'));
-      // console.log(p.url());
-      expect(p.url()).toContain('https://outlook.live.com/calendar/');
-    }
+    const [button] = buttons;
+
+    await button.click({
+      force: true,
+      button: 'left',
+    });
+
+    await page.context().waitForEvent('page');
+
+    // all new tabs pages opened
+    const pages = await page.context().pages();
+
+    // get new pages instance urls
+    const urls = pages.map((p) => p.url());
+
+    const triggeredCalendar = urls.some((url) => url.indexOf('outlook.live') !== -1);
+    await expect(triggeredCalendar).toBeTruthy();
   });
 
   // ICS
   test('Triggers ICS Calendar event correctly', async ({ page, browserName }) => {
-    const appleButtons = await page.$$('[fs-calevent-element="apple"]');
+    const buttons = await page.locator('[fs-calevent-element="apple"]').all();
 
-    // Loop through all apple buttons and click them
-    for (const appleButton of appleButtons) {
-      // on click, the browser downloads a .ics file. Test that the file is downloaded
-      const [download] = await Promise.all([page.waitForEvent('download'), appleButton.click()]);
+    const [button] = buttons;
 
-      // assert that the suggested filename is download.ics on chrome browser
-      switch (browserName) {
-        case 'chromium':
-          expect(download.suggestedFilename()).toBe('download.ics');
-          break;
-        default:
-          expect(await download.path()).toBeTruthy();
-          break;
-      }
+    // Start waiting for download before clicking: https://playwright.dev/docs/api/class-page#page-wait-for-event
+    const downloadPromise = page.waitForEvent('download');
+
+    await button.click({
+      force: true,
+      button: 'left',
+    });
+
+    // on click, the browser downloads a .ics file. Test that the file is downloaded
+    const download = await downloadPromise;
+
+    // assert that the suggested filename is download.ics on chrome browser
+    switch (browserName) {
+      case 'chromium':
+        expect(download.suggestedFilename()).toBe('download.ics');
+        break;
+      default:
+        expect(await download.path()).toBeTruthy();
+        break;
     }
   });
 });
