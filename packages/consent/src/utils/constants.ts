@@ -48,15 +48,15 @@ export const SETTINGS = {
   /**
    * Animation duration
    */
-  animationduration: {
-    key: 'animationduration',
+  duration: {
+    key: 'duration',
   },
 
   /**
    * Animation easing
    */
-  animationeasing: {
-    key: 'animationeasing',
+  easing: {
+    key: 'easing',
     values: {
       linear: 'linear',
       ease: 'ease',

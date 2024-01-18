@@ -25,10 +25,11 @@ interface ComponentEvents {
   formsubmit: Partial<Consents>;
 }
 
+let scrollableElementSetting: Element | undefined;
+let disableScrollOnOpenSetting = false;
+
 export const useComponent = (element: HTMLElement, store: ReturnType<typeof useStore>, selector: string) => {
   let formSetting: ReturnType<typeof useConsentForm> | undefined;
-  let scrollableElementSetting: Element | undefined;
-  let disableScrollOnOpenSetting = false;
   let displayController: ReturnType<typeof createDisplayController> | undefined;
 
   const emitter = new Emittery<ComponentEvents>();
@@ -56,9 +57,10 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
 
     if (form) formSetting = useConsentForm(form, store);
 
-    disableScrollOnOpenSetting = getAttribute(element, 'scroll', true) === 'disable';
+    const scrollAttributeSetting = getAttribute(element, 'scroll');
 
-    if (disableScrollOnOpenSetting) {
+    if (scrollAttributeSetting) {
+      disableScrollOnOpenSetting = scrollAttributeSetting === 'disable';
       scrollableElementSetting = findFirstScrollableElement(element);
     }
 
@@ -71,8 +73,8 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
       displayProperty: getAttribute(element, 'display', true),
       startsHidden: true,
       animation: getAttribute(element, 'animation', true),
-      animationDuration: Number(getAttribute(element, 'animationduration', true)),
-      animationEasing: getAttribute(element, 'animationeasing', true) as Easings[number],
+      animationDuration: Number(getAttribute(element, 'duration', true)),
+      animationEasing: getAttribute(element, 'easing', true) as Easings[number],
     });
 
     return true;

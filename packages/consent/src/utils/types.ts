@@ -42,6 +42,7 @@ export interface IFrameData {
 declare global {
   interface Window {
     doNotTrack: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dataLayer: any[];
     FinsweetCookieConsent: UseConsents;
   }
