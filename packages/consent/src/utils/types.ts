@@ -1,5 +1,6 @@
 import type { FsAttributeInit } from '@finsweet/attributes-utils';
 
+import type { UseConsents } from '../FsCookieConsent';
 import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS, SETTINGS } from '.';
 
 // Consents
@@ -41,7 +42,9 @@ export interface IFrameData {
 declare global {
   interface Window {
     doNotTrack: string | null;
-    dataLayer?: { event: string }[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dataLayer: any[];
+    FinsweetCookieConsent: UseConsents;
   }
 }
 

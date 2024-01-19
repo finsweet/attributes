@@ -10,7 +10,18 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
       'Opt-in means the user must explicitly “opt-in” to cookies before they are loaded on the page. Opt-out means cookies are loaded immediately and they can “opt-out” of the loaded cookies.',
     type: 'select',
   },
-
+  easing: {
+    ...SETTINGS.easing,
+    name: 'Easing',
+    description: 'Animation easing for the component. Defaults to none if not set.',
+    type: 'select',
+  },
+  duration: {
+    ...SETTINGS.duration,
+    name: 'Duration',
+    description: 'Default animation duration for the component. Defaults to none if not set.',
+    type: 'text',
+  },
   source: {
     ...SETTINGS.source,
     name: 'Source',
@@ -122,14 +133,26 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Banner',
       description: 'Bottom banner',
       allowedTypes: ['Block'],
-      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation],
+      settings: [
+        SCHEMA_SETTINGS.scroll,
+        SCHEMA_SETTINGS.display,
+        SCHEMA_SETTINGS.animation,
+        SCHEMA_SETTINGS.easing,
+        SCHEMA_SETTINGS.duration,
+      ],
     },
     {
       key: 'preferences',
       name: 'Preferences',
       description: 'Modal Form containing all the preferences and form',
       allowedTypes: ['Block'],
-      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation],
+      settings: [
+        SCHEMA_SETTINGS.scroll,
+        SCHEMA_SETTINGS.display,
+        SCHEMA_SETTINGS.animation,
+        SCHEMA_SETTINGS.easing,
+        SCHEMA_SETTINGS.duration,
+      ],
     },
     {
       key: 'open-preferences',
@@ -142,7 +165,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Fixed Preferences',
       description: 'Toggles preferences modal.',
       allowedTypes: ['Link'],
-      settings: [SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation],
+      settings: [SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation, SCHEMA_SETTINGS.easing, SCHEMA_SETTINGS.duration],
     },
     {
       key: 'allow',

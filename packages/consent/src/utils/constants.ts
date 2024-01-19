@@ -44,6 +44,28 @@ export const SETTINGS = {
       spin: 'spin',
     },
   },
+
+  /**
+   * Animation duration
+   */
+  duration: {
+    key: 'duration',
+  },
+
+  /**
+   * Animation easing
+   */
+  easing: {
+    key: 'easing',
+    values: {
+      linear: 'linear',
+      ease: 'ease',
+      'ease-in': 'ease-in',
+      'ease-out': 'ease-out',
+      'ease-in-out': 'ease-in-out',
+    },
+  },
+
   /**
    * Accepts informational opt-out or opt-in as value
    */

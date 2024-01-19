@@ -1,4 +1,4 @@
-import { Debug } from '../components';
+import { alert } from '../components';
 import type { Action, Consents } from '../utils';
 
 /**
@@ -35,9 +35,9 @@ export const POSTConsentsToEndpoint = async ({
       method: 'POST',
     });
 
-    if (response.ok) Debug.alert('The new consents were successfully POSTed to the API endpoint.', 'info');
+    if (response.ok) alert('The new consents were successfully POSTed to the API endpoint.', 'info');
     else throw new Error(`The API returned a ${response.status} status.`);
   } catch (error) {
-    Debug.alert(`There was an error while POSTing to the API: ${error}`, 'error');
+    alert(`There was an error while POSTing to the API: ${error}`, 'error');
   }
 };

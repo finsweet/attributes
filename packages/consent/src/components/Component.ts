@@ -1,8 +1,9 @@
+import type { Easings } from '@finsweet/attributes-utils';
 import { clearAllBodyScrollLocks, disableBodyScroll } from 'body-scroll-lock';
 import Emittery from 'emittery';
 
-import { DisplayController } from '../components';
-import Store from '../Store';
+import { createDisplayController } from '../components';
+import type { useStore } from '../Store';
 import {
   type Consents,
   findFirstScrollableElement,
@@ -11,7 +12,7 @@ import {
   queryAllElements,
   queryElement,
 } from '../utils';
-import ConsentsForm from './ConsentsForm';
+import { useConsentForm } from './ConsentsForm';
 
 // Types
 interface ComponentEvents {
@@ -24,68 +25,65 @@ interface ComponentEvents {
   formsubmit: Partial<Consents>;
 }
 
-export default class Component extends Emittery<ComponentEvents> {
-  public form?: ConsentsForm;
-  private displayController?: DisplayController;
-  private scrollableElement?: Element;
-  private disableScrollOnOpen = false;
+let scrollableElementSetting: Element | undefined;
+let disableScrollOnOpenSetting = false;
 
-  constructor(public readonly element: HTMLElement, protected store: Store) {
-    super();
+export const useComponent = (element: HTMLElement, store: ReturnType<typeof useStore>, selector: string) => {
+  let formSetting: ReturnType<typeof useConsentForm> | undefined;
+  let displayController: ReturnType<typeof createDisplayController> | undefined;
 
-    this.init();
-  }
-
+  const emitter = new Emittery<ComponentEvents>();
   /**
    * Inits the component.
    */
-  protected init(): void {
+  const init = () => {
     // Get DOM Elements
-    this.initElements();
+    initElements();
 
     // Handle Accessibility
-    this.handleAccessibility();
+    handleAccessibility();
 
     // Listen events
-    this.listenEvents();
-  }
+    listenEvents();
+  };
 
   /**
    * Gets DOM elements and their properties.
    * @returns `true` if elements are correctly setup.
    */
-  private initElements(): boolean {
-    // Main element
-    const { element, store } = this;
-
+  const initElements = (): boolean => {
     // Preferences form
     const form = queryElement<HTMLFormElement>('form', { scope: element });
 
-    if (form) this.form = new ConsentsForm(form, store);
+    if (form) formSetting = useConsentForm(form, store);
 
-    this.disableScrollOnOpen = getAttribute(element, 'scroll', true) === 'disable';
-    if (this.disableScrollOnOpen) this.scrollableElement = findFirstScrollableElement(element);
+    const scrollAttributeSetting = getAttribute(element, 'scroll');
+
+    if (scrollAttributeSetting) {
+      disableScrollOnOpenSetting = scrollAttributeSetting === 'disable';
+      scrollableElementSetting = findFirstScrollableElement(element);
+    }
 
     // Create the display controller
     const interactionTrigger = queryElement<HTMLElement>('interaction', { scope: element });
 
-    this.displayController = new DisplayController({
+    displayController = createDisplayController({
       element,
       interaction: interactionTrigger ? { element: interactionTrigger } : undefined,
       displayProperty: getAttribute(element, 'display', true),
       startsHidden: true,
       animation: getAttribute(element, 'animation', true),
+      animationDuration: Number(getAttribute(element, 'duration', true)),
+      animationEasing: getAttribute(element, 'easing', true) as Easings[number],
     });
 
     return true;
-  }
+  };
 
   /**
    * Makes sure all buttons are accessible.
    */
-  private handleAccessibility() {
-    const { element } = this;
-
+  const handleAccessibility = () => {
     if (!element) return;
 
     const buttons = [
@@ -101,29 +99,27 @@ export default class Component extends Emittery<ComponentEvents> {
       button.setAttribute('role', 'button');
       button.setAttribute('tabindex', '0');
     });
-  }
+  };
 
   /**
    * Listen for mouse and keyboard events
    */
-  private listenEvents(): void {
-    const { element, form } = this;
-
+  const listenEvents = (): void => {
     if (!element) return;
 
-    element.addEventListener('click', (e) => this.handleMouseAndKeyboard(e));
-    element.addEventListener('keydown', (e) => this.handleMouseAndKeyboard(e));
-    form?.on('submit', (newConsents) => this.handleFormSubmit(newConsents));
-  }
+    element.addEventListener('click', (e) => handleMouseAndKeyboard(e));
+    element.addEventListener('keydown', (e) => handleMouseAndKeyboard(e));
+    formSetting?.on('submit', (newConsents: Partial<Consents>) => handleFormSubmit(newConsents));
+  };
 
   /**
    * Handles mouse and keyboard events.
    * @param e The event object.
    */
-  private handleMouseAndKeyboard(e: MouseEvent | KeyboardEvent): void {
+  const handleMouseAndKeyboard = (e: MouseEvent | KeyboardEvent): void => {
     const { target } = e;
 
-    const [allow, deny, close, submit] = [
+    const [allowSelector, denySelector, closeSelector, submitSelector] = [
       getElementSelector('allow'),
       getElementSelector('deny'),
       getElementSelector('close'),
@@ -133,55 +129,78 @@ export default class Component extends Emittery<ComponentEvents> {
     if (!(target instanceof Element)) return;
     if ('key' in e && e.key !== 'Enter') return;
 
-    if (target.closest(allow)) {
-      this.emit('allow');
-      this.close();
-    } else if (target.closest(deny)) {
-      this.emit('deny');
-      this.close();
-    } else if (target.closest(close)) this.close();
-    else if (target.closest(submit)) this.form?.submit();
-  }
+    if (target.closest(allowSelector)) {
+      emitter.emit('allow');
+      close();
+    } else if (target.closest(denySelector)) {
+      emitter.emit('deny');
+      close();
+    } else if (target.closest(closeSelector)) close();
+    else if (target.closest(submitSelector)) formSetting?.submit(formSetting.form);
+  };
 
   /**
    * Handle form submit
    * @param newConsents
    */
-  private handleFormSubmit(newConsents: Partial<Consents>) {
-    this.emit('formsubmit', newConsents);
-    this.close();
-  }
+  const handleFormSubmit = (newConsents: Partial<Consents>) => {
+    emitter.emit('formsubmit', newConsents);
+    close();
+  };
 
   /**
    * Shows/hides the component.
    * @param display Action to be performed. `true` to show, `false` to hide.
    */
-  private show(display = true) {
-    const { element, displayController, disableScrollOnOpen, scrollableElement } = this;
+  const show = async (display = true) => {
+    if (!displayController) return;
 
-    if (!element || !displayController || displayController.isVisible() === display) return;
+    const { isElementVisible } = displayController;
+
+    if (!element || !displayController || isElementVisible() === display) return;
 
     displayController[display ? 'show' : 'hide']();
 
-    if (disableScrollOnOpen) {
-      if (display) disableBodyScroll(scrollableElement || element, { reserveScrollBarGap: true });
+    if (disableScrollOnOpenSetting) {
+      if (display) disableBodyScroll(scrollableElementSetting || element, { reserveScrollBarGap: true });
       else clearAllBodyScrollLocks();
     }
 
-    this.emit(display ? 'open' : 'close');
-  }
+    emitter.emit(display ? 'open' : 'close');
+  };
 
   /**
    * Opens the component.
    */
-  public open(): void {
-    this.show();
-  }
+  const open = (): void => {
+    show();
+  };
 
   /**
    * Closes the component.
    */
-  public close(): void {
-    this.show(false);
-  }
-}
+  const close = (): void => {
+    show(false);
+  };
+
+  init();
+
+  return {
+    init,
+    open,
+    close,
+    on: emitter.on.bind(emitter),
+    element,
+    form: formSetting,
+    displayController,
+    store,
+    handleAccessibility,
+    handleFormSubmit,
+    handleMouseAndKeyboard,
+    initElements,
+    listenEvents,
+    show,
+    selector: `[fs-consent-element="${selector}"]`,
+    type: selector,
+  };
+};
