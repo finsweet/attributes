@@ -1,4 +1,4 @@
-import { expect, type Locator, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 
@@ -6,14 +6,12 @@ test.beforeEach(async ({ page }) => {
   await page.goto('http://fs-attributes.webflow.io/socialshare');
 
   await waitAttributeLoaded(page, 'socialshare');
-
-  await page.waitForLoadState('domcontentloaded');
 });
 
 test.describe('socialshare', () => {
   test('Triggers copy URL correctly', async ({ page }) => {
     const inputEl = page.getByTestId('input');
-    const currentUrl = await page.url();
+    const currentUrl = page.url();
 
     const options = ['copy'];
 
@@ -35,8 +33,6 @@ test.describe('socialshare', () => {
           await page.keyboard.press(`${modifier}+KeyC`);
           await page.keyboard.press(`${modifier}+KeyV`);
 
-          await page.waitForTimeout(100);
-
           // Retrieve the input value and check against page url
           const inputValue = await inputEl.evaluate((input) => (input as HTMLInputElement).value);
           await expect(inputValue).toEqual(currentUrl);
@@ -50,28 +46,21 @@ test.describe('socialshare', () => {
     }
   });
 
-  test('Triggers share to social media correctly', async ({ page }) => {
-    const facebook1 = page.getByTestId('facebook-1');
-    const twitter1 = page.getByTestId('twitter-1');
-    const linkedin1 = page.getByTestId('linkedin-1');
-    const pinterest1 = page.getByTestId('pinterest-1');
-    const telegram1 = page.getByTestId('telegram-1');
-    const reddit1 = page.getByTestId('reddit-1');
+  test('Triggers share to social media correctly', async ({ page, context }) => {
+    const socialMediaSites = ['facebook', 'twitter', 'linkedin', 'pinterest', 't.me', 'reddit'];
 
-    const triggersValidPopup = async (text: string, element: Locator) => {
-      await element.click();
+    const triggersValidPopups = async (sites: string[]) => {
+      for (const site of sites) {
+        const identifier = site === 't.me' ? 'telegram' : site;
 
-      const context = await page.context();
+        const element = page.getByTestId(`${identifier}-1`);
+        await element.click();
 
-      await context.waitForEvent('page', (p) => p.url().includes(text));
-      await context.pages()[1].close();
+        await context.waitForEvent('page', (p) => p.url().includes(site));
+        await context.pages()[1].close();
+      }
     };
 
-    await triggersValidPopup('facebook', facebook1);
-    await triggersValidPopup('twitter', twitter1);
-    await triggersValidPopup('linkedin', linkedin1);
-    await triggersValidPopup('pinterest', pinterest1);
-    await triggersValidPopup('t.me', telegram1);
-    await triggersValidPopup('reddit', reddit1);
+    await triggersValidPopups(socialMediaSites);
   });
 });
