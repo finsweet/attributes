@@ -72,9 +72,9 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
       interaction: interactionTrigger ? { element: interactionTrigger } : undefined,
       displayProperty: getAttribute(element, 'display', true),
       startsHidden: true,
-      animation: getAttribute(element, 'animation', true),
-      animationDuration: Number(getAttribute(element, 'duration', true)),
-      animationEasing: getAttribute(element, 'easing', true) as Easings[number],
+      animation: getAttribute(element, 'animation'),
+      animationDuration: Number(getAttribute(element, 'duration')) || undefined,
+      animationEasing: (getAttribute(element, 'easing') as Easings[number]) || undefined,
     });
 
     return true;
