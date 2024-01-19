@@ -92,6 +92,12 @@ importers:
       '@finsweet/attributes-autovideo':
         specifier: workspace:*
         version: link:../autovideo
+      '@finsweet/attributes-beforeafter':
+        specifier: workspace:*
+        version: link:../beforeafter
+      '@finsweet/attributes-calevent':
+        specifier: workspace:*
+        version: link:../calevent
       '@finsweet/attributes-cmscombine':
         specifier: workspace:*
         version: link:../cmscombine
@@ -164,6 +170,9 @@ importers:
       '@finsweet/attributes-linkblockedit':
         specifier: workspace:*
         version: link:../linkblockedit
+      '@finsweet/attributes-masonry':
+        specifier: workspace:*
+        version: link:../masonry
       '@finsweet/attributes-mirrorclick':
         specifier: workspace:*
         version: link:../mirrorclick
@@ -173,6 +182,9 @@ importers:
       '@finsweet/attributes-modal':
         specifier: workspace:*
         version: link:../modal
+      '@finsweet/attributes-nativesearch':
+        specifier: workspace:*
+        version: link:../nativesearch
       '@finsweet/attributes-numbercount':
         specifier: workspace:*
         version: link:../numbercount
@@ -212,6 +224,9 @@ importers:
       '@finsweet/attributes-toc':
         specifier: workspace:*
         version: link:../toc
+      '@finsweet/attributes-typing':
+        specifier: workspace:*
+        version: link:../typing
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
@@ -231,6 +246,28 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+
+  packages/beforeafter:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      beerslider:
+        specifier: ^1.0.3
+        version: 1.0.3
+
+  packages/calevent:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      dayjs:
+        specifier: ^1.11.9
+        version: 1.11.9
+    devDependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
 
   packages/cmscombine:
     dependencies:
@@ -471,6 +508,15 @@ importers:
         specifier: workspace:*
         version: link:../utils
 
+  packages/masonry:
+    dependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
   packages/mirrorclick:
     dependencies:
       '@finsweet/attributes-utils':
@@ -488,6 +534,15 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+
+  packages/nativesearch:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      just-debounce:
+        specifier: 1.1.0
+        version: 1.1.0
 
   packages/numbercount:
     dependencies:
@@ -608,6 +663,18 @@ importers:
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
+
+  packages/typing:
+    dependencies:
+      '@finsweet/attributes-cmscore':
+        specifier: workspace:*
+        version: link:../cmscore
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+      typed.js:
+        specifier: ^2.0.16
+        version: 2.0.16
 
   packages/utils:
     dependencies:
@@ -1780,6 +1847,12 @@ packages:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: false
 
+  /beerslider@1.0.3:
+    resolution: {integrity: sha512-1XsuTxbspcAR1rxKOJa3qYX3XW9Kf6d+QRUJtDSxsj+yLVSoBRK8ThqpgxhGaxFeBKklrCc0v0UWpifACT7Dbw==}
+    dependencies:
+      core-js: 3.34.0
+    dev: false
+
   /better-path-resolve@1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
     engines: {node: '>=4'}
@@ -1923,6 +1996,11 @@ packages:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
+  /core-js@3.34.0:
+    resolution: {integrity: sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==}
+    requiresBuild: true
+    dev: false
+
   /cross-env@7.0.3:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
     engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
@@ -1969,6 +2047,10 @@ packages:
       csv-stringify: 5.6.5
       stream-transform: 2.1.3
     dev: true
+
+  /dayjs@1.11.9:
+    resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
+    dev: false
 
   /debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -3762,6 +3844,10 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.10
     dev: true
+
+  /typed.js@2.0.16:
+    resolution: {integrity: sha512-IBB52GlJiTUOnomwdVVf7lWgC6gScn8md+26zTHj5oJWA+4pSuclHE76rbGI2hnyO+NT+QXdIUHbfjAY5nEtcw==}
+    dev: false
 
   /typescript@5.1.3:
     resolution: {integrity: sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==}
