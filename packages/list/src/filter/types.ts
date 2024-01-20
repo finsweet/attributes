@@ -48,7 +48,7 @@ export type TagData = {
   wrapper: HTMLElement;
 };
 
-type FiltersGroup = {
+export type FiltersGroup = {
   match: 'and' | 'or';
-  filters: FiltersData | FiltersGroup[];
+  filters: FiltersData;
 };

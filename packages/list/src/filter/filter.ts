@@ -2,16 +2,26 @@ import { extractCommaSeparatedValues, isNumber } from '@finsweet/attributes-util
 
 import type { ListItem } from '../components/ListItem';
 import { normalizeFieldKey } from '../utils/fields';
-import type { FiltersData } from './types';
+import { type FiltersGroup } from './types';
 
-export const filterItems = (filters: FiltersData, items: ListItem[]) => {
-  const filtersEntries = Object.entries(filters);
+export const filterItems = (filtersGroup: FiltersGroup, items: ListItem[]) => {
+  const filtersEntries = Object.entries(filtersGroup.filters);
+  const method = filtersGroup.match;
 
-  const filteredItems = items.filter((item) => {
-    // TODO: Support both `and` and `or` modes, this is just supporting `and` mode.
-    const isValid = filtersEntries.every(([rawFieldKey, filterData]) => {
-      if (!filterData.value) return true;
-      if (Array.isArray(filterData.value) && !filterData.value.length) return true;
+  if (
+    method === 'or' &&
+    filtersEntries.every(
+      ([, filterData]) => !filterData.value || (Array.isArray(filterData.value) && filterData.value.length === 0)
+    )
+  ) {
+    return items;
+  }
+
+  return items.filter((item) => {
+    const matchesFilters = filtersEntries.map(([rawFieldKey, filterData]) => {
+      if (!filterData.value && method === 'and') return true;
+      if (Array.isArray(filterData.value) && filterData.value.length === 0 && method === 'and') return true;
+      if (!filterData.value && method === 'or') return false;
 
       const fieldKeys = rawFieldKey === '*' ? Object.keys(item.fields) : extractCommaSeparatedValues(rawFieldKey);
 
@@ -119,7 +129,6 @@ export const filterItems = (filters: FiltersData, items: ListItem[]) => {
               return filterData.op === 'includes'
                 ? filterData.value.some((filterValue) => {
                     const fieldValue = fieldData.value;
-
                     return fieldValue.some((value) => value === filterValue);
                   })
                 : filterData.value.every((filterValue) => {
@@ -141,9 +150,6 @@ export const filterItems = (filters: FiltersData, items: ListItem[]) => {
         }
       });
     });
-
-    return isValid;
+    return method === 'and' ? matchesFilters.every(Boolean) : matchesFilters.some(Boolean);
   });
-
-  return filteredItems;
 };

@@ -1,7 +1,8 @@
 import { clearFormField, isFormField, parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
+import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
+import { initCondition } from './conditions';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
 import { handleTags, initTag } from './tag';
@@ -15,8 +16,9 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Init hook
   list.addHook('filter', (items) => {
     const filters = list.filters.get();
+    const match: 'and' | 'or' = getAttribute(form, 'match') || 'and';
 
-    return filterItems(filters, items);
+    return filterItems({ filters, match }, items);
   });
 
   const selector = getSettingSelector('field');
@@ -26,6 +28,7 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   const filtersData = getFiltersData(form);
 
   const tagData = initTag();
+  initCondition();
 
   list.filters.set(filtersData);
 
@@ -34,6 +37,11 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Listen for changes
   form.addEventListener('input', (e) => {
     const { target } = e;
+    const conditionGroup = queryElement('condition-group');
+    if (conditionGroup) {
+      const fs = queryElement('condition-value');
+    }
+
     if (!isFormField(target)) return;
 
     const rawFieldKey = getAttribute(target, 'field');

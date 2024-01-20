@@ -100,6 +100,71 @@ export const ELEMENTS = [
    * Defines a filters form.
    */
   'filters',
+
+  /**
+   * Defines the tag element.
+   */
+  'tag',
+
+  /**
+   * Defines the element inside each tag.
+   */
+  'tag-field',
+
+  /**
+   * Defines the element inside each tag.
+   */
+  'tag-value',
+
+  /**
+   * Defines the element inside each tag.
+   */
+  'tag-operator',
+
+  /**
+   * Defines the element inside each Tag that should remove it.
+   */
+  'tag-remove',
+
+  /**
+   * Defines a Condition group wrapper that wraps all the conditions added to that group.
+   */
+  'condition-group',
+
+  /**
+   * Defines a matching value for a Conditions group.
+   */
+  'condition-match',
+
+  /**
+   * Defines an element that when clicked will add a new condition to the group.
+   */
+  'condition-add',
+
+  /**
+   * Defines a Condition template element that wraps the field, operator and value elements.
+   */
+  'condition',
+
+  /**
+   * Defines a Condition field input.
+   */
+  'condition-field',
+
+  /**
+   * Defines a Condition operator selector.
+   */
+  'condition-operator',
+
+  /**
+   * Defines a Condition value input.
+   */
+  'condition-value',
+
+  /**
+   * Defines an element that when clicked will remove the condition.
+   */
+  'condition-clear',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
@@ -108,6 +173,14 @@ export const SETTINGS = {
    */
   field: {
     key: 'field',
+  },
+
+  /**
+   * Defines the matching logic for a group of filters.
+   */
+  match: {
+    key: 'match',
+    values: { default: 'and' },
   },
 
   /**

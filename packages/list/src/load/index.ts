@@ -5,7 +5,7 @@ import { initLoadUnderMode } from './load-under';
 import { initPaginationMode } from './pagination';
 import { initRenderAllMode } from './render-all';
 
-type LoadModeValues = (typeof SETTINGS)['loadmode']['values'];
+type LoadModeValues = typeof SETTINGS['loadmode']['values'];
 type LoadMode = LoadModeValues[keyof LoadModeValues];
 
 /**
