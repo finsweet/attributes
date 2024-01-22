@@ -25,13 +25,13 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     ...SETTINGS.trigger,
     name: 'Trigger',
     description: 'Event listener that shows the tooltip, currently supported is click or Hover. Defaults to hover.',
-    type: 'text',
+    type: 'select',
   },
   triggerout: {
     ...SETTINGS.triggerout,
     name: 'Trigger Out',
     description: 'Event listener that hides the tooltip, currently supported is click or Hover. Defaults to hover.',
-    type: 'text',
+    type: 'select',
   },
   offset: {
     ...SETTINGS.offset,
@@ -49,7 +49,7 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     ...SETTINGS.placement,
     name: 'Placement',
     description: 'The placement value of the tooltip. Where the tooltip will be placed relative to the target.',
-    type: 'text',
+    type: 'select',
   },
   animation: {
     ...SETTINGS.animation,
@@ -89,6 +89,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
         SCHEMA_SETTINGS.offset,
         SCHEMA_SETTINGS.flip,
         SCHEMA_SETTINGS.padding,
+        SCHEMA_SETTINGS.virtual,
       ],
     },
     {
