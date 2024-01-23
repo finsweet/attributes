@@ -2,7 +2,7 @@ import { clearFormField, isFormField, parseNumericAttribute } from '@finsweet/at
 
 import type { List } from '../components/List';
 import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
-import { initCondition } from './conditions';
+import { filterConditions, initCondition } from './conditions';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
 import { handleTags, initTag } from './tag';
@@ -37,12 +37,10 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Listen for changes
   form.addEventListener('input', (e) => {
     const { target } = e;
-    const conditionGroup = queryElement('condition-group');
-    if (conditionGroup) {
-      const fs = queryElement('condition-value');
-    }
 
     if (!isFormField(target)) return;
+
+    filterConditions(target, list);
 
     const rawFieldKey = getAttribute(target, 'field');
     const debounceValue = parseNumericAttribute(getAttribute(target, 'debounce'), 0);

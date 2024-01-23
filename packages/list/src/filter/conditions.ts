@@ -1,6 +1,9 @@
 import { cloneNode } from '@finsweet/attributes-utils';
 
+import type { List } from '../components/List';
 import { queryAllElements, queryElement } from '../utils/selectors';
+import type { FilterData } from './types';
+import { type FilterOperator } from './types';
 
 function cloneConditionTemplate() {
   const condition = queryElement('condition');
@@ -33,4 +36,25 @@ export const initCondition = () => {
     event.preventDefault();
     addCondition();
   });
+};
+
+export const filterConditions = (element: HTMLElement, list: List) => {
+  const conditionGroup = queryElement('condition-group');
+  if (!conditionGroup) return;
+  const closestCondition = element.closest('[fs-list-element="condition"]');
+  if (!closestCondition) return;
+
+  const value = queryElement<HTMLInputElement>('condition-value', { scope: closestCondition })?.value;
+  const op = queryElement<HTMLInputElement>('condition-operator', { scope: closestCondition })
+    ?.value as FilterOperator | null;
+  const key = queryElement<HTMLInputElement>('condition-field', { scope: closestCondition })?.value;
+
+  if (value && op && key) {
+    const filterData: FilterData = {
+      type: 'text',
+      value,
+      op,
+    };
+    list.filters.setKey(key, filterData);
+  }
 };

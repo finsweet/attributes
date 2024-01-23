@@ -30,7 +30,7 @@ export const getFiltersData = (form: HTMLFormElement) => {
  * @param field A {@link FormField} element.
  */
 export const getFilterData = (field: FormField): FilterData => {
-  const op: FilterOperator = getAttribute(field, 'operator', true) || 'incl udes';
+  const op: FilterOperator = getAttribute(field, 'operator', true) || 'includes';
   const { type } = field;
 
   switch (type) {
