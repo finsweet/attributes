@@ -1,4 +1,4 @@
-import { getCollectionElements, simulateEvent } from '@finsweet/attributes-utils';
+import { type Easings, getCollectionElements, simulateEvent } from '@finsweet/attributes-utils';
 
 import {
   activeTabClass,
@@ -21,12 +21,14 @@ export const initTabs = (tabWrapper: HTMLElement) => {
   }
 
   const querySupport = getAttribute(menu, 'querytabs');
-  const effect = getAttribute(menu, 'effect', true) || 'fade';
+  const animation = getAttribute(menu, 'animation') || 'fade';
+  const animationEasing = (getAttribute(menu, 'easing') as Easings[number]) || undefined;
+  const animationDuration = Number(getAttribute(menu, 'duration')) || undefined;
   const customNamesElements = queryAllElements('name', { scope: menu });
   const customNames = customNamesElements.map((element) => element.textContent?.replace(/\s/g, '-'));
   const timer = getAttribute(menu, 'timer');
   const timerStopClick = getAttribute(menu, 'timerstopclick');
-  const timerStart = getAttribute(menu, 'timerstart', true) || 'load';
+  const timerStart = getAttribute(menu, 'timerstart') || 'load';
   let intervalId: number | null = null;
   const interactionElements = queryAllElements('timer-interaction', { scope: tabWrapper });
 
@@ -54,7 +56,8 @@ export const initTabs = (tabWrapper: HTMLElement) => {
       contentItem.classList.remove(contentActiveClass);
     });
 
-    handleVisibility(contentItems[index], effect, 'flex');
+    // todo: handle display property (probably not flex?)
+    handleVisibility(contentItems[index], animation, 'flex', animationEasing, animationDuration);
 
     contentItems[index].classList.add(contentActiveClass);
 
@@ -137,7 +140,8 @@ export const initTabs = (tabWrapper: HTMLElement) => {
       },
     };
 
-    const startTimerFunction = startTimerConditions[timerStart];
+    const startTimerFunction = startTimerConditions[timerStart as keyof typeof startTimerConditions];
+
     if (startTimerFunction) {
       startTimerFunction();
     }

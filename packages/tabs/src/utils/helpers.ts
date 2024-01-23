@@ -1,4 +1,4 @@
-import { animations } from '@finsweet/attributes-utils';
+import { animations, type Easings } from '@finsweet/attributes-utils';
 
 import { activeTabClass } from './constants';
 import { getAttribute } from './selectors';
@@ -9,14 +9,21 @@ import { getAttribute } from './selectors';
  * @param animation The animation to use when showing/hiding the element.
  * @param displayProperty The display property to use when showing the element.
  */
-export const handleVisibility = (element: HTMLElement, animation?: string, displayProperty = 'block') => {
+export const handleVisibility = (
+  element: HTMLElement,
+  animation?: string,
+  displayProperty = 'block',
+  easing?: Easings[number],
+  duration?: number
+) => {
+  // todo: use fs-tabs-cloak instead of display property
   if (element.style.display === 'none' || element.style.display === '') {
-    showTargetElement(element, displayProperty, animation as keyof typeof animations);
+    showTargetElement(element, displayProperty, animation as keyof typeof animations, easing, duration);
 
     return;
   }
 
-  hideTargetElement(element, animation as keyof typeof animations);
+  hideTargetElement(element, animation as keyof typeof animations, easing, duration);
 };
 
 /**
@@ -29,7 +36,9 @@ export const handleVisibility = (element: HTMLElement, animation?: string, displ
 export const showTargetElement = async (
   targetElement: HTMLElement,
   displayProperty: string,
-  animation?: keyof typeof animations
+  animation?: keyof typeof animations,
+  easing?: Easings[number],
+  duration?: number
 ) => {
   if (!animation) {
     targetElement.style.display = displayProperty;
@@ -38,7 +47,7 @@ export const showTargetElement = async (
   }
 
   animations[animation].prepareIn(targetElement, { display: displayProperty });
-  await animations[animation].animateIn(targetElement, { display: displayProperty });
+  await animations[animation].animateIn(targetElement, { display: displayProperty, duration, easing });
 };
 
 /**
@@ -47,14 +56,19 @@ export const showTargetElement = async (
  * @param animation The animation to use when hiding the element.
  * @returns
  */
-export const hideTargetElement = async (targetElement: HTMLElement, animation?: keyof typeof animations) => {
+export const hideTargetElement = async (
+  targetElement: HTMLElement,
+  animation?: keyof typeof animations,
+  easing?: Easings[number],
+  duration?: number
+) => {
   if (!animation) {
     targetElement.style.display = 'none';
 
     return;
   }
 
-  await animations[animation].animateOut(targetElement, { display: 'none' });
+  await animations[animation].animateOut(targetElement, { display: 'none', duration, easing });
 };
 
 /**

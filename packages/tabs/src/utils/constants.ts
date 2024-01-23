@@ -11,8 +11,8 @@ export const ELEMENTS = [
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
-  effect: {
-    key: 'effect',
+  animation: {
+    key: 'animation',
     values: {
       fade: 'fade',
       slideup: 'slide-up',
@@ -24,8 +24,6 @@ export const SETTINGS = {
       spin: 'spin',
     },
   },
-  querytabs: { key: 'querytabs', values: { true: 'true' } },
-  activeclass: { key: 'activeclass' },
   easing: {
     key: 'easing',
     values: {
@@ -35,7 +33,9 @@ export const SETTINGS = {
       easeout: 'ease-out',
     },
   },
-  speed: { key: 'speed' },
+  duration: { key: 'duration' },
+  querytabs: { key: 'querytabs' },
+  activeclass: { key: 'activeclass' },
   timer: { key: 'timer' },
   name: { key: 'name' },
   timerstopclick: { key: 'timerstopclick' },

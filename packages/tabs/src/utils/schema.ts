@@ -3,12 +3,6 @@ import type { Schema, SchemaSettings } from '@finsweet/attributes-utils';
 import { ELEMENTS, SETTINGS } from './constants';
 
 const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
-  effect: {
-    ...SETTINGS.effect,
-    name: 'Effect',
-    description: 'Default animation for the component. Defaults to no animations if not set.',
-    type: 'select',
-  },
   querytabs: {
     ...SETTINGS.querytabs,
     name: 'Query tabs',
@@ -35,31 +29,37 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     name: 'Timer stop-click',
     description:
       'The automatic timer will stop on click by default. The user can set this to false if they never want the timer to stop.',
-    type: 'text',
+    type: 'boolean',
   },
   timerstart: {
     ...SETTINGS.timerstart,
-    name: 'Offset',
+    name: 'Timer start',
     description: 'Decides when the automatic timer starts. Default is scroll-into-view.',
     type: 'select',
   },
   name: {
     ...SETTINGS.name,
-    name: 'Name',
+    name: 'Tab name',
     description:
       'Custom name for each tab by placing an name attribute on a Text Element nested in the item of the fs-tabs-element = menu element. If a user adds fs-tabs-name = green to a Text Element inside the menu, https://website.com/careers#tabs-section?green will open that tab immediately upload load.',
+    type: 'text',
+  },
+  animation: {
+    ...SETTINGS.animation,
+    name: 'Animation',
+    description: 'Default animation for the component. Defaults to no animations if not set.',
     type: 'select',
   },
   easing: {
     ...SETTINGS.easing,
-    name: 'Easings',
+    name: 'Easing',
     description: 'Easing options for the animation. Default is none.',
     type: 'select',
   },
-  speed: {
-    ...SETTINGS.speed,
-    name: 'Easings speed',
-    description: 'Speed of the animation.',
+  duration: {
+    ...SETTINGS.duration,
+    name: 'Duration',
+    description: 'Duration of the animation. Default is none.',
     type: 'text',
   },
 };
@@ -73,10 +73,13 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       description: 'Wrapper for the menu and content elements.',
       allowedTypes: ['Block'],
       settings: [
-        SCHEMA_SETTINGS.effect,
+        SCHEMA_SETTINGS.animation,
+        SCHEMA_SETTINGS.duration,
+        SCHEMA_SETTINGS.easing,
         SCHEMA_SETTINGS.querytabs,
         SCHEMA_SETTINGS.activeclass,
         SCHEMA_SETTINGS.timer,
+        SCHEMA_SETTINGS.name,
         SCHEMA_SETTINGS.timerstart,
         SCHEMA_SETTINGS.timerstopclick,
       ],
