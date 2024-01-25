@@ -1,4 +1,4 @@
-import type { animations } from '@finsweet/attributes-utils';
+import type { animations, Easings } from '@finsweet/attributes-utils';
 
 export type TooltipInstance = {
   target: HTMLElement;
@@ -9,6 +9,8 @@ export type TooltipInstance = {
 
 export type GlobalSettings = {
   animation?: keyof typeof animations;
+  duration?: number;
+  easing?: Easings[number];
   placement?: string;
   offset?: string;
   trigger?: 'hover' | 'click';

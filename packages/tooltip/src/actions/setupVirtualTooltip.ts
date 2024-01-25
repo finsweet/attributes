@@ -1,4 +1,4 @@
-import type { animations } from '@finsweet/attributes-utils';
+import type { animations, Easings } from '@finsweet/attributes-utils';
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
 
 import { hideTooltip, showTooltip } from './controls';
@@ -17,7 +17,9 @@ const updateTooltipPosition = (
   clientX: number,
   clientY: number,
   tooltip: HTMLElement,
-  animation: keyof typeof animations
+  animation: keyof typeof animations,
+  easing: Easings[number] | undefined,
+  duration: number | undefined
 ) => {
   const virtualEl = {
     getBoundingClientRect: () => ({
@@ -43,7 +45,7 @@ const updateTooltipPosition = (
   });
 
   if (!tooltipOpen) {
-    showTooltip(animation, tooltip);
+    showTooltip(animation, easing, duration, tooltip);
     tooltipOpen = true;
   }
 };
@@ -56,14 +58,20 @@ const updateTooltipPosition = (
  * @param animation The animation type for showing and hiding the tooltip.
  * @returns A function to clean up the event listeners.
  */
-export const setupVirtualTooltip = (target: HTMLElement, tooltip: HTMLElement, animation: keyof typeof animations) => {
+export const setupVirtualTooltip = (
+  target: HTMLElement,
+  tooltip: HTMLElement,
+  animation: keyof typeof animations,
+  easing: Easings[number] | undefined,
+  duration: number | undefined
+) => {
   const mouseMoveHandler = (event: MouseEvent) => {
     const { clientX, clientY } = event;
-    updateTooltipPosition(clientX, clientY, tooltip, animation);
+    updateTooltipPosition(clientX, clientY, tooltip, animation, easing, duration);
   };
 
   const mouseLeaveHandler = () => {
-    hideTooltip(animation, tooltip);
+    hideTooltip(animation, easing, duration, tooltip);
     tooltipOpen = false;
   };
 

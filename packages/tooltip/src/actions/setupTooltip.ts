@@ -1,4 +1,4 @@
-import { animations, isNotEmpty, normalizeNumber } from '@finsweet/attributes-utils';
+import { animations, type Easings, isNotEmpty, normalizeNumber } from '@finsweet/attributes-utils';
 import { arrow, autoUpdate, computePosition, flip, offset, type Placement, shift } from '@floating-ui/dom';
 
 import { getAttribute, type GlobalSettings, rotateArrow, type TooltipInstance } from '../utils';
@@ -25,9 +25,11 @@ export const setupTooltip = (
 ): TooltipInstance => {
   const virtual = getAttribute(target, 'virtual') === 'true' || globalSettings.virtual === 'true';
   const animation = (getAttribute(target, 'animation') || globalSettings.animation) as keyof typeof animations;
+  const animationEasing = ((getAttribute(target, 'easing') || globalSettings.easing) as Easings[number]) || undefined;
+  const animationDuration = Number(getAttribute(target, 'duration') || globalSettings.duration) || undefined;
 
   if (virtual) {
-    const cleanup = setupVirtualTooltip(target, tooltip, animation);
+    const cleanup = setupVirtualTooltip(target, tooltip, animation, animationEasing, animationDuration);
 
     return { target, tooltip, arrowElement: undefined, cleanup };
   }
@@ -93,10 +95,10 @@ export const setupTooltip = (
 
   const tooltipTrigger = {
     show: () => {
-      return showTooltip(animation, tooltip, update);
+      return showTooltip(animation, animationEasing, animationDuration, tooltip, update);
     },
     hide: () => {
-      return hideTooltip(animation, tooltip);
+      return hideTooltip(animation, animationEasing, animationDuration, tooltip);
     },
   };
 

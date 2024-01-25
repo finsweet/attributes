@@ -1,4 +1,4 @@
-import { animations } from '@finsweet/attributes-utils';
+import { animations, type Easings } from '@finsweet/attributes-utils';
 
 /**
  * Updates accessibility attributes for the tooltip.
@@ -16,7 +16,13 @@ const updateTooltipAccessibility = (tooltip: HTMLElement, isVisible: boolean) =>
  * @param func
  * @returns
  */
-export const showTooltip = async (animation: keyof typeof animations, tooltip: HTMLElement, func?: () => void) => {
+export const showTooltip = async (
+  animation: keyof typeof animations,
+  easing: Easings[number] | undefined,
+  duration: number | undefined,
+  tooltip: HTMLElement,
+  func?: () => void
+) => {
   if (!animation) {
     tooltip.style.display = 'block';
     updateTooltipAccessibility(tooltip, true);
@@ -27,7 +33,7 @@ export const showTooltip = async (animation: keyof typeof animations, tooltip: H
   }
 
   animations[animation].prepareIn(tooltip, { display: 'block' });
-  await animations[animation].animateIn(tooltip, { display: 'block' });
+  await animations[animation].animateIn(tooltip, { display: 'block', duration, easing });
   updateTooltipAccessibility(tooltip, true);
 
   if (func) func();
@@ -39,7 +45,12 @@ export const showTooltip = async (animation: keyof typeof animations, tooltip: H
  * @param tooltip
  * @returns
  */
-export const hideTooltip = async (animation: keyof typeof animations, tooltip: HTMLElement) => {
+export const hideTooltip = async (
+  animation: keyof typeof animations,
+  easing: Easings[number] | undefined,
+  duration: number | undefined,
+  tooltip: HTMLElement
+) => {
   if (!animation) {
     tooltip.style.display = 'none';
     updateTooltipAccessibility(tooltip, false);
@@ -47,6 +58,6 @@ export const hideTooltip = async (animation: keyof typeof animations, tooltip: H
     return;
   }
 
-  await animations[animation].animateOut(tooltip, { display: 'none' });
+  await animations[animation].animateOut(tooltip, { display: 'none', duration, easing });
   updateTooltipAccessibility(tooltip, false);
 };

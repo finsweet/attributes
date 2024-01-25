@@ -42,6 +42,22 @@ export const SETTINGS = {
     },
   },
   /**
+   * Animation duration
+   */
+  duration: { key: 'duration' },
+  /**
+   * Animation easing
+   */
+  easing: {
+    key: 'easing',
+    values: {
+      linear: 'linear',
+      ease: 'ease',
+      easein: 'ease-in',
+      easeout: 'ease-out',
+    },
+  },
+  /**
    * Defines whether tooltip should be shown on hover or click.
    */
   trigger: {
