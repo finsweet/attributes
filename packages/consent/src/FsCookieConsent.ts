@@ -8,7 +8,6 @@ import {
   ACTIONS,
   CONSENT_ALL,
   CONSENT_REQUIRED,
-  FS_CONSENT_CSS,
   getElementSelector,
   type GlobalSettings,
   hasEnabledDNT,
@@ -59,8 +58,6 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
     }
 
     if (isBot) return;
-
-    document.head.insertAdjacentHTML('beforeend', FS_CONSENT_CSS);
 
     const { componentsSource, resetix } = store;
 

@@ -12,12 +12,8 @@ declare const process: {
 export default defineConfig({
   testDir: './tests',
 
-  /**
-   * Maximum time one test can run for.
-   * Set max to 2 minutes to prevent unnecessary timeout error.
-   * Some tests do finished within timeout of 30000ms, but tearing down "context" ran out of time, hence more time needed.
-   */
-  timeout: 120 * 1000,
+  /* Maximum time one test can run for. */
+  timeout: 30 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -77,14 +73,12 @@ export default defineConfig({
         ...devices['Desktop Firefox'],
       },
     },
-
-    // TODO: ignoring webkit tests for now, needs to run on https, otherwise it fails with timeout
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //   },
-    // },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+      },
+    },
   ],
 
   /* Run your local dev server before starting the tests */

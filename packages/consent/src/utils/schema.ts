@@ -74,19 +74,6 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     description: 'Controls body locks and page scrolling when the Banner is visible',
     type: 'boolean',
   },
-  display: {
-    values: {
-      block: 'block',
-      inline: 'inline',
-      grid: 'grid',
-      'inline-block': 'inline-block',
-      flex: 'flex',
-    },
-    key: 'display',
-    type: 'select',
-    name: 'Display',
-    description: 'Controls the display property when no interaction is used for displaying the component',
-  },
   expires: {
     ...SETTINGS.expires,
     name: 'Expires',
@@ -133,26 +120,14 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Banner',
       description: 'Bottom banner',
       allowedTypes: ['Block'],
-      settings: [
-        SCHEMA_SETTINGS.scroll,
-        SCHEMA_SETTINGS.display,
-        SCHEMA_SETTINGS.animation,
-        SCHEMA_SETTINGS.easing,
-        SCHEMA_SETTINGS.duration,
-      ],
+      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.animation, SCHEMA_SETTINGS.easing, SCHEMA_SETTINGS.duration],
     },
     {
       key: 'preferences',
       name: 'Preferences',
       description: 'Modal Form containing all the preferences and form',
       allowedTypes: ['Block'],
-      settings: [
-        SCHEMA_SETTINGS.scroll,
-        SCHEMA_SETTINGS.display,
-        SCHEMA_SETTINGS.animation,
-        SCHEMA_SETTINGS.easing,
-        SCHEMA_SETTINGS.duration,
-      ],
+      settings: [SCHEMA_SETTINGS.scroll, SCHEMA_SETTINGS.animation, SCHEMA_SETTINGS.easing, SCHEMA_SETTINGS.duration],
     },
     {
       key: 'open-preferences',
@@ -165,7 +140,7 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       name: 'Fixed Preferences',
       description: 'Toggles preferences modal.',
       allowedTypes: ['Link'],
-      settings: [SCHEMA_SETTINGS.display, SCHEMA_SETTINGS.animation, SCHEMA_SETTINGS.easing, SCHEMA_SETTINGS.duration],
+      settings: [SCHEMA_SETTINGS.animation, SCHEMA_SETTINGS.easing, SCHEMA_SETTINGS.duration],
     },
     {
       key: 'allow',

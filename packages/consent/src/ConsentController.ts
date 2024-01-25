@@ -225,6 +225,7 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
    * Function to set consent mode and update it based on the consent controller.
    * Ref: https://www.youtube.com/watch?v=MqAEbshMv84&t=493s
    * Consent Mode Docs: https://support.google.com/analytics/answer/9976101
+   * Article: https://www.simoahava.com/analytics/consent-settings-google-tag-manager/
    */
   const setConsentMode = (): void => {
     window.dataLayer = window.dataLayer || [];
@@ -238,27 +239,27 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
 
     const consentMode = {
       /**
-       * Example: User language
+       * Google Analytics: Enables storage that supports the functionality of the website or app e.g. language settings.
        */
       functionality_storage: consents?.essential ? 'granted' : 'denied',
 
       /**
-       * Mostly Authorization or Authentication
+       * Google Analytics: Enables storage related to security such as authentication functionality, fraud prevention, and other user protection.
        */
       security_storage: consents?.essential ? 'granted' : 'denied',
 
       /**
-       * Related to Google Analytics/Ads
+       * Google Analytics: : Enables storage (such as cookies) related to advertising.
        */
-      ad_storage: consents?.marketing ? 'granted' : 'denied',
+      ad_storage: consents?.essential ? 'granted' : 'denied',
 
       /**
-       * Related to Google Analytics
+       * Google Analytics: Enables storage (such as cookies) related to analytics e.g. visit duration.
        */
       analytics_storage: consents?.analytics ? 'granted' : 'denied',
 
       /**
-       * Example: User recommendations
+       * Google Analytics: Enables storage related to personalization e.g. video recommendations
        */
       personalization_storage: consents?.personalization ? 'granted' : 'denied',
 
@@ -266,6 +267,16 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
        * Uncategorised: This is not part of the default consent modes, can be added as a custom required consent under GTM consent settings.
        */
       uncategorized_storage: consents?.uncategorized ? 'granted' : 'denied',
+
+      /**
+       * Google Analytics: Sets consent for sending user data related to advertising to Google.
+       */
+      ad_user_data: consents?.personalization ? 'granted' : 'denied',
+
+      /**
+       * Google Analytics: Sets consent for personalized advertising.
+       */
+      ad_personalization: consents?.personalization ? 'granted' : 'denied',
     };
 
     // @ts-ignore

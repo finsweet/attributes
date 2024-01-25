@@ -70,7 +70,6 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
     displayController = createDisplayController({
       element,
       interaction: interactionTrigger ? { element: interactionTrigger } : undefined,
-      displayProperty: getAttribute(element, 'display', true),
       startsHidden: true,
       animation: getAttribute(element, 'animation'),
       animationDuration: Number(getAttribute(element, 'duration')) || undefined,

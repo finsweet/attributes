@@ -18,7 +18,6 @@ export const ELEMENTS = [
   'marketing',
   'personalization',
   'analytics',
-  'display',
   'cookie-consent',
   'opt-in',
   'disable',
@@ -64,6 +63,13 @@ export const SETTINGS = {
       'ease-out': 'ease-out',
       'ease-in-out': 'ease-in-out',
     },
+  },
+
+  /**
+   * Manipulates visibility of the component
+   */
+  cloak: {
+    key: 'cloak',
   },
 
   /**
@@ -148,20 +154,6 @@ export const SETTINGS = {
   },
 
   /**
-   * If this attribute is set and no interaction is used for displaying the component, the default fade animation will set this display property.
-   */
-  display: {
-    key: 'display',
-    values: {
-      block: 'block',
-      inline: 'inline',
-      grid: 'grid',
-      'inline-block': 'inline-block',
-      flex: 'flex',
-    },
-  },
-
-  /**
    * Default is 180 days.
    */
   expires: {
@@ -222,15 +214,6 @@ export const ACTIONS = {
 export const COOKIE_KEYS = {
   main: MAIN_KEY,
   consentsUpdated: `${MAIN_KEY}-updated`,
-};
-
-/**
- * CSS Classes
- */
-export const WEBFLOW_CSS = {
-  customCheckbox: 'w-checkbox-input--inputType-custom',
-  customRadio: 'w-form-formradioinput--inputType-custom',
-  checkedInput: 'w--redirected-checked',
 };
 
 /**

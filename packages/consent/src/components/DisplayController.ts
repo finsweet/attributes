@@ -3,7 +3,6 @@ import { animations, type Easings, Interaction, type InteractionParams, isVisibl
 export type DisplayControllerParams = {
   element: HTMLElement;
   interaction?: InteractionParams;
-  displayProperty?: (typeof displayProperties)[number];
   animation?: keyof typeof animations;
   startsHidden?: boolean;
   animationDuration?: number;
@@ -15,7 +14,6 @@ export const displayProperties = ['block', 'flex', 'grid', 'inline-block', 'inli
 export function createDisplayController({
   element,
   interaction,
-  displayProperty,
   animation,
   startsHidden,
   animationDuration,
@@ -24,10 +22,12 @@ export function createDisplayController({
   let visible: boolean;
 
   if (startsHidden) {
-    element.style.display = 'none';
+    element.setAttribute('fs-consent-cloak', '');
+
     visible = false;
   } else {
     visible = isVisible(element);
+    element.removeAttribute('fs-consent-cloak');
   }
 
   let interactionInstance: Interaction | undefined;
@@ -41,15 +41,16 @@ export function createDisplayController({
   const show = async (): Promise<void> => {
     if (visible) return;
 
-    const display = displayProperty || 'block';
-
     if (interactionInstance) {
       await interactionInstance.trigger('first');
     } else if (animation) {
-      animations[animation].prepareIn(element, { display });
-      await animations[animation].animateIn(element, { display, duration: animationDuration, easing: animationEasing });
+      animations[animation].prepareIn(element);
+
+      element.removeAttribute('fs-consent-cloak');
+
+      await animations[animation].animateIn(element, { duration: animationDuration, easing: animationEasing });
     } else {
-      element.style.display = display;
+      element.removeAttribute('fs-consent-cloak');
     }
 
     visible = true;
@@ -62,12 +63,13 @@ export function createDisplayController({
       await interactionInstance.trigger('second');
     } else if (animation) {
       await animations[animation].animateOut(element, {
-        display: 'none',
         duration: animationDuration,
         easing: animationEasing,
       });
+
+      element.setAttribute('fs-consent-cloak', '');
     } else {
-      element.style.display = 'none';
+      element.setAttribute('fs-consent-cloak', '');
     }
 
     visible = false;
@@ -78,6 +80,5 @@ export function createDisplayController({
     isElementVisible,
     show,
     hide,
-    displayProperty,
   };
 }

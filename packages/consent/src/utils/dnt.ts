@@ -1,8 +1,3 @@
-interface CustomNavigator extends Navigator {
-  // Old IE support: https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/gg699492(v=vs.85)#remarks
-  msDoNotTrack?: string | null;
-}
-
 /**
  * Returns true or false based on whether doNotTack is enabled. It also takes into account the
  * anomalies, such as !bugzilla 887703, which effect versions of Fx 31 and lower. It also handles
@@ -12,13 +7,11 @@ interface CustomNavigator extends Navigator {
  * @returns {boolean} `true` if DNT is enabled else `false`
  */
 export const hasEnabledDNT = (): boolean => {
-  const customNavigator: CustomNavigator = navigator;
-
   // for old version of IE we need to use the msDoNotTrack property of navigator
   // on newer versions, and newer platforms, this is doNotTrack but, on the window object
   // Safari also exposes the property on the window object.
-  let dntStatus = customNavigator.doNotTrack || window.doNotTrack || customNavigator.msDoNotTrack;
-  const ua = customNavigator.userAgent;
+  let dntStatus = navigator.doNotTrack || window.doNotTrack;
+  const ua = navigator.userAgent;
 
   // List of Windows versions known to not implement DNT according to the standard.
   const anomalousWinVersions = ['Windows NT 6.1', 'Windows NT 6.2', 'Windows NT 6.3'];
