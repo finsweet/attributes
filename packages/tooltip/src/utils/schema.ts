@@ -95,6 +95,8 @@ export const SCHEMA: Schema<typeof ELEMENTS, typeof SETTINGS> = {
       allowedTypes: ['Block'],
       settings: [
         SCHEMA_SETTINGS.animation,
+        SCHEMA_SETTINGS.duration,
+        SCHEMA_SETTINGS.easing,
         SCHEMA_SETTINGS.trigger,
         SCHEMA_SETTINGS.triggerout,
         SCHEMA_SETTINGS.placement,
