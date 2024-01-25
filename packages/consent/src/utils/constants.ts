@@ -135,18 +135,6 @@ export const SETTINGS = {
   },
 
   /**
-   * Cookie category
-   */
-  category: {
-    key: 'category',
-    values: {
-      personalization: 'personalization',
-      marketing: 'marketing',
-      analytics: 'analytics',
-    },
-  },
-
-  /**
    * Makes the body locks and page scrolling is disabled when the Banner is visible.
    */
   scroll: {

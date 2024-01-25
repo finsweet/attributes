@@ -57,17 +57,6 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     type: 'select',
     key: 'categories',
   },
-  category: {
-    name: 'Category',
-    description: 'The category of the cookie',
-    values: {
-      personalization: 'personalization',
-      marketing: 'marketing',
-      analytics: 'analytics',
-    },
-    type: 'select',
-    key: 'category',
-  },
   scroll: {
     ...SETTINGS.scroll,
     name: 'Disable Scroll',

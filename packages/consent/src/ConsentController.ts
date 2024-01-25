@@ -55,7 +55,7 @@ export const useConsentController = (store: ReturnType<typeof useStore>) => {
     unstoredElements.forEach((element) => {
       // Get the categories
       const categories = extractCommaSeparatedValues(
-        getAttribute(element, 'category') || getAttribute(element, 'categories'),
+        getAttribute(element, 'categories'),
         true
       ) as (typeof CONSENTS)[number][];
 
