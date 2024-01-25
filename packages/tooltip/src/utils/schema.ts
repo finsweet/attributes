@@ -57,17 +57,17 @@ const SCHEMA_SETTINGS: SchemaSettings<typeof SETTINGS> = {
     description: 'Default animation for the component. Defaults to no animations if not set.',
     type: 'select',
   },
+  easing: {
+    ...SETTINGS.easing,
+    name: 'Easing',
+    description: 'Easing options for the animation. Default is none.',
+    type: 'select',
+  },
   duration: {
     ...SETTINGS.duration,
     name: 'Duration',
-    description: 'Animation duration in seconds. Default is none if not set.',
-    type: 'select',
-  },
-  easing: {
-    ...SETTINGS.easing,
-    name: 'Easings',
-    description: 'Animation easing. Default is none if not set.',
-    type: 'select',
+    description: 'Duration of the animation. Default is none.',
+    type: 'text',
   },
 };
 
