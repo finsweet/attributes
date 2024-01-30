@@ -2,11 +2,13 @@ import { extractCommaSeparatedValues, isNumber } from '@finsweet/attributes-util
 
 import type { ListItem } from '../components/ListItem';
 import { normalizeFieldKey } from '../utils/fields';
+import { highlightItems, removeHighlight } from './highlight';
 import { type FiltersGroup } from './types';
 
 export const filterItems = (filtersGroup: FiltersGroup, items: ListItem[]) => {
   const filtersEntries = Object.entries(filtersGroup.filters);
   const method = filtersGroup.match;
+  const highlightFields = new Set();
 
   if (
     method === 'or' &&
@@ -17,7 +19,7 @@ export const filterItems = (filtersGroup: FiltersGroup, items: ListItem[]) => {
     return items;
   }
 
-  return items.filter((item) => {
+  const filteredItems = items.filter((item) => {
     const matchesFilters = filtersEntries.map(([rawFieldKey, filterData]) => {
       if (!filterData.value && method === 'and') return true;
       if (Array.isArray(filterData.value) && filterData.value.length === 0 && method === 'and') return true;
@@ -26,6 +28,7 @@ export const filterItems = (filtersGroup: FiltersGroup, items: ListItem[]) => {
       const fieldKeys = rawFieldKey === '*' ? Object.keys(item.fields) : extractCommaSeparatedValues(rawFieldKey);
 
       return fieldKeys.some((fieldKey) => {
+        highlightFields.add(fieldKey);
         const normalizedFieldKey = normalizeFieldKey(fieldKey);
 
         const fieldData = item.fields[normalizedFieldKey];
@@ -152,4 +155,11 @@ export const filterItems = (filtersGroup: FiltersGroup, items: ListItem[]) => {
     });
     return method === 'and' ? matchesFilters.every(Boolean) : matchesFilters.some(Boolean);
   });
+
+  filteredItems.forEach((item) => {
+    removeHighlight(item);
+    highlightItems(highlightFields, item);
+  });
+
+  return filteredItems;
 };

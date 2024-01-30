@@ -192,6 +192,20 @@ export const SETTINGS = {
   },
 
   /**
+   * Defines highlighte flag.
+   */
+  highlight: {
+    key: 'highlight',
+  },
+
+  /**
+   * Defines the CSS class added to highlighted values.
+   */
+  highlightclass: {
+    key: 'highlightclass',
+  },
+
+  /**
    * Defines if sorting should start reversed.
    */
   reverse: {
@@ -250,6 +264,16 @@ export const SETTINGS = {
    * Defaults to {@link DEFAULT_PAGE_BOUNDARY}.
    */
   pageboundary: { key: 'pageboundary' },
+
+  /**
+   * Defines an easing animation for any action in the list (sorting, page navigation, filtering).
+   */
+  easing: { key: 'easing' },
+
+  /**
+   * Defines an animation duration for any action in the list (sorting, page navigation, filtering).
+   */
+  duration: { key: 'duration' },
 
   /**
    * Defines if the pagination query params should be displayed on the URL.

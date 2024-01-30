@@ -8,13 +8,14 @@ import {
   type PaginationButtonElement,
   type PaginationWrapperElement,
 } from '@finsweet/attributes-utils';
+import { animations } from '@finsweet/attributes-utils';
 import { atom, deepMap, type WritableAtom } from 'nanostores';
 
 import type { FiltersData } from '../filter/types';
 import { getCollectionElements } from '../utils/dom';
 import { getPaginationQuery } from '../utils/pagination';
 import { subscribeMultiple } from '../utils/reactivity';
-import { getInstanceIndex, queryElement } from '../utils/selectors';
+import { getAttribute, getInstanceIndex, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
@@ -233,11 +234,12 @@ export class List {
    */
   #initHooks() {
     // Add render hook
-    this.addHook('render', (items) => {
-      // TODO: animate
+    this.addHook('render', async (items) => {
+      const { fade } = animations;
 
       items.forEach((item, index) => {
         const previousItem = items[index - 1];
+        const duration = Number(getAttribute(item.element, 'duration')) || 1;
 
         const render = () => {
           if (previousItem) {
@@ -245,7 +247,7 @@ export class List {
           } else {
             this.listElement?.prepend(item.element);
           }
-
+          fade.animateIn(item.element, { duration });
           item.currentIndex = index;
         };
 
@@ -266,6 +268,7 @@ export class List {
 
       // Remove items that should not be rendered anymore
       this.renderedItems.forEach((renderedItem) => {
+        fade.animateOut(renderedItem.element);
         renderedItem.element.remove();
         renderedItem.currentIndex = undefined;
       });

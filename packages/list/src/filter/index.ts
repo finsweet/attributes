@@ -1,7 +1,7 @@
 import { clearFormField, isFormField, parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
+import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
 import { filterConditions, initCondition } from './conditions';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
@@ -17,8 +17,12 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   list.addHook('filter', (items) => {
     const filters = list.filters.get();
     const match: 'and' | 'or' = getAttribute(form, 'match') || 'and';
-
-    return filterItems({ filters, match }, items);
+    const filteredItems = filterItems({ filters, match }, items);
+    if (list.listElement?.parentElement) {
+      if (filterItems.length === 0) list.listElement.parentElement.style.display = 'none';
+      else list.listElement.parentElement.style.display = 'block';
+    }
+    return filteredItems;
   });
 
   const selector = getSettingSelector('field');
@@ -75,7 +79,10 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
       const fieldsToClear = rawFilterKey
         ? formFields.filter((item) => getAttribute(item, 'field') === rawFilterKey)
         : formFields;
-      for (const element of fieldsToClear) clearFormField(element);
+      for (const element of fieldsToClear) {
+        clearFormField(element);
+        debouncedFiltration = 0;
+      }
     }
   });
 };
