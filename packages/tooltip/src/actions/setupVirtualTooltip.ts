@@ -1,5 +1,5 @@
 import type { animations, Easings } from '@finsweet/attributes-utils';
-import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { computePosition, flip, shift } from '@floating-ui/dom';
 
 import { hideTooltip, showTooltip } from './controls';
 
@@ -12,6 +12,9 @@ let tooltipOpen = false; // Moved outside the function to maintain state across 
  * @param target The target element to which the tooltip is attached.
  * @param tooltip The tooltip element to be positioned.
  * @param animation The animation type for showing and hiding the tooltip.
+ * @param easing The easing function for the animation.
+ * @param duration The duration of the animation.
+ *
  */
 const updateTooltipPosition = (
   clientX: number,
@@ -19,7 +22,8 @@ const updateTooltipPosition = (
   tooltip: HTMLElement,
   animation: keyof typeof animations,
   easing: Easings[number] | undefined,
-  duration: number | undefined
+  duration: number | undefined,
+  target: HTMLElement
 ) => {
   const virtualEl = {
     getBoundingClientRect: () => ({
@@ -34,9 +38,12 @@ const updateTooltipPosition = (
     }),
   };
 
+  // setup floating ui middleware
+  const middleware = [shift({ boundary: target }), flip({ boundary: target })];
+
   computePosition(virtualEl, tooltip, {
     placement: 'right-start',
-    middleware: [offset(5), flip(), shift()],
+    middleware,
   }).then(({ x, y }) => {
     Object.assign(tooltip.style, {
       top: `${y}px`,
@@ -56,6 +63,8 @@ const updateTooltipPosition = (
  * @param target The target element to which the tooltip is attached.
  * @param tooltip The tooltip element.
  * @param animation The animation type for showing and hiding the tooltip.
+ * @param easing The easing function for the animation.
+ * @param duration The duration of the animation.
  * @returns A function to clean up the event listeners.
  */
 export const setupVirtualTooltip = (
@@ -65,9 +74,12 @@ export const setupVirtualTooltip = (
   easing: Easings[number] | undefined,
   duration: number | undefined
 ) => {
+  // prevent the tooltip from blocking pointer events beneath it (so the mouseleave listener can fire at all times)
+  tooltip.style.pointerEvents = 'none';
+
   const mouseMoveHandler = (event: MouseEvent) => {
     const { clientX, clientY } = event;
-    updateTooltipPosition(clientX, clientY, tooltip, animation, easing, duration);
+    updateTooltipPosition(clientX, clientY, tooltip, animation, easing, duration, target);
   };
 
   const mouseLeaveHandler = () => {
