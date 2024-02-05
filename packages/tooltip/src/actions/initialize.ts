@@ -53,6 +53,9 @@ export const initRctTooltips = (rctElements: HTMLDivElement[], globalSettings: G
 
   rctElements.forEach((element) => {
     const tooltipTargets = element.querySelectorAll<HTMLElement>('[fs-tooltip-content]');
+    const templateGenerated = queryElement('tooltip-template', { scope: element });
+
+    if (templateGenerated) return;
 
     tooltipTargets?.forEach((rctTarget) => {
       // clone tooltip template
