@@ -22,12 +22,10 @@ export function createDisplayController({
   let visible: boolean;
 
   if (startsHidden) {
-    element.setAttribute('fs-consent-cloak', '');
-
+    element.style.display = 'none';
     visible = false;
   } else {
     visible = isVisible(element);
-    element.removeAttribute('fs-consent-cloak');
   }
 
   let interactionInstance: Interaction | undefined;
@@ -41,16 +39,15 @@ export function createDisplayController({
   const show = async (): Promise<void> => {
     if (visible) return;
 
+    const display = 'block';
+
     if (interactionInstance) {
       await interactionInstance.trigger('first');
     } else if (animation) {
-      animations[animation].prepareIn(element);
-
-      element.removeAttribute('fs-consent-cloak');
-
-      await animations[animation].animateIn(element, { duration: animationDuration, easing: animationEasing });
+      animations[animation].prepareIn(element, { display });
+      await animations[animation].animateIn(element, { display, duration: animationDuration, easing: animationEasing });
     } else {
-      element.removeAttribute('fs-consent-cloak');
+      element.style.display = display;
     }
 
     visible = true;
@@ -63,13 +60,12 @@ export function createDisplayController({
       await interactionInstance.trigger('second');
     } else if (animation) {
       await animations[animation].animateOut(element, {
+        display: 'none',
         duration: animationDuration,
         easing: animationEasing,
       });
-
-      element.setAttribute('fs-consent-cloak', '');
     } else {
-      element.setAttribute('fs-consent-cloak', '');
+      element.style.display = 'none';
     }
 
     visible = false;

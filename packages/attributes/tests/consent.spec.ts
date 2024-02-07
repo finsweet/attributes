@@ -31,15 +31,6 @@ export const COOKIE_KEYS = {
   consentsUpdated: `${MAIN_KEY}-updated`,
 };
 
-interface ConsentMode {
-  functionality_storage: string;
-  security_storage: string;
-  ad_storage: string;
-  analytics_storage: string;
-  personalization_storage: string;
-  uncategorized_storage: string;
-}
-
 export const DYNAMIC_KEYS = {
   checkbox: (key: string): string => `[${ELEMENT}="checkbox-${key}"]`,
   gtmEvent: (key: string): string => `${key}-activated`,

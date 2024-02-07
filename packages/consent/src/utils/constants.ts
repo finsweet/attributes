@@ -66,13 +66,6 @@ export const SETTINGS = {
   },
 
   /**
-   * Manipulates visibility of the component
-   */
-  cloak: {
-    key: 'cloak',
-  },
-
-  /**
    * Accepts informational opt-out or opt-in as value
    */
   mode: {
