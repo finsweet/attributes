@@ -71,7 +71,7 @@ export const addItemsAnimation = (
     ...animationFunctions,
     options: {
       easing: isKeyOf(animationEasing, easings) ? animationEasing : undefined,
-      duration: animationDuration ? parseFloat(animationDuration) / 1000 : undefined,
+      duration: animationDuration ? parseFloat(animationDuration) : undefined,
       stagger: animationStagger ? parseFloat(animationStagger) : undefined,
     },
   };
