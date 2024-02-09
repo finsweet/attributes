@@ -43,11 +43,6 @@ export type FiltersData = {
   [key: string]: FilterData;
 };
 
-export type TagData = {
-  template: HTMLElement;
-  wrapper: HTMLElement;
-};
-
 export type FiltersGroup = {
   match: 'and' | 'or';
   filters: FiltersData;

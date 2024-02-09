@@ -17,6 +17,18 @@ function cloneConditionTemplate() {
   return conditionTemplate;
 }
 
+function cloneConditionGroupTemplate() {
+  const conditionGroup = queryElement('condition-group');
+  if (!conditionGroup) return;
+  const conditionTemplate = cloneNode(conditionGroup);
+
+  const conditionClearLink = queryElement('condition-clear', { scope: conditionTemplate });
+  conditionClearLink?.addEventListener('click', () => {
+    conditionTemplate.remove();
+  });
+  return conditionTemplate;
+}
+
 function addCondition() {
   const newCondition = cloneConditionTemplate();
   if (!newCondition) return;
@@ -29,12 +41,26 @@ function addCondition() {
   }
 }
 
+function addConditionGroup() {
+  const newCondition = cloneConditionGroupTemplate();
+  if (!newCondition) return;
+  const conditionGroup = queryElement('condition-group');
+  const parent = conditionGroup?.parentElement;
+  parent?.insertBefore(newCondition, conditionGroup);
+}
+
 export const initCondition = () => {
   const conditionAdd = queryElement('condition-add');
+  const conditionGroupAdd = queryElement('condition-group-add');
 
   conditionAdd?.addEventListener('click', function (event) {
     event.preventDefault();
     addCondition();
+  });
+
+  conditionGroupAdd?.addEventListener('click', function (event) {
+    event.preventDefault();
+    addConditionGroup();
   });
 };
 

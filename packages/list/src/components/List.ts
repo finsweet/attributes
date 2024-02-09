@@ -7,6 +7,7 @@ import {
   type PageCountElement,
   type PaginationButtonElement,
   type PaginationWrapperElement,
+  parseNumericAttribute,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
 import { atom, deepMap, type WritableAtom } from 'nanostores';
@@ -239,7 +240,7 @@ export class List {
 
       items.forEach((item, index) => {
         const previousItem = items[index - 1];
-        const duration = Number(getAttribute(item.element, 'duration')) || 1;
+        const duration = parseNumericAttribute(getAttribute(item.element, 'duration')) || 1000;
 
         const render = () => {
           if (previousItem) {
@@ -247,7 +248,7 @@ export class List {
           } else {
             this.listElement?.prepend(item.element);
           }
-          fade.animateIn(item.element, { duration });
+          fade.animateIn(item.element, { duration: duration / 1000 });
           item.currentIndex = index;
         };
 

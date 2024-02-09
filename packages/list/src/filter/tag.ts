@@ -1,19 +1,25 @@
 import { clearFormField, cloneNode } from '@finsweet/attributes-utils';
 
-import { getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
-import type { FiltersData, TagData } from './types';
+import type { List } from '../components/List';
+import { getInstanceIndex, getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
+import type { FiltersData } from './types';
 
-export const initTag = () => {
-  const tagTemplate = queryElement('tag');
+export const initTag = (list: List) => {
+  if (!list.listElement) return;
+  const instanceIndex = getInstanceIndex(list.listElement);
+  const tagTemplate = queryElement('tag', { instanceIndex: instanceIndex });
   if (!tagTemplate) return;
   const template = cloneNode(tagTemplate);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const wrapper = tagTemplate.parentElement!;
+  const wrapper = tagTemplate.parentElement;
+  if (!wrapper) return;
   tagTemplate.remove();
-  return { template, wrapper };
+
+  list.filters.subscribe((filters) => {
+    handleTags(filters, template, wrapper);
+  });
 };
 
-export const handleTags = (filters: FiltersData, tagData: TagData) => {
+export const handleTags = (filters: FiltersData, template: HTMLElement, wrapper: HTMLElement) => {
   const activeFilters = queryAllElements('tag');
 
   activeFilters.forEach((tag) => {
@@ -48,7 +54,7 @@ export const handleTags = (filters: FiltersData, tagData: TagData) => {
       });
 
       if (!existingTag && stringValue.length > 0) {
-        const tag = cloneNode(tagData.template);
+        const tag = cloneNode(template);
         const tagText = queryElement('tag-value', { scope: tag });
         const tagField = queryElement('tag-field', { scope: tag });
         const tagOperator = queryElement('tag-operator', { scope: tag });
@@ -73,7 +79,7 @@ export const handleTags = (filters: FiltersData, tagData: TagData) => {
             tag.remove();
           });
         }
-        tagData.wrapper.appendChild(tag);
+        wrapper.appendChild(tag);
       }
     });
   }

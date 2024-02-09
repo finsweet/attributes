@@ -1,11 +1,11 @@
 import { clearFormField, isFormField, parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
+import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
 import { filterConditions, initCondition } from './conditions';
 import { getFilterData, getFiltersData } from './data';
 import { filterItems } from './filter';
-import { handleTags, initTag } from './tag';
+import { initTag } from './tag';
 
 /**
  * Inits loading functionality for the list.
@@ -13,14 +13,21 @@ import { handleTags, initTag } from './tag';
  * @param form
  */
 export const initListFiltering = async (list: List, form: HTMLFormElement) => {
+  const emptyElement = queryElement('empty');
+
   // Init hook
   list.addHook('filter', (items) => {
     const filters = list.filters.get();
-    const match: 'and' | 'or' = getAttribute(form, 'match') || 'and';
+    const match = getAttribute(form, 'match', true) || 'and';
     const filteredItems = filterItems({ filters, match }, items);
-    if (list.listElement?.parentElement) {
-      if (filterItems.length === 0) list.listElement.parentElement.style.display = 'none';
-      else list.listElement.parentElement.style.display = 'block';
+    if (list.wrapperElement) {
+      if (filteredItems.length === 0) {
+        list.wrapperElement.style.display = 'none';
+        if (emptyElement) emptyElement.style.display = 'flex';
+      } else {
+        list.wrapperElement.style.display = 'block';
+        if (emptyElement) emptyElement.style.display = 'none';
+      }
     }
     return filteredItems;
   });
@@ -31,7 +38,7 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
   // Get filters data
   const filtersData = getFiltersData(form);
 
-  const tagData = initTag();
+  initTag(list);
   initCondition();
 
   list.filters.set(filtersData);
@@ -59,15 +66,6 @@ export const initListFiltering = async (list: List, form: HTMLFormElement) => {
       const filterData = getFilterData(target);
       list.filters.setKey(rawFieldKey, filterData);
     }, debounceValue);
-  });
-
-  // Trigger the hook when the filters change
-  list.filters.subscribe(() => {
-    list.triggerHook('filter');
-
-    const filters = list.filters.get();
-
-    if (tagData) handleTags(filters, tagData);
   });
 
   // Global click event listener on the form

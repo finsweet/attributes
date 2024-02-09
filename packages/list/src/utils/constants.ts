@@ -142,6 +142,11 @@ export const ELEMENTS = [
   'condition-add',
 
   /**
+   * Defines an element that when clicked will add a new condition group.
+   */
+  'condition-group-add',
+
+  /**
    * Defines a Condition template element that wraps the field, operator and value elements.
    */
   'condition',
