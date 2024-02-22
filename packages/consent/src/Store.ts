@@ -27,8 +27,7 @@ let confirmed = false;
  */
 export const useStore = ({ source, expires, debug, mode, endpoint, domain, resetix }: GlobalSettings) => {
   if (!endpoint) {
-    console.error('Oops! Finsweet consent element has no endpoint url.');
-    return;
+    alert('Consent has has no endpoint url. This is needed for GDPR Compliance', 'warning');
   }
 
   // Get the mode
