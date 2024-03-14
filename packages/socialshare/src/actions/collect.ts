@@ -5,7 +5,7 @@ import type {
   PinterestSocialShare,
   SocialShare,
   SocialShareTypes,
-  TwitterSocialShare,
+  XSocialShare,
 } from './../utils/types';
 
 export function collectFacebookData(
@@ -25,23 +25,23 @@ export function collectFacebookData(
   };
 }
 
-export function collectTwitterData(
+export function collectXData(
   trigger: HTMLElement,
   instanceIndex: number | undefined,
   scope: HTMLElement | undefined
-): TwitterSocialShare {
-  const socialData = collectSocialData(trigger, 'twitter', instanceIndex, scope);
+): XSocialShare {
+  const socialData = collectSocialData(trigger, 'x', instanceIndex, scope);
 
-  const hashtagsElement = queryElement('twitter-hashtags', { instanceIndex, scope });
+  const hashtagsElement = queryElement('x-hashtags', { instanceIndex, scope });
   const hashtagsText =
     hashtagsElement && hashtagsElement.textContent ? hashtagsElement.textContent.replace(/[^a-zA-Z0-9_,]/g, '') : null;
 
-  const usernameElement = queryElement('twitter-username', { instanceIndex, scope });
+  const usernameElement = queryElement('x-username', { instanceIndex, scope });
   const userNameText = usernameElement ? usernameElement.textContent : null;
 
   return {
     ...socialData,
-    type: 'twitter',
+    type: 'x',
     hashtags: hashtagsText,
     username: userNameText,
   };

@@ -5,14 +5,14 @@ import type {
   SocialShare,
   SocialShareStoreData,
   SocialShareTypes,
-  TwitterSocialShare,
+  XSocialShare,
 } from './../utils/types';
 
 export function createFacebookShare({ type, url, hashtags, content, width, height }: FacebookSocialShare) {
   return createSocialShare(type, { u: url, hashtag: hashtags, quote: content }, width, height);
 }
 
-export function createTwitterShare({ type, content, username, hashtags, url, width, height }: TwitterSocialShare) {
+export function createXShare({ type, content, username, hashtags, url, width, height }: XSocialShare) {
   return createSocialShare(
     type,
     {

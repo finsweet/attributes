@@ -1,11 +1,11 @@
-import { collectFacebookData, collectPinterestData, collectSocialData, collectTwitterData } from './actions/collect';
+import { collectFacebookData, collectPinterestData, collectSocialData, collectXData } from './actions/collect';
 import {
   createFacebookShare,
   createLinkedinShare,
   createPinterestShare,
   createRedditShare,
   createTelegramShare,
-  createTwitterShare,
+  createXShare,
 } from './actions/share';
 import { SOCIAL_SHARE_PLATFORMS } from './utils/constants';
 import { getCMSItemWrapper } from './utils/dom';
@@ -58,21 +58,21 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   },
 
   /**
-   * Twitter creator.
+   * X creator.
    * @param trigger
    */
-  twitter(trigger) {
-    if (stores.twitter.has(trigger)) return;
+  x(trigger) {
+    if (stores.x.has(trigger)) return;
 
     const instanceIndex = getInstanceIndex(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const twitter = collectTwitterData(trigger, instanceIndex, cmsListItem);
+    const x = collectXData(trigger, instanceIndex, cmsListItem);
 
-    const shareData = createTwitterShare(twitter);
+    const shareData = createXShare(x);
 
-    stores.twitter.set(trigger, shareData);
+    stores.x.set(trigger, shareData);
   },
 
   /**
