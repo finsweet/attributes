@@ -97,7 +97,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
     store.confirmed = store.userHasConfirmed();
 
     // If user has already confirmed, show the manager, otherwise show the banner
-    if (store.confirmed) manager?.open();
+    if (store.confirmed) manager?.open(false);
     else banner?.open();
 
     const params = { store, consentController, banner, manager, preferences };
@@ -172,7 +172,7 @@ export const useConsents = async (settings: GlobalSettings): Promise<UseConsents
             consentController.updateConsents(CONSENT_ALL, allow);
           }
 
-          manager?.open();
+          manager?.open(false);
         });
       }
     });

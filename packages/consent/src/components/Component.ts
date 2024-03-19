@@ -150,8 +150,9 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
   /**
    * Shows/hides the component.
    * @param display Action to be performed. `true` to show, `false` to hide.
+   * @param scrollLock Whether to lock the scroll or not.
    */
-  const show = async (display = true) => {
+  const show = async (display = true, scrollLock = false) => {
     if (!displayController) return;
 
     const { isElementVisible } = displayController;
@@ -161,7 +162,7 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
     displayController[display ? 'show' : 'hide']();
 
     if (disableScrollOnOpenSetting) {
-      if (display) disableBodyScroll(scrollableElementSetting || element, { reserveScrollBarGap: true });
+      if (display && scrollLock) disableBodyScroll(scrollableElementSetting || element, { reserveScrollBarGap: true });
       else clearAllBodyScrollLocks();
     }
 
@@ -170,9 +171,10 @@ export const useComponent = (element: HTMLElement, store: ReturnType<typeof useS
 
   /**
    * Opens the component.
+   * @param scrollLock Whether to lock the scroll or not.
    */
-  const open = (): void => {
-    show();
+  const open = (scrollLock = true): void => {
+    show(true, scrollLock);
   };
 
   /**
