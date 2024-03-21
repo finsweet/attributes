@@ -1,5 +1,11 @@
 # @finsweet/attributes-combobox
 
+## 1.0.7
+
+### Patch Changes
+
+- 696f92d: fix: ensure combobox instances are relative to parent element to allow multiple instances to run
+
 ## 1.0.6
 
 ### Patch Changes
