@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-combobox",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A combo box that helps users select an item from a large list of options.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,
