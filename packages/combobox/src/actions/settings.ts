@@ -31,7 +31,8 @@ export const collectSettings = (referenceElement: HTMLElement) => {
 
   const selectElement = dropdown.querySelector('select');
   const inputElement = dropdown.querySelector('input');
-  const navListElement = queryElement('dropdown')?.querySelector('nav');
+  const navListElement = dropdown?.querySelector('nav');
+
   const { body } = document;
 
   if (!selectElement || !inputElement || !navListElement) return;
@@ -59,8 +60,8 @@ export const collectSettings = (referenceElement: HTMLElement) => {
 
   const defaultOption = Array.from(selectElement.querySelectorAll('option')).find((opt) => opt.value === '');
 
-  const noResultsTemplate = queryElement('noResults');
-  const clearDropdown = queryElement('clearDropdown') as HTMLElement;
+  const noResultsTemplate = queryElement('noResults', { operator: 'prefixed', scope: dropdown });
+  const clearDropdown = queryElement('clearDropdown', { operator: 'prefixed', scope: dropdown }) as HTMLElement;
 
   for (const element of [optionTemplate]) {
     if (!element) continue;

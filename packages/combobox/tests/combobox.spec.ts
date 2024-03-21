@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://fs-attributes.webflow.io/combobox');
+  await page.goto('https://fs-attributes.webflow.io/legacy-v1/combobox');
   page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
 });
 
