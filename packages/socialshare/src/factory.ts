@@ -1,12 +1,17 @@
-import { collectFacebookData, collectPinterestData, collectSocialData, collectXData } from './actions/collect';
 import {
+  collectCopyData,
+  collectFacebookData,
+  collectPinterestData,
+  collectSocialData,
+  collectXData,
+  createCopyInstance,
   createFacebookShare,
   createLinkedinShare,
   createPinterestShare,
   createRedditShare,
   createTelegramShare,
   createXShare,
-} from './actions/share';
+} from './actions';
 import { SOCIAL_SHARE_PLATFORMS } from './utils/constants';
 import { getCMSItemWrapper } from './utils/dom';
 import { getAttribute, getInstance, queryAllElements } from './utils/selectors';
@@ -39,6 +44,22 @@ export const createSocialShareInstances = (scope?: HTMLElement) => {
  * Holds an instance creator for each platform.
  */
 const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
+  /**
+   * Copy creator
+   * @param trigger
+   */
+  copy(trigger) {
+    if (stores.copy.has(trigger)) return;
+
+    const instanceIndex = getInstance(trigger);
+
+    const cmsListItem = getCMSItemWrapper(trigger);
+
+    const copyUrl = collectCopyData(trigger, instanceIndex, cmsListItem);
+
+    createCopyInstance(copyUrl);
+  },
+
   /**
    * Facebook creator.
    * @param trigger

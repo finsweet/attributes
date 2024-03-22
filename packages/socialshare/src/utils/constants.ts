@@ -2,6 +2,11 @@ import { type AttributeElements, type AttributeSettings } from '@finsweet/attrib
 
 export const ELEMENTS = [
   /**
+   * Defines a Copy URL button
+   */
+  'copy',
+
+  /**
    * Defines a Facebook social button
    */
   'facebook',
@@ -94,4 +99,5 @@ export const SOCIAL_SHARE_PLATFORMS = {
   reddit: 'https://www.reddit.com/submit',
   linkedin: 'https://www.linkedin.com//sharing/share-offsite',
   telegram: 'https://t.me/share',
+  copy: window.location.href,
 } as const;

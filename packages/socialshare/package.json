@@ -17,6 +17,7 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-utils": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*",
+    "clipboard": "^2.0.11"
   }
 }

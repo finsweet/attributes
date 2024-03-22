@@ -1,5 +1,3 @@
-import { isNotEmpty } from '@finsweet/attributes-utils';
-
 /**
  * Search for a query i.e. /search?query=hello
  * @param query The search query

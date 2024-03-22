@@ -12,7 +12,7 @@ test.describe('cmsload', () => {
 
     // Pagination mode
     // TODO: migrate to fs-list
-    const collectionWrapper1 = page.locator('[fs-cmsload-element="list-1"]');
+    const collectionWrapper1 = page.locator('[fs-cmsload-element="list"][fs-cmsload-instance="1"]');
     const collectionItems1 = collectionWrapper1.locator('.w-dyn-item');
     const paginationPrevious1 = collectionWrapper1.locator('.w-pagination-previous');
     const paginationNext1 = collectionWrapper1.locator('.w-pagination-next');
@@ -48,7 +48,7 @@ test.describe('cmsload', () => {
     await expect(paginationNext1).toBeHidden();
 
     // Load Under mode
-    const collectionWrapper2 = page.locator('[fs-cmsload-element="list-2"]');
+    const collectionWrapper2 = page.locator('[fs-cmsload-element="list"][fs-cmsload-instance="2"]');
     const collectionItems2 = collectionWrapper2.locator('.w-dyn-item');
     const paginationNext2 = collectionWrapper2.locator('.w-pagination-next');
 
@@ -61,7 +61,7 @@ test.describe('cmsload', () => {
     expect(await collectionItems2.count()).toBe(4);
 
     // Infinite mode
-    const collectionWrapper3 = page.locator('[fs-cmsload-element="list-3"]');
+    const collectionWrapper3 = page.locator('[fs-cmsload-element="list"][fs-cmsload-instance="3"]');
     const collectionItems3 = collectionWrapper3.locator('.w-dyn-item');
 
     expect(await collectionItems3.count()).toBe(6);
@@ -78,7 +78,7 @@ test.describe('cmsload', () => {
     // expect(await collectionItems3.count()).toBeGreaterThan(6);
 
     // Render All mode
-    const collectionWrapper4 = page.locator('[fs-cmsload-element="list-4"]');
+    const collectionWrapper4 = page.locator('[fs-cmsload-element="list"][fs-cmsload-instance="4"]');
     const collectionItems4 = collectionWrapper4.locator('.w-dyn-item');
 
     expect(await collectionItems4.count()).toBe(35);

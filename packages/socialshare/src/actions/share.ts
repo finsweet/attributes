@@ -1,3 +1,5 @@
+import ClipboardJS from 'clipboard';
+
 import { SOCIAL_SHARE_PLATFORMS } from '../utils/constants';
 import type {
   FacebookSocialShare,
@@ -8,10 +10,31 @@ import type {
   XSocialShare,
 } from './../utils/types';
 
-export function createFacebookShare({ type, url, hashtags, content, width, height }: FacebookSocialShare) {
-  return createSocialShare(type, { u: url, hashtag: hashtags, quote: content }, width, height);
-}
+/**
+ * Creates a social share link for copying the URL to the clipboard.
+ */
+export const createCopyInstance = ({ shareUrl, trigger }: SocialShareStoreData) => {
+  if (!trigger) return;
 
+  const clipboard = new ClipboardJS(trigger, {
+    text: () => shareUrl.href,
+  });
+
+  clipboard.on('error', (e) => {
+    console.error('Failed to copy text to clipboard', e.text);
+  });
+};
+
+/**
+ * Creates a Facebook share link with the given parameters.
+ */
+export const createFacebookShare = ({ type, url, hashtags, content, width, height }: FacebookSocialShare) => {
+  return createSocialShare(type, { u: url, hashtag: hashtags, quote: content }, width, height);
+};
+
+/**
+ * Creates a Twitter share object with the specified properties.
+ */
 export function createXShare({ type, content, username, hashtags, url, width, height }: XSocialShare) {
   return createSocialShare(
     type,
@@ -26,7 +49,10 @@ export function createXShare({ type, content, username, hashtags, url, width, he
   );
 }
 
-export function createPinterestShare({ type, url, image, description, width, height }: PinterestSocialShare) {
+/**
+ * Creates a Pinterest share object with the specified parameters.
+ */
+export const createPinterestShare = ({ type, url, image, description, width, height }: PinterestSocialShare) => {
   return createSocialShare(
     type,
     {
@@ -37,13 +63,19 @@ export function createPinterestShare({ type, url, image, description, width, hei
     width,
     height
   );
-}
+};
 
-export function createLinkedinShare({ type, url, width, height }: SocialShare) {
+/**
+ * Creates a LinkedIn share object with the specified parameters.
+ */
+export const createLinkedinShare = ({ type, url, width, height }: SocialShare) => {
   return createSocialShare(type, { url: url }, width, height);
-}
+};
 
-export function createRedditShare({ type, url, content, width, height }: SocialShare) {
+/**
+ * Creates a Reddit share object with the given parameters.
+ */
+export const createRedditShare = ({ type, url, content, width, height }: SocialShare) => {
   return createSocialShare(
     type,
     {
@@ -53,9 +85,12 @@ export function createRedditShare({ type, url, content, width, height }: SocialS
     width,
     height
   );
-}
+};
 
-export function createTelegramShare({ type, content, url, width, height }: SocialShare) {
+/**
+ * Creates a Telegram share object with the specified parameters.
+ */
+export const createTelegramShare = ({ type, content, url, width, height }: SocialShare) => {
   return createSocialShare(
     type,
     {
@@ -65,14 +100,17 @@ export function createTelegramShare({ type, content, url, width, height }: Socia
     width,
     height
   );
-}
+};
 
-function createSocialShare(
+/**
+ * Creates a social share object with the given parameters.
+ */
+const createSocialShare = (
   type: SocialShareTypes,
   params: { [key: string]: string | null },
   width: number,
   height: number
-): SocialShareStoreData {
+): SocialShareStoreData => {
   const urlSocialMedia = SOCIAL_SHARE_PLATFORMS[type];
 
   const shareUrl = new URL(urlSocialMedia);
@@ -88,4 +126,4 @@ function createSocialShare(
     type,
     shareUrl,
   };
-}
+};

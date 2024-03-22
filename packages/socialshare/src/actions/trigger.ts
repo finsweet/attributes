@@ -1,9 +1,12 @@
 import { addListener, isElement } from '@finsweet/attributes-utils';
 
-import { SOCIAL_SHARE_PLATFORMS } from '../utils/constants';
-import { getElementSelector } from '../utils/selectors';
-import { stores } from '../utils/stores';
-import type { SocialShareStoreData, SocialShareTypes } from '../utils/types';
+import {
+  getElementSelector,
+  SOCIAL_SHARE_PLATFORMS,
+  type SocialShareStoreData,
+  type SocialShareTypes,
+  stores,
+} from '../utils';
 
 /**
  * Listens for trigger clicks on the document.
@@ -22,6 +25,7 @@ export const listenTriggerClicks = () => {
       if (!trigger) continue;
 
       const socialShareData = stores[platform].get(trigger);
+
       if (socialShareData) triggerSocialShare(socialShareData);
       break;
     }
@@ -34,7 +38,9 @@ export const listenTriggerClicks = () => {
  * Triggers a social share.
  * @param storeData
  */
-const triggerSocialShare = ({ width, height, shareUrl }: SocialShareStoreData) => {
+const triggerSocialShare = ({ width, height, shareUrl, type }: SocialShareStoreData) => {
+  if (type === 'copy') return;
+
   const left = window.innerWidth / 2 - width / 2 + window.screenX;
   const top = window.innerHeight / 2 - height / 2 + window.screenY;
   const popParams = `scrollbars=no, width=${width}, height=${height}, top=${top}, left=${left}`;

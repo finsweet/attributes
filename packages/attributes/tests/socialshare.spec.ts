@@ -4,6 +4,8 @@ import { waitAttributeLoaded } from './utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('https://fs-attributes.webflow.io/socialshare');
+
+  await waitAttributeLoaded(page, 'socialshare');
 });
 
 test.describe('socialshare', () => {

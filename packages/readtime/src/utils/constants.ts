@@ -28,7 +28,16 @@ export const SETTINGS = {
   decimals: {
     key: 'decimals',
   },
+
+  /**
+   * Defines the locale used to format the time output.
+   * Defaults to {@link DEFAULT_LOCALE}.
+   */
+  locale: {
+    key: 'locale',
+  },
 } as const satisfies AttributeSettings;
 
 export const DEFAULT_WPM = 265;
 export const DEFAULT_DECIMALS = 0;
+export const DEFAULT_LOCALE = 'auto';

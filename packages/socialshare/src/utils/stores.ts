@@ -7,4 +7,5 @@ export const stores: Record<SocialShareTypes, SocialShareStore> = {
   telegram: new Map(),
   linkedin: new Map(),
   reddit: new Map(),
+  copy: new Map(),
 };

@@ -1,4 +1,4 @@
-import { expect, type Request, type Response, test } from '@playwright/test';
+import { expect, type Response, test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 

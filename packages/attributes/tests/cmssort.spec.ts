@@ -13,8 +13,10 @@ test.describe('cmssort', () => {
     await waitAttributeLoaded(page, 'cmssort');
 
     // HTML Select Dropdown
-    const trigger1 = page.locator('[fs-cmssort-element="trigger"]');
-    const list1 = page.locator('[fs-cmssort-element="list"]');
+    // need to pick the first index since locator will resolve to multiple elements of the same attribute
+    // the first should not have any instance hence index 0
+    const trigger1 = (await page.locator('[fs-cmssort-element="trigger"]').all())[0];
+    const list1 = (await page.locator('[fs-cmssort-element="list"]').all())[0];
     const listItems1 = list1.locator('.w-dyn-item');
 
     await expect(listItems1.first()).toHaveText(/Project 35/);
@@ -52,11 +54,11 @@ test.describe('cmssort', () => {
     await expect(listItems1.first()).toHaveText(/Project 33/);
 
     // Buttons
-    const triggers2 = page.locator('[fs-cmssort-element="trigger-2"]');
+    const triggers2 = page.locator('[fs-cmssort-element="trigger"][fs-cmssort-instance="2"]');
     const nameTrigger = triggers2.nth(0);
     const yearTrigger = triggers2.nth(1);
     const numberTrigger = triggers2.nth(3);
-    const list2 = page.locator('[fs-cmssort-element="list-2"]');
+    const list2 = page.locator('[fs-cmssort-element="list"][fs-cmssort-instance="2"]');
     const listItems2 = list2.locator('.w-dyn-item');
 
     await expect(listItems2.first()).toHaveText(/Project 35/);
