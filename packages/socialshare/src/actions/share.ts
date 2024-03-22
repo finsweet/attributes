@@ -47,7 +47,7 @@ export function createXShare({ type, content, username, hashtags, url, width, he
     width,
     height
   );
-};
+}
 
 /**
  * Creates a Pinterest share object with the specified parameters.
