@@ -25,9 +25,9 @@ import {
   PINTEREST_IMAGE_ELEMENT_KEY,
   REDDIT_ELEMENT_KEY,
   TELEGRAM_ELEMENT_KEY,
-  TWITTER_ELEMENT_KEY,
-  TWITTER_HASHTAG_ELEMENT_KEY,
-  TWITTER_USERNAME_ELEMENT_KEY,
+  X_ELEMENT_KEY,
+  X_HASHTAG_ELEMENT_KEY,
+  X_USERNAME_ELEMENT_KEY,
   URL_ELEMENT_KEY,
   WIDTH_SETTING_KEY,
 } from './../src/utils/constants';
@@ -45,8 +45,8 @@ const schema: AttributeSchema = {
       caseInsensitive: true,
     },
     {
-      key: TWITTER_ELEMENT_KEY,
-      description: 'Defines a Twitter social button',
+      key: X_ELEMENT_KEY,
+      description: 'Defines a X social button',
       requiresInstance: true,
       multiplesInInstance: true,
       appliedTo: [BUTTON, LINK_BLOCK, TEXT_LINK, TEXT_ELEMENT, DIV_BLOCK],
@@ -125,8 +125,8 @@ const schema: AttributeSchema = {
       scope: COLLECTION_ITEM,
     },
     {
-      key: TWITTER_HASHTAG_ELEMENT_KEY,
-      description: 'Defines Twitter hashtags',
+      key: X_HASHTAG_ELEMENT_KEY,
+      description: 'Defines X hashtags',
       requiresInstance: true,
       multiplesInInstance: false,
       appliedTo: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
@@ -135,8 +135,8 @@ const schema: AttributeSchema = {
       scope: COLLECTION_ITEM,
     },
     {
-      key: TWITTER_USERNAME_ELEMENT_KEY,
-      description: 'Defines Twitter username',
+      key: X_USERNAME_ELEMENT_KEY,
+      description: 'Defines X username',
       requiresInstance: true,
       multiplesInInstance: false,
       appliedTo: [TEXT_BLOCK, HEADING, PARAGRAPH, TEXT_LINK],
@@ -172,7 +172,7 @@ const schema: AttributeSchema = {
       appliedTo: {
         elements: [
           FACEBOOK_ELEMENT_KEY,
-          TWITTER_ELEMENT_KEY,
+          X_ELEMENT_KEY,
           LINKEDIN_ELEMENT_KEY,
           TELEGRAM_ELEMENT_KEY,
           REDDIT_ELEMENT_KEY,
@@ -191,7 +191,7 @@ const schema: AttributeSchema = {
       appliedTo: {
         elements: [
           FACEBOOK_ELEMENT_KEY,
-          TWITTER_ELEMENT_KEY,
+          X_ELEMENT_KEY,
           LINKEDIN_ELEMENT_KEY,
           TELEGRAM_ELEMENT_KEY,
           REDDIT_ELEMENT_KEY,

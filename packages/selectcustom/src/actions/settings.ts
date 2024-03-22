@@ -1,7 +1,7 @@
 import {
   ARIA_CURRENT_KEY,
-  type Dropdown,
   DROPDOWN_CSS_CLASSES,
+  type DropdownElement,
   type DropdownList,
   type DropdownToggle,
   findTextNode,
@@ -20,7 +20,7 @@ import { setDropdownAria } from './a11y';
 export const collectSettings = (referenceElement: HTMLElement) => {
   const optionsStore: OptionsStore = [];
 
-  const dropdown = referenceElement.closest<Dropdown>(`.${DROPDOWN_CSS_CLASSES.dropdown}`);
+  const dropdown = referenceElement.closest<DropdownElement>(`.${DROPDOWN_CSS_CLASSES.dropdown}`);
   if (!dropdown) return;
 
   const selectElement = dropdown.querySelector('select');

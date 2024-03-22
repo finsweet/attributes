@@ -1,11 +1,10 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
-
 import { queryAllElements } from '../utils/selectors';
 
 /**
  * @returns All the accordion elements on the page.
  * @param listInstances The `cmsload` instances. If provided, all the loaded accordions will also be added.
  */
+// @ts-expect-error TODO: Support fs-list
 export const queryAllAccordions = (listInstances?: CMSList[]) => {
   const allAccordions = queryAllElements('accordion');
 

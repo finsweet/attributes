@@ -39,7 +39,7 @@ const examples: AttributeExamples = [
             children: ['4b52b121-e3a2-fa62-5260-4c67afacde58', 'a319bc92-8bfb-44e7-16e8-b90e1712e6da'],
             data: {
               search: { exclude: false },
-              xattr: [{ name: 'fs-socialshare-element', value: 'twitter' }],
+              xattr: [{ name: 'fs-socialshare-element', value: 'x' }],
               block: 'inline',
               displayName: '',
               attr: { id: '' },
@@ -54,12 +54,12 @@ const examples: AttributeExamples = [
             tag: 'div',
             classes: ['95a1851b-3812-5234-019b-4190ba9a81b6'],
             children: [],
-            v: '<svg aria-hidden="true" role="img" fill=currentColor xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28"><title>Twitter icon</title><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>',
+            v: '<svg width="300" height="271" xmlns="http://www.w3.org/2000/svg" ><path d="m236 0h46l-101 115 118 156h-92.6l-72.5-94.8-83 94.8h-46l107-123-113-148h94.9l65.5 86.6zm-16.1 244h25.5l-165-218h-27.4z"/>< /svg>',
             data: {
               embed: {
                 type: 'html',
                 meta: {
-                  html: '<svg aria-hidden="true" role="img" fill=currentColor xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28"><title>Twitter icon</title><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>',
+                  html: '<svg width="300" height="271" xmlns="http://www.w3.org/2000/svg" ><path d="m236 0h46l-101 115 118 156h-92.6l-72.5-94.8-83 94.8h-46l107-123-113-148h94.9l65.5 86.6zm-16.1 244h25.5l-165-218h-27.4z"/>< /svg>',
                   div: false,
                   iframe: false,
                   script: false,
@@ -86,7 +86,7 @@ const examples: AttributeExamples = [
               tag: 'div',
             },
           },
-          { _id: 'a319bc92-8bfb-44e7-16e8-b90e1712e6db', text: true, v: 'Twitter' },
+          { _id: 'a319bc92-8bfb-44e7-16e8-b90e1712e6db', text: true, v: 'X' },
           {
             _id: 'b3e3448f-bed5-e43c-e339-09645c332739',
             type: 'Link',
@@ -425,7 +425,7 @@ const examples: AttributeExamples = [
             _id: '2ce53c15-7cd6-5ac2-6bc5-0ed436cc79c6',
             fake: false,
             type: 'class',
-            name: 'is-twitter',
+            name: 'is-x',
             namespace: '',
             comb: '&',
             styleLess: 'background-color: hsla(212, 91.45%, 44.92%, 1.00);',

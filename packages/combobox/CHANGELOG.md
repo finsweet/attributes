@@ -1,5 +1,11 @@
 # @finsweet/attributes-combobox
 
+## 1.0.6
+
+### Patch Changes
+
+- 358dcc88: preventclear - if true this attribute will retain combobox input value when user types a value that does not exist in the options
+
 ## 1.0.5
 
 ### Patch Changes

@@ -2,7 +2,7 @@ import { DISPLAY_VALUES_ATTRIBUTE, generateSelectors } from '@finsweet/attribute
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { queryAllElements, getInstanceIndex, getElementSelector, getAttribute } = generateSelectors(
+export const { queryAllElements, getInstance, getElementSelector, getAttribute } = generateSelectors(
   DISPLAY_VALUES_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

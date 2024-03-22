@@ -15,10 +15,10 @@ export interface FacebookSocialShare extends SocialShare {
   type: 'facebook';
 }
 
-export interface TwitterSocialShare extends SocialShare {
+export interface XSocialShare extends SocialShare {
   hashtags: string | null;
   username: string | null;
-  type: 'twitter';
+  type: 'x';
 }
 
 export interface PinterestSocialShare extends SocialShare {

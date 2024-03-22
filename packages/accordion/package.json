@@ -18,8 +18,5 @@
   },
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*"
-  },
-  "devDependencies": {
-    "@finsweet/attributes-cmscore": "workspace:*"
   }
 }

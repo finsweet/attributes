@@ -39,16 +39,6 @@
     "@finsweet/attributes-autovideo": "workspace:*",
     "@finsweet/attributes-beforeafter": "workspace:*",
     "@finsweet/attributes-calevent": "workspace:*",
-    "@finsweet/attributes-cmscombine": "workspace:*",
-    "@finsweet/attributes-cmsfilter": "workspace:*",
-    "@finsweet/attributes-cmsload": "workspace:*",
-    "@finsweet/attributes-cmsnest": "workspace:*",
-    "@finsweet/attributes-cmsprevnext": "workspace:*",
-    "@finsweet/attributes-cmsselect": "workspace:*",
-    "@finsweet/attributes-cmsslider": "workspace:*",
-    "@finsweet/attributes-cmssort": "workspace:*",
-    "@finsweet/attributes-cmsstatic": "workspace:*",
-    "@finsweet/attributes-cmstabs": "workspace:*",
     "@finsweet/attributes-codehighlight": "workspace:*",
     "@finsweet/attributes-combobox": "workspace:*",
     "@finsweet/attributes-component": "workspace:*",
@@ -63,6 +53,7 @@
     "@finsweet/attributes-inputcounter": "workspace:*",
     "@finsweet/attributes-launchdarkly": "workspace:*",
     "@finsweet/attributes-linkblockedit": "workspace:*",
+    "@finsweet/attributes-list": "workspace:*",
     "@finsweet/attributes-masonry": "workspace:*",
     "@finsweet/attributes-mirrorclick": "workspace:*",
     "@finsweet/attributes-mirrorinput": "workspace:*",
@@ -87,6 +78,6 @@
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
-    "tsx": "^3.12.7"
+    "tsx": "^4.7.1"
   }
 }

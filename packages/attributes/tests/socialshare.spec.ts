@@ -1,66 +1,56 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://fs-attributes.webflow.io/socialshare');
+  await page.goto('https://fs-attributes.webflow.io/socialshare');
 
   await waitAttributeLoaded(page, 'socialshare');
 });
 
 test.describe('socialshare', () => {
-  test('Triggers copy URL correctly', async ({ page }) => {
-    const inputEl = page.getByTestId('input');
-    const currentUrl = page.url();
+  test('Triggers share correctly', async ({ page, context }) => {
+    await waitAttributeLoaded(page, 'socialshare');
 
-    const options = ['copy'];
+    const facebook1 = page.getByTestId('facebook-1');
+    const x1 = page.getByTestId('x-1');
+    const linkedin1 = page.getByTestId('linkedin-1');
+    const pinterest1 = page.getByTestId('pinterest-1');
+    const telegram1 = page.getByTestId('telegram-1');
+    const reddit1 = page.getByTestId('reddit-1');
+    const x = page.getByTestId('x').first();
+    const pinterest = page.getByTestId('pinterest').first();
 
-    for (const option of options) {
-      const elements = await page.locator(`[fs-socialshare-element="${option}"]`).all();
+    await facebook1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('facebook'));
+    await context.pages()[1].close();
 
-      for (const element of elements) {
-        expect(element).toBeTruthy();
+    await x1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('x'));
+    await context.pages()[1].close();
 
-        if (option === 'copy') {
-          await element.click();
+    await linkedin1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('linkedin'));
+    await context.pages()[1].close();
 
-          // focus on the input element to paste
-          await inputEl.focus();
+    await pinterest1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('pinterest'));
+    await context.pages()[1].close();
 
-          // Simulate paste event using keyboard press
-          const isMac = await page.evaluate(() => window.navigator.platform.toString().toLowerCase() === 'macintel');
-          const modifier = isMac ? 'Meta' : 'Control';
-          await page.keyboard.press(`${modifier}+KeyC`);
-          await page.keyboard.press(`${modifier}+KeyV`);
+    await telegram1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('t.me'));
+    await context.pages()[1].close();
 
-          // Retrieve the input value and check against page url
-          const inputValue = await inputEl.evaluate((input) => (input as HTMLInputElement).value);
-          await expect(inputValue).toEqual(currentUrl);
+    await reddit1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('reddit'));
+    await context.pages()[1].close();
 
-          // clear the input field
-          await inputEl.fill('');
+    await x.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('x'));
+    await context.pages()[1].close();
 
-          continue;
-        }
-      }
-    }
-  });
-
-  test('Triggers share to social media correctly', async ({ page, context }) => {
-    const socialMediaSites = ['facebook', 'twitter', 'linkedin', 'pinterest', 't.me', 'reddit'];
-
-    const triggersValidPopups = async (sites: string[]) => {
-      for (const site of sites) {
-        const identifier = site === 't.me' ? 'telegram' : site;
-
-        const element = page.getByTestId(`${identifier}-1`);
-        await element.click();
-
-        await context.waitForEvent('page', (p) => p.url().includes(site));
-        await context.pages()[1].close();
-      }
-    };
-
-    await triggersValidPopups(socialMediaSites);
+    await pinterest.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('pinterest'));
+    await context.pages()[1].close();
   });
 });

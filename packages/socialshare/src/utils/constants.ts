@@ -12,9 +12,9 @@ export const ELEMENTS = [
   'facebook',
 
   /**
-   * Defines a Twitter social button
+   * Defines a X social button
    */
-  'twitter',
+  'x',
 
   /**
    * Defines a Pinterest social button
@@ -52,14 +52,14 @@ export const ELEMENTS = [
   'facebook-hashtags',
 
   /**
-   * Defines Twitter hashtags
+   * Defines X hashtags
    */
-  'twitter-hashtags',
+  'x-hashtags',
 
   /**
-   * Defines Twitter username
+   * Defines X username
    */
-  'twitter-username',
+  'x-username',
 
   /**
    * Defines Pinterest image
@@ -94,7 +94,7 @@ export const DEFAULT_HEIGHT_SETTING_KEY = 480;
 
 export const SOCIAL_SHARE_PLATFORMS = {
   facebook: 'https://www.facebook.com/sharer/sharer.php',
-  twitter: 'https://twitter.com/intent/tweet/',
+  x: 'https://x.com/intent/post/',
   pinterest: 'https://www.pinterest.com/pin/create/trigger/',
   reddit: 'https://www.reddit.com/submit',
   linkedin: 'https://www.linkedin.com//sharing/share-offsite',

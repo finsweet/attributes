@@ -2,7 +2,7 @@ import { BEFORE_AFTER_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { queryElement, getInstanceIndex, queryAllElements, getAttribute } = generateSelectors(
+export const { queryElement, getInstance, queryAllElements, getAttribute } = generateSelectors(
   BEFORE_AFTER_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

@@ -9,7 +9,7 @@ import {
 
 import { createClipboardJsInstance } from './factory';
 import { DEFAULT_SUCCESS_CSS_CLASS, DEFAULT_SUCCESS_DURATION } from './utils/constants';
-import { getAttribute, getInstanceIndex, queryAllElements, queryElement } from './utils/selectors';
+import { getAttribute, getInstance, queryAllElements, queryElement } from './utils/selectors';
 
 /**
  * Inits the copy to clipboard functionality.
@@ -31,14 +31,14 @@ export const init: FsAttributeInit = async () => {
       const successClass = getAttribute(trigger, 'active') || DEFAULT_SUCCESS_CSS_CLASS;
 
       // Get the instance index
-      const instanceIndex = getInstanceIndex(trigger);
+      const instance = getInstance(trigger);
 
       // Get the target to be copied, if existing
       const siblingTarget = trigger.parentElement
         ? queryElement('copy-sibling', { scope: trigger.parentElement })
         : null;
 
-      const target = siblingTarget || queryElement('copy-this', { instanceIndex });
+      const target = siblingTarget || queryElement('copy-this', { instance });
 
       // Store the text node and the original text
       const textNode = findTextNode(trigger);

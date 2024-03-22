@@ -1,4 +1,3 @@
-import { type CMSList, createCMSListInstance } from '@finsweet/attributes-cmscore';
 import { getCMSElementSelector } from '@finsweet/attributes-utils';
 
 import type { JobWithContent } from '../types';
@@ -8,6 +7,7 @@ import { getAttribute, queryAllElements } from '../utils/selectors';
 
 export async function createCMSList(listWrapper: HTMLElement, queryParam: string, jobs: JobWithContent[]) {
   // Create the list instances
+  // @ts-expect-error TODO: Support fs-list
   const listInstance = createCMSListInstance(listWrapper);
 
   if (!listInstance) {
@@ -17,6 +17,7 @@ export async function createCMSList(listWrapper: HTMLElement, queryParam: string
   await addJobsCMSList(listInstance, queryParam, jobs);
 }
 
+// @ts-expect-error TODO: Support fs-list
 export async function addJobsCMSList(listInstance: CMSList, queryParam: string, jobs: JobWithContent[]) {
   const groupByKey = getNestedKey(listInstance);
 
@@ -28,6 +29,7 @@ export async function addJobsCMSList(listInstance: CMSList, queryParam: string, 
   addJobsToCMSItems(listInstance, jobs, queryParam);
 }
 
+// @ts-expect-error TODO: Support fs-list
 export function getNestedKey(listInstance: CMSList): string | null {
   const templateItem = [...listInstance.items][0];
 

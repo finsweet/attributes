@@ -2,7 +2,7 @@ import { generateSelectors, MIRROR_INPUT_ATTRIBUTE } from '@finsweet/attributes-
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getElementSelector, getInstanceIndex, queryElement } = generateSelectors(
+export const { getElementSelector, getInstance, queryElement } = generateSelectors(
   MIRROR_INPUT_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

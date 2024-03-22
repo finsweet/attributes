@@ -19,8 +19,5 @@
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*",
     "dayjs": "^1.11.9"
-  },
-  "devDependencies": {
-    "@finsweet/attributes-cmscore": "workspace:*"
   }
 }

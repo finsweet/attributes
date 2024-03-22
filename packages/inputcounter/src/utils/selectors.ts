@@ -2,7 +2,7 @@ import { generateSelectors, INPUT_COUNTER_ATTRIBUTE } from '@finsweet/attributes
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { queryElement, getElementSelector, getInstanceIndex, getAttribute } = generateSelectors(
+export const { queryElement, getElementSelector, getInstance, getAttribute } = generateSelectors(
   INPUT_COUNTER_ATTRIBUTE,
   ELEMENTS,
   SETTINGS
