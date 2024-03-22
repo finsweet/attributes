@@ -1,9 +1,6 @@
 import { type AttributeElements, type AttributeSettings } from '@finsweet/attributes-utils';
 
-export const ELEMENTS = [
-  'text',
-  'content',
-] as const satisfies AttributeElements;
+export const ELEMENTS = ['text', 'content'] as const satisfies AttributeElements;
 
 export const SETTINGS = {
   loop: { key: 'loop', values: { true: 'true' } },

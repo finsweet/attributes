@@ -2,5 +2,8 @@ import { FORM_SUBMIT_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-u
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getSettingSelector, getInstanceIndex, queryAllElements, getAttribute, hasAttributeValue } =
-  generateSelectors(FORM_SUBMIT_ATTRIBUTE, ELEMENTS, SETTINGS);
+export const { getSettingSelector, getInstance, queryAllElements, getAttribute, hasAttributeValue } = generateSelectors(
+  FORM_SUBMIT_ATTRIBUTE,
+  ELEMENTS,
+  SETTINGS
+);

@@ -10,22 +10,22 @@ import {
   type SocialShare,
   type SocialShareStoreData,
   type SocialShareTypes,
-  type TwitterSocialShare,
+  type XSocialShare,
 } from './../utils';
 
 /**
  * Collects data for the copy action of the Social Share feature.
  * @param trigger - The HTML element that triggered the action.
- * @param instanceIndex - The index of the Social Share instance, if multiple instances are present on the page.
+ * @param instance - The index of the Social Share instance, if multiple instances are present on the page.
  * @param scope - The HTML element that contains the Social Share instance, if multiple instances are present on the page.
  * @returns An object containing the collected data for the copy action.
  */
 export const collectCopyData = (
   trigger: HTMLElement,
-  instanceIndex: string | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): SocialShareStoreData => {
-  const socialData = collectSocialData(trigger, 'copy', instanceIndex, scope);
+  const socialData = collectSocialData(trigger, 'copy', instance, scope);
 
   return {
     ...socialData,
@@ -38,18 +38,18 @@ export const collectCopyData = (
 /**
  * Collects Facebook social share data.
  * @param trigger - The element that triggered the social share.
- * @param instanceIndex - The index of the social share instance.
+ * @param instance - The index of the social share instance.
  * @param scope - The scope of the social share.
  * @returns An object containing the collected Facebook social share data.
  */
 export const collectFacebookData = (
   trigger: HTMLElement,
-  instanceIndex: string | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): FacebookSocialShare => {
-  const socialData = collectSocialData(trigger, 'facebook', instanceIndex, scope);
+  const socialData = collectSocialData(trigger, 'facebook', instance, scope);
 
-  const hashtagsElement = queryElement('facebook-hashtags', { instanceIndex, scope });
+  const hashtagsElement = queryElement('facebook-hashtags', { instance, scope });
   const hashtagsText = hashtagsElement ? hashtagsElement.textContent : null;
 
   return {
@@ -60,52 +60,52 @@ export const collectFacebookData = (
 };
 
 /**
- * Collects Twitter data from a given trigger element, instance index, and scope.
+ * Collects X data from a given trigger element, instance index, and scope.
  * @param trigger - The element that triggered the action.
- * @param instanceIndex - The index of the instance.
+ * @param instance - The index of the instance.
  * @param scope - The scope of the element.
  * @returns An object containing the collected Twitter data.
  */
-export const collectTwitterData = (
+export function collectXData(
   trigger: HTMLElement,
-  instanceIndex: string | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
-): TwitterSocialShare => {
-  const socialData = collectSocialData(trigger, 'twitter', instanceIndex, scope);
+): XSocialShare {
+  const socialData = collectSocialData(trigger, 'x', instance, scope);
 
-  const hashtagsElement = queryElement('twitter-hashtags', { instanceIndex, scope });
+  const hashtagsElement = queryElement('x-hashtags', { instance, scope });
   const hashtagsText =
     hashtagsElement && hashtagsElement.textContent ? hashtagsElement.textContent.replace(/[^a-zA-Z0-9_,]/g, '') : null;
 
-  const usernameElement = queryElement('twitter-username', { instanceIndex, scope });
+  const usernameElement = queryElement('x-username', { instance, scope });
   const userNameText = usernameElement ? usernameElement.textContent : null;
 
   return {
     ...socialData,
-    type: 'twitter',
+    type: 'x',
     hashtags: hashtagsText,
     username: userNameText,
   };
-};
+}
 
 /**
  * Collects Pinterest social share data.
  * @param trigger - The element that triggered the social share.
- * @param instanceIndex - The index of the instance, if multiple instances are present.
+ * @param instance - The index of the instance, if multiple instances are present.
  * @param scope - The scope of the social share.
  * @returns An object containing the collected Pinterest social share data.
  */
 export const collectPinterestData = (
   trigger: HTMLElement,
-  instanceIndex: string | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): PinterestSocialShare => {
-  const socialData = collectSocialData(trigger, 'pinterest', instanceIndex, scope);
+  const socialData = collectSocialData(trigger, 'pinterest', instance, scope);
 
-  const imageElement = queryElement<HTMLImageElement>('pinterest-image', { instanceIndex, scope });
+  const imageElement = queryElement<HTMLImageElement>('pinterest-image', { instance, scope });
   const imageSrc = imageElement && imageElement.src ? imageElement.src : null;
 
-  const descriptionElement = queryElement('pinterest-description', { instanceIndex, scope });
+  const descriptionElement = queryElement('pinterest-description', { instance, scope });
 
   const descriptionText = descriptionElement ? descriptionElement.textContent : null;
 
@@ -121,24 +121,24 @@ export const collectPinterestData = (
  * Collects social share data from the given social share button element.
  * @param socialShareButton - The social share button element.
  * @param elementKey - The key of the social share element.
- * @param instanceIndex - The index of the social share instance.
+ * @param instance - The index of the social share instance.
  * @param scope - The scope of the social share element.
  * @returns The collected social share data.
  */
 export const collectSocialData = (
   socialShareButton: HTMLElement,
   elementKey: SocialShareTypes,
-  instanceIndex: string | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): SocialShare => {
   const width = collectSize(socialShareButton, 'width', DEFAULT_WIDTH_SETTING_KEY);
 
   const height = collectSize(socialShareButton, 'height', DEFAULT_HEIGHT_SETTING_KEY);
 
-  const contentElement = queryElement('content', { instanceIndex, scope });
+  const contentElement = queryElement('content', { instance, scope });
   const contentText = contentElement ? contentElement.textContent : null;
 
-  const urlElement = queryElement('url', { instanceIndex, scope });
+  const urlElement = queryElement('url', { instance, scope });
   const contentUrl = urlElement && urlElement.textContent ? urlElement.textContent : window.location.href;
 
   return {

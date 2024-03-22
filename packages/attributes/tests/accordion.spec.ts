@@ -92,6 +92,7 @@ test.describe('accordion', () => {
     await expect(header61).not.toHaveClass(/is-cool-header/);
   });
 
+  // TODO: migrate to fs-list
   test('fs-accordion + fs-cmsload', async ({ page }) => {
     await waitAttributeLoaded(page, 'accordion');
 

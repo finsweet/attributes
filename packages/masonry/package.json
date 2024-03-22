@@ -16,7 +16,6 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-utils": "workspace:*",
-    "@finsweet/attributes-cmscore": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*"
   }
 }

@@ -7,7 +7,7 @@ import type {
   SocialShare,
   SocialShareStoreData,
   SocialShareTypes,
-  TwitterSocialShare,
+  XSocialShare,
 } from './../utils/types';
 
 /**
@@ -33,9 +33,9 @@ export const createFacebookShare = ({ type, url, hashtags, content, width, heigh
 };
 
 /**
- * Creates a Twitter share object with the specified properties.
+ * Creates a X share object with the specified properties.
  */
-export const createTwitterShare = ({ type, content, username, hashtags, url, width, height }: TwitterSocialShare) => {
+export function createXShare({ type, content, username, hashtags, url, width, height }: XSocialShare) {
   return createSocialShare(
     type,
     {
@@ -47,7 +47,7 @@ export const createTwitterShare = ({ type, content, username, hashtags, url, wid
     width,
     height
   );
-};
+}
 
 /**
  * Creates a Pinterest share object with the specified parameters.

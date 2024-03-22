@@ -26,46 +26,6 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-calevent');
     }
 
-    case 'cmscombine': {
-      return import('@finsweet/attributes-cmscombine');
-    }
-
-    case 'cmsfilter': {
-      return import('@finsweet/attributes-cmsfilter');
-    }
-
-    case 'cmsload': {
-      return import('@finsweet/attributes-cmsload');
-    }
-
-    case 'cmsnest': {
-      return import('@finsweet/attributes-cmsnest');
-    }
-
-    case 'cmsprevnext': {
-      return import('@finsweet/attributes-cmsprevnext');
-    }
-
-    case 'cmsselect': {
-      return import('@finsweet/attributes-cmsselect');
-    }
-
-    case 'cmsslider': {
-      return import('@finsweet/attributes-cmsslider');
-    }
-
-    case 'cmssort': {
-      return import('@finsweet/attributes-cmssort');
-    }
-
-    case 'cmsstatic': {
-      return import('@finsweet/attributes-cmsstatic');
-    }
-
-    case 'cmstabs': {
-      return import('@finsweet/attributes-cmstabs');
-    }
-
     case 'codehighlight': {
       return import('@finsweet/attributes-codehighlight');
     }
@@ -120,6 +80,10 @@ export const loadAttribute = async (solution: FinsweetAttributeKey) => {
 
     case 'linkblockedit': {
       return import('@finsweet/attributes-linkblockedit');
+    }
+
+    case 'list': {
+      return import('@finsweet/attributes-list');
     }
 
     case 'masonry': {

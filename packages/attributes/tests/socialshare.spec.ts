@@ -52,11 +52,13 @@ test.describe('socialshare', () => {
 
   test('Triggers share to social media correctly', async ({ page }) => {
     const facebook1 = page.getByTestId('facebook-1');
-    const twitter1 = page.getByTestId('twitter-1');
+    const x1 = page.getByTestId('x-1');
     const linkedin1 = page.getByTestId('linkedin-1');
     const pinterest1 = page.getByTestId('pinterest-1');
     const telegram1 = page.getByTestId('telegram-1');
     const reddit1 = page.getByTestId('reddit-1');
+    const x = page.getByTestId('x').first();
+    const pinterest = page.getByTestId('pinterest').first();
 
     const triggersValidPopup = async (text: string, element: Locator) => {
       await element.click();
@@ -68,7 +70,7 @@ test.describe('socialshare', () => {
     };
 
     await triggersValidPopup('facebook', facebook1);
-    await triggersValidPopup('twitter', twitter1);
+    await triggersValidPopup('x', x1);
     await triggersValidPopup('linkedin', linkedin1);
     await triggersValidPopup('pinterest', pinterest1);
     await triggersValidPopup('t.me', telegram1);

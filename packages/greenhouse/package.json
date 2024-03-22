@@ -16,11 +16,7 @@
       "import": "./src/index.ts"
     }
   },
-  "devDependencies": {
-    "@finsweet/attributes-cmsfilter": "workspace:*"
-  },
   "dependencies": {
-    "@finsweet/attributes-cmscore": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
     "slugify": "^1.6.6"
   }

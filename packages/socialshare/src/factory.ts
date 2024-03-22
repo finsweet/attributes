@@ -3,24 +3,20 @@ import {
   collectFacebookData,
   collectPinterestData,
   collectSocialData,
-  collectTwitterData,
+  collectXData,
   createCopyInstance,
   createFacebookShare,
   createLinkedinShare,
   createPinterestShare,
   createRedditShare,
   createTelegramShare,
-  createTwitterShare,
+  createXShare,
 } from './actions';
-import {
-  getAttribute,
-  getCMSItemWrapper,
-  getInstanceIndex,
-  queryAllElements,
-  SOCIAL_SHARE_PLATFORMS,
-  type SocialShareTypes,
-  stores,
-} from './utils';
+import { SOCIAL_SHARE_PLATFORMS } from './utils/constants';
+import { getCMSItemWrapper } from './utils/dom';
+import { getAttribute, getInstance, queryAllElements } from './utils/selectors';
+import { stores } from './utils/stores';
+import type { SocialShareTypes } from './utils/types';
 
 /**
  * Creates a social share instance for all matching elements under a scope.
@@ -55,7 +51,7 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   copy(trigger) {
     if (stores.copy.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instanceIndex = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
@@ -71,11 +67,11 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   facebook(trigger) {
     if (stores.facebook.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const facebook = collectFacebookData(trigger, instanceIndex, cmsListItem);
+    const facebook = collectFacebookData(trigger, instance, cmsListItem);
 
     const shareData = createFacebookShare(facebook);
 
@@ -83,21 +79,21 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   },
 
   /**
-   * Twitter creator.
+   * X creator.
    * @param trigger
    */
-  twitter(trigger) {
-    if (stores.twitter.has(trigger)) return;
+  x(trigger) {
+    if (stores.x.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const twitter = collectTwitterData(trigger, instanceIndex, cmsListItem);
+    const x = collectXData(trigger, instance, cmsListItem);
 
-    const shareData = createTwitterShare(twitter);
+    const shareData = createXShare(x);
 
-    stores.twitter.set(trigger, shareData);
+    stores.x.set(trigger, shareData);
   },
 
   /**
@@ -107,11 +103,11 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   pinterest(trigger) {
     if (stores.pinterest.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const pinterest = collectPinterestData(trigger, instanceIndex, cmsListItem);
+    const pinterest = collectPinterestData(trigger, instance, cmsListItem);
 
     const shareData = createPinterestShare(pinterest);
 
@@ -125,11 +121,11 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   telegram(trigger) {
     if (stores.telegram.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const telegram = collectSocialData(trigger, 'telegram', instanceIndex, cmsListItem);
+    const telegram = collectSocialData(trigger, 'telegram', instance, cmsListItem);
 
     const shareData = createTelegramShare(telegram);
 
@@ -143,11 +139,11 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   linkedin(trigger) {
     if (stores.linkedin.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const linkedin = collectSocialData(trigger, 'linkedin', instanceIndex, cmsListItem);
+    const linkedin = collectSocialData(trigger, 'linkedin', instance, cmsListItem);
 
     const shareData = createLinkedinShare(linkedin);
 
@@ -161,11 +157,11 @@ const creators: Record<SocialShareTypes, (trigger: HTMLElement) => void> = {
   reddit(trigger) {
     if (stores.reddit.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const reddit = collectSocialData(trigger, 'reddit', instanceIndex, cmsListItem);
+    const reddit = collectSocialData(trigger, 'reddit', instance, cmsListItem);
 
     const shareData = createRedditShare(reddit);
 

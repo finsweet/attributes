@@ -1,5 +1,23 @@
 # @finsweet/attributes-toc
 
+## 1.2.4
+
+### Patch Changes
+
+- 9be3c039: remove toc item scroll to view checker
+
+## 1.2.3
+
+### Patch Changes
+
+- 579afce3: Fix TOC rendering issue that results to some links missing in the final table generated.
+
+## 1.2.2
+
+### Patch Changes
+
+- 19303441: fix: rendering the TOC breaks on iOS 17
+
 ## 1.2.1
 
 ### Patch Changes

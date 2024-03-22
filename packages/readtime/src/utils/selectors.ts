@@ -2,7 +2,7 @@ import { generateSelectors, READ_TIME_ATTRIBUTE } from '@finsweet/attributes-uti
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getInstanceIndex, queryElement, queryAllElements, getAttribute } = generateSelectors(
+export const { getInstance, queryElement, queryAllElements, getAttribute } = generateSelectors(
   READ_TIME_ATTRIBUTE,
   ELEMENTS,
   SETTINGS
