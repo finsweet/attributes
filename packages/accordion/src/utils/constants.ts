@@ -2,7 +2,7 @@ import {
   ACCORDION_ATTRIBUTE,
   type AttributeElements,
   type AttributeSettings,
-  CMS_LOAD_ATTRIBUTE,
+  LIST_ATTRIBUTE,
 } from '@finsweet/attributes-utils';
 
 export const ELEMENTS = [
@@ -61,4 +61,4 @@ export const SETTINGS = {
 
 export const DEFAULT_ACTIVE_CLASS = `is-active-${ACCORDION_ATTRIBUTE}`;
 
-export const CMS_LOAD_LIST_ELEMENT_SELECTOR = `[fs-${CMS_LOAD_ATTRIBUTE}-element="list"]`;
+export const LIST_ELEMENT_SELECTOR = `[fs-${LIST_ATTRIBUTE}-element="list"]`;

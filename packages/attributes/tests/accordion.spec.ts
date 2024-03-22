@@ -92,14 +92,13 @@ test.describe('accordion', () => {
     await expect(header61).not.toHaveClass(/is-cool-header/);
   });
 
-  // TODO: migrate to fs-list
-  test('fs-accordion + fs-cmsload', async ({ page }) => {
+  test('fs-accordion + fs-list', async ({ page }) => {
     await waitAttributeLoaded(page, 'accordion');
 
     const header71 = page.getByTestId('header-7-1');
     const content71 = page.getByTestId('content-7-1');
 
-    // Waits for cmsload render-all
+    // Waits for list render-all
     const lastHeader = header71.nth(4);
     const lastContent = content71.nth(4);
 

@@ -8,42 +8,35 @@ import { getElementSelector } from './utils/selectors';
 import type { AccordionData, AccordionGroupData } from './utils/types';
 
 /**
- * Inits the accordions' groups functionalities.
- * @param accordions
- *
- * @returns A {@link AccordionGroupData} array.
+ * Inits an accordion group.
+ * @param accordion
+ * @param groupsData
+ * @returns
  */
-export const initAccordionGroups = (accordions: HTMLElement[]) => {
-  // Init groups
-  const groupsStore = accordions.reduce<Map<HTMLElement, AccordionGroupData>>((store, accordion) => {
-    const group = accordion.closest<HTMLElement>(getElementSelector('group')) || document.body;
+export const initAccordionGroup = (accordion: HTMLElement, groupsData: AccordionGroupData[]) => {
+  const group = accordion.closest<HTMLElement>(getElementSelector('group')) || document.body;
 
-    let groupData = store.get(group);
+  let groupData = groupsData.find((data) => data.group === group);
+  if (!groupData) {
+    groupData = getGroupSettings(group);
 
-    if (!groupData) {
-      groupData = getGroupSettings(group);
-      store.set(group, groupData);
-    }
-
-    const controls = initAccordion(accordion, groupData);
-    if (controls) {
-      groupData.accordions.push({
-        accordion,
-        controls,
-      });
-    }
-
-    return store;
-  }, new Map());
-
-  const groupsData = [...groupsStore.values()];
-
-  // Set initial state
-  for (const groupData of groupsData) {
-    setInitialGroupState(groupData);
+    groupsData.push(groupData);
   }
 
-  return groupsData;
+  const accordionData = groupData.accordions.find((data) => data.accordion === accordion);
+  if (accordionData) return groupData;
+
+  const controls = initAccordion(accordion, groupData);
+  if (controls) {
+    groupData.accordions.push({
+      accordion,
+      controls,
+    });
+  }
+
+  setInitialGroupState(groupData);
+
+  return groupData;
 };
 
 /**

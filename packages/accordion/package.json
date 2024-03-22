@@ -18,5 +18,8 @@
   },
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@finsweet/attributes-list": "workspace:*"
   }
 }
