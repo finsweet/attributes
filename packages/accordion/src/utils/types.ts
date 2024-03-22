@@ -11,6 +11,7 @@ export interface AccordionData {
 }
 
 export interface AccordionGroupData {
+  group: HTMLElement;
   single: boolean;
   initial: InitialState;
   accordions: AccordionData[];

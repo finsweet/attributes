@@ -76,6 +76,10 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
+    devDependencies:
+      '@finsweet/attributes-list':
+        specifier: workspace:*
+        version: link:../list
 
   packages/attributes:
     dependencies:
