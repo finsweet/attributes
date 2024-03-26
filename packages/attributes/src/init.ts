@@ -2,8 +2,6 @@ import { ATTRIBUTES, type FsAttributeKey, type FsAttributesCallback } from '@fin
 
 import { loadAttribute } from './load';
 
-declare const SCRIPT_SRC: string;
-
 /**
  * Inits the Finsweet Attributes library.
  */
@@ -24,6 +22,7 @@ export const init = () => {
   window.fsAttributes = window.FsAttributes = {
     solutions: {},
     process: new Set<FsAttributeKey>(),
+    scripts: [...document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`)],
 
     push(...args) {
       for (const [key, callback] of args) {
@@ -55,9 +54,7 @@ export const init = () => {
  * Inits all Attributes that are defined in the current script.
  */
 const initAttributes = () => {
-  const scripts = document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src^="${SCRIPT_SRC}"]`);
-
-  for (const script of scripts) {
+  for (const script of window.fsAttributes.scripts) {
     for (const attribute of Object.values(ATTRIBUTES)) {
       const isDefined = script.hasAttribute(`fs-${attribute}`);
       if (!isDefined) continue;

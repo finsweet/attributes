@@ -138,8 +138,12 @@ export const generateSelectors = <
   };
 
   /**
-   * @returns The value of an attribute.
-   * @param element The element to get the attribute value from, or its closest ancestor that has the attribute.
+   * @returns The value of an attribute. It will check, in order:
+   * - The element itself.
+   * - The closest ancestor that has the attribute.
+   * - The script tags.
+   *
+   * @param element The element to get the attribute value from, or its closest ancestor that has the attribute. If `null`, it will check the script tags.
    * @param settingKey The attribute key.
    * @param filterInvalid Whether to filter out invalid values. Defaults to `false`.
    */
@@ -153,16 +157,27 @@ export const generateSelectors = <
         : string
       : string
   >(
-    element: Element,
+    element: Element | null,
     settingKey: SettingKey,
     filterInvalid?: FilterInvalid
   ) => {
     const attributeName = getSettingAttributeName(settingKey);
     const selector = getSettingSelector(settingKey);
 
-    const settingElement = element.closest(selector);
+    const settingElement = element?.closest(selector);
 
-    const rawValue = settingElement?.getAttribute(attributeName) || undefined;
+    // Check the element
+    let rawValue = settingElement?.getAttribute(attributeName);
+
+    // Check the script tags
+    if (!rawValue) {
+      for (const script of window.fsAttributes.scripts) {
+        rawValue = script.getAttribute(attributeName);
+
+        if (rawValue) break;
+      }
+    }
+
     if (!rawValue) return;
 
     if (filterInvalid) {

@@ -1,16 +1,18 @@
 import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initJob, initJobsList } from './factory';
-import { DEFAULT_QUERY_PARAM_SETTING_KEY, GH_DEPARTMENT, GH_OFFICE, SETTINGS } from './utils/constants';
+import { DEFAULT_QUERY_PARAM_SETTING_KEY, GH_DEPARTMENT, GH_OFFICE } from './utils/constants';
+import { getAttribute } from './utils/selectors';
 
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit<typeof SETTINGS> = async ({ board, queryparam } = {}) => {
+export const init: FsAttributeInit = async () => {
   await waitWebflowReady();
 
   // init params
-  queryparam ??= DEFAULT_QUERY_PARAM_SETTING_KEY;
+  const queryparam = getAttribute(null, 'queryparam') ?? DEFAULT_QUERY_PARAM_SETTING_KEY;
+  const board = getAttribute(null, 'board');
 
   if (!board) {
     return;

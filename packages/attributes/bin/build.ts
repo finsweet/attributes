@@ -4,8 +4,6 @@ import * as esbuild from 'esbuild';
 import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { name } from '../package.json';
-
 declare const process: {
   env: {
     NODE_ENV?: 'production' | 'development';
@@ -24,13 +22,6 @@ const ENTRY_POINTS = ['src/index.ts'];
 // Config dev serving
 const SERVE_PORT = 3000;
 
-const SCRIPT_SRC =
-  ENV === 'production'
-    ? `https://cdn.jsdelivr.net/npm/${name}@2`
-    : ENV === 'preview'
-    ? `https://attributes-git`
-    : `http://localhost:${SERVE_PORT}`;
-
 const buildOptions: esbuild.BuildOptions = {
   bundle: true,
   entryPoints: ENTRY_POINTS,
@@ -39,7 +30,6 @@ const buildOptions: esbuild.BuildOptions = {
   target: DEV ? 'esnext' : 'es2019',
   define: {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    SCRIPT_SRC: JSON.stringify(SCRIPT_SRC),
     SERVE_PORT: JSON.stringify(SERVE_PORT),
   },
 };

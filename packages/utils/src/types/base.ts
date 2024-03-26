@@ -49,6 +49,12 @@ export type FsAttributes = {
    * Contains the Attributes that are currently running.
    */
   process: Set<FsAttributeKey>;
+
+  /**
+   * Contains the script tags that define the Attributes library.
+   * Can be multiple as the user might import the library multiple times.
+   */
+  scripts: HTMLScriptElement[];
 };
 
 export type FsAttributesCallback = [FsAttributeKey, (value: any) => void];
@@ -87,9 +93,7 @@ type AttributeInitResult =
     }
   | undefined;
 
-export type FsAttributeInit<GlobalSettings extends AttributeSettings = AttributeSettings> = (settings?: {
-  [Key in keyof GlobalSettings]?: string;
-}) => AttributeInitResult | Promise<AttributeInitResult>;
+export type FsAttributeInit = () => AttributeInitResult | Promise<AttributeInitResult>;
 
 /**
  * Window object.

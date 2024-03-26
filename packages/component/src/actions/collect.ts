@@ -7,11 +7,12 @@ import type { ComponentTargetData } from '../utils/types';
  * Collects the component targets.
  * @param proxy A CORS proxy to use for external sources.
  */
-export const collectComponentTargetsData = (proxy?: string | null) => {
+export const collectComponentTargetsData = () => {
   const targetElements = queryAllElements('target');
   const targetsData: ComponentTargetData[] = [...targetElements]
     .map((target) => {
       const instance = getInstance(target);
+      const proxy = getAttribute(target, 'proxy');
       const rawSource = getAttribute(target, 'source');
       const rawLoadCSS = getAttribute(target, 'css');
       const rawAutoRender = getAttribute(target, 'render');
