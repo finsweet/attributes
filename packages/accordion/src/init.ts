@@ -24,7 +24,7 @@ export const init: FsAttributeInit = async () => {
   const listsCleanup = usesList ? await initListAccordions(groupsData) : undefined;
 
   // Ensure fs-a11y is present
-  window.fsAttributes.import('a11y');
+  window.fsAttributes.load('a11y');
 
   // Finalize
   return {

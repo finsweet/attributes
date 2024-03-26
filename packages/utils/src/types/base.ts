@@ -23,15 +23,10 @@ export type FsAttributes = {
 
   /**
    * Dynamically imports an Attribute solution.
-   * @param solution
+   * @param attribute
    * @returns A Promise that resolves once the Attribute has loaded.
    */
-  import: (
-    solution: FsAttributeKey,
-    globalSettings?: {
-      [k: string]: string;
-    }
-  ) => Promise<any> | undefined;
+  load: (attribute: FsAttributeKey) => Promise<any> | undefined;
 
   /**
    * Destroys all Attributes instances.

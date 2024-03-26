@@ -13,7 +13,7 @@ export const init: FsAttributeInit = async () => {
 
   const cleanups = modalElements.map(initModal).filter(isNotEmpty);
 
-  window.fsAttributes.import('a11y');
+  window.fsAttributes.load('a11y');
 
   return {
     result: modalElements,
