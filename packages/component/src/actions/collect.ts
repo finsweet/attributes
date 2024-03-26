@@ -12,7 +12,7 @@ export const collectComponentTargetsData = () => {
   const targetsData: ComponentTargetData[] = [...targetElements]
     .map((target) => {
       const instance = getInstance(target);
-      const proxy = getAttribute(target, 'proxy');
+      const proxy = getAttribute(null, 'proxy');
       const rawSource = getAttribute(target, 'source');
       const rawLoadCSS = getAttribute(target, 'css');
       const rawAutoRender = getAttribute(target, 'render');
