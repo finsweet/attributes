@@ -1,6 +1,4 @@
-import type { FsAttributeInit } from '@finsweet/attributes-utils';
-
-import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS, SETTINGS } from '.';
+import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS } from '.';
 
 // Consents
 export type ConsentKey = (typeof CONSENTS)[number];
@@ -44,7 +42,3 @@ declare global {
     dataLayer?: { event: string }[];
   }
 }
-
-export type GlobalSettings = Parameters<FsAttributeInit<typeof SETTINGS>>['0'] & {
-  debug: boolean;
-};

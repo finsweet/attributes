@@ -241,4 +241,4 @@ export const CONSENT_ALL: Consents = Object.freeze({
   uncategorized: true,
 } as const);
 
-export const DEFAULT_COOKIE_MAX_AGE = '180';
+export const DEFAULT_COOKIE_MAX_AGE = 180;

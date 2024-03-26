@@ -10,7 +10,6 @@ import {
   CONSENT_REQUIRED,
   FS_CONSENT_CSS,
   getElementSelector,
-  type GlobalSettings,
   queryElement,
   renderComponentsFromSource,
 } from './utils';
@@ -26,9 +25,9 @@ export default class FsCookieConsent {
   private preferences?: Component;
   private manager?: Component;
 
-  constructor(globalSettings: GlobalSettings) {
+  constructor() {
     // Initialize store with attributes values
-    this.store = new Store(globalSettings);
+    this.store = new Store();
 
     // Consent controller
     this.consentController = new ConsentController(this.store);
