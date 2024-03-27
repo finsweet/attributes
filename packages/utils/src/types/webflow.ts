@@ -137,7 +137,7 @@ export type RichTextBlockElement = HTMLDivElement;
 /**
  * Dropdowns
  */
-export type Dropdown = HTMLDivElement;
+export type DropdownElement = HTMLDivElement;
 export type DropdownToggle = HTMLDivElement;
 export type DropdownList = HTMLElement;
 

@@ -30,21 +30,17 @@ function formatTimes(
 /**
  * Make the calendar event object.
  * @param element The Html element
- * @param instanceIndex The instance index
+ * @param instance The instance index
  * @param scope The element scope
  * @returns The calendar event object
  */
-function makeEvent(
-  element: HTMLElement,
-  instanceIndex: number | undefined,
-  scope: HTMLElement | undefined
-): CalendarEvent {
-  const title = getElementTextContent('title', instanceIndex, scope) ?? '';
-  const start = getElementTextContent('start', instanceIndex, scope) ?? '';
-  const end: string | undefined = getElementTextContent('end', instanceIndex, scope);
-  const timezone = getElementTextContent('timezone', instanceIndex, scope);
-  const location = getElementTextContent('location', instanceIndex, scope);
-  const description = getElementHTMLContent('description', instanceIndex, scope);
+function makeEvent(element: HTMLElement, instance: string | undefined, scope: HTMLElement | undefined): CalendarEvent {
+  const title = getElementTextContent('title', instance, scope) ?? '';
+  const start = getElementTextContent('start', instance, scope) ?? '';
+  const end: string | undefined = getElementTextContent('end', instance, scope);
+  const timezone = getElementTextContent('timezone', instance, scope);
+  const location = getElementTextContent('location', instance, scope);
+  const description = getElementHTMLContent('description', instance, scope);
 
   return {
     title,
@@ -59,16 +55,16 @@ function makeEvent(
 /**
  * Collects the Google calendar event data.
  * @param trigger The trigger element that was clicked
- * @param instanceIndex The instance index
+ * @param instance The instance index
  * @param scope The element scope
  * @returns The Google calendar event data object
  */
 export function collectGoogleData(
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): Google {
-  const eventDetails = makeEvent(trigger, instanceIndex, scope);
+  const eventDetails = makeEvent(trigger, instance, scope);
   const event = eventify(eventDetails);
 
   const { start, end } = formatTimes(event, event.allDay ? 'allDay' : 'dateTimeUTC');
@@ -99,16 +95,16 @@ export function collectGoogleData(
 /**
  * Collects the Outlook calendar event data.
  * @param trigger The trigger element that was clicked
- * @param instanceIndex The instance index
+ * @param instance The instance index
  * @param scope The element scope
  * @returns The Outlook calendar event data object
  */
 export function collectOutlookData(
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): Outlook {
-  const eventDetails = makeEvent(trigger, instanceIndex, scope);
+  const eventDetails = makeEvent(trigger, instance, scope);
   const event = eventify(eventDetails, false);
 
   const { start, end } = formatTimes(event, 'dateTimeLocal');
@@ -130,16 +126,16 @@ export function collectOutlookData(
 /**
  * Collects the ICS calendar event data.
  * @param trigger The trigger element that was clicked
- * @param instanceIndex The instance index
+ * @param instance The instance index
  * @param scope The element scope
  * @returns The ICS calendar event data object
  */
 export function collectIcsData(
   trigger: HTMLElement,
-  instanceIndex: number | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): Record<string, string | CalendarEventOrganizer | undefined>[] {
-  const eventDetails = makeEvent(trigger, instanceIndex, scope);
+  const eventDetails = makeEvent(trigger, instance, scope);
   const event = eventify(eventDetails);
 
   const { start, end } = formatTimes(event, event.allDay ? 'allDay' : 'dateTimeUTC');

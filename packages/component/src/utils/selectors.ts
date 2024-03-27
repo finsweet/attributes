@@ -2,4 +2,8 @@ import { COMPONENT_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-uti
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getSettingSelector, getAttribute } = generateSelectors(COMPONENT_ATTRIBUTE, ELEMENTS, SETTINGS);
+export const { getAttribute, getInstance, queryAllElements, queryElement } = generateSelectors(
+  COMPONENT_ATTRIBUTE,
+  ELEMENTS,
+  SETTINGS
+);

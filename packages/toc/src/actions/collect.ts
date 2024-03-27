@@ -65,11 +65,9 @@ export const collectHeadingsData = ({ children }: HTMLElement) => {
 
     // Group all lower elements under the wrapper
     const nextHeading = headingsData.find((headingData) => headingData.level <= level);
-    const { length } = children;
-    const j = i + 1;
+    const childrenSlice = Array.from(children).slice(i + 1);
 
-    for (let k = j; k <= length; k++) {
-      const element = children[j];
+    for (const element of childrenSlice) {
       if (element === nextHeading?.headingWrapper) break;
 
       headingWrapper.append(element);

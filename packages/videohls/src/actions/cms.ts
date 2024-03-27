@@ -1,5 +1,3 @@
-import { createCMSListInstances } from '@finsweet/attributes-cmscore';
-
 import { CMS_LOAD_LIST_ELEMENT_SELECTOR } from '../utils/constants';
 import { initVideoHLS } from './video';
 
@@ -10,9 +8,12 @@ import { initVideoHLS } from './video';
  *
  */
 export const listenCMSLoad = async () => {
+  // @ts-expect-error TODO: Support fs-list
   const listInstances = createCMSListInstances([CMS_LOAD_LIST_ELEMENT_SELECTOR]);
 
+  // @ts-expect-error TODO: Support fs-list
   listInstances.map((listInstance) => {
+    // @ts-expect-error TODO: Support fs-list
     listInstance.on('renderitems', (addedItems) => {
       for (const { element } of addedItems) {
         const videos = element.querySelectorAll('video');

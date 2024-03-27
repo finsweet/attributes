@@ -115,6 +115,7 @@ const examples: AttributeExamples = [
               },
               form: { type: 'input', name: 'From 3', passwordPage: false },
               xattr: [
+                // TODO: Support fs-list
                 { name: 'fs-cmsfilter-field', value: 'price' },
                 { name: 'fs-cmsfilter-range', value: 'from' },
               ],

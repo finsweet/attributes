@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*",
-    "@finsweet/attributes-cmscore": "workspace:*",
     "swiper": "^10.0.2"
   }
 }

@@ -11,7 +11,7 @@ import { populateSliderDots } from './actions/populate';
 import { syncDotsProperties } from './actions/sync';
 import { waitSliderReady } from './actions/wait';
 import { DEFAULT_ACTIVE_CSS_CLASS } from './utils/constants';
-import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from './utils/selectors';
+import { getAttribute, getInstance, hasAttributeValue, queryElement } from './utils/selectors';
 
 /**
  * Generates the custom slider dots and inits syncing.
@@ -19,10 +19,10 @@ import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from 
  */
 export const createSliderDots = async (slider: SliderElement) => {
   // Get slider elements
-  const instanceIndex = getInstanceIndex(slider);
+  const instance = getInstance(slider);
 
   const sliderNav = slider.querySelector<SliderNavElement>(`.${SLIDER_CSS_CLASSES.sliderNav}`);
-  const customSliderNav = queryElement<HTMLElement>('slider-nav', { instanceIndex }) || sliderNav;
+  const customSliderNav = queryElement<HTMLElement>('slider-nav', { instance }) || sliderNav;
 
   if (!sliderNav || !customSliderNav) return;
 

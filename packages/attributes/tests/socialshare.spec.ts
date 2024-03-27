@@ -3,7 +3,7 @@ import { test } from '@playwright/test';
 import { waitAttributeLoaded } from './utils';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://fs-attributes.webflow.io/socialshare');
+  await page.goto('https://fs-attributes.webflow.io/socialshare');
 });
 
 test.describe('socialshare', () => {
@@ -11,20 +11,20 @@ test.describe('socialshare', () => {
     await waitAttributeLoaded(page, 'socialshare');
 
     const facebook1 = page.getByTestId('facebook-1');
-    const twitter1 = page.getByTestId('twitter-1');
+    const x1 = page.getByTestId('x-1');
     const linkedin1 = page.getByTestId('linkedin-1');
     const pinterest1 = page.getByTestId('pinterest-1');
     const telegram1 = page.getByTestId('telegram-1');
     const reddit1 = page.getByTestId('reddit-1');
-    const twitter4 = page.getByTestId('twitter-4').first();
-    const pinterest4 = page.getByTestId('pinterest-4').first();
+    const x = page.getByTestId('x').first();
+    const pinterest = page.getByTestId('pinterest').first();
 
     await facebook1.click();
     await page.context().waitForEvent('page', (p) => p.url().includes('facebook'));
     await context.pages()[1].close();
 
-    await twitter1.click();
-    await page.context().waitForEvent('page', (p) => p.url().includes('twitter'));
+    await x1.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('x'));
     await context.pages()[1].close();
 
     await linkedin1.click();
@@ -43,11 +43,11 @@ test.describe('socialshare', () => {
     await page.context().waitForEvent('page', (p) => p.url().includes('reddit'));
     await context.pages()[1].close();
 
-    await twitter4.click();
-    await page.context().waitForEvent('page', (p) => p.url().includes('twitter'));
+    await x.click();
+    await page.context().waitForEvent('page', (p) => p.url().includes('x'));
     await context.pages()[1].close();
 
-    await pinterest4.click();
+    await pinterest.click();
     await page.context().waitForEvent('page', (p) => p.url().includes('pinterest'));
     await context.pages()[1].close();
   });

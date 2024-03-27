@@ -3,7 +3,7 @@ import { isNumber, parseNumericAttribute, setFormFieldValue } from '@finsweet/at
 import { handleButtons, handleResetButton } from './actions/buttons';
 import { handleInput } from './actions/input';
 import { addHideArrowsStylesheet } from './actions/style';
-import { getAttribute, getInstanceIndex, queryElement } from './utils/selectors';
+import { getAttribute, getInstance, queryElement } from './utils/selectors';
 
 /**
  * Inits an input counter component.
@@ -11,17 +11,17 @@ import { getAttribute, getInstanceIndex, queryElement } from './utils/selectors'
  * @returns A cleanup callback.
  */
 export const initInputCounter = (inputElement: HTMLInputElement) => {
-  const instanceIndex = getInstanceIndex(inputElement);
+  const instance = getInstance(inputElement);
 
   const showArrows = getAttribute(inputElement, 'showarrows');
 
   const rawInitialValue = getAttribute(inputElement, 'initial');
   const initialValue = parseNumericAttribute(rawInitialValue);
 
-  const incrementButton = queryElement('increment', { instanceIndex });
-  const decrementButton = queryElement('decrement', { instanceIndex });
+  const incrementButton = queryElement('increment', { instance });
+  const decrementButton = queryElement('decrement', { instance });
 
-  const resetButton = queryElement('clear', { instanceIndex });
+  const resetButton = queryElement('clear', { instance });
 
   if (!incrementButton && !decrementButton) return;
 

@@ -1,5 +1,4 @@
 import type { AttributeElements, AttributeSettings, FsAttributeKey } from '../types';
-import { isNumber } from './guards';
 
 /**
  * @returns Selector helpers for the defined Attribute Elements and Settings.
@@ -62,23 +61,19 @@ export const generateSelectors = <
   /**
    * @returns A valid CSS selector for an element.
    * @param elementKey The key of the element.
-   * @param params.instanceIndex The index of the element instance.
+   * @param params.instance The index of the element instance.
    */
-  const getElementSelector = (
-    elementKey?: ElementsDefinition[number],
-    { instanceIndex }: { instanceIndex?: number } = {}
-  ) => {
+  const getElementSelector = (elementKey?: ElementsDefinition[number], { instance }: { instance?: string } = {}) => {
     if (!elementKey) {
       return `[${ELEMENT_ATTRIBUTE_NAME}]`;
     }
 
     const elementSelector = `[${ELEMENT_ATTRIBUTE_NAME}="${elementKey}" i]`;
-
-    if (!isNumber(instanceIndex)) {
+    if (!instance) {
       return elementSelector;
     }
 
-    const instanceSelector = `[${INSTANCE_ATTRIBUTE_NAME}="${instanceIndex}"]`;
+    const instanceSelector = `[${INSTANCE_ATTRIBUTE_NAME}="${instance}"]`;
 
     return `${elementSelector}${instanceSelector}, ${instanceSelector} ${elementSelector}`;
   };
@@ -86,14 +81,14 @@ export const generateSelectors = <
   /**
    * @returns The first element that matches the selector.
    * @param elementKey The key of the element.
-   * @param params.instanceIndex The index of the element instance.
+   * @param params.instance The index of the element instance.
    * @param params.scope The scope to query the element from. Defaults to `document`.
    */
   const queryElement = <E extends Element = HTMLElement>(
     elementKey?: ElementsDefinition[number],
-    { instanceIndex, scope = document }: { instanceIndex?: number; scope?: ParentNode } = {}
+    { instance, scope = document }: { instance?: string; scope?: ParentNode } = {}
   ) => {
-    const selector = getElementSelector(elementKey, { instanceIndex });
+    const selector = getElementSelector(elementKey, { instance });
 
     return scope.querySelector<E>(selector);
   };
@@ -101,14 +96,14 @@ export const generateSelectors = <
   /**
    * @returns All elements that match the selector.
    * @param elementKey The key of the element.
-   * @param params.instanceIndex The index of the element instance.
+   * @param params.instance The index of the element instance.
    * @param params.scope The scope to query the element from. Defaults to `document`.
    */
   const queryAllElements = <E extends Element = HTMLElement>(
     elementKey?: ElementsDefinition[number],
-    { instanceIndex, scope = document }: { instanceIndex?: number; scope?: ParentNode } = {}
+    { instance, scope = document }: { instance?: string; scope?: ParentNode } = {}
   ) => {
-    const selector = getElementSelector(elementKey, { instanceIndex });
+    const selector = getElementSelector(elementKey, { instance });
 
     return [...scope.querySelectorAll<E>(selector)];
   };
@@ -117,17 +112,29 @@ export const generateSelectors = <
    * @returns The instance index of an element.
    * @param element The element to get the instance index from.
    */
-  const getInstanceIndex = (element: Element) => {
+  const getInstance = (element: Element) => {
     const instanceHolder = element.closest(`[${INSTANCE_ATTRIBUTE_NAME}]`);
     if (!instanceHolder) return;
 
-    const rawInstanceIndex = instanceHolder.getAttribute(INSTANCE_ATTRIBUTE_NAME);
-    if (!rawInstanceIndex) return;
+    const instance = instanceHolder.getAttribute(INSTANCE_ATTRIBUTE_NAME);
+    if (!instance) return;
 
-    const instanceIndex = parseInt(rawInstanceIndex);
-    if (isNaN(instanceIndex)) return;
+    return instance;
+  };
 
-    return instanceIndex;
+  /**
+   * @returns The first ancestor that matches the selector.
+   * @param elementKey The key of the element.
+   * @param params.instance The index of the element instance.
+   */
+  const getClosestElement = <E extends Element = HTMLElement>(
+    element: Element,
+    elementKey?: ElementsDefinition[number],
+    { instance }: { instance?: string } = {}
+  ) => {
+    const selector = getElementSelector(elementKey, { instance });
+
+    return element.closest<E>(selector);
   };
 
   /**
@@ -142,7 +149,7 @@ export const generateSelectors = <
     SettingValues = SettingsDefinition[SettingKey]['values'],
     SettingValue = SettingValues extends Record<string, string>
       ? FilterInvalid extends true
-        ? keyof SettingValues
+        ? SettingValues[keyof SettingValues]
         : string
       : string
   >(
@@ -187,12 +194,13 @@ export const generateSelectors = <
   };
 
   return {
+    getClosestElement,
     getElementSelector,
     getSettingSelector,
     getSettingAttributeName,
     queryElement,
     queryAllElements,
-    getInstanceIndex,
+    getInstance,
     getAttribute,
     hasAttributeValue,
   };

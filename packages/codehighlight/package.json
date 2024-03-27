@@ -17,7 +17,7 @@
     }
   },
   "dependencies": {
-    "highlight.js": "^11.8.0",
-    "@finsweet/attributes-utils": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*",
+    "highlight.js": "^11.9.0"
   }
 }

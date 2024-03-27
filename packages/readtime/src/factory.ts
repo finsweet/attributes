@@ -1,16 +1,16 @@
 import { parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import { DEFAULT_DECIMALS, DEFAULT_WPM } from './utils/constants';
-import { getAttribute, getInstanceIndex, queryElement } from './utils/selectors';
+import { getAttribute, getInstance, queryElement } from './utils/selectors';
 
 /**
  * Inits the read time for an instance.
  * @param timeElement
  */
 export const initReadTime = (timeElement: Element) => {
-  const instanceIndex = getInstanceIndex(timeElement);
+  const instance = getInstance(timeElement);
 
-  const contentsElement = queryElement('contents', { instanceIndex });
+  const contentsElement = queryElement('contents', { instance });
   if (!contentsElement) return;
 
   const wpm = parseNumericAttribute(getAttribute(timeElement, 'wpm'), DEFAULT_WPM);

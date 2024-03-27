@@ -9,6 +9,8 @@ import type {
   PaginationWrapperElement,
 } from '../types';
 
+// TODO: unify this with fs-list
+
 const CUSTOM_CSS_SELECTORS_PREFIX = 'fs-cms-element';
 
 const CUSTOM_CSS_SELECTORS_VALUES: Record<keyof typeof CMS_CSS_CLASSES, string> = {

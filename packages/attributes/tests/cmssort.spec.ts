@@ -6,6 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('http://fs-attributes.webflow.io/cmssort');
 });
 
+// TODO: migrate to fs-list
 test.describe('cmssort', () => {
   test('Sorts correctly', async ({ page }) => {
     await waitAttributeLoaded(page, 'cmsload');

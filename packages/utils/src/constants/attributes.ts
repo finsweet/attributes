@@ -76,6 +76,8 @@ export const NUMBER_COUNT_ATTRIBUTE = 'numbercount';
 
 export const LAUNCHDARKLY_ATTRIBUTE = 'launchdarkly';
 
+export const LIST_ATTRIBUTE = 'list';
+
 export const QUERY_PARAM_ATTRIBUTE = 'queryparam';
 
 export const RANGE_SLIDER_ATTRIBUTE = 'rangeslider';

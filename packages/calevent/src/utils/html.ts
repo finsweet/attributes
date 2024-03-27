@@ -17,32 +17,32 @@ export function minifyHTML(html: string) {
 /**
  * Get the text content of an Html element.
  * @param attributeElement The attribute element i.e 'google', 'outlook'
- * @param instanceIndex The instance index
+ * @param instance The instance index
  * @param scope The element scope
  * @returns The element text content
  */
 export function getElementTextContent(
   attributeElement: (typeof ELEMENTS)[number],
-  instanceIndex: number | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): string | undefined {
-  const element = queryElement(attributeElement, { instanceIndex, scope });
+  const element = queryElement(attributeElement, { instance, scope });
   return element?.textContent ?? '';
 }
 
 /**
  * Get the html content of an Html element.
  * @param attributeElement The attribute element i.e 'google', 'outlook'
- * @param instanceIndex The instance index
+ * @param instance The instance index
  * @param scope The element scope
  * @returns The element text content
  */
 export function getElementHTMLContent(
   attributeElement: (typeof ELEMENTS)[number],
-  instanceIndex: number | undefined,
+  instance: string | undefined,
   scope: HTMLElement | undefined
 ): string | undefined {
-  const element = queryElement(attributeElement, { instanceIndex, scope });
+  const element = queryElement(attributeElement, { instance, scope });
 
   if (!element) return undefined;
 

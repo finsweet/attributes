@@ -1,4 +1,4 @@
-import { waitWebflowReady, type FsAttributeInit } from '@finsweet/attributes-utils';
+import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { logHello } from './actions/console';
 

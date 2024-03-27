@@ -33,6 +33,8 @@ export const prefetchComponentsPages = async (
         cacheVersion: parseNumericAttribute(cacheVersion, 1),
       });
 
+      page?.cloneNode(true);
+
       return [href, page] as const;
     })
   );

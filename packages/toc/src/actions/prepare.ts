@@ -4,13 +4,13 @@ import type { LinkData } from '../utils/types';
 
 /**
  * Queries the TOC wrapper and replaces the template links for an anchor placeholder.
- * @param instanceIndex
  * @param linksData
+ * @param instance
  *
  * @returns The TOC wrapper element.
  */
-export const prepareTOC = ([{ component: firstLinkComponent }]: LinkData[], instanceIndex?: number) => {
-  const tocWrapper = queryElement('table', { instanceIndex }) || firstLinkComponent.parentElement;
+export const prepareTOC = ([{ component: firstLinkComponent }]: LinkData[], instance?: string) => {
+  const tocWrapper = queryElement('table', { instance }) || firstLinkComponent.parentElement;
   if (!tocWrapper) return;
 
   const anchor = new Comment(ANCHOR_SELECTOR);

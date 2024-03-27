@@ -16,7 +16,6 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-cmscore": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
     "typed.js": "^2.0.16"
   }
