@@ -159,7 +159,6 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     }
 
     const consents = this.store.getConsents();
-    console.log('consents', consents);
 
     const consentMode = {
       /**
