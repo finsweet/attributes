@@ -1,4 +1,4 @@
-import { animations, Interaction, type InteractionParams, isVisible } from '@finsweet/attributes-utils';
+import { animations, type Easings, Interaction, type InteractionParams, isVisible } from '@finsweet/attributes-utils';
 
 // Types
 export interface DisplayControllerParams {
@@ -13,13 +13,6 @@ export interface DisplayControllerParams {
   interaction?: InteractionParams;
 
   /**
-   * The display property of the element when displayed.
-   * Not applicable when interaction parameters ara passed to the instance, as it's assumed that the Webflow interaction will set the display property.
-   * Defaults to `block`.
-   */
-  displayProperty?: (typeof DisplayController)['displayProperties'][number];
-
-  /**
    * Defines a custom animation to be used when showing/hiding the element.
    */
   animation?: keyof typeof animations;
@@ -28,6 +21,16 @@ export interface DisplayControllerParams {
    * If set to true, the element will be set to `display: none`.
    */
   startsHidden?: boolean;
+
+  /**
+   * The duration of the animation in milliseconds.
+   */
+  animationDuration?: number;
+
+  /**
+   * The easing of the animation.
+   */
+  animationEasing: Easings[number];
 }
 
 /**
@@ -37,17 +40,25 @@ export interface DisplayControllerParams {
 export class DisplayController {
   private readonly interaction;
   private readonly animation;
-  private readonly displayProperty: Required<DisplayControllerParams>['displayProperty'];
+  private readonly animationEasing;
+  private readonly animationDuration;
   private visible;
 
   public readonly element: HTMLElement;
-  public static readonly displayProperties = ['block', 'flex', 'grid', 'inline-block', 'inline'] as const;
 
-  constructor({ element, interaction, displayProperty, animation, startsHidden }: DisplayControllerParams) {
+  constructor({
+    element,
+    interaction,
+    animation,
+    startsHidden,
+    animationEasing,
+    animationDuration,
+  }: DisplayControllerParams) {
     // Store properties
     this.element = element;
     this.animation = animation;
-    this.displayProperty = displayProperty || 'block';
+    this.animationEasing = animationEasing;
+    this.animationDuration = animationDuration;
 
     // Visibility check
     if (startsHidden) {
@@ -73,7 +84,8 @@ export class DisplayController {
   public async show(): Promise<void> {
     if (this.visible) return;
 
-    const { interaction, animation, element, displayProperty: display } = this;
+    const { interaction, animation, element, animationDuration, animationEasing } = this;
+    const display = 'block';
 
     // Interaction
     if (interaction) {
@@ -82,7 +94,7 @@ export class DisplayController {
     // Animation
     else if (animation) {
       animations[animation].prepareIn(element, { display });
-      await animations[animation].animateIn(element, { display });
+      await animations[animation].animateIn(element, { display, duration: animationDuration, easing: animationEasing });
     }
     // No interaction or animation
     else {
@@ -99,7 +111,7 @@ export class DisplayController {
   public async hide(): Promise<void> {
     if (!this.visible) return;
 
-    const { interaction, animation, element } = this;
+    const { interaction, animation, element, animationDuration, animationEasing } = this;
 
     // Interaction
     if (interaction) {
@@ -107,7 +119,11 @@ export class DisplayController {
     }
     // Animation
     else if (animation) {
-      await animations[animation].animateOut(element, { display: 'none' });
+      await animations[animation].animateOut(element, {
+        display: 'none',
+        duration: animationDuration,
+        easing: animationEasing,
+      });
     }
     // No interaction or animation
     else {

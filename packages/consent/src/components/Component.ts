@@ -1,3 +1,4 @@
+import type { Easings } from '@finsweet/attributes-utils';
 import { clearAllBodyScrollLocks, disableBodyScroll } from 'body-scroll-lock';
 import Emittery from 'emittery';
 
@@ -72,9 +73,10 @@ export default class Component extends Emittery<ComponentEvents> {
     this.displayController = new DisplayController({
       element,
       interaction: interactionTrigger ? { element: interactionTrigger } : undefined,
-      displayProperty: getAttribute(element, 'display', true),
       startsHidden: true,
       animation: getAttribute(element, 'animation', true),
+      animationDuration: Number(getAttribute(element, 'duration')),
+      animationEasing: getAttribute(element, 'easing') as Easings[number],
     });
 
     return true;

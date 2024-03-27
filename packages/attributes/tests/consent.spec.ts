@@ -102,7 +102,7 @@ test('Attributes Consent', async ({ page, browserName }) => {
   const animationDuration = await banner.getAttribute('fs-consent-duration');
 
   // compute the wait time for display animation to complete else default to 1.1 second.
-  const computedAnimationWaitTime = ((Number(animationDuration) || 1) + 0.1) * 1000;
+  const computedAnimationWaitTime = (Number(animationDuration) || 1) + 0.1;
 
   await page.waitForTimeout(computedAnimationWaitTime);
 
