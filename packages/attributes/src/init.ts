@@ -18,11 +18,16 @@ export const init = () => {
   // Collect pre-existing callbacks
   const callbacks = Array.isArray(fsAttributes) ? (fsAttributes as FsAttributesCallback[]) : [];
 
+  // Collect library scripts
+  const scripts = [...document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`)];
+
+  console.log({ scripts, url: import.meta.url });
+
   // Init Attributes object
   window.fsAttributes = window.FsAttributes = {
+    scripts,
     solutions: {},
     process: new Set<FsAttributeKey>(),
-    scripts: [...document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`)],
 
     load: initAttribute,
 
