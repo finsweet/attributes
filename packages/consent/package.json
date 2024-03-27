@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-consent",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "GDPR and CCPA compliant Cookie Consent solution for Webflow.",
   "private": true,
   "type": "module",
