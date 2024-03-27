@@ -39,6 +39,6 @@ export interface IFrameData {
 declare global {
   interface Window {
     doNotTrack: string | null;
-    dataLayer?: { event: string }[];
+    dataLayer: Record<string, unknown>[];
   }
 }

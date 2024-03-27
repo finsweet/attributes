@@ -123,6 +123,9 @@ export const SETTINGS = {
    */
   scroll: {
     key: 'scroll',
+    values: {
+      disable: 'disable',
+    },
   },
 
   /**
