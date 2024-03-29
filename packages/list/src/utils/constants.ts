@@ -320,6 +320,11 @@ export const SETTINGS = {
    * Only used for checkboxes and radios to work around Webflow now allowing to define CMS based values for them.
    */
   value: { key: 'value' },
+
+  /**
+   *
+   */
+  combine: { key: 'combine', values: { true: 'true' } },
 } as const satisfies AttributeSettings;
 
 export const DEFAULT_INFINITE_THRESHOLD = -20;

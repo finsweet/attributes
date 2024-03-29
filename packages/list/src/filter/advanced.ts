@@ -87,8 +87,9 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
   const destroy = () => {
     for (const cleanup of cleanups) {
       cleanup();
-      cleanups.clear();
     }
+
+    cleanups.clear();
 
     conditionGroup.remove();
 
@@ -200,8 +201,9 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
   const destroy = () => {
     for (const cleanup of cleanups) {
       cleanup();
-      cleanups.clear();
     }
+
+    cleanups.clear();
 
     conditionGroup.remove();
 
@@ -300,8 +302,9 @@ const initCondition = (
   const destroy = () => {
     for (const cleanup of cleanups) {
       cleanup();
-      cleanups.clear();
     }
+
+    cleanups.clear();
 
     condition.remove();
 

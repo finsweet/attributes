@@ -12,7 +12,7 @@ import {
   parseNumericAttribute,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
-import { atom, deepMap, type WritableAtom } from 'nanostores';
+import { atom, deepMap, map, type WritableAtom } from 'nanostores';
 
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
@@ -76,7 +76,7 @@ export class List {
   /**
    * A signal holding all {@link ListItem} instances of the list.
    */
-  readonly items: WritableAtom<ListItem[]> = atom([]);
+  readonly items = map<ListItem[]>([]);
 
   /**
    * A set holding all rendered {@link ListItem} instances.

@@ -1,11 +1,12 @@
 import { type CollectionListWrapperElement } from '@finsweet/attributes-utils';
 
+import { initListCombine } from './combine';
 import { List } from './components/List';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
 import { initListSorting } from './sort';
 import { getCMSElementSelector, getCollectionElements } from './utils/dom';
-import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
+import { getAttribute, hasAttributeValue, queryAllElements, queryElement } from './utils/selectors';
 import { listInstancesStore } from './utils/store';
 
 /**
@@ -33,10 +34,16 @@ export const createListInstance = (referenceElement: HTMLElement): List | undefi
   return listInstance;
 };
 
+/**
+ * Initializes the list features.
+ * @param list
+ * @returns A cleanup function.
+ */
 export const initList = (list: List) => {
   const filtersForm = queryElement('filters', { instance: list.instance });
   const sortTriggers = queryAllElements('sort-trigger', { instance: list.instance });
   const loadMode = getAttribute(list.listOrWrapper, 'loadmode', true);
+  const combine = hasAttributeValue(list.listOrWrapper, 'combine', 'true');
 
   const cleanups = new Set<() => void>();
 
@@ -61,10 +68,18 @@ export const initList = (list: List) => {
     }
   }
 
+  if (combine) {
+    const cleanup = initListCombine(list);
+    if (cleanup) {
+      cleanups.add(cleanup);
+    }
+  }
+
   return () => {
     for (const cleanup of cleanups) {
       cleanup();
-      cleanups.clear();
     }
+
+    cleanups.clear();
   };
 };
