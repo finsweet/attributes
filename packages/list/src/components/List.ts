@@ -86,7 +86,7 @@ export class List {
   /**
    * The instance.
    */
-  readonly instance?: string;
+  readonly instance: string | null;
 
   /**
    * The `Collection List` element.

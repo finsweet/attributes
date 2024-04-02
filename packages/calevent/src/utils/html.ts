@@ -23,7 +23,7 @@ export function minifyHTML(html: string) {
  */
 export function getElementTextContent(
   attributeElement: (typeof ELEMENTS)[number],
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): string | undefined {
   const element = queryElement(attributeElement, { instance, scope });
@@ -39,7 +39,7 @@ export function getElementTextContent(
  */
 export function getElementHTMLContent(
   attributeElement: (typeof ELEMENTS)[number],
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): string | undefined {
   const element = queryElement(attributeElement, { instance, scope });

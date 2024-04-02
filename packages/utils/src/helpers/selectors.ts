@@ -62,17 +62,30 @@ export const generateSelectors = <
    * @returns A valid CSS selector for an element.
    * @param elementKey The key of the element.
    * @param params.instance The index of the element instance.
+   * If `null`, it will select all elements without an instance.
+   * If `undefined`, it will select all elements.
    */
-  const getElementSelector = (elementKey?: ElementsDefinition[number], { instance }: { instance?: string } = {}) => {
+  const getElementSelector = (
+    elementKey?: ElementsDefinition[number],
+    { instance }: { instance?: string | null } = {}
+  ) => {
     if (!elementKey) {
       return `[${ELEMENT_ATTRIBUTE_NAME}]`;
     }
 
     const elementSelector = `[${ELEMENT_ATTRIBUTE_NAME}="${elementKey}" i]`;
-    if (!instance) {
+
+    // If no instance is provided, select all elements
+    if (instance === undefined) {
       return elementSelector;
     }
 
+    // If instance is null, select all elements without an instance
+    if (instance === null) {
+      return `${elementSelector}:not([${INSTANCE_ATTRIBUTE_NAME}], [${INSTANCE_ATTRIBUTE_NAME}] ${elementSelector})`;
+    }
+
+    // If instance exists, select the specific element instance
     const instanceSelector = `[${INSTANCE_ATTRIBUTE_NAME}="${instance}"]`;
 
     return `${elementSelector}${instanceSelector}, ${instanceSelector} ${elementSelector}`;
@@ -86,7 +99,7 @@ export const generateSelectors = <
    */
   const queryElement = <E extends Element = HTMLElement>(
     elementKey?: ElementsDefinition[number],
-    { instance, scope = document }: { instance?: string; scope?: ParentNode } = {}
+    { instance, scope = document }: { instance?: string | null; scope?: ParentNode } = {}
   ) => {
     const selector = getElementSelector(elementKey, { instance });
 
@@ -101,7 +114,7 @@ export const generateSelectors = <
    */
   const queryAllElements = <E extends Element = HTMLElement>(
     elementKey?: ElementsDefinition[number],
-    { instance, scope = document }: { instance?: string; scope?: ParentNode } = {}
+    { instance, scope = document }: { instance?: string | null; scope?: ParentNode } = {}
   ) => {
     const selector = getElementSelector(elementKey, { instance });
 
@@ -114,12 +127,9 @@ export const generateSelectors = <
    */
   const getInstance = (element: Element) => {
     const instanceHolder = element.closest(`[${INSTANCE_ATTRIBUTE_NAME}]`);
-    if (!instanceHolder) return;
+    if (!instanceHolder) return null;
 
-    const instance = instanceHolder.getAttribute(INSTANCE_ATTRIBUTE_NAME);
-    if (!instance) return;
-
-    return instance;
+    return instanceHolder.getAttribute(INSTANCE_ATTRIBUTE_NAME);
   };
 
   /**
@@ -130,7 +140,7 @@ export const generateSelectors = <
   const getClosestElement = <E extends Element = HTMLElement>(
     element: Element,
     elementKey?: ElementsDefinition[number],
-    { instance }: { instance?: string } = {}
+    { instance }: { instance?: string | null } = {}
   ) => {
     const selector = getElementSelector(elementKey, { instance });
 

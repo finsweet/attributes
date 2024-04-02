@@ -10,7 +10,7 @@ import type {
 
 export function collectFacebookData(
   trigger: HTMLElement,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): FacebookSocialShare {
   const socialData = collectSocialData(trigger, 'facebook', instance, scope);
@@ -27,7 +27,7 @@ export function collectFacebookData(
 
 export function collectXData(
   trigger: HTMLElement,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): XSocialShare {
   const socialData = collectSocialData(trigger, 'x', instance, scope);
@@ -49,7 +49,7 @@ export function collectXData(
 
 export function collectPinterestData(
   trigger: HTMLElement,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): PinterestSocialShare {
   const socialData = collectSocialData(trigger, 'pinterest', instance, scope);
@@ -72,7 +72,7 @@ export function collectPinterestData(
 export function collectSocialData(
   socialShareButton: HTMLElement,
   elementKey: SocialShareTypes,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): SocialShare {
   const width = collectSize(socialShareButton, 'width', DEFAULT_WIDTH_SETTING_KEY);
