@@ -195,6 +195,16 @@ export const ELEMENTS = [
    * Defines a tab link element.
    */
   'tab-link',
+
+  /**
+   * Defines a <select> element.
+   */
+  'select',
+
+  /**
+   * Defines a select <option> value element.
+   */
+  'select-value',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

@@ -4,6 +4,7 @@ import { initListCombine } from './combine';
 import { List } from './components/List';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
+import { initListSelects } from './select';
 import { initListSliders } from './slider';
 import { initListSorting } from './sort';
 import { initListTabs } from './tabs';
@@ -50,6 +51,7 @@ export const initList = (list: List) => {
   const combineTarget = getAttribute(list.listOrWrapper, 'combine');
   const sliders = queryAllElements('slider', { instance });
   const tabs = queryAllElements('tabs', { instance });
+  const selects = queryAllElements('select', { instance });
 
   const cleanups = new Set<() => void>();
 
@@ -87,6 +89,10 @@ export const initList = (list: List) => {
 
   if (tabs.length) {
     initListTabs(list, tabs);
+  }
+
+  if (selects.length) {
+    initListSelects(list, selects);
   }
 
   return () => {
