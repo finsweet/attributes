@@ -6,6 +6,7 @@ import { initListFiltering } from './filter';
 import { initListLoading } from './load';
 import { initListSliders } from './slider';
 import { initListSorting } from './sort';
+import { initListTabs } from './tabs';
 import { getCMSElementSelector, getCollectionElements } from './utils/dom';
 import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
 import { listInstancesStore } from './utils/store';
@@ -48,6 +49,7 @@ export const initList = (list: List) => {
   const loadMode = getAttribute(list.listOrWrapper, 'loadmode', true);
   const combineTarget = getAttribute(list.listOrWrapper, 'combine');
   const sliders = queryAllElements('slider', { instance });
+  const tabs = queryAllElements('tabs', { instance });
 
   const cleanups = new Set<() => void>();
 
@@ -81,6 +83,10 @@ export const initList = (list: List) => {
 
   if (sliders.length) {
     initListSliders(list, sliders);
+  }
+
+  if (tabs.length) {
+    initListTabs(list, tabs);
   }
 
   return () => {

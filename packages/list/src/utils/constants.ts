@@ -185,6 +185,16 @@ export const ELEMENTS = [
    * Defines a slider element.
    */
   'slider',
+
+  /**
+   * Defines a tabs element.
+   */
+  'tabs',
+
+  /**
+   * Defines a tab link element.
+   */
+  'tab-link',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

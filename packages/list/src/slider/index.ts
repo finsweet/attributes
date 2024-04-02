@@ -6,7 +6,6 @@ import type { List, ListItem } from '../components';
  * Inits the list sliders.
  * @param list
  * @param slidersReferences
- *  @returns A cleanup function.
  */
 export const initListSliders = (list: List, slidersReferences: HTMLElement[]) => {
   list.webflowModules.add('slider');
@@ -18,7 +17,6 @@ export const initListSliders = (list: List, slidersReferences: HTMLElement[]) =>
  * Inits a list slider.
  * @param list
  * @param sliderReference
- * @returns A cleanup function.
  */
 const initListSlider = (list: List, sliderReference: HTMLElement) => {
   const sliderElement = sliderReference.closest(`.${SLIDER_CSS_CLASSES.slider}`);
