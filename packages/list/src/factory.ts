@@ -6,7 +6,7 @@ import { initListFiltering } from './filter';
 import { initListLoading } from './load';
 import { initListSorting } from './sort';
 import { getCMSElementSelector, getCollectionElements } from './utils/dom';
-import { getAttribute, hasAttributeValue, queryAllElements, queryElement } from './utils/selectors';
+import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
 import { listInstancesStore } from './utils/store';
 
 /**
@@ -43,7 +43,7 @@ export const initList = (list: List) => {
   const filtersForm = queryElement('filters', { instance: list.instance });
   const sortTriggers = queryAllElements('sort-trigger', { instance: list.instance });
   const loadMode = getAttribute(list.listOrWrapper, 'loadmode', true);
-  const combine = hasAttributeValue(list.listOrWrapper, 'combine', 'true');
+  const combineTarget = getAttribute(list.listOrWrapper, 'combine');
 
   const cleanups = new Set<() => void>();
 
@@ -68,8 +68,8 @@ export const initList = (list: List) => {
     }
   }
 
-  if (combine) {
-    const cleanup = initListCombine(list);
+  if (combineTarget) {
+    const cleanup = initListCombine(list, combineTarget);
     if (cleanup) {
       cleanups.add(cleanup);
     }

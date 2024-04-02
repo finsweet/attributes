@@ -322,9 +322,9 @@ export const SETTINGS = {
   value: { key: 'value' },
 
   /**
-   *
+   * Defines a list instance where the list should be combined with.
    */
-  combine: { key: 'combine', values: { true: 'true' } },
+  combine: { key: 'combine' },
 } as const satisfies AttributeSettings;
 
 export const DEFAULT_INFINITE_THRESHOLD = -20;

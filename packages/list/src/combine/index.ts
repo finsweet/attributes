@@ -3,44 +3,25 @@ import { listInstancesStore } from '../utils/store';
 
 /**
  * Initializes the list combine feature.
- * @param targetList
+ * @param sourceList The source list.
+ * @param targetInstance The target list instance.
  * @returns A cleanup function.
  */
-export const initListCombine = (targetList: List) => {
-  const sourceLists = [...listInstancesStore.values()].filter(
-    (sourceList) =>
-      sourceList !== targetList &&
-      sourceList.wrapperElement !== targetList.wrapperElement &&
-      targetList.instance === sourceList.instance
+export const initListCombine = (sourceList: List, targetInstance: string) => {
+  const targetList = [...listInstancesStore.values()].find(
+    (list) =>
+      list.instance === targetInstance && list !== sourceList && list.wrapperElement !== sourceList.wrapperElement
   );
+  if (!targetList) return;
 
-  console.log({ sourceLists, instances: [...listInstancesStore.values()] });
+  const cleanup = sourceList.items.subscribe((items) => {
+    if (!items.length) return;
 
-  if (!sourceLists.length) return;
+    const elements = items.map((item) => item.element);
 
-  const cleanups = new Set<() => void>();
+    targetList.addItems(elements);
+    sourceList.items.set([]);
+  });
 
-  for (const sourceList of sourceLists) {
-    const cleanup = sourceList.items.subscribe((items, changed) => {
-      console.log(items);
-      if (!items.length) return;
-
-      const elements = items.map((item) => item.element);
-
-      targetList.addItems(elements);
-      sourceList.items.set([]);
-
-      console.log({ items, changed });
-    });
-
-    cleanups.add(cleanup);
-  }
-
-  return () => {
-    for (const cleanup of cleanups) {
-      cleanup();
-    }
-
-    cleanups.clear();
-  };
+  return cleanup;
 };
