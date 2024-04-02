@@ -10,6 +10,8 @@ import {
   type PaginationButtonElement,
   type PaginationWrapperElement,
   parseNumericAttribute,
+  restartWebflow,
+  type WebflowModule,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
 import { atom, deepMap, map, type WritableAtom } from 'nanostores';
@@ -175,6 +177,11 @@ export class List {
   readonly showPagesQuery = atom(false);
 
   /**
+   * Defines the Webflow modules to restart after rendering.
+   */
+  readonly webflowModules = new Set<WebflowModule>();
+
+  /**
    * Defines the query key for the paginated pages.
    * @example '5f7457b3_page'
    */
@@ -285,6 +292,11 @@ export class List {
       this.renderedItems = new Set(items);
 
       return items;
+    });
+
+    // Restart Webflow modules
+    this.addHook('afterRender', async () => {
+      restartWebflow([...this.webflowModules]);
     });
 
     // Start hooks chain
@@ -445,6 +457,8 @@ export class List {
         const anchor = paginationPreviousElement.get()?.parentElement || paginationWrapperElement;
         if (!anchor) return;
 
+        paginationNext.style.display = 'none';
+
         anchor.append(paginationNext);
         paginationNextElement.set(paginationNext);
       })(),
@@ -467,6 +481,8 @@ export class List {
         if (paginationPrevious && !paginationPreviousElement.get()) {
           const anchor = paginationNextElement.get()?.parentElement || paginationWrapperElement;
           if (!anchor) return;
+
+          paginationPrevious.style.display = 'none';
 
           anchor.prepend(paginationPrevious);
           paginationPreviousElement.set(paginationPrevious);

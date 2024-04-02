@@ -180,6 +180,11 @@ export const ELEMENTS = [
    * Defines an element that when clicked will remove the condition.
    */
   'condition-remove',
+
+  /**
+   * Defines a slider element.
+   */
+  'slider',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

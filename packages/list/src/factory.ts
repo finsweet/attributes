@@ -4,6 +4,7 @@ import { initListCombine } from './combine';
 import { List } from './components/List';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
+import { initListSliders } from './slider';
 import { initListSorting } from './sort';
 import { getCMSElementSelector, getCollectionElements } from './utils/dom';
 import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
@@ -40,10 +41,13 @@ export const createListInstance = (referenceElement: HTMLElement): List | undefi
  * @returns A cleanup function.
  */
 export const initList = (list: List) => {
-  const filtersForm = queryElement('filters', { instance: list.instance });
-  const sortTriggers = queryAllElements('sort-trigger', { instance: list.instance });
+  const { instance } = list;
+
+  const filtersForm = queryElement('filters', { instance });
+  const sortTriggers = queryAllElements('sort-trigger', { instance });
   const loadMode = getAttribute(list.listOrWrapper, 'loadmode', true);
   const combineTarget = getAttribute(list.listOrWrapper, 'combine');
+  const sliders = queryAllElements('slider', { instance });
 
   const cleanups = new Set<() => void>();
 
@@ -73,6 +77,10 @@ export const initList = (list: List) => {
     if (cleanup) {
       cleanups.add(cleanup);
     }
+  }
+
+  if (sliders.length) {
+    initListSliders(list, sliders);
   }
 
   return () => {
