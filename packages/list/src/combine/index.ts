@@ -1,27 +1,37 @@
+import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
+
 import type { List } from '../components';
 import { listInstancesStore } from '../utils/store';
 
 /**
  * Initializes the list combine feature.
- * @param sourceList The source list.
- * @param targetInstance The target list instance.
+ * @param targetList The target list.
+ * @param rawSourceInstances A comma-separated list of source instances.
  * @returns A cleanup function.
  */
-export const initListCombine = (sourceList: List, targetInstance: string) => {
-  const targetList = [...listInstancesStore.values()].find(
-    (list) =>
-      list.instance === targetInstance && list !== sourceList && list.wrapperElement !== sourceList.wrapperElement
+export const initListCombine = (targetList: List, rawSourceInstances: string) => {
+  const sourceInstances = extractCommaSeparatedValues(rawSourceInstances);
+
+  const sourceLists = [...listInstancesStore.values()].filter(
+    (list) => list !== targetList && list.instance && sourceInstances.includes(list.instance)
   );
-  if (!targetList) return;
 
-  const cleanup = sourceList.items.subscribe((items) => {
-    if (!items.length) return;
+  if (!sourceLists.length) return;
 
-    const elements = items.map((item) => item.element);
+  const cleanups = sourceLists.map((sourceList) => {
+    const cleanup = sourceList.items.subscribe((items) => {
+      if (!items.length) return;
 
-    targetList.addItems(elements);
-    sourceList.items.set([]);
+      const elements = items.map((item) => item.element);
+
+      targetList.addItems(elements);
+      sourceList.items.set([]);
+    });
+
+    return cleanup;
   });
 
-  return cleanup;
+  return () => {
+    cleanups.forEach((cleanup) => cleanup());
+  };
 };

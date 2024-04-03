@@ -48,7 +48,7 @@ export const initList = (list: List) => {
   const filtersForm = queryElement('filters', { instance });
   const sortTriggers = queryAllElements('sort-trigger', { instance });
   const loadMode = getAttribute(list.listOrWrapper, 'loadmode', true);
-  const combineTarget = getAttribute(list.listOrWrapper, 'combine');
+  const combine = getAttribute(list.listOrWrapper, 'combine');
   const sliders = queryAllElements('slider', { instance });
   const tabs = queryAllElements('tabs', { instance });
   const selects = queryAllElements('select', { instance });
@@ -76,8 +76,8 @@ export const initList = (list: List) => {
     }
   }
 
-  if (combineTarget) {
-    const cleanup = initListCombine(list, combineTarget);
+  if (combine) {
+    const cleanup = initListCombine(list, combine);
     if (cleanup) {
       cleanups.add(cleanup);
     }
