@@ -9,7 +9,7 @@ import { loadPaginatedItems } from './load';
 
 /**
  * Inits the infinite mode.
- * @param list The `List` instance.
+ * @param list The {@link List} instance.
  *
  * @returns A callback to remove all event listeners.
  */

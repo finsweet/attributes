@@ -294,9 +294,9 @@ export const SETTINGS = {
   /**
    * Defines the descending CSS class.
    */
-  loadmode: {
-    key: 'loadmode',
-    values: { default: 'load-under', infinite: 'infinite', pagination: 'pagination', renderAll: 'render-all' },
+  load: {
+    key: 'load',
+    values: { more: 'more', infinite: 'infinite', pagination: 'pagination', all: 'all' },
   },
 
   /**
