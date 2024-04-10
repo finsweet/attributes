@@ -4,6 +4,7 @@ import { initListCombine } from './combine';
 import { List } from './components/List';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
+import { initListNest } from './nest';
 import { initListSelects } from './select';
 import { initListSliders } from './slider';
 import { initListSorting } from './sort';
@@ -45,6 +46,8 @@ export const createListInstance = (referenceElement: HTMLElement): List | undefi
 export const initList = (list: List) => {
   const { instance } = list;
 
+  const items = list.items.get();
+
   const filtersForm = queryElement('filters', { instance });
   const sortTriggers = queryAllElements('sort-trigger', { instance });
   const loadMode = getAttribute(list.listOrWrapper, 'loadmode', true);
@@ -52,6 +55,7 @@ export const initList = (list: List) => {
   const sliders = queryAllElements('slider', { instance });
   const tabs = queryAllElements('tabs', { instance });
   const selects = queryAllElements('select', { instance });
+  const nest = items.length ? !!queryElement('nest-target', { scope: items[0].element }) : false;
 
   const cleanups = new Set<() => void>();
 
@@ -78,6 +82,13 @@ export const initList = (list: List) => {
 
   if (combine) {
     const cleanup = initListCombine(list, combine);
+    if (cleanup) {
+      cleanups.add(cleanup);
+    }
+  }
+
+  if (nest) {
+    const cleanup = initListNest(list);
     if (cleanup) {
       cleanups.add(cleanup);
     }
