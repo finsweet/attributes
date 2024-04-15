@@ -108,9 +108,6 @@ export default class FsCookieConsent {
     // Consent Controller
     consentController.on('updateconsents', () => {
       componentsKeys.forEach((componentKey) => this[componentKey]?.form?.updateCheckboxes());
-
-      // trigger consent mode update
-      consentController.setConsentMode();
     });
 
     // All Components

@@ -6,6 +6,7 @@ import { Debug } from './components';
 import Store from './Store';
 import {
   type Action,
+  type ConsentMode,
   CONSENTS,
   type Consents,
   createNewIFrameElement,
@@ -14,13 +15,13 @@ import {
   fireUniqueGTMEvent,
   getAttribute,
   getConsentsCookie,
-  getConsentStatus,
   getSettingSelector,
   getUpdatedStateCookie,
   MAIN_KEY,
   POSTConsentsToEndpoint,
   queryElement,
   removeAllCookies,
+  setConsentMode,
   setConsentsCookie,
   setUpdatedStateCookie,
   UNCATEGORIZED_CONSENT,
@@ -46,8 +47,6 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     super();
 
     this.loadConsents();
-
-    this.setConsentMode();
 
     this.storeElements();
 
@@ -124,7 +123,30 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
   private loadConsents() {
     // Get the consents
     const consents = getConsentsCookie();
+
+    // Set consent mode for GTM
+    setConsentMode('default', {
+      ad_storage: consents?.marketing ? 'granted' : 'denied',
+      ad_user_data: consents?.marketing ? 'granted' : 'denied',
+      ad_personalization: consents?.marketing ? 'granted' : 'denied',
+      analytics_storage: consents?.analytics ? 'granted' : 'denied',
+      functionality_storage: consents?.personalization ? 'granted' : 'denied',
+      personalization_storage: consents?.personalization ? 'granted' : 'denied',
+      security_storage: 'granted',
+    });
+
     if (!consents) return;
+
+    // Fire the correspondent GTM events
+    for (const consentKey in consents || {}) {
+      const key = consentKey as keyof Consents;
+      const consented = consents[key];
+
+      if (consented) {
+        const event = DYNAMIC_KEYS.gtmEvent(key);
+        fireUniqueGTMEvent(event);
+      }
+    }
 
     // Debug mode
     Debug.alert(`The following consents were loaded from the stored cookies: ${JSON.stringify(consents)}`, 'info');
@@ -140,73 +162,6 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       // Debug mode
       Debug.alert('Previously denied cookies have been deleted.', 'info');
     }
-  }
-
-  /**
-   * Initializes the Consent Mode and updates it when the consent controller changes.
-   * Ref: https://support.google.com/analytics/answer/9976101
-   * Ref: https://www.youtube.com/watch?v=MqAEbshMv84&t=493s
-   * Consent Mode Docs: https://support.google.com/analytics/answer/9976101
-   * Article: https://www.simoahava.com/analytics/consent-settings-google-tag-manager/
-   */
-  public setConsentMode() {
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      // eslint-disable-next-line prefer-rest-params
-      dataLayer.push(arguments);
-    }
-
-    const consents = this.store.getConsents();
-
-    const consentMode = {
-      /**
-       * Google Analytics: Enables storage that supports the functionality of the website or app e.g. language settings.
-       */
-      functionality_storage: getConsentStatus('essential', consents),
-
-      /**
-       * Google Analytics: Enables storage related to security such as authentication functionality, fraud prevention, and other user protection.
-       */
-      security_storage: getConsentStatus('essential', consents),
-
-      /**
-       * Google Analytics: : Enables storage (such as cookies) related to advertising.
-       */
-      ad_storage: getConsentStatus('essential', consents),
-
-      /**
-       * Google Analytics: Enables storage (such as cookies) related to analytics e.g. visit duration.
-       */
-      analytics_storage: getConsentStatus('analytics', consents),
-
-      /**
-       * Google Analytics: Enables storage related to personalization e.g. video recommendations
-       */
-      personalization_storage: getConsentStatus('personalization', consents),
-
-      /**
-       * Uncategorised: This is not part of the default consent modes, can be added as a custom required consent under GTM consent settings.
-       */
-      uncategorized_storage: getConsentStatus('uncategorized', consents),
-
-      /**
-       * Google Analytics: Sets consent for sending user data related to advertising to Google.
-       */
-      ad_user_data: getConsentStatus('personalization', consents),
-
-      /**
-       * Google Analytics: Sets consent for personalized advertising.
-       */
-      ad_personalization: getConsentStatus('personalization', consents),
-    };
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    gtag('consent', !consents ? 'default' : 'update', {
-      ...consentMode,
-    });
   }
 
   /**
@@ -251,11 +206,6 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
         if (!src) handleLoad();
       });
     }
-
-    // Fire the correspondent GTM events
-    store.getConsentsEntries().forEach(([consentKey, value]) => {
-      if (value) fireUniqueGTMEvent(DYNAMIC_KEYS.gtmEvent(consentKey));
-    });
   }
 
   /**
@@ -284,6 +234,36 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
 
     const consentId = nanoid();
     setConsentsCookie(consentId, store.getConsents(), cookieMaxAge, domain);
+
+    // Set consent mode for GTM and fire the correspondent GTM events
+    const consentMode: ConsentMode = {};
+
+    for (const updatedConsent of updatedConsents) {
+      const consented = consents[updatedConsent];
+      const value = consented ? 'granted' : 'denied';
+
+      if (updatedConsent === 'marketing') {
+        consentMode.ad_storage = value;
+        consentMode.ad_user_data = value;
+        consentMode.ad_personalization = value;
+      }
+
+      if (updatedConsent === 'analytics') {
+        consentMode.analytics_storage = value;
+      }
+
+      if (updatedConsent === 'personalization') {
+        consentMode.functionality_storage = value;
+        consentMode.personalization_storage = value;
+      }
+
+      if (consented) {
+        const event = DYNAMIC_KEYS.gtmEvent(updatedConsent);
+        fireUniqueGTMEvent(event);
+      }
+    }
+
+    setConsentMode('update', consentMode);
 
     // POST the consents to the endpoint
     if (endpoint)

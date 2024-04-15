@@ -1,3 +1,4 @@
+import type FsCookieConsent from '../FsCookieConsent';
 import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS } from '.';
 
 // Consents
@@ -35,10 +36,26 @@ export interface IFrameData {
   placeholder?: HTMLElement;
 }
 
+// GTM
+export type ConsentMode = {
+  [key in
+    | 'ad_storage'
+    | 'ad_user_data'
+    | 'ad_personalization'
+    | 'analytics_storage'
+    | 'functionality_storage'
+    | 'personalization_storage'
+    | 'security_storage']?: 'granted' | 'denied';
+};
+
+// JavaScript API
+export type FsCookieConsentCallback = (instance: FsCookieConsent) => void;
+
 // Global
 declare global {
   interface Window {
     doNotTrack: string | null;
-    dataLayer: Record<string, unknown>[];
+    FsCC: FsCookieConsent;
+    dataLayer: Array<{ event: string } | IArguments>;
   }
 }

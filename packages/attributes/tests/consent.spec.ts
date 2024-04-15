@@ -58,26 +58,24 @@ test.beforeEach(async ({ page }) => {
   await page.goto('https://attributes-consent-sandbox-v2.webflow.io/');
 });
 
-const reloadPage = async (page: Page) => {
-  await page.reload();
-
-  await waitAttributeLoaded(page, 'consent');
-};
-
 /**
  * We have a single test because the context needs to be preserved between tests.
  * And playwright applies Isolation {@link https://playwright.dev/docs/browser-contexts} by default.
  */
-test('Attributes Consent', async ({ page, browserName }) => {
-  const scriptElement = await page.$('script[fs-consent]');
-  const scriptSrc = await scriptElement?.getAttribute('src');
+test('Finsweet Cookie Consent', async ({ page }) => {
+  /**
+   * Reloads the page and waits for the fs-cc-ready event.
+   * @param page
+   * @param reload - Whether to reload the page or not.
+   */
+  const reloadPage = async (reload = true) => {
+    if (reload) await page.reload();
 
-  if (browserName === 'webkit' && !scriptSrc?.startsWith('https://')) {
-    //TODO: needs to run on https, otherwise it fails with timeout, hence the https check
-    return;
-  }
+    await waitAttributeLoaded(page, 'consent');
+    await page.waitForTimeout(1000);
+  };
 
-  await waitAttributeLoaded(page, 'consent');
+  await reloadPage(false);
 
   const banner = page.locator(COMPONENTS.banner);
   const bannerClose = banner.locator(BUTTONS.close);
@@ -122,7 +120,7 @@ test('Attributes Consent', async ({ page, browserName }) => {
   await expect(manager).toBeVisible();
   await expect(preferences).not.toBeVisible();
 
-  await reloadPage(page);
+  await reloadPage();
 
   await expect(banner).toBeVisible();
   await expect(manager).not.toBeVisible();
@@ -158,53 +156,15 @@ test('Attributes Consent', async ({ page, browserName }) => {
   expect(await getCookie(page, COOKIE_KEYS.main)).toBeDefined();
 
   const analyticsActivatedEvent = await page.evaluate(
-    (analyticsEvent) => window?.dataLayer?.find(({ event }) => event === analyticsEvent),
+    (analyticsEvent) =>
+      window.dataLayer?.find((data) => typeof data === 'object' && 'event' in data && data.event === analyticsEvent),
     analyticsEvent
   );
 
   expect(analyticsActivatedEvent).toBeDefined();
 
-  const checkAnalyticsConsentMode = () => {
-    function isConsentArguments(item: Record<string, unknown>): boolean {
-      const isArguments = Object.prototype.toString.call(item) === '[object Arguments]';
-      const isConsent = item[0] === 'consent';
-      return isArguments && isConsent;
-    }
-
-    let analytisGranted = false;
-
-    const dataLayer = [...(window?.dataLayer || [])];
-
-    // events are always fired with arr.push() so there can exist multiple that matches gtag('consent', 'update', {})
-    // Reverse the array so that the latest events are at the beginning
-    dataLayer.reverse();
-
-    for (const event of dataLayer) {
-      if (isConsentArguments(event)) {
-        const consentEvent = event as unknown as {
-          analytics_storage?: string;
-        }[];
-
-        const [, , mode] = Array.from(consentEvent);
-
-        console.log('mode?.analytics_storage', mode?.analytics_storage);
-        console.log('Array.from(consentEvent)', Array.from(consentEvent));
-
-        analytisGranted = mode?.analytics_storage === 'granted';
-
-        // Stop looping after finding the last "consent" argument
-        break;
-      }
-    }
-
-    return analytisGranted;
-  };
-
-  const analyticsConsentModGranted = await page.evaluate(checkAnalyticsConsentMode);
-
-  expect(analyticsConsentModGranted).toBeTruthy();
-
-  await reloadPage(page);
+  // After page refresh, the Banner is not displayed, but the Manager is.
+  await reloadPage();
 
   await expect(banner).not.toBeVisible();
   await expect(manager).toBeVisible();
@@ -245,10 +205,30 @@ test('Attributes Consent', async ({ page, browserName }) => {
   await expect(personalizationCheckbox).toBeChecked();
   await expect(analyticsCheckbox).toBeChecked();
 
-  await reloadPage(page);
+  await reloadPage();
 
   await page.waitForTimeout(computedAnimationWaitTime);
 
+  const checkAnalyticsConsentMode = () => {
+    const dataLayer = [...(window?.dataLayer || [])];
+
+    const consentObjects = dataLayer?.filter(
+      (data) =>
+        typeof data === 'object' && 'callee' in data && typeof data[2] === 'object' && 'analytics_storage' in data[2]
+    ) as IArguments[];
+
+    // there can exist multiple that matches gtag('consent', 'update', {...consentModes})
+    // we want the latest from datalayer.push event
+    const consentModeEvent = consentObjects[consentObjects.length - 1];
+
+    return consentModeEvent?.[2].analytics_storage === 'granted';
+  };
+
+  const analyticsConsentModGranted = await page.evaluate(checkAnalyticsConsentMode);
+
+  expect(analyticsConsentModGranted).toBeTruthy();
+
+  // After page refresh, the GA script fires automatically.
   expect(await getCookie(page, '_ga')).toBeDefined();
 
   // Opening the Preferences and clicking Reject All sets the fs-consent-updated cookie
@@ -272,7 +252,7 @@ test('Attributes Consent', async ({ page, browserName }) => {
   expect(await getCookie(page, COOKIE_KEYS.consentsUpdated)).toBeDefined();
 
   // After page refresh, the GA cookie is no longer present.
-  await reloadPage(page);
+  await reloadPage();
 
   expect(await getCookie(page, '_ga')).toBeUndefined();
 });
