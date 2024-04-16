@@ -74,6 +74,7 @@
     "@finsweet/attributes-socialshare": "workspace:*",
     "@finsweet/attributes-starrating": "workspace:*",
     "@finsweet/attributes-toc": "workspace:*",
+    "@finsweet/attributes-tooltip": "workspace:*",
     "@finsweet/attributes-typing": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
     "@finsweet/attributes-videohls": "workspace:*"
