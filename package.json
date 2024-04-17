@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter @finsweet/attributes dev",
-    "build": "pnpm --filter @finsweet/attributes build",
+    "build": "pnpm --filter @finsweet/attributes --filter @finsweet/attributes-docs build",
     "check": "pnpm -r check",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm -r lint:fix",

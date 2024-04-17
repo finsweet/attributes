@@ -59,6 +59,8 @@ importers:
         specifier: ^5.1.3
         version: 5.1.3
 
+  docs: {}
+
   packages/a11y:
     dependencies:
       '@finsweet/attributes-utils':

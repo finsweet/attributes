@@ -1,0 +1,31 @@
+{
+  "name": "@finsweet/attributes-docs",
+  "version": "1.12.11",
+  "description": "Attributes documentation custom code.",
+  "homepage": "https://www.finsweet.com/attributes",
+  "license": "ISC",
+  "author": {
+    "name": "Finsweet",
+    "url": "https://finsweet.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finsweet/attributes.git"
+  },
+  "bugs": {
+    "url": "https://finsweet.com/attributes/support"
+  },
+  "type": "module",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node ./bin/build.js",
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix && prettier --write ./src",
+    "check": "tsc --noEmit"
+  }
+}
