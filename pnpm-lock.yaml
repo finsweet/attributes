@@ -21,7 +21,7 @@ importers:
         version: 2.27.1
       '@finsweet/eslint-config':
         specifier: ^2.0.5
-        version: 2.0.5(@typescript-eslint/eslint-plugin@5.59.11)(@typescript-eslint/parser@5.59.11)(eslint-config-prettier@8.8.0)(eslint-plugin-prettier@4.2.1)(eslint-plugin-simple-import-sort@12.0.0)(eslint@8.42.0)(prettier@2.8.8)(typescript@5.1.3)
+        version: 2.0.5(@typescript-eslint/eslint-plugin@5.59.11)(@typescript-eslint/parser@5.59.11)(eslint-config-prettier@8.8.0)(eslint-plugin-prettier@4.2.1)(eslint-plugin-simple-import-sort@10.0.0)(eslint@8.42.0)(prettier@2.8.8)(typescript@5.1.3)
       '@finsweet/tsconfig':
         specifier: ^1.3.2
         version: 1.3.2(typescript@5.1.3)
@@ -59,7 +59,14 @@ importers:
         specifier: ^5.1.3
         version: 5.1.3
 
-  docs: {}
+  docs:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../packages/utils
+      '@floating-ui/dom':
+        specifier: ^1.6.3
+        version: 1.6.3
 
   packages/a11y:
     dependencies:
@@ -1211,7 +1218,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@finsweet/eslint-config@2.0.5(@typescript-eslint/eslint-plugin@5.59.11)(@typescript-eslint/parser@5.59.11)(eslint-config-prettier@8.8.0)(eslint-plugin-prettier@4.2.1)(eslint-plugin-simple-import-sort@12.0.0)(eslint@8.42.0)(prettier@2.8.8)(typescript@5.1.3):
+  /@finsweet/eslint-config@2.0.5(@typescript-eslint/eslint-plugin@5.59.11)(@typescript-eslint/parser@5.59.11)(eslint-config-prettier@8.8.0)(eslint-plugin-prettier@4.2.1)(eslint-plugin-simple-import-sort@10.0.0)(eslint@8.42.0)(prettier@2.8.8)(typescript@5.1.3):
     resolution: {integrity: sha512-twlHPSSS1CuIXOSCnIWETqOXD3OiLmouPR/Qc5Io0xDecMXqy1K8rB87X5SLkgDGGSxPv09R/oKAAtWl6Lbkqw==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': ^5.59.9
@@ -1228,7 +1235,7 @@ packages:
       eslint: 8.42.0
       eslint-config-prettier: 8.8.0(eslint@8.42.0)
       eslint-plugin-prettier: 4.2.1(eslint-config-prettier@8.8.0)(eslint@8.42.0)(prettier@2.8.8)
-      eslint-plugin-simple-import-sort: 12.0.0(eslint@8.42.0)
+      eslint-plugin-simple-import-sort: 10.0.0(eslint@8.42.0)
       prettier: 2.8.8
       typescript: 5.1.3
     dev: true
@@ -1240,6 +1247,23 @@ packages:
     dependencies:
       typescript: 5.1.3
     dev: true
+
+  /@floating-ui/core@1.6.0:
+    resolution: {integrity: sha512-PcF++MykgmTj3CIyOQbKA/hDzOAiqI3mhuoN44WRCopIs1sgoDoU4oty4Jtqaj/y3oDU6fnVSm4QG0a3t5i0+g==}
+    dependencies:
+      '@floating-ui/utils': 0.2.1
+    dev: false
+
+  /@floating-ui/dom@1.6.3:
+    resolution: {integrity: sha512-RnDthu3mzPlQ31Ss/BTwQ1zjzIhr3lk1gZB1OC56h/1vEtaXkESrOqL5fQVMfXpwGtRwX+YsZBdyHtJMQnkArw==}
+    dependencies:
+      '@floating-ui/core': 1.6.0
+      '@floating-ui/utils': 0.2.1
+    dev: false
+
+  /@floating-ui/utils@0.2.1:
+    resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
+    dev: false
 
   /@humanwhocodes/config-array@0.11.10:
     resolution: {integrity: sha512-KVVjQmNUepDVGXNuoRRdmmEjruj0KfiGSbS8LVc12LMsWDQzRXJ0qdhN8L8uUigKpfEHRhlaQFY0ib1tnUbNeQ==}
@@ -2103,8 +2127,8 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-simple-import-sort@12.0.0(eslint@8.42.0):
-    resolution: {integrity: sha512-8o0dVEdAkYap0Cn5kNeklaKcT1nUsa3LITWEuFk3nJifOoD+5JQGoyDUW2W/iPWwBsNBJpyJS9y4je/BgxLcyQ==}
+  /eslint-plugin-simple-import-sort@10.0.0(eslint@8.42.0):
+    resolution: {integrity: sha512-AeTvO9UCMSNzIHRkg8S6c3RPy5YEwKWSQPx3DYghLedo2ZQxowPFLGDN1AZ2evfg6r6mjBSZSLxLFsWSu3acsw==}
     peerDependencies:
       eslint: '>=5.0.0'
     dependencies:

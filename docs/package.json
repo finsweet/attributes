@@ -27,5 +27,9 @@
     "lint": "eslint ./src && prettier --check ./src",
     "lint:fix": "eslint ./src --fix && prettier --write ./src",
     "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@finsweet/attributes-utils": "workspace:*",
+    "@floating-ui/dom": "^1.6.3"
   }
 }

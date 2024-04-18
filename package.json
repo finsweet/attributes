@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @finsweet/attributes dev",
+    "dev": "pnpm --filter @finsweet/attributes --filter @finsweet/attributes-docs dev",
     "build": "pnpm --filter @finsweet/attributes --filter @finsweet/attributes-docs build",
     "check": "pnpm -r check",
     "lint": "pnpm -r lint",
