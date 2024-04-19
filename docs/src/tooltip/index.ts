@@ -1,6 +1,6 @@
 import debounce from 'just-debounce';
 
-const voidElements = [
+const voidElements = new Set([
   'area',
   'base',
   'br',
@@ -16,9 +16,11 @@ const voidElements = [
   'track',
   'wbr',
   'select',
-];
+]);
 
-let showTooltip = false;
+let tooltipEnabled = true;
+let tooltip: HTMLElement | null;
+let initialLoad = true;
 
 /**
  * Searches for the closest element up the DOM tree that has any attribute starting with 'fs-'.
@@ -59,99 +61,100 @@ const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null =
  * @returns HTMLElement - The element to apply the ::before styles to.
  */
 const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | undefined => {
-  if (voidElements.includes(element.tagName.toLowerCase())) {
-    // going 2 levels up seems the perfect guess :)
+  if (voidElements.has(element.tagName.toLowerCase())) {
+    // going 2 levels up seems the perfect approach :)
     // like checkboxes and radios have some 2-3 elements wrapping them
     return element.parentElement?.parentElement || element;
   }
   return element;
 };
 
-/**
- * Updates or creates a style element in the document's head with the given CSS content.
- * @param cssContent - The CSS content to be injected into the style element.
- */
-const updateOrCreateStyleElement = (cssContent: string): void => {
-  let styleElement = document.getElementById('helper');
+function showTooltipElement(element: HTMLElement, content: string) {
+  if (!tooltip) {
+    tooltip = document.createElement('div');
+    tooltip.id = 'tooltip-helper';
+    tooltip.style.position = 'fixed';
+    tooltip.style.zIndex = '9999';
+    tooltip.style.backgroundColor = '#00e4ff';
+    tooltip.style.color = '#003238';
+    tooltip.style.borderRadius = '.25rem';
+    tooltip.style.padding = '.2rem .5rem';
+    tooltip.style.margin = '0';
+    tooltip.style.fontSize = '.85rem';
+    tooltip.style.fontFamily = 'monospace';
+    tooltip.style.width = 'max-content';
 
-  if (styleElement) {
-    styleElement.innerHTML = cssContent;
-
-    return;
+    document.body.appendChild(tooltip);
   }
 
-  styleElement = document.createElement('style'); // Create new style element
-  styleElement.id = 'helper';
-  styleElement.innerHTML = cssContent;
-  document.head.appendChild(styleElement);
-};
+  tooltip.innerHTML = content;
+  tooltip.style.display = 'block';
+  //visibility none
+  tooltip.style.visibility = 'hidden';
+
+  // Measure the tooltip and target element
+  const targetRect = element.getBoundingClientRect();
+  const tooltipHeight = tooltip.offsetHeight;
+  const viewportWidth = window.innerWidth;
+
+  // Calculate the top position of the tooltip
+  const tooltipTop = targetRect.top - tooltipHeight - 10;
+  let tooltipLeft = targetRect.left;
+
+  // Adjust left position if the target is in the right half of the viewport
+  if (targetRect.left + targetRect.width / 2 > viewportWidth / 2 && element.clientWidth < 150) {
+    tooltipLeft = targetRect.left + targetRect.width / 2 - tooltip.offsetWidth / 2 - 50;
+  }
+
+  tooltip.style.left = `${tooltipLeft}px`;
+  tooltip.style.top = `${tooltipTop}px`;
+
+  // show
+  tooltip.style.visibility = 'visible';
+}
+
+function removeTooltip() {
+  const tooltip = document.getElementById('tooltip-helper');
+
+  if (tooltip) {
+    tooltip.remove();
+  }
+}
 
 const debouncedMouseMove = debounce((event: MouseEvent) => {
-  if (!showTooltip) return;
+  if (!tooltipEnabled) return;
+
+  tooltip = document.querySelector<HTMLElement>('#tooltip-helper');
+
+  if (tooltip) {
+    tooltip.style.display = 'none';
+  }
 
   const target = event.target as HTMLElement;
-
-  const dataHoverElement = document.querySelector('[data-hover]');
-
-  if (dataHoverElement) {
-    dataHoverElement.removeAttribute('data-hover');
-    dataHoverElement.removeAttribute('style');
-
-    const styleElement = document.getElementById('helper');
-    if (styleElement) {
-      styleElement.remove();
-    }
-  }
 
   const fsElement = findElementWithFsAttributes(target);
   console.log('fsElement:', fsElement);
   console.log('target hovered:', target);
 
-  if (!fsElement) return;
+  if (!fsElement) {
+    removeTooltip();
+
+    return;
+  }
 
   const fsAttributes = Array.from(fsElement.attributes).filter((attr) => attr.name.startsWith('fs-'));
 
   const elementToStyle = getValidElementForPseudo(target);
 
   if (fsAttributes.length > 0 && elementToStyle) {
-    const list = fsAttributes.map((attr) => `${attr.name} = ${attr.value}`).join('\\A ');
+    const list = fsAttributes
+      .map(
+        (attr) =>
+          `<span style="font-weight:bold;">${attr.name}</span><span style="opacity:0.5">=</span><span style="opacity:0.5">"</span><span style="font-weight:bold;">${attr.value}</span><span style="opacity:0.5">"</span>`
+      )
+      .join('<br/>');
 
-    elementToStyle.setAttribute('data-hover', '');
-    elementToStyle.style.position = 'relative';
-
-    elementToStyle.style.setProperty('--tooltip-top', '0.5rem');
-    elementToStyle.style.setProperty('--tooltip-left', '0');
-
-    // todo: tooltip sometimes dissapears
-    const rect = target.getBoundingClientRect();
-    const topPosition = rect.top - 30;
-    const leftPosition = rect.left;
-
-    elementToStyle.style.setProperty('--tooltip-top', `${topPosition}px`);
-    elementToStyle.style.setProperty('--tooltip-left', `${leftPosition}px`);
-
-    const styleContent = `
-        [data-hover]::before {
-          content: "${list}";
-          white-space: pre;
-          color: #003238;
-          display: block;
-          padding: .2rem .5rem 0 .5rem;
-          background-color: #00e4ff;
-          font-size: .85rem;
-          font-family: monospace;
-          position: fixed;
-          top: var(--tooltip-top);
-          left: var(--tooltip-left);
-          border-radius: .25rem;
-          width: max-content;
-          z-index: 9999;
-          text-transform: lowercase;
-          font-weight: bold;
-        }
-      `;
-
-    updateOrCreateStyleElement(styleContent);
+    showTooltipElement(fsElement, list);
   }
 }, 150);
 
@@ -197,23 +200,40 @@ const queryElementsWithFsAttributes = () => {
   return elements;
 };
 
+/**
+ * Initialize the mouseover event listener for elements with 'fs-' attributes.
+ */
 const initializeFsElementMouseover = (): void => {
   document.addEventListener('mouseover', debouncedMouseMove);
 
+  const defaultHelpers = document.querySelectorAll('.helper');
   const helperElements = queryElementsWithFsAttributes();
+
+  // clear any existing helper classes that were added in webflow so that script can manage it.
+  if (defaultHelpers.length > 0) {
+    defaultHelpers.forEach((helper) => {
+      helper.classList.remove('helper');
+    });
+  }
+
+  if (initialLoad) {
+    helperElements.forEach((element) => {
+      if (element) {
+        element.classList.add('helper');
+      }
+    });
+
+    initialLoad = false;
+  }
 
   // init the .helper class on key press
   document.addEventListener('keydown', (e) => {
-    if (e.key === '?') {
-      showTooltip = !showTooltip;
+    console.log('keycode', { key: e.key, which: e.which, code: e.code });
+    if (e.key === '?' || e.which === 191 || e.keyCode === 191) {
+      tooltipEnabled = !tooltipEnabled;
 
-      if (!showTooltip) {
-        const dataHoverElement = document.querySelector('[data-hover]');
-
-        if (dataHoverElement) {
-          dataHoverElement.removeAttribute('data-hover');
-          dataHoverElement.removeAttribute('style');
-        }
+      if (!tooltipEnabled) {
+        removeTooltip();
       }
 
       helperElements.forEach((element) => {
