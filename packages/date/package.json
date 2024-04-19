@@ -17,6 +17,7 @@
     }
   },
   "dependencies": {
-    "@finsweet/attributes-utils": "workspace:*"
+    "@finsweet/attributes-utils": "workspace:*",
+    "chrono-node": "^2.7.5"
   }
 }

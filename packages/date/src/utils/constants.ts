@@ -46,4 +46,18 @@ export const SETTINGS = {
     key: 'day',
     values: { numeric: 'numeric', '2-digit': '2-digit' },
   },
+
+  /**
+   * Defines a specific date value.
+   */
+  value: {
+    key: 'value',
+  },
+
+  /**
+   * Defines a specific date value.
+   */
+  parse: {
+    key: 'parse',
+  },
 } as const satisfies AttributeSettings;

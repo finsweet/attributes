@@ -12,7 +12,7 @@ export const init: FsAttributeInit = async () => {
   // localize date elements
   const dateElements = queryAllElements('date');
 
-  dateElements.map(initDateElement);
+  await Promise.all(dateElements.map(initDateElement));
 
   return {};
 };
