@@ -50,6 +50,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-countitems');
     }
 
+    case 'date': {
+      return import('@finsweet/attributes-date');
+    }
+
     case 'displayvalues': {
       return import('@finsweet/attributes-displayvalues');
     }
