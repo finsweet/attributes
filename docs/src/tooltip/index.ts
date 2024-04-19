@@ -1,139 +1,228 @@
-import type { animations, Easings } from '@finsweet/attributes-utils';
+import debounce from 'just-debounce';
 
-import { cleanupTooltips, initTooltip } from './actions';
-import type { TooltipOptions } from './utils';
+const voidElements = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+  'select',
+];
 
-// Store the elements with .helper class on page load
-let helperElements: HTMLElement[] = [];
+let showTooltip = false;
 
-const load = () => {
-  const target = document.querySelector<HTMLScriptElement>('script[docs]');
-
-  console.log('docs script:', target);
-
-  const targetAttribute = target?.getAttribute('target') || '.helper';
-  const key = target?.getAttribute('key') || '?';
-  const animation = (target?.getAttribute('animation') || 'fade') as keyof typeof animations;
-  const duration = target?.getAttribute('duration') || '150';
-  const easing = (target?.getAttribute('easing') || 'ease') as Easings[number];
-  // get tooltip theme color
-  const textColor = target?.getAttribute('text-color') || '#003238';
-  const themeColor = target?.getAttribute('theme-color') || 'var(--aqua)';
-  const arrow = target?.getAttribute('arrow') === 'true';
-  const badge = target?.getAttribute('badge') === 'true';
-
-  // show outline only
-  const outlineOnly = target?.getAttribute('outline-only') === 'true';
-
-  const options: TooltipOptions = {
-    animation,
-    duration: parseInt(duration),
-    easing,
-    textColor,
-    themeColor,
-    arrow,
-    badge,
-    outlineOnly,
-    key,
-    targetAttribute,
-  };
-
-  console.log('Target script:', target);
-  console.log('options', options);
-
-  const elements = document.querySelectorAll<HTMLElement>(targetAttribute);
-
-  console.log('elements', elements?.length > 0);
-
-  if (elements.length > 0 && target) {
-    helperElements = Array.from(elements);
-
-    helperElements.forEach((element) => {
-      if (outlineOnly) {
-        if (themeColor) element.style.outlineColor = options.themeColor;
-
-        return;
-      }
-
-      // Init the tooltips
-      initTooltip(element, options);
-    });
+/**
+ * Searches for the closest element up the DOM tree that has any attribute starting with 'fs-'.
+ * @param element - The starting HTMLElement to check.
+ * @returns HTMLElement | null - The found element with 'fs-' attributes or null if none found.
+ */
+const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null => {
+  // 1. Check the current element
+  if (Array.from(element.attributes).some((attr) => attr.name.startsWith('fs-'))) {
+    return element;
   }
+
+  // 2. Check children of the parent element if they have 'fs-' attributes
+  const { parentElement } = element;
+  if (parentElement) {
+    for (const child of Array.from(parentElement.children) as HTMLElement[]) {
+      if (Array.from(child.attributes).some((attr) => attr.name.startsWith('fs-'))) {
+        return child;
+      }
+    }
+
+    // 3. Traverse parents and return the closest one with an 'fs-' attribute
+    let ancestor: HTMLElement | null = parentElement;
+    while (ancestor) {
+      if (Array.from(ancestor.attributes).some((attr) => attr.name.startsWith('fs-'))) {
+        return ancestor;
+      }
+      ancestor = ancestor.parentElement;
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Checks if the given element is a void element and returns the parent to apply styles.
+ * @param element - The HTMLElement to check.
+ * @returns HTMLElement - The element to apply the ::before styles to.
+ */
+const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | undefined => {
+  if (voidElements.includes(element.tagName.toLowerCase())) {
+    // going 2 levels up seems the perfect guess :)
+    // like checkboxes and radios have some 2-3 elements wrapping them
+    return element.parentElement?.parentElement || element;
+  }
+  return element;
+};
+
+/**
+ * Updates or creates a style element in the document's head with the given CSS content.
+ * @param cssContent - The CSS content to be injected into the style element.
+ */
+const updateOrCreateStyleElement = (cssContent: string): void => {
+  let styleElement = document.getElementById('helper');
+
+  if (styleElement) {
+    styleElement.innerHTML = cssContent;
+
+    return;
+  }
+
+  styleElement = document.createElement('style'); // Create new style element
+  styleElement.id = 'helper';
+  styleElement.innerHTML = cssContent;
+  document.head.appendChild(styleElement);
+};
+
+const debouncedMouseMove = debounce((event: MouseEvent) => {
+  if (!showTooltip) return;
+
+  const target = event.target as HTMLElement;
+
+  const dataHoverElement = document.querySelector('[data-hover]');
+
+  if (dataHoverElement) {
+    dataHoverElement.removeAttribute('data-hover');
+    dataHoverElement.removeAttribute('style');
+
+    const styleElement = document.getElementById('helper');
+    if (styleElement) {
+      styleElement.remove();
+    }
+  }
+
+  const fsElement = findElementWithFsAttributes(target);
+  console.log('fsElement:', fsElement);
+  console.log('target hovered:', target);
+
+  if (!fsElement) return;
+
+  const fsAttributes = Array.from(fsElement.attributes).filter((attr) => attr.name.startsWith('fs-'));
+
+  const elementToStyle = getValidElementForPseudo(target);
+
+  if (fsAttributes.length > 0 && elementToStyle) {
+    const list = fsAttributes.map((attr) => `${attr.name} = ${attr.value}`).join('\\A ');
+
+    elementToStyle.setAttribute('data-hover', '');
+    elementToStyle.style.position = 'relative';
+
+    elementToStyle.style.setProperty('--tooltip-top', '0.5rem');
+    elementToStyle.style.setProperty('--tooltip-left', '0');
+
+    // todo: tooltip sometimes dissapears
+    const rect = target.getBoundingClientRect();
+    const topPosition = rect.top - 30;
+    const leftPosition = rect.left;
+
+    elementToStyle.style.setProperty('--tooltip-top', `${topPosition}px`);
+    elementToStyle.style.setProperty('--tooltip-left', `${leftPosition}px`);
+
+    const styleContent = `
+        [data-hover]::before {
+          content: "${list}";
+          white-space: pre;
+          color: #003238;
+          display: block;
+          padding: .2rem .5rem 0 .5rem;
+          background-color: #00e4ff;
+          font-size: .85rem;
+          font-family: monospace;
+          position: fixed;
+          top: var(--tooltip-top);
+          left: var(--tooltip-left);
+          border-radius: .25rem;
+          width: max-content;
+          z-index: 9999;
+          text-transform: lowercase;
+          font-weight: bold;
+        }
+      `;
+
+    updateOrCreateStyleElement(styleContent);
+  }
+}, 150);
+
+/**
+ * Query all elements that have attributes starting with 'fs-'.
+ * @returns {HTMLElement[]} An array of HTMLElements that have attributes starting with 'fs-'.
+ */
+const queryElementsWithFsAttributes = () => {
+  // Get all elements in the document
+  const allElements = document.querySelectorAll('*');
+
+  allElements.forEach((element) => {
+    const hasHelper = element.classList.contains('helper');
+
+    if (hasHelper) {
+      element.classList.remove('helper');
+    }
+  });
+
+  // Filter elements that have at least one attribute starting with 'fs-'
+  const elementsWithFsAttributes = Array.from(allElements).filter((element) =>
+    Array.from(element.attributes).some((attr) => attr.name.startsWith('fs-'))
+  );
+
+  const altTags = ['INPUT'];
+
+  // if element is void element, return the parent element
+  const elements = elementsWithFsAttributes.map((element) => {
+    if (
+      altTags.includes(element.tagName) &&
+      (element.getAttribute('type') === 'checkbox' || element.getAttribute('type') === 'radio')
+    ) {
+      return (
+        element.parentElement?.querySelector('.fs-checkbox_button') ||
+        element.parentElement?.querySelector('.fs-radio_button') ||
+        element
+      );
+    }
+
+    return element;
+  });
+
+  return elements;
+};
+
+const initializeFsElementMouseover = (): void => {
+  document.addEventListener('mouseover', debouncedMouseMove);
+
+  const helperElements = queryElementsWithFsAttributes();
 
   // init the .helper class on key press
   document.addEventListener('keydown', (e) => {
-    if (e.key === key) {
-      helperElements.forEach((element) => {
-        if (outlineOnly) {
-          element.classList.toggle('helper');
-          if (themeColor) element.style.outlineColor = options.themeColor;
+    if (e.key === '?') {
+      showTooltip = !showTooltip;
 
-          return;
+      if (!showTooltip) {
+        const dataHoverElement = document.querySelector('[data-hover]');
+
+        if (dataHoverElement) {
+          dataHoverElement.removeAttribute('data-hover');
+          dataHoverElement.removeAttribute('style');
         }
+      }
 
+      helperElements.forEach((element) => {
         if (element) {
           element.classList.toggle('helper');
-
-          if (element.classList.contains('helper')) {
-            initTooltip(element, options);
-          } else {
-            cleanupTooltips(element);
-          }
         }
       });
     }
   });
 };
 
-const checkAllSolutionsLoaded = async (): Promise<boolean> => {
-  if (!window?.fsAttributes?.solutions) return true;
-
-  const loadingPromises = Object.values(window.fsAttributes.solutions).map((solution) => solution.loading);
-
-  try {
-    const results = await Promise.all(loadingPromises);
-    return results.every((result) => result && result.length > 0);
-  } catch (error) {
-    console.error('A promise was rejected with error:', error);
-    return false;
-  }
-};
-
-const finsweetCoreScript = () => {
-  // Select all script elements src containing attributes.js
-  const scripts = document.querySelectorAll('script');
-  const fsScripts = Array.from(scripts).filter((script) => script.src.includes('attributes.js'));
-
-  return fsScripts;
-};
-
-const waitForAllSolutions = async () => {
-  // check for finsweet core script
-  const fsScripts = finsweetCoreScript();
-
-  if (fsScripts.length === 0) {
-    load();
-
-    return;
-  }
-
-  let allLoaded = false;
-
-  // Keep checking until all promises are loaded for all attribute solutions
-  while (!allLoaded) {
-    allLoaded = await checkAllSolutionsLoaded();
-
-    if (!allLoaded) {
-      console.log('Not all solutions loaded, waiting to retry...');
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    }
-  }
-
-  console.log('All finsweet solutions loaded:', allLoaded);
-
-  // Load the helper script
-  load();
-};
-
-document.addEventListener('DOMContentLoaded', waitForAllSolutions);
+initializeFsElementMouseover();

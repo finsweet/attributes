@@ -30,6 +30,6 @@
   },
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*",
-    "@floating-ui/dom": "^1.6.3"
+    "just-debounce": "^1.1.0"
   }
 }
