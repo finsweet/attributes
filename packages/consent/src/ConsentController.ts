@@ -22,6 +22,7 @@ import {
   queryElement,
   removeAllCookies,
   setConsentMode,
+  setConsentModeCookies,
   setConsentsCookie,
   setUpdatedStateCookie,
   UNCATEGORIZED_CONSENT,
@@ -125,15 +126,23 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     const consents = getConsentsCookie();
 
     // Set consent mode for GTM
-    setConsentMode('default', {
-      ad_storage: consents?.marketing ? 'granted' : 'denied',
-      ad_user_data: consents?.marketing ? 'granted' : 'denied',
-      ad_personalization: consents?.marketing ? 'granted' : 'denied',
-      analytics_storage: consents?.analytics ? 'granted' : 'denied',
-      functionality_storage: consents?.personalization ? 'granted' : 'denied',
-      personalization_storage: consents?.personalization ? 'granted' : 'denied',
-      security_storage: 'granted',
-    });
+    if (this.store.consentMode) {
+      const consentModes: ConsentMode = {
+        ad_storage: consents?.marketing ? 'granted' : 'denied',
+        ad_user_data: consents?.marketing ? 'granted' : 'denied',
+        ad_personalization: consents?.marketing ? 'granted' : 'denied',
+        analytics_storage: consents?.analytics ? 'granted' : 'denied',
+        functionality_storage: consents?.personalization ? 'granted' : 'denied',
+        personalization_storage: consents?.personalization ? 'granted' : 'denied',
+        security_storage: 'granted',
+      };
+
+      // Set consent mode cookies
+      setConsentModeCookies(consentModes, 120, this.store.domain);
+
+      // Set consent mode for GTM
+      setConsentMode('default', consentModes);
+    }
 
     if (!consents) return;
 
@@ -263,7 +272,13 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       }
     }
 
-    setConsentMode('update', consentMode);
+    if (store.consentMode) {
+      // Set consent mode cookies
+      setConsentModeCookies(consentMode, 120, domain);
+
+      // Set consent mode for GTM
+      setConsentMode('update', consentMode);
+    }
 
     // POST the consents to the endpoint
     if (endpoint)

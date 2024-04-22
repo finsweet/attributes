@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 
-import type { Consents, ConsentsCookie } from '../utils';
 import { COOKIE_KEYS } from './constants';
 import { isValidConsents } from './type-guards';
+import type { ConsentMode, Consents, ConsentsCookie } from './types';
 
 /**
  * @returns The proper domain to store the cookies,
@@ -58,7 +58,8 @@ export const removeAllCookies = (): void => {
   const cookies = Cookies.get();
 
   for (const cookie in cookies) {
-    if (cookie === COOKIE_KEYS.main) continue;
+    // skip removing the main fs-consent cookie and the fs-consent-[CONSENT_MODE] cookies
+    if (cookie.includes(COOKIE_KEYS.main)) continue;
 
     const splitDomain = window.location.host.split('.');
     while (splitDomain.length > 1) {
@@ -84,4 +85,21 @@ export const setUpdatedStateCookie = (expires = 120, domain?: string | null): vo
   domain = processConsentsCookieDomain(domain);
 
   Cookies.set(COOKIE_KEYS.consentsUpdated, 'true', { expires, domain, sameSite: 'None', secure: true });
+};
+
+/**
+ * Set or update the fs-consent-[CONSENT_MODE] consent cookie.
+ * @param consents
+ * @param expires
+ * @param domain
+ */
+export const setConsentModeCookies = (consents: ConsentMode, expires = 120, domain?: string | null): void => {
+  domain = processConsentsCookieDomain(domain);
+
+  for (const consent in consents) {
+    const key = consent as keyof ConsentMode;
+    const cookieName = `${COOKIE_KEYS.main}-${consent}`;
+
+    Cookies.set(cookieName, String(consents[key] === 'granted'), { expires, domain });
+  }
 };

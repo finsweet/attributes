@@ -228,6 +228,10 @@ test('Finsweet Cookie Consent', async ({ page }) => {
 
   expect(analyticsConsentModGranted).toBeTruthy();
 
+  // expect analytics consent mode cookie to be set to true
+  const analyticsConsentCookie = await getCookie(page, `${MAIN_KEY}-analytics_storage`);
+  expect(analyticsConsentCookie?.value).toBe('true');
+
   // After page refresh, the GA script fires automatically.
   expect(await getCookie(page, '_ga')).toBeDefined();
 

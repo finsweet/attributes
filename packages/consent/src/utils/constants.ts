@@ -90,6 +90,15 @@ export const SETTINGS = {
   },
 
   /**
+   * if set to true, Consent Mode will be enabled
+   *
+   */
+  consentMode: {
+    // TODO: Consent Mode is now opt-in to prevent backwards incompatibilities, but we might want to change it to opt-out in V2
+    key: 'consentmode',
+  },
+
+  /**
    * When cookie is updated, this attribute will be set to true and stored in cookies
    */
   updated: {
