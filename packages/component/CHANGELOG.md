@@ -1,5 +1,11 @@
 # @finsweet/attributes-component
 
+## 2.0.0
+
+### Major Changes
+
+- 0ccef15: component: prepared for v2 release
+
 ## 1.2.0
 
 ### Minor Changes

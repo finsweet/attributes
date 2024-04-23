@@ -10,15 +10,17 @@ import {
   type PaginationButtonElement,
   type PaginationWrapperElement,
   parseNumericAttribute,
+  restartWebflow,
+  type WebflowModule,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
-import { atom, deepMap, type WritableAtom } from 'nanostores';
+import { atom, deepMap, map, type WritableAtom } from 'nanostores';
 
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
 import { subscribeMultiple } from '../utils/reactivity';
-import { getAttribute, getInstance, queryElement } from '../utils/selectors';
+import { getAttribute, getInstance, hasAttributeValue, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
@@ -36,7 +38,7 @@ export class List {
   /**
    * Contains all lifecycle hooks with their callbacks and last result.
    */
-  readonly hooks: Hooks = {
+  public readonly hooks: Hooks = {
     filter: {
       callbacks: [],
       result: atom(),
@@ -76,124 +78,129 @@ export class List {
   /**
    * A signal holding all {@link ListItem} instances of the list.
    */
-  readonly items: WritableAtom<ListItem[]> = atom([]);
+  public readonly items = map<ListItem[]>([]);
 
   /**
    * A set holding all rendered {@link ListItem} instances.
    */
-  renderedItems: Set<ListItem> = new Set();
+  public renderedItems: Set<ListItem> = new Set();
 
   /**
    * The instance.
    */
-  readonly instance?: string;
+  public readonly instance: string | null;
 
   /**
    * The `Collection List` element.
    */
-  readonly listElement?: CollectionListElement | null;
+  public readonly listElement?: CollectionListElement | null;
 
   /**
    * The `Pagination` wrapper element.
    */
-  readonly paginationWrapperElement?: PaginationWrapperElement | null;
+  public readonly paginationWrapperElement?: PaginationWrapperElement | null;
 
   /**
    * The `Page Count` element.
    */
-  readonly paginationCountElement?: PageCountElement | null;
+  public readonly paginationCountElement?: PageCountElement | null;
 
   /**
    * The `Previous` button.
    */
-  readonly paginationPreviousElement: WritableAtom<PaginationButtonElement | null>;
+  public readonly paginationPreviousElement: WritableAtom<PaginationButtonElement | null>;
 
   /**
    * The `Next` button.
    */
-  readonly paginationNextElement: WritableAtom<PaginationButtonElement | null>;
+  public readonly paginationNextElement: WritableAtom<PaginationButtonElement | null>;
 
   /**
    * The `Empty State` element.
    */
-  readonly emptyElement: WritableAtom<HTMLElement | null>;
+  public readonly emptyElement: WritableAtom<HTMLElement | null>;
 
   /**
    * A custom loader element.
    */
-  readonly loaderElement?: HTMLElement | null;
+  public readonly loaderElement?: HTMLElement | null;
 
   /**
    * An element that displays the total amount of items in the list.
    */
-  readonly itemsCountElement?: HTMLElement | null;
+  public readonly itemsCountElement?: HTMLElement | null;
 
   /**
    * An element that displays the total amount of items in the list after filtering.
    */
-  readonly resultsCountElement?: HTMLElement | null;
+  public readonly resultsCountElement?: HTMLElement | null;
 
   /**
    * An element that displays the amount of visible items.
    */
-  readonly visibleCountElement?: HTMLElement | null;
+  public readonly visibleCountElement?: HTMLElement | null;
 
   /**
    * An element that displays the lower range of visible items.
    */
-  readonly visibleCountFromElement?: HTMLElement | null;
+  public readonly visibleCountFromElement?: HTMLElement | null;
 
   /**
    * An element that displays the upper range of visible items.
    */
-  readonly visibleCountToElement?: HTMLElement | null;
+  public readonly visibleCountToElement?: HTMLElement | null;
 
   /**
    * Defines the amount of items per page.
    */
-  readonly itemsPerPage: WritableAtom<number>;
+  public readonly itemsPerPage: WritableAtom<number>;
 
   /**
    * Defines the total amount of pages in the list.
    */
-  readonly totalPages = atom(1);
+  public readonly totalPages = atom(1);
 
   /**
    * Defines the current page in `Pagination` mode.
    */
-  readonly currentPage = atom(1);
+  public readonly currentPage = atom(1);
 
   /**
    * Defines the active filters.
    */
-  readonly filters = deepMap<Filters>({ groups: [{ conditions: [] }] });
+  public readonly filters = deepMap<Filters>({ groups: [{ conditions: [] }] });
 
   /**
    * Defines if the pagination query param should be added to the URL when switching pages.
    * @example '?5f7457b3_page=1'
    */
-  readonly showPagesQuery = atom(false);
+  public readonly showPagesQuery = atom(false);
+
+  /**
+   * Defines the Webflow modules to restart after rendering.
+   */
+  public readonly webflowModules = new Set<WebflowModule>();
+
+  /**
+   * Defines if loaded Items can be cached using IndexedDB after fetching them.
+   */
+  public readonly cache: boolean;
 
   /**
    * Defines the query key for the paginated pages.
    * @example '5f7457b3_page'
    */
-  pagesQuery?: string;
+  public pagesQuery?: string;
 
   /**
    * Defines an awaitable Promise that resolves once the pagination data (`currentPage` + `pagesQuery`) has been retrieved.
    */
-  loadingPaginationQuery?: Promise<void>;
+  public loadingPaginationQuery?: Promise<void>;
 
   /**
    * Defines an awaitable Promise that resolves once the pagination elements have been loaded.
    */
-  loadingPaginationElements?: Promise<void>;
-
-  /**
-   * Defines if loaded CMS Items can be cached using IndexedDB after fetching them.
-   */
-  cacheItems = true;
+  public loadingPaginationElements?: Promise<void>;
 
   constructor(public readonly wrapperElement: CollectionListWrapperElement, public readonly pageIndex: number) {
     // Collect elements
@@ -207,13 +214,14 @@ export class List {
     this.paginationCountElement = getCollectionElements(wrapperElement, 'page-count');
     this.paginationNextElement = atom(getCollectionElements(wrapperElement, 'pagination-next'));
     this.paginationPreviousElement = atom(getCollectionElements(wrapperElement, 'pagination-previous'));
-    this.emptyElement = atom(getCollectionElements(wrapperElement, 'empty'));
+    this.emptyElement = atom(getCollectionElements(wrapperElement, 'empty') || queryElement('empty', { instance }));
     this.loaderElement = queryElement('loader', { instance });
     this.itemsCountElement = queryElement('items-count', { instance });
     this.visibleCountElement = queryElement('visible-count', { instance });
     this.visibleCountFromElement = queryElement('visible-count-from', { instance });
     this.visibleCountToElement = queryElement('visible-count-to', { instance });
     this.resultsCountElement = queryElement('results-count', { instance });
+    this.cache = hasAttributeValue(this.listOrWrapper, 'cache', 'true');
 
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
@@ -285,6 +293,11 @@ export class List {
       this.renderedItems = new Set(items);
 
       return items;
+    });
+
+    // Restart Webflow modules
+    this.addHook('afterRender', async () => {
+      restartWebflow([...this.webflowModules]);
     });
 
     // Start hooks chain
@@ -445,6 +458,8 @@ export class List {
         const anchor = paginationPreviousElement.get()?.parentElement || paginationWrapperElement;
         if (!anchor) return;
 
+        paginationNext.style.display = 'none';
+
         anchor.append(paginationNext);
         paginationNextElement.set(paginationNext);
       })(),
@@ -467,6 +482,8 @@ export class List {
         if (paginationPrevious && !paginationPreviousElement.get()) {
           const anchor = paginationNextElement.get()?.parentElement || paginationWrapperElement;
           if (!anchor) return;
+
+          paginationPrevious.style.display = 'none';
 
           anchor.prepend(paginationPrevious);
           paginationPreviousElement.set(paginationPrevious);

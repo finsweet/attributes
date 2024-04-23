@@ -20,7 +20,7 @@ import { getAttribute, getElementSelector, hasAttributeValue, queryElement } fro
 import { loadPaginatedItems } from './load';
 
 /**
- * Inits the `Paginate` mode.
+ * Inits the `Pagination` mode.
  * @param list The {@link List} instance.
  *
  * @returns A callback to destroy the event listeners.

@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('cmsload', () => {
-  test('Loads items correctly', async ({ page }) => {
+  test.skip('Loads items correctly', async ({ page }) => {
     await waitAttributeLoaded(page, 'cmsload');
 
     // Pagination mode

@@ -1,5 +1,11 @@
 # @finsweet/attributes-countitems
 
+## 2.0.0
+
+### Major Changes
+
+- ec5cdc4: countitems: prepared for v2 release
+
 ## 1.6.0
 
 ### Minor Changes

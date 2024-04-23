@@ -1,5 +1,11 @@
 # @finsweet/attributes-autovideo
 
+## 2.0.0
+
+### Major Changes
+
+- 688d6ae: autovideo: prepared for v2 release
+
 ## 1.5.0
 
 ### Minor Changes

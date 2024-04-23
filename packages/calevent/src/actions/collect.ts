@@ -34,7 +34,7 @@ function formatTimes(
  * @param scope The element scope
  * @returns The calendar event object
  */
-function makeEvent(element: HTMLElement, instance: string | undefined, scope: HTMLElement | undefined): CalendarEvent {
+function makeEvent(element: HTMLElement, instance: string | null, scope: HTMLElement | undefined): CalendarEvent {
   const title = getElementTextContent('title', instance, scope) ?? '';
   const start = getElementTextContent('start', instance, scope) ?? '';
   const end: string | undefined = getElementTextContent('end', instance, scope);
@@ -61,7 +61,7 @@ function makeEvent(element: HTMLElement, instance: string | undefined, scope: HT
  */
 export function collectGoogleData(
   trigger: HTMLElement,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): Google {
   const eventDetails = makeEvent(trigger, instance, scope);
@@ -101,7 +101,7 @@ export function collectGoogleData(
  */
 export function collectOutlookData(
   trigger: HTMLElement,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): Outlook {
   const eventDetails = makeEvent(trigger, instance, scope);
@@ -132,7 +132,7 @@ export function collectOutlookData(
  */
 export function collectIcsData(
   trigger: HTMLElement,
-  instance: string | undefined,
+  instance: string | null,
   scope: HTMLElement | undefined
 ): Record<string, string | CalendarEventOrganizer | undefined>[] {
   const eventDetails = makeEvent(trigger, instance, scope);

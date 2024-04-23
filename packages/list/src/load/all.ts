@@ -2,11 +2,10 @@ import type { List } from '../components/List';
 import { loadPaginatedItems } from './load';
 
 /**
- * Inits the `Render All` mode.
- * @param list The `CMSList` instance.
- * @param loadingText The text to display while loading.
+ * Inits the `Load All` mode.
+ * @param list The {@link List} instance.
  */
-export const initRenderAllMode = (list: List) => {
+export const initAllMode = (list: List) => {
   const { paginationNextElement, paginationPreviousElement, paginationCountElement } = list;
 
   const paginationPrevious = paginationPreviousElement.get();

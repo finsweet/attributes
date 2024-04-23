@@ -17,6 +17,11 @@ export const ELEMENTS = [
   'item',
 
   /**
+   * Defines a link to an item's template page.
+   */
+  'item-link',
+
+  /**
    * Defines a button to clear a filter or all the filters.
    */
   'clear',
@@ -180,6 +185,41 @@ export const ELEMENTS = [
    * Defines an element that when clicked will remove the condition.
    */
   'condition-remove',
+
+  /**
+   * Defines a slider element.
+   */
+  'slider',
+
+  /**
+   * Defines a tabs element.
+   */
+  'tabs',
+
+  /**
+   * Defines a tab link element.
+   */
+  'tab-link',
+
+  /**
+   * Defines a <select> element.
+   */
+  'select',
+
+  /**
+   * Defines a select <option> value element.
+   */
+  'select-value',
+
+  /**
+   * Defines a nesting target
+   */
+  'nest-target',
+
+  /**
+   * Defines an element that has a comma-separated list of slugs of elements to nest into a specific target.
+   */
+  'nest-slugs',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
@@ -254,9 +294,9 @@ export const SETTINGS = {
   /**
    * Defines the descending CSS class.
    */
-  loadmode: {
-    key: 'loadmode',
-    values: { default: 'load-under', infinite: 'infinite', pagination: 'pagination', renderAll: 'render-all' },
+  load: {
+    key: 'load',
+    values: { more: 'more', infinite: 'infinite', pagination: 'pagination', all: 'all' },
   },
 
   /**
@@ -320,6 +360,22 @@ export const SETTINGS = {
    * Only used for checkboxes and radios to work around Webflow now allowing to define CMS based values for them.
    */
   value: { key: 'value' },
+
+  /**
+   * Defines a list instance where the list should be combined with.
+   */
+  combine: { key: 'combine' },
+
+  /**
+   * Defines the instance of a list to be nested into a nest-target.
+   */
+  nest: { key: 'nest' },
+
+  /**
+   * Defines if loaded Items can be cached using IndexedDB after fetching them.
+   * Defaults to `true`.
+   */
+  cache: { key: `cache`, values: { true: 'true' } },
 } as const satisfies AttributeSettings;
 
 export const DEFAULT_INFINITE_THRESHOLD = -20;

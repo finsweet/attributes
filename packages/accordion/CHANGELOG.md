@@ -1,5 +1,11 @@
 # @finsweet/attributes-accordion
 
+## 2.0.0
+
+### Major Changes
+
+- 2671384: prepare for v2 release
+
 ## 1.1.2
 
 ### Patch Changes

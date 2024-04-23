@@ -1,5 +1,11 @@
 # @finsweet/attributes-a11y
 
+## 2.0.0
+
+### Major Changes
+
+- 7740fc0: major: v2 release
+
 ## 1.1.3
 
 ### Patch Changes

@@ -1,11 +1,12 @@
 import {
   type CollectionItemElement,
   type CollectionListElement,
+  isHTMLAnchorElement,
   normalizeDate,
   normalizeNumber,
 } from '@finsweet/attributes-utils';
 
-import { getAttribute, getSettingSelector } from '../utils/selectors';
+import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 
 type ListItemFields = {
   [field: string]:
@@ -44,9 +45,9 @@ export class ListItem {
   public currentIndex?: number;
 
   /**
-   * Defines if the item needs a Webflow modules restart.
+   * Defines an awaitable Promise that resolves when the item's nesting is complete.
    */
-  public needsWebflowRestart: boolean;
+  public nesting?: Promise<void>;
 
   /**
    * @param element The DOM element of the item.
@@ -63,13 +64,15 @@ export class ListItem {
      */
     public readonly listElement: CollectionListElement
   ) {
-    this.href = element.querySelector('a')?.href;
+    let link = queryElement<HTMLAnchorElement>('item-link', { scope: element });
+
+    if (!isHTMLAnchorElement(link)) {
+      link = element.querySelector('a');
+    }
+
+    this.href = link?.href;
 
     this.currentIndex = [...listElement.children].indexOf(element);
-
-    const rendered = this.currentIndex >= 0;
-
-    this.needsWebflowRestart = !rendered;
 
     this.collectFields();
   }
@@ -80,7 +83,8 @@ export class ListItem {
   public collectFields() {
     const { element, fields } = this;
 
-    const fieldElements = [...element.querySelectorAll<HTMLElement>(getSettingSelector('field'))];
+    const fieldSelector = getSettingSelector('field');
+    const fieldElements = [...element.querySelectorAll<HTMLElement>(fieldSelector)];
 
     for (const element of fieldElements) {
       const fieldKey = getAttribute(element, 'field');
@@ -97,10 +101,13 @@ export class ListItem {
 
       fields[fieldKey] ||= { type, value: [] };
 
-      if (fields[fieldKey].type === type) {
-        // @ts-expect-error value is guaranteed to be the right type
-        fields[fieldKey].value.push(value);
-      }
+      const field = fields[fieldKey];
+
+      if (field.type !== type) continue;
+      if (field.value.some((v) => v === value)) continue;
+
+      // @ts-expect-error - Value is guaranteed to be the right type
+      field.value.push(value);
     }
   }
 }

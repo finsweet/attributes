@@ -1,5 +1,11 @@
 # @finsweet/attributes-displayvalues
 
+## 2.0.0
+
+### Major Changes
+
+- 4fd67e6: displayvalues: prepared for v2 release
+
 ## 1.4.0
 
 ### Minor Changes

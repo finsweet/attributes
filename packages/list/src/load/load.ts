@@ -16,7 +16,7 @@ export const loadPaginatedItems = async (list: List): Promise<void> => {
     paginationCountElement,
     loadingPaginationQuery: loadingPaginationData,
     loaderElement,
-    cacheItems,
+    cache: cacheItems,
   } = list;
 
   if (!paginationNextElement && !paginationPreviousElement) return;

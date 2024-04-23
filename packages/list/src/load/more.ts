@@ -6,11 +6,11 @@ import { loadPaginatedItems } from './load';
 
 /**
  * Inits the default mode.
- * @param list The `List` instance.
+ * @param list The {@link List} instance.
  *
  * @returns A callback to remove event listeners.
  */
-export const initLoadUnderMode = (list: List) => {
+export const initMoreMode = (list: List) => {
   const { paginationNextElement, paginationPreviousElement, paginationCountElement, itemsPerPage } = list;
 
   const paginationPrevious = paginationPreviousElement.get();

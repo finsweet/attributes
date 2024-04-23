@@ -1,12 +1,14 @@
 {
   "name": "@finsweet/attributes",
-  "version": "0.0.0",
+  "version": "2.0.4",
   "description": "Finsweet Attributes V2.",
   "homepage": "https://finsweet.com/attributes",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "attributes.js",
   "files": [
-    "dist"
+    "attributes.js",
+    "dist",
+    "schemas"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx ./bin/build.ts",

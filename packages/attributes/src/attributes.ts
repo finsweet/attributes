@@ -5,7 +5,7 @@ import { loadAttribute } from './load';
 /**
  * Inits the Finsweet Attributes library.
  */
-export const init = () => {
+const init = () => {
   const { fsAttributes } = window;
 
   // Avoid initting the Attributes API more than once.
@@ -20,8 +20,6 @@ export const init = () => {
 
   // Collect library scripts
   const scripts = [...document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`)];
-
-  console.log({ scripts, url: import.meta.url });
 
   // Init Attributes object
   window.fsAttributes = window.FsAttributes = {
@@ -115,3 +113,6 @@ const initAttribute = async (attribute: FsAttributeKey) => {
     console.error(err);
   }
 };
+
+// Init
+init();

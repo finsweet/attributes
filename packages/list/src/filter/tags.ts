@@ -4,8 +4,7 @@ import type { List } from '../components/List';
 import { getInstance, getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
 
 export const initTags = (list: List) => {
-  const instance = getInstance(list.listOrWrapper);
-  const tagTemplate = queryElement('tag', { instance });
+  const tagTemplate = queryElement('tag', { instance: list.instance });
   if (!tagTemplate) return;
 
   const tagsWrapper = tagTemplate.parentElement;
