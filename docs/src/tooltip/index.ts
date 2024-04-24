@@ -21,6 +21,7 @@ const voidElements = new Set([
 let tooltipEnabled = true;
 let tooltip: HTMLElement | null;
 let initialLoad = true;
+let helperStore: HTMLElement[] = [];
 
 /**
  * Searches for the closest element up the DOM tree that has any attribute starting with 'fs-'.
@@ -69,7 +70,12 @@ const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | un
   return element;
 };
 
-function showTooltipElement(element: HTMLElement, content: string) {
+/**
+ * Creates a tooltip element and appends it to the DOM.
+ * @param element
+ * @param content
+ */
+const showTooltipElement = (element: HTMLElement, content: string) => {
   if (!tooltip) {
     tooltip = document.createElement('div');
     tooltip.id = 'tooltip-helper';
@@ -111,16 +117,22 @@ function showTooltipElement(element: HTMLElement, content: string) {
 
   // show
   tooltip.style.visibility = 'visible';
-}
+};
 
-function removeTooltip() {
+/**
+ * Removes the tooltip element from the DOM.
+ */
+const removeTooltip = () => {
   const tooltip = document.getElementById('tooltip-helper');
 
   if (tooltip) {
     tooltip.remove();
   }
-}
+};
 
+/**
+ * Debounced mousemove event listener to show tooltips on elements with 'fs-' attributes.
+ */
 const debouncedMouseMove = debounce((event: MouseEvent) => {
   if (!tooltipEnabled) return;
 
@@ -133,8 +145,6 @@ const debouncedMouseMove = debounce((event: MouseEvent) => {
   const target = event.target as HTMLElement;
 
   const fsElement = findElementWithFsAttributes(target);
-  console.log('fsElement:', fsElement);
-  console.log('target hovered:', target);
 
   if (!fsElement) {
     removeTooltip();
@@ -146,7 +156,16 @@ const debouncedMouseMove = debounce((event: MouseEvent) => {
 
   const elementToStyle = getValidElementForPseudo(target);
 
+  if (!tooltipEnabled) {
+    return;
+  }
+
   if (fsAttributes.length > 0 && elementToStyle) {
+    // update temp store
+    helperStore.push(elementToStyle);
+
+    elementToStyle.style.cursor = 'help';
+
     const list = fsAttributes
       .map(
         (attr) =>
@@ -164,7 +183,7 @@ const debouncedMouseMove = debounce((event: MouseEvent) => {
  */
 const queryElementsWithFsAttributes = () => {
   // Get all elements in the document
-  const allElements = document.querySelectorAll('*');
+  const allElements = document.querySelectorAll<HTMLElement>('*');
 
   allElements.forEach((element) => {
     const hasHelper = element.classList.contains('helper');
@@ -188,8 +207,8 @@ const queryElementsWithFsAttributes = () => {
       (element.getAttribute('type') === 'checkbox' || element.getAttribute('type') === 'radio')
     ) {
       return (
-        element.parentElement?.querySelector('.fs-checkbox_button') ||
-        element.parentElement?.querySelector('.fs-radio_button') ||
+        element.parentElement?.querySelector<HTMLElement>('.fs-checkbox_button') ||
+        element.parentElement?.querySelector<HTMLElement>('.fs-radio_button') ||
         element
       );
     }
@@ -198,6 +217,19 @@ const queryElementsWithFsAttributes = () => {
   });
 
   return elements;
+};
+
+/**
+ * Remove the cursor style from all elements in the helperStore.
+ */
+const removeCursorStyle = () => {
+  if (helperStore.length === 0) return;
+
+  helperStore.forEach((element) => {
+    element.style.cursor = '';
+  });
+
+  helperStore = [];
 };
 
 /**
@@ -228,11 +260,11 @@ const initializeFsElementMouseover = (): void => {
 
   // init the .helper class on key press
   document.addEventListener('keydown', (e) => {
-    console.log('keycode', { key: e.key, which: e.which, code: e.code });
     if (e.key === '?' || e.which === 191 || e.keyCode === 191) {
       tooltipEnabled = !tooltipEnabled;
 
       if (!tooltipEnabled) {
+        removeCursorStyle();
         removeTooltip();
       }
 
