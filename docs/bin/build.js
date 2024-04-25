@@ -26,6 +26,7 @@ const context = await esbuild.context({
   define: {
     SERVE_ORIGIN: JSON.stringify(SERVE_ORIGIN),
   },
+  format: 'esm',
 });
 
 // Build files in prod
@@ -78,7 +79,7 @@ function logServedFiles() {
       // Create import suggestion
       const tag = location.endsWith('.css')
         ? `<link href="${location}" rel="stylesheet" type="text/css"/>`
-        : `<script defer src="${location}"></script>`;
+        : `<script type="module" src="${location}"></script>`;
 
       return {
         'File Location': location,
