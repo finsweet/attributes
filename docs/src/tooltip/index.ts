@@ -1,3 +1,4 @@
+import { animations, type Easings } from '@finsweet/attributes-utils';
 import debounce from 'just-debounce';
 
 const voidElements = new Set([
@@ -22,6 +23,13 @@ let tooltipEnabled = true;
 let tooltip: HTMLElement | null;
 let initialLoad = true;
 let helperStore: HTMLElement[] = [];
+let textColor = '#003238';
+let backgroundColor = '#00e4ff';
+let animation: keyof typeof animations = 'fade';
+let easing: Easings[number] = 'ease-in-out';
+let duration = 150;
+let keyCode = '191';
+let targetClass = 'helper';
 
 /**
  * Searches for the closest element up the DOM tree that has any attribute starting with 'fs-'.
@@ -75,14 +83,14 @@ const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | un
  * @param element
  * @param content
  */
-const showTooltipElement = (element: HTMLElement, content: string) => {
+const showTooltipElement = async (element: HTMLElement, content: string) => {
   if (!tooltip) {
     tooltip = document.createElement('div');
     tooltip.id = 'tooltip-helper';
     tooltip.style.position = 'fixed';
     tooltip.style.zIndex = '9999';
-    tooltip.style.backgroundColor = '#00e4ff';
-    tooltip.style.color = '#003238';
+    tooltip.style.backgroundColor = backgroundColor;
+    tooltip.style.color = textColor;
     tooltip.style.borderRadius = '.25rem';
     tooltip.style.padding = '.2rem .5rem';
     tooltip.style.margin = '0';
@@ -96,7 +104,7 @@ const showTooltipElement = (element: HTMLElement, content: string) => {
   tooltip.innerHTML = content;
   tooltip.style.display = 'block';
   //visibility none
-  tooltip.style.visibility = 'hidden';
+  tooltip.style.opacity = '0';
 
   // Measure the tooltip and target element
   const targetRect = element.getBoundingClientRect();
@@ -115,8 +123,17 @@ const showTooltipElement = (element: HTMLElement, content: string) => {
   tooltip.style.left = `${tooltipLeft}px`;
   tooltip.style.top = `${tooltipTop}px`;
 
-  // show
-  tooltip.style.visibility = 'visible';
+  // TODO: support opacity as a property in the animations object in packages\utils\src\animations\factory.ts
+  const prepare = animations[animation].prepareIn as (element: HTMLElement, options: { opacity: number }) => void;
+  const animate = animations[animation].animateIn as (
+    element: HTMLElement,
+    options: { opacity: number; duration: number; easing: Easings[number] }
+  ) => Promise<void>;
+
+  // animate
+  prepare(tooltip, { opacity: 1 });
+  await animate(tooltip, { opacity: 1, duration, easing });
+  // await animations[animation].animateIn(tooltip, { opacity: 1, duration, easing });
 };
 
 /**
@@ -133,13 +150,14 @@ const removeTooltip = () => {
 /**
  * Debounced mousemove event listener to show tooltips on elements with 'fs-' attributes.
  */
-const debouncedMouseMove = debounce((event: MouseEvent) => {
+const debouncedMouseMove = debounce(async (event: MouseEvent) => {
   if (!tooltipEnabled) return;
 
   tooltip = document.querySelector<HTMLElement>('#tooltip-helper');
 
   if (tooltip) {
-    tooltip.style.display = 'none';
+    // tooltip.style.display = 'none';
+    await animations[animation].animateOut(tooltip, { display: 'none', duration, easing });
   }
 
   const target = event.target as HTMLElement;
@@ -186,10 +204,10 @@ const queryElementsWithFsAttributes = () => {
   const allElements = document.querySelectorAll<HTMLElement>('*');
 
   allElements.forEach((element) => {
-    const hasHelper = element.classList.contains('helper');
+    const hasHelper = element.classList.contains(targetClass);
 
     if (hasHelper) {
-      element.classList.remove('helper');
+      element.classList.remove(targetClass);
     }
   });
 
@@ -232,10 +250,42 @@ const removeCursorStyle = () => {
   helperStore = [];
 };
 
+const updateHelperStyle = () => {
+  let style = document.getElementById('tooltip-helper-style');
+
+  if (!style) {
+    style = document.createElement('style');
+    style.setAttribute('id', 'tooltip-helper-style');
+
+    document.head.appendChild(style);
+  }
+
+  style.innerHTML = `
+    .${targetClass}, .${targetClass}:hover {
+      outline-color: ${backgroundColor};
+      outline-offset: 3px;
+      outline-width: 1px;
+      outline-style: solid;
+    }
+  `;
+};
+
 /**
  * Initialize the mouseover event listener for elements with 'fs-' attributes.
  */
 const initializeFsElementMouseover = (): void => {
+  const script = document.querySelector<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`);
+
+  textColor = script?.getAttribute('text-color') || '#003238';
+  backgroundColor = script?.getAttribute('background-color') || '#00e4ff';
+  animation = (script?.getAttribute('animation') as keyof typeof animations) || 'fade';
+  easing = (script?.getAttribute('easing') as Easings[number]) || 'ease-in-out';
+  duration = Number(script?.getAttribute('duration')) || 150;
+  keyCode = script?.getAttribute('key') || '191';
+  targetClass = script?.getAttribute('target-class') || 'helper';
+
+  updateHelperStyle();
+
   document.addEventListener('mouseover', debouncedMouseMove);
 
   const defaultHelpers = document.querySelectorAll('.helper');
@@ -244,14 +294,14 @@ const initializeFsElementMouseover = (): void => {
   // clear any existing helper classes that were added in webflow so that script can manage it.
   if (defaultHelpers.length > 0) {
     defaultHelpers.forEach((helper) => {
-      helper.classList.remove('helper');
+      helper.classList.remove(targetClass);
     });
   }
 
   if (initialLoad) {
     helperElements.forEach((element) => {
       if (element) {
-        element.classList.add('helper');
+        element.classList.add(targetClass);
       }
     });
 
@@ -260,7 +310,7 @@ const initializeFsElementMouseover = (): void => {
 
   // init the .helper class on key press
   document.addEventListener('keydown', (e) => {
-    if (e.key === '?' || e.which === 191 || e.keyCode === 191) {
+    if (e.key === keyCode || e.which === Number(keyCode) || e.keyCode === Number(keyCode)) {
       tooltipEnabled = !tooltipEnabled;
 
       if (!tooltipEnabled) {
@@ -270,7 +320,7 @@ const initializeFsElementMouseover = (): void => {
 
       helperElements.forEach((element) => {
         if (element) {
-          element.classList.toggle('helper');
+          element.classList.toggle(targetClass);
         }
       });
     }
