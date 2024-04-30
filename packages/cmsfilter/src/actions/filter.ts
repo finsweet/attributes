@@ -107,7 +107,8 @@ const checkFilterValidity = (
           filterElements.some(({ type }) => !['checkbox', 'radio', 'select-one'].includes(type)) ||
           filterKeys.length > 1
         ) {
-          isValid = propValue.toLowerCase().includes(filterValue.toLowerCase());
+          if (match === 'all') isValid = filterValue.toLowerCase() === propValue.toLowerCase();
+          else isValid = propValue.toLowerCase().includes(filterValue.toLowerCase());
         }
 
         // Multiple Prop Values
@@ -123,6 +124,9 @@ const checkFilterValidity = (
 
     return match === 'all' ? matchingFilterValues.length === filterValues.length : matchingFilterValues.length > 0;
   });
+
+  if (filterElements.some(({ type }) => !['checkbox', 'radio', 'select-one'].includes(type)) && match === 'all')
+    return validFilterKeys.length > 0;
 
   return match === 'all' ? validFilterKeys.length === filterKeys.length : validFilterKeys.length > 0;
 };
