@@ -19,17 +19,19 @@ const voidElements = new Set([
   'select',
 ]);
 
-let tooltipEnabled = true;
+let xrayActive = true;
 let tooltip: HTMLElement | null;
 let initialLoad = true;
-let helperStore: HTMLElement[] = [];
+let xrayStore: HTMLElement[] = [];
+let xrayElements: HTMLElement[] = [];
 let textColor = '#003238';
 let backgroundColor = '#00e4ff';
 let animation: keyof typeof animations = 'fade';
 let easing: Easings[number] = 'ease-in-out';
 let duration = 150;
 let keyCode = '191';
-let targetClass = 'helper';
+let targetClass = 'x-ray';
+let script: HTMLScriptElement | null;
 
 /**
  * Searches for the closest element up the DOM tree that has any attribute starting with 'fs-'.
@@ -45,6 +47,12 @@ const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null =
   // 2. Check children of the parent element if they have 'fs-' attributes
   const { parentElement } = element;
   if (parentElement) {
+    // if parent is 'fs-' element, return it
+    if (Array.from(parentElement.attributes).some((attr) => attr.name.startsWith('fs-'))) {
+      return parentElement;
+    }
+
+    // else check its children
     for (const child of Array.from(parentElement.children) as HTMLElement[]) {
       if (Array.from(child.attributes).some((attr) => attr.name.startsWith('fs-'))) {
         return child;
@@ -86,7 +94,7 @@ const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | un
 const showTooltipElement = async (element: HTMLElement, content: string) => {
   if (!tooltip) {
     tooltip = document.createElement('div');
-    tooltip.id = 'tooltip-helper';
+    tooltip.id = 'tooltip-xray';
     tooltip.style.position = 'fixed';
     tooltip.style.zIndex = '9999';
     tooltip.style.backgroundColor = backgroundColor;
@@ -140,7 +148,7 @@ const showTooltipElement = async (element: HTMLElement, content: string) => {
  * Removes the tooltip element from the DOM.
  */
 const removeTooltip = () => {
-  const tooltip = document.getElementById('tooltip-helper');
+  const tooltip = document.getElementById('tooltip-xray');
 
   if (tooltip) {
     tooltip.remove();
@@ -151,9 +159,9 @@ const removeTooltip = () => {
  * Debounced mousemove event listener to show tooltips on elements with 'fs-' attributes.
  */
 const debouncedMouseMove = debounce(async (event: MouseEvent) => {
-  if (!tooltipEnabled) return;
+  if (!xrayActive) return;
 
-  tooltip = document.querySelector<HTMLElement>('#tooltip-helper');
+  tooltip = document.querySelector<HTMLElement>('#tooltip-xray');
 
   if (tooltip) {
     // tooltip.style.display = 'none';
@@ -174,13 +182,20 @@ const debouncedMouseMove = debounce(async (event: MouseEvent) => {
 
   const elementToStyle = getValidElementForPseudo(target);
 
-  if (!tooltipEnabled) {
+  if (!xrayActive || !elementToStyle) {
     return;
   }
 
-  if (fsAttributes.length > 0 && elementToStyle) {
+  if (fsAttributes.length > 0) {
+    const toIgnore = elementToStyle?.getAttribute('x-ray');
+    if (toIgnore === 'ignore') {
+      // remove
+      ignoreElement(elementToStyle);
+      return;
+    }
+
     // update temp store
-    helperStore.push(elementToStyle);
+    xrayStore.push(elementToStyle);
 
     elementToStyle.style.cursor = 'help';
 
@@ -204,9 +219,9 @@ const queryElementsWithFsAttributes = () => {
   const allElements = document.querySelectorAll<HTMLElement>('*');
 
   allElements.forEach((element) => {
-    const hasHelper = element.classList.contains(targetClass);
+    const hasxray = element.classList.contains(targetClass);
 
-    if (hasHelper) {
+    if (hasxray && !xrayActive) {
       element.classList.remove(targetClass);
     }
   });
@@ -238,24 +253,24 @@ const queryElementsWithFsAttributes = () => {
 };
 
 /**
- * Remove the cursor style from all elements in the helperStore.
+ * Remove the cursor style from all elements in the xrayStore.
  */
 const removeCursorStyle = () => {
-  if (helperStore.length === 0) return;
+  if (xrayStore.length === 0) return;
 
-  helperStore.forEach((element) => {
+  xrayStore.forEach((element) => {
     element.style.cursor = '';
   });
 
-  helperStore = [];
+  xrayStore = [];
 };
 
-const updateHelperStyle = () => {
-  let style = document.getElementById('tooltip-helper-style');
+const updatexrayStyle = () => {
+  let style = document.getElementById('tooltip-xray-style');
 
   if (!style) {
     style = document.createElement('style');
-    style.setAttribute('id', 'tooltip-helper-style');
+    style.setAttribute('id', 'tooltip-xray-style');
 
     document.head.appendChild(style);
   }
@@ -273,33 +288,41 @@ const updateHelperStyle = () => {
 /**
  * Initialize the mouseover event listener for elements with 'fs-' attributes.
  */
-const initializeFsElementMouseover = (): void => {
-  const script = document.querySelector<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`);
+const initializeXRAY = (): void => {
+  if (!script) {
+    script = document.querySelector<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`);
 
-  textColor = script?.getAttribute('text-color') || '#003238';
-  backgroundColor = script?.getAttribute('background-color') || '#00e4ff';
-  animation = (script?.getAttribute('animation') as keyof typeof animations) || 'fade';
-  easing = (script?.getAttribute('easing') as Easings[number]) || 'ease-in-out';
-  duration = Number(script?.getAttribute('duration')) || 150;
-  keyCode = script?.getAttribute('key') || '191';
-  targetClass = script?.getAttribute('target-class') || 'helper';
+    textColor = script?.getAttribute('text-color') || '#003238';
+    backgroundColor = script?.getAttribute('background-color') || '#00e4ff';
+    animation = (script?.getAttribute('animation') as keyof typeof animations) || 'fade';
+    easing = (script?.getAttribute('easing') as Easings[number]) || 'ease-in-out';
+    duration = Number(script?.getAttribute('duration')) || 150;
+    keyCode = script?.getAttribute('key') || '191';
+    targetClass = script?.getAttribute('target-class') || 'xray';
+  }
 
-  updateHelperStyle();
+  updatexrayStyle();
 
-  document.addEventListener('mouseover', debouncedMouseMove);
-
-  const defaultHelpers = document.querySelectorAll('.helper');
-  const helperElements = queryElementsWithFsAttributes();
+  const defaultxrays = document.querySelectorAll('.helper');
 
   // clear any existing helper classes that were added in webflow so that script can manage it.
-  if (defaultHelpers.length > 0) {
-    defaultHelpers.forEach((helper) => {
-      helper.classList.remove(targetClass);
+  if (defaultxrays.length > 0) {
+    defaultxrays.forEach((xray) => {
+      xray.classList.remove('helper');
     });
   }
 
+  xrayElements = queryElementsWithFsAttributes();
+
   if (initialLoad) {
-    helperElements.forEach((element) => {
+    xrayElements.forEach((element) => {
+      const toIgnore = element?.getAttribute('x-ray');
+      if (toIgnore === 'ignore') {
+        // remove
+        ignoreElement(element);
+        return;
+      }
+
       if (element) {
         element.classList.add(targetClass);
       }
@@ -307,24 +330,62 @@ const initializeFsElementMouseover = (): void => {
 
     initialLoad = false;
   }
-
-  // init the .helper class on key press
-  document.addEventListener('keydown', (e) => {
-    if (e.key === keyCode || e.which === Number(keyCode) || e.keyCode === Number(keyCode)) {
-      tooltipEnabled = !tooltipEnabled;
-
-      if (!tooltipEnabled) {
-        removeCursorStyle();
-        removeTooltip();
-      }
-
-      helperElements.forEach((element) => {
-        if (element) {
-          element.classList.toggle(targetClass);
-        }
-      });
-    }
-  });
 };
 
-initializeFsElementMouseover();
+/**
+ * Remove the x-ray class from the element and its closest parent with x-ray ignore attribute.
+ * @param element
+ */
+const ignoreElement = (element: HTMLElement) => {
+  const closestIgnore = element.closest('[x-ray="ignore"]');
+  // handle closest parent with x-ray ignore
+  if (closestIgnore) {
+    closestIgnore.classList.remove(targetClass);
+  }
+
+  // handle element itself
+  element.classList.remove(targetClass);
+};
+
+/**
+ * Handle the keydown event to toggle the x-ray mode.
+ * @param e
+ */
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === keyCode || e.which === Number(keyCode) || e.keyCode === Number(keyCode)) {
+    xrayActive = !xrayActive;
+
+    if (!xrayActive) {
+      removeCursorStyle();
+      removeTooltip();
+    }
+
+    xrayElements.forEach((element) => {
+      if (element) {
+        const toIgnore = element?.getAttribute('x-ray');
+        if (toIgnore === 'ignore') {
+          // remove
+          ignoreElement(element);
+          return;
+        }
+
+        element.classList.toggle(targetClass);
+      }
+    });
+  }
+};
+
+// dom ready
+document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('mouseover', debouncedMouseMove);
+  document.addEventListener('keydown', handleKeydown);
+
+  const config: MutationObserverInit = {
+    childList: true,
+    subtree: true,
+  };
+
+  const debouncedCallback = debounce(initializeXRAY, 150);
+  const observer = new MutationObserver(debouncedCallback);
+  observer.observe(document.body, config);
+});
