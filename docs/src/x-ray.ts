@@ -278,8 +278,8 @@ const updatexrayStyle = () => {
   style.innerHTML = `
     .${targetClass}, .${targetClass}:hover {
       outline-color: ${backgroundColor};
-      outline-offset: 3px;
-      outline-width: 1px;
+      outline-offset: 0.15rem;
+      outline-width: 0.15rem;
       outline-style: solid;
     }
   `;
