@@ -188,9 +188,11 @@ const debouncedMouseMove = debounce(async (event: MouseEvent) => {
 
   if (fsAttributes.length > 0) {
     const toIgnore = elementToStyle?.getAttribute('x-ray');
-    if (toIgnore === 'ignore') {
+    const toIgnoreALt = fsElement?.getAttribute('x-ray');
+    if (toIgnore === 'ignore' || toIgnoreALt === 'ignore') {
       // remove
-      ignoreElement(elementToStyle);
+      if (toIgnore === 'ignore') ignoreElement(elementToStyle);
+      if (toIgnoreALt === 'ignore') ignoreElement(fsElement);
       return;
     }
 
