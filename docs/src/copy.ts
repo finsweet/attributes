@@ -112,13 +112,13 @@ const enableElement = (element: HTMLElement, textToShow = '') => {
   const { textContent } = element;
 
   if (textToShow) {
-    const button_text = element.querySelector('.button_text');
+    const buttonText = element.querySelector('.button_text');
 
-    if (button_text) button_text.textContent = textToShow;
+    if (buttonText) buttonText.textContent = textToShow;
     else element.textContent = textToShow;
 
     setTimeout(() => {
-      if (button_text) button_text.textContent = textContent;
+      if (buttonText) buttonText.textContent = textContent;
       else element.textContent = textContent;
 
       element.style.pointerEvents = 'auto';

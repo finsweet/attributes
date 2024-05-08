@@ -47,7 +47,7 @@ let backgroundColor = '#00e4ff';
 let animation: keyof typeof animations = 'fade';
 let easing: Easings[number] = 'ease-in-out';
 let duration = 150;
-let keyCode = '191';
+let keyCode = '?';
 let targetClass = 'x-ray';
 
 const altTags = ['INPUT'];
@@ -56,7 +56,7 @@ const script = document.currentScript as HTMLScriptElement;
 /**
  * Searches for the closest element up the DOM tree that has any attribute starting with 'fs-'.
  * @param element - The starting HTMLElement to check.
- * @returns HTMLElement | null - The found element with 'fs-' attributes or null if none found.
+ * @returns The found element with 'fs-' attributes or null if none found.
  */
 const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null => {
   // 1. Check the current element
@@ -67,12 +67,7 @@ const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null =
   // 2. Check children of the parent element if they have 'fs-' attributes
   const { parentElement } = element;
   if (parentElement) {
-    // if parent is 'fs-' element, return it
-    if (Array.from(parentElement.attributes).some((attr) => attr.name.startsWith('fs-'))) {
-      return parentElement;
-    }
-
-    // else check its children
+    // check its children
     for (const child of Array.from(parentElement.children) as HTMLElement[]) {
       if (Array.from(child.attributes).some((attr) => attr.name.startsWith('fs-'))) {
         return child;
@@ -80,7 +75,7 @@ const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null =
     }
 
     // 3. Traverse parents and return the closest one with an 'fs-' attribute
-    let ancestor: HTMLElement | null = parentElement;
+    let ancestor: HTMLElement | null = element;
     while (ancestor) {
       if (Array.from(ancestor.attributes).some((attr) => attr.name.startsWith('fs-'))) {
         return ancestor;
@@ -95,7 +90,7 @@ const findElementWithFsAttributes = (element: HTMLElement): HTMLElement | null =
 /**
  * Checks if the given element is a void element and returns the parent to apply styles.
  * @param element - The HTMLElement to check.
- * @returns HTMLElement - The element to apply the xray outline styles to.
+ * @returns The element to apply the xray outline styles to.
  */
 const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | undefined => {
   if (voidElements.has(element.tagName.toLowerCase())) {
@@ -151,16 +146,8 @@ const showTooltipElement = async (element: HTMLElement, content: string) => {
   tooltip.style.left = `${tooltipLeft}px`;
   tooltip.style.top = `${tooltipTop}px`;
 
-  // TODO: support opacity as a property in the animations object in packages\utils\src\animations\factory.ts
-  const prepare = animations[animation].prepareIn as (element: HTMLElement, options: { opacity: number }) => void;
-  const animate = animations[animation].animateIn as (
-    element: HTMLElement,
-    options: { opacity: number; duration: number; easing: Easings[number] }
-  ) => Promise<void>;
-
   // animate
-  prepare(tooltip, { opacity: 1 });
-  await animate(tooltip, { opacity: 1, duration, easing });
+  await animations[animation].animateIn(tooltip, { duration, easing });
 };
 
 /**
@@ -176,8 +163,8 @@ const removeTooltip = () => {
 
 /**
  * Checks if the element has an 'x-ray' attribute set to 'ignore' and disables x-ray mode for that element.
- * @param {Element | null} element - The element to check.
- * @returns {boolean} - Returns true if the element was ignored, otherwise false.
+ * @param element - The element to check.
+ * @returns true if the element was ignored, otherwise false.
  */
 const checkAndIgnoreElement = (element: Element | null): boolean => {
   if (element?.getAttribute('x-ray') === 'ignore') {
@@ -247,7 +234,7 @@ const debouncedMouseMove = debounce(async (event: MouseEvent) => {
 
 /**
  * Query all elements that have attributes starting with 'fs-'.
- * @returns {HTMLElement[]} An array of HTMLElements that have attributes starting with 'fs-'.
+ * @returns An array of HTMLElements that have attributes starting with 'fs-'.
  */
 const queryElementsWithFsAttributes = () => {
   // Get all elements in the document
@@ -330,7 +317,7 @@ const xrayInit = (): void => {
   animation = (script?.getAttribute('animation') as keyof typeof animations) || 'fade';
   easing = (script?.getAttribute('easing') as Easings[number]) || 'ease-in-out';
   duration = Number(script?.getAttribute('duration')) || 150;
-  keyCode = script?.getAttribute('key') || '191';
+  keyCode = script?.getAttribute('key') || '?';
   targetClass = script?.getAttribute('target-class') || 'x-ray';
 
   updateTooltipStyle();
@@ -364,7 +351,7 @@ const xrayInit = (): void => {
  * @param e
  */
 const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === keyCode || e.which === Number(keyCode) || e.keyCode === Number(keyCode)) {
+  if (e.key === keyCode) {
     xrayActive = !xrayActive;
 
     if (!xrayActive) {
