@@ -1,10 +1,4 @@
-import {
-  addListener,
-  cloneNode,
-  createRenderController,
-  type FormField,
-  simulateEvent,
-} from '@finsweet/attributes-utils';
+import { addListener, cloneNode, type FormField, RenderController, simulateEvent } from '@finsweet/attributes-utils';
 import { atom, computed, type ReadableAtom, type WritableAtom } from 'nanostores';
 
 import type { List } from '../components/List';
@@ -34,7 +28,7 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
   // Handle condition groups matching
   const conditionGroupMatch = queryElement<HTMLSelectElement>('condition-group-match', { scope: form });
   if (conditionGroupMatch) {
-    const renderController = createRenderController(conditionGroupMatch);
+    const renderController = new RenderController(conditionGroupMatch);
 
     const renderCleanup = conditionGroups.subscribe(($conditionGroups) => {
       const shouldRender = $conditionGroups.length > 1;
@@ -124,7 +118,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
   // Handle condition matching
   const conditionMatch = queryElement<HTMLSelectElement>('condition-match', { scope: conditionGroup });
   if (conditionMatch) {
-    const renderController = createRenderController(conditionMatch);
+    const renderController = new RenderController(conditionMatch);
 
     const renderCleanup = groupConditions.subscribe(($groupConditions) => {
       const shouldRender = $groupConditions.length > 1;
@@ -178,7 +172,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
     });
 
     // Handle remove button display
-    const renderController = createRenderController(conditionGroupRemove);
+    const renderController = new RenderController(conditionGroupRemove);
 
     const renderCleanup = conditionGroups.subscribe(($conditionGroups) => {
       const shouldRender = $conditionGroups.length > 1;

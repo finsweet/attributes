@@ -83,64 +83,58 @@ export const isScrollable = (element: Element): boolean => {
   return overflow === 'auto' || overflow === 'scroll';
 };
 
-/**
- * Creates a render controller for an element.
- * @param element The element to control.
- * @param options.rendered Whether the element is currently rendered or not. Defaults to `true`.
- * @returns The render controller.
- */
-export const createRenderController = (element: Element, { rendered = true }: { rendered?: boolean } = {}) => {
-  const anchor = new Comment();
+export class RenderController {
+  #rendered = true;
+  #anchor = new Comment();
+
+  /**
+   * Creates a render controller instance for an element.
+   * @param element The element to control.
+   */
+  constructor(public readonly element: Element) {}
 
   /**
    * Renders the element using the anchor as a reference.
    */
-  const render = () => {
-    if (rendered) return;
+  render() {
+    if (this.#rendered) return;
 
-    anchor.after(element);
-    anchor.remove();
+    this.#anchor.after(this.element);
+    this.#anchor.remove();
 
-    rendered = true;
-  };
+    this.#rendered = true;
+  }
 
   /**
    * Removes the element from the DOM and replaces it with the anchor.
    */
-  const remove = () => {
-    if (!rendered) return;
+  remove() {
+    if (!this.#rendered) return;
 
-    element.after(anchor);
-    element.remove();
+    this.element.after(this.#anchor);
+    this.element.remove();
 
-    rendered = false;
-  };
+    this.#rendered = false;
+  }
 
   /**
    * Updates the element's rendering state.
    * @param shouldRender Whether the element should be rendered or not.
    */
-  const update = (shouldRender: boolean) => {
-    if (shouldRender) render();
-    else remove();
-  };
+  update(shouldRender: boolean) {
+    if (shouldRender) this.render();
+    else this.remove();
+  }
 
   /**
    * Destroys the render controller.
    * @param forceRender Whether to force the element to be rendered after destroying the controller.
    */
-  const destroy = (forceRender = true) => {
+  destroy(forceRender = true) {
     if (forceRender) {
-      render();
+      this.render();
     }
 
-    anchor.remove();
-  };
-
-  return {
-    update,
-    render,
-    remove,
-    destroy,
-  };
-};
+    this.#anchor.remove();
+  }
+}

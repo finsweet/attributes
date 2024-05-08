@@ -350,8 +350,8 @@ export const SETTINGS = {
       'greater-equal': 'greater-equal',
       less: 'less',
       'less-equal': 'less-equal',
-      exists: 'exists',
-      'not-exists': 'not-exists',
+      empty: 'empty',
+      'not-empty': 'not-empty',
     },
   },
 
