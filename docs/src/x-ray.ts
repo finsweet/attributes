@@ -36,6 +36,10 @@ let initialLoad = true;
  */
 let xrayElements: HTMLElement[] = [];
 /**
+ * Store xray active element
+ */
+let xrayActiveElement: HTMLElement | null;
+/**
  * Default values for x-ray mode.
  */
 let textColor = '#003238';
@@ -98,6 +102,31 @@ const getValidElementForPseudo = (element: HTMLElement): HTMLElement | null | un
 };
 
 /**
+ * Updates the position of the tooltip element relative to the target element.
+ * @param element - The target element.
+ * @param tooltip - The tooltip element.
+ */
+const updateTooltipPosition = () => {
+  if (!tooltip || !xrayActiveElement) return;
+
+  // Measure the tooltip and target element
+  const targetRect = xrayActiveElement.getBoundingClientRect();
+  const tooltipHeight = tooltip.offsetHeight;
+  const viewportWidth = window.innerWidth;
+
+  // Calculate the top position of the tooltip
+  const tooltipTop = targetRect.top - tooltipHeight - 10;
+  let tooltipLeft = targetRect.left;
+
+  // Adjust left position if the target is in the right half of the viewport
+  if (targetRect.left + targetRect.width / 2 > viewportWidth / 2 && xrayActiveElement.clientWidth < 150) {
+    tooltipLeft = targetRect.left + targetRect.width / 2 - tooltip.offsetWidth / 2 - 50;
+  }
+
+  tooltip.style.left = `${tooltipLeft}px`;
+  tooltip.style.top = `${tooltipTop}px`;
+};
+/**
  * Creates a tooltip element and appends it to the DOM.
  * @param element
  * @param content
@@ -125,22 +154,9 @@ const showTooltipElement = async (element: HTMLElement, content: string) => {
   //visibility none
   tooltip.style.opacity = '0';
 
-  // Measure the tooltip and target element
-  const targetRect = element.getBoundingClientRect();
-  const tooltipHeight = tooltip.offsetHeight;
-  const viewportWidth = window.innerWidth;
-
-  // Calculate the top position of the tooltip
-  const tooltipTop = targetRect.top - tooltipHeight - 10;
-  let tooltipLeft = targetRect.left;
-
-  // Adjust left position if the target is in the right half of the viewport
-  if (targetRect.left + targetRect.width / 2 > viewportWidth / 2 && element.clientWidth < 150) {
-    tooltipLeft = targetRect.left + targetRect.width / 2 - tooltip.offsetWidth / 2 - 50;
-  }
-
-  tooltip.style.left = `${tooltipLeft}px`;
-  tooltip.style.top = `${tooltipTop}px`;
+  // update tooltip position
+  xrayActiveElement = element;
+  updateTooltipPosition();
 
   // animate
   await animations[animation].animateIn(tooltip, { duration, easing });
@@ -279,8 +295,8 @@ const updateTooltipStyle = () => {
   style.innerHTML = `
     .${targetClass}, .${targetClass}:hover {
       outline-color: ${backgroundColor};
-      outline-offset: 0.15rem;
-      outline-width: 0.15rem;
+      outline-offset: 3px;
+      outline-width: 1px;
       outline-style: solid;
     }
   `;
@@ -344,10 +360,20 @@ const handleKeydown = (e: KeyboardEvent) => {
   }
 };
 
+/**
+ * Handle the scroll event to update the tooltip position.
+ */
+const handleScroll = () => {
+  if (xrayActiveElement) {
+    updateTooltipPosition();
+  }
+};
+
 // dom ready
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('mouseover', debouncedMouseMove);
   document.addEventListener('keydown', handleKeydown);
+  document.addEventListener('scroll', handleScroll, { passive: true });
 
   const config: MutationObserverInit = {
     childList: true,
