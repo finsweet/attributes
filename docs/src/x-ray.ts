@@ -32,10 +32,6 @@ let tooltip: HTMLElement | null;
  */
 let initialLoad = true;
 /**
- * Temporary store for target elements.
- */
-let xrayStore: HTMLElement[] = [];
-/**
  * Store for elements with 'x-ray' attribute.
  */
 let xrayElements: HTMLElement[] = [];
@@ -216,11 +212,6 @@ const debouncedMouseMove = debounce(async (event: MouseEvent) => {
   if (fsAttributes.length > 0) {
     if (checkAndIgnoreElement(elementToStyle) || checkAndIgnoreElement(fsElement)) return;
 
-    // update temp store
-    xrayStore.push(elementToStyle);
-
-    elementToStyle.style.cursor = 'help';
-
     const list = fsAttributes
       .map(
         (attr) =>
@@ -270,19 +261,6 @@ const queryElementsWithFsAttributes = () => {
   });
 
   return elements;
-};
-
-/**
- * Remove the cursor style from all elements in the xrayStore.
- */
-const removeCursorStyle = () => {
-  if (xrayStore.length === 0) return;
-
-  xrayStore.forEach((element) => {
-    element.style.cursor = '';
-  });
-
-  xrayStore = [];
 };
 
 /**
@@ -355,7 +333,6 @@ const handleKeydown = (e: KeyboardEvent) => {
     xrayActive = !xrayActive;
 
     if (!xrayActive) {
-      removeCursorStyle();
       removeTooltip();
     }
 
