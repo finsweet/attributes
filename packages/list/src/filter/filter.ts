@@ -12,7 +12,7 @@ export const filterItems = (filters: Filters, items: ListItem[]) => {
         if (!filterData.field || !filterData.op || !filterData.value) return true;
 
         const fieldData = item.fields[filterData.field];
-        if (!fieldData) return true;
+        if (!fieldData) return false;
 
         switch (filterData.op) {
           case 'empty': {
