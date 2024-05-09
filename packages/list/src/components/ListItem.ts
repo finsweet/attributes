@@ -8,20 +8,22 @@ import {
 
 import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 
+export type ListItemField =
+  | {
+      type: 'text';
+      value: string[];
+    }
+  | {
+      type: 'date';
+      value: Date[];
+    }
+  | {
+      type: 'number';
+      value: number[];
+    };
+
 type ListItemFields = {
-  [field: string]:
-    | {
-        type: 'text';
-        value: string[];
-      }
-    | {
-        type: 'date';
-        value: Date[];
-      }
-    | {
-        type: 'number';
-        value: number[];
-      };
+  [field: string]: ListItemField;
 };
 
 /**
