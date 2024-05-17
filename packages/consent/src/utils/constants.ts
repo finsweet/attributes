@@ -223,7 +223,7 @@ export const GTM_EVENT_SUFFIX = '-activated';
 // Defaults
 export const CONSENT_REQUIRED: Consents = Object.freeze({
   analytics: false,
-  essential: false,
+  essential: true,
   marketing: false,
   personalization: false,
   uncategorized: false,
