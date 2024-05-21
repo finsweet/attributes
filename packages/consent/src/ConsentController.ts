@@ -126,23 +126,21 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     const consents = getConsentsCookie();
 
     // Set consent mode for GTM
-    if (this.store.consentMode) {
-      const consentModes: ConsentMode = {
-        ad_storage: consents?.marketing ? 'granted' : 'denied',
-        ad_user_data: consents?.marketing ? 'granted' : 'denied',
-        ad_personalization: consents?.marketing ? 'granted' : 'denied',
-        analytics_storage: consents?.analytics ? 'granted' : 'denied',
-        functionality_storage: consents?.personalization ? 'granted' : 'denied',
-        personalization_storage: consents?.personalization ? 'granted' : 'denied',
-        security_storage: 'granted',
-      };
+    const consentModes: ConsentMode = {
+      ad_storage: consents?.marketing ? 'granted' : 'denied',
+      ad_user_data: consents?.marketing ? 'granted' : 'denied',
+      ad_personalization: consents?.marketing ? 'granted' : 'denied',
+      analytics_storage: consents?.analytics ? 'granted' : 'denied',
+      functionality_storage: consents?.personalization ? 'granted' : 'denied',
+      personalization_storage: consents?.personalization ? 'granted' : 'denied',
+      security_storage: 'granted',
+    };
 
-      // Set consent mode cookies
-      setConsentModeCookies(consentModes, 120, this.store.domain);
+    // Set consent mode cookies
+    setConsentModeCookies(consentModes, 120, this.store.domain);
 
-      // Set consent mode for GTM
-      setConsentMode('default', consentModes);
-    }
+    // Set consent mode for GTM
+    setConsentMode('default', consentModes);
 
     if (!consents) return;
 
@@ -225,12 +223,7 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     const { store } = this;
     const { cookieMaxAge, endpoint, domain } = store;
 
-    const checkboxEssential = queryElement('checkbox-essential');
-
-    // if essential checkbox is checked by default, hidden input, Essential cookies are required by default.
-    const essentialIsMandatory = checkboxEssential?.hasAttribute('checked');
-
-    if (checkboxEssential && essentialIsMandatory && !consents.essential) {
+    if (!consents.essential) {
       // we make sure essential is always true
       consents = {
         ...consents,
@@ -272,13 +265,11 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       }
     }
 
-    if (store.consentMode) {
-      // Set consent mode cookies
-      setConsentModeCookies(consentMode, 120, domain);
+    // Set consent mode cookies
+    setConsentModeCookies(consentMode, 120, domain);
 
-      // Set consent mode for GTM
-      setConsentMode('update', consentMode);
-    }
+    // Set consent mode for GTM
+    setConsentMode('update', consentMode);
 
     // POST the consents to the endpoint
     if (endpoint)

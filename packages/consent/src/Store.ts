@@ -20,7 +20,6 @@ export default class Store {
   public readonly mode: ModeKey = 'opt-in'; // Cookie consent mode, opt-in by default
   public readonly cookieMaxAge: number = 120; // In days; Defaults to 120
   public readonly debugMode: boolean = true; // Cookie consent mode, opt-in by default
-  public readonly consentMode: boolean; // Cookie consent mode, opt-in by default
   public readonly endpoint?: string | null; // Endpoint where the consents will be POSTed
   public readonly componentsSource?: string | null; // Page where the components are located
   public readonly domain?: string | null; // The domain used to store the consent cookie
@@ -38,9 +37,6 @@ export default class Store {
     this.domain = getAttribute(null, 'domain');
     this.resetix = getAttribute(null, 'resetix');
     this.cookieMaxAge = parseNumericAttribute(getAttribute(null, 'expires'), DEFAULT_COOKIE_MAX_AGE);
-    // Get the consent mode
-    const consentModeAttribute = getAttribute(null, 'consentMode');
-    this.consentMode = consentModeAttribute === 'true';
 
     // Get the consents
     switch (this.mode) {
