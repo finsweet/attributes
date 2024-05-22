@@ -20,7 +20,12 @@ _Important:_ It's only required to import it once, no matter how many Attribute 
 Define the Attribute solutions that should be loaded on each page by adding the following inside the `<head>` tag:
 
 ```html
-<finsweet-attributes solution="SOLUTION_KEY" />
+<script
+  async
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js"
+  fs-SOLUTION_KEY
+></script>
 ```
 
 Replace `SOLUTION_KEY` with the key of the solution you want to load. You can load as many solutions as you want.
@@ -28,22 +33,35 @@ Replace `SOLUTION_KEY` with the key of the solution you want to load. You can lo
 Example:
 
 ```html
-<finsweet-attributes solution="cmsload" />
-<finsweet-attributes solution="cmsnest" />
-<finsweet-attributes solution="cmsfilter" />
-<finsweet-attributes solution="cmssort" />
-<finsweet-attributes solution="cmsselect" />
-<finsweet-attributes solution="rangeslider" />
+<script
+  async
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js"
+  fs-rangeslider
+  fs-date
+  fs-socialshare
+  fs-consent
+></script>
 ```
 
 ### 3. Optional: Define the global settings
 
 Attributes reads the settings from the HTML Attributes that are added to the elements on the page. But some solutions also allow passing a set of global settings.
 
-To do so, add the settings to the module elements **without prefixes**.
+To do so, add the settings to the module elements **with solution prefixes included**.
 
 Example:
 
 ```html
-<finsweet-attributes solution="component" proxy="https://api.finsweet.com/cors?url=" />
+<script
+  async
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js"
+  fs-rangeslider
+  fs-date
+  fs-socialshare
+  fs-consent
+  fs-consent-mode="opt-in"
+  fs-consent-source="/"
+></script>
 ```
