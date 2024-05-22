@@ -1,5 +1,5 @@
 import {
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isHTMLElement,
   isHTMLInputElement,
   isNotEmpty,
@@ -12,7 +12,7 @@ import { getAttribute, queryAllElements, queryElement } from './utils/selectors'
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   // Get all search input elements

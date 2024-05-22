@@ -1,6 +1,6 @@
 import {
   addListener,
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isElement,
   isFormField,
   isHTMLInputElement,
@@ -12,7 +12,7 @@ import { getElementSelector, getInstance, queryElement } from './utils/selectors
 /**
  * Inits click events mirroring.
  */
-export const init: FsAttributeInit = () => {
+export const init: FinsweetAttributeInit = () => {
   const inputCleanup = addListener(window, 'input', ({ target }) => {
     if (!isElement(target)) return;
 

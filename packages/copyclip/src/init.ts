@@ -1,6 +1,6 @@
 import {
   findTextNode,
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isHTMLElement,
   isNotEmpty,
   parseNumericAttribute,
@@ -14,7 +14,7 @@ import { getAttribute, getInstance, queryAllElements, queryElement } from './uti
 /**
  * Inits the copy to clipboard functionality.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await await waitWebflowReady();
 
   const copyTriggers = queryAllElements('click');

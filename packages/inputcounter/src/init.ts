@@ -1,4 +1,4 @@
-import { type FsAttributeInit, isNotEmpty, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, isNotEmpty, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initInputCounter } from './factory';
 import { getElementSelector } from './utils/selectors';
@@ -6,14 +6,14 @@ import { getElementSelector } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const inputElements = [...document.querySelectorAll<HTMLInputElement>(`input${getElementSelector('input')}`)];
 
   const cleanups = inputElements.map(initInputCounter).filter(isNotEmpty);
 
-  window.fsAttributes.load('a11y');
+  window.finsweetAttributes.load('a11y');
 
   return {
     result: inputElements,

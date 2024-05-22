@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initTyping } from './actions/typing';
 import { queryAllElements } from './utils';
@@ -7,7 +7,7 @@ import { typingInstancesStore } from './utils';
 /**
  * Inits the typing attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const textElements = queryAllElements<HTMLElement>('text');

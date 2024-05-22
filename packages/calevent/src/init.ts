@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { listenTriggerClicks } from './actions/trigger';
 import { createCalendarEventInstances } from './factory';
@@ -7,7 +7,7 @@ import { stores } from './utils';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   // click listener callback

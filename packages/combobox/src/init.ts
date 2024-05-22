@@ -1,4 +1,4 @@
-import { type FsAttributeInit, isNotEmpty, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, isNotEmpty, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { listenEvents } from './actions/events';
 import { observeElements } from './actions/observe';
@@ -9,7 +9,7 @@ import { queryAllElements } from './utils/selectors';
 /**
  * Inits the attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   // TODO: Make compatible with fs-list

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type * as ATTRIBUTES from '../constants/attributes';
 
-export type FsAttributeKey = (typeof ATTRIBUTES)[keyof typeof ATTRIBUTES];
+export type FinsweetAttributeKey = (typeof ATTRIBUTES)[keyof typeof ATTRIBUTES];
 
 export type AttributeElements = readonly string[];
 
@@ -14,19 +14,19 @@ export type AttributeSettings = {
   };
 };
 
-export type FsAttributes = {
+export type FinsweetAttributes = {
   /**
    * Run a callback (or multiple callbacks) after an Attribute has loaded.
-   * @param args A {@link FsAttributesCallback} array.
+   * @param args A {@link FinsweetAttributesCallback} array.
    */
-  push: (...args: FsAttributesCallback[]) => void;
+  push: (...args: FinsweetAttributesCallback[]) => void;
 
   /**
    * Dynamically imports an Attribute solution.
    * @param attribute
    * @returns A Promise that resolves once the Attribute has loaded.
    */
-  load: (attribute: FsAttributeKey) => Promise<any> | undefined;
+  load: (attribute: FinsweetAttributeKey) => Promise<any> | undefined;
 
   /**
    * Destroys all Attributes instances.
@@ -37,13 +37,13 @@ export type FsAttributes = {
    * Contains access to each Attribute solution.
    */
   solutions: {
-    [key in FsAttributeKey]?: FsAttributeControls;
+    [key in FinsweetAttributeKey]?: FinsweetAttributeControls;
   };
 
   /**
    * Contains the Attributes that are currently running.
    */
-  process: Set<FsAttributeKey>;
+  process: Set<FinsweetAttributeKey>;
 
   /**
    * Contains the script tags that define the Attributes library.
@@ -52,9 +52,9 @@ export type FsAttributes = {
   scripts: HTMLScriptElement[];
 };
 
-export type FsAttributesCallback = [FsAttributeKey, (value: any) => void];
+export type FinsweetAttributesCallback = [FinsweetAttributeKey, (value: any) => void];
 
-export type FsAttributeControls<T = any> = {
+export type FinsweetAttributeControls<T = any> = {
   /**
    * Defines the Attribute version.
    */
@@ -73,7 +73,7 @@ export type FsAttributeControls<T = any> = {
   /**
    * Restarts the Attribute.
    */
-  restart?: FsAttributeInit;
+  restart?: FinsweetAttributeInit;
 
   /**
    * Destroys the Attribute instance.
@@ -88,14 +88,14 @@ type AttributeInitResult =
     }
   | undefined;
 
-export type FsAttributeInit = () => AttributeInitResult | Promise<AttributeInitResult>;
+export type FinsweetAttributeInit = () => AttributeInitResult | Promise<AttributeInitResult>;
 
 /**
  * Window object.
  */
 declare global {
   interface Window {
-    fsAttributes: FsAttributes;
-    FsAttributes: FsAttributes;
+    finsweetAttributes: FinsweetAttributes;
+    FinsweetAttributes: FinsweetAttributes;
   }
 }
