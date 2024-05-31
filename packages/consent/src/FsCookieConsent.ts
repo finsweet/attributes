@@ -175,7 +175,10 @@ export default class FsCookieConsent {
 
     const closest = target.closest(openPreference);
 
-    if (closest) {
+    // accept when user clicks fixed-preferences element
+    const isFixedPreferencesClicked = queryElement('fixed-preferences')?.contains(target);
+
+    if (closest || isFixedPreferencesClicked) {
       banner?.close();
       manager?.close();
       preferences?.open();
