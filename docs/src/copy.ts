@@ -1,61 +1,3 @@
-interface Configurator {
-  target: string;
-  text: string;
-  textContent: boolean;
-  script?: boolean;
-  stopPropagation: boolean;
-  button?: boolean;
-  changeText?: boolean;
-  detached?: boolean;
-}
-/**
- * Copy Elements Configuration
- * TODO: migrate this to attribute when ready.
- */
-export const configurator: Configurator[] = [
-  // script tag
-  {
-    target: '.copy_button',
-    text: '.docs-2_script_richtext p',
-    textContent: true,
-    script: true,
-    stopPropagation: false,
-    button: true,
-    changeText: true,
-  },
-  {
-    target: '.docs-2_flashcard-header-component .copy_button-dark',
-    text: '.docs-2_script_richtext p',
-    textContent: true,
-    script: true,
-    stopPropagation: false,
-    detached: true,
-    button: true,
-    changeText: true,
-  },
-  // text attributes
-  {
-    target: '.panel_attributes_copy',
-    text: '.panel_attributes_value',
-    textContent: true,
-    stopPropagation: false,
-    changeText: true,
-  },
-
-  {
-    target: '.docs-2_tag_item .docs-2_tag_block',
-    text: '',
-    textContent: true,
-    stopPropagation: true,
-  },
-  {
-    target: '.docs-2_tag_item .docs-2_tag_block',
-    text: '',
-    textContent: true,
-    stopPropagation: true,
-  },
-];
-
 /**
  * CSS string to be injected into the head of the document.
  */
@@ -234,95 +176,47 @@ const extractAttributes = (scriptString: string): string => {
 };
 
 /**
- * Handle the copy event.
- * @param e - The event object.
- * @param textElement - The element to copy the text from.
- * @param config - Element Configurations
- * @param target - The target element.
+ * Handle the trigger element click event.
+ * @param element
  * @returns
  */
-const handleCopy = (e: Event, textElement: HTMLElement, config: Configurator, target: HTMLElement) => {
-  if (config.stopPropagation) {
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-  }
+const handleTrigger = (element: HTMLElement) => {
+  const instance = element.getAttribute('fs-docs-instance');
 
-  if (config?.script) {
-    copyScript(textElement?.textContent, target, config?.changeText ? 'Copied!' : '');
+  if (!instance) return;
 
+  // get target element with matching instance
+  const target = document.querySelector<HTMLElement>(`[fs-docs-copy="target"][fs-docs-instance="${instance}"]`);
+
+  if (!target) return;
+
+  const { textContent } = target;
+
+  if (!textContent) return;
+
+  // if script tag, check for 'src' attribute
+  if (textContent.includes('script') && textContent.includes('src="')) {
+    copyScript(textContent, element, 'Copied');
     return;
   }
 
-  if (config.changeText) {
-    const text = textElement?.textContent || 'Failed to copy';
-
-    copyText(text, target, 'Copied!');
-
-    return;
-  }
-
-  const text = textElement?.textContent || 'Failed to copy';
-
-  copyText(text, textElement, '');
+  copyText(textContent, element, 'Copied');
 };
 
 /**
- * Initialize the copy functionality.
- * @param config - The configuration object.
+ * Add click event listener to elements.
+ * @param elements
+ * @param callback
  */
-export const initCopy = (config: Configurator) => {
-  const targetElements = document.querySelectorAll<HTMLElement>(config.target);
+const addClickListener = (elements: NodeListOf<HTMLElement>, callback: (el: HTMLElement) => void) => {
+  elements.forEach((el) => {
+    el.classList.add('copied-text');
 
-  if (targetElements.length === 0) return;
-
-  targetElements.forEach((target) => {
-    // add default style copied-text
-    // Add class to show "Copied!"
-    target.classList.add('copied-text');
-
-    if (config.text && config.button) {
-      // handle copy script for button
-      const parent = target.parentElement;
-
-      let textElement = parent?.querySelector(config.text) as HTMLElement;
-
-      if (config?.detached) textElement = document.querySelector(config.text) as HTMLElement;
-
-      addClickEventListener(target, textElement, config);
-
-      return;
-    }
-
-    if (config.text && !config?.button) {
-      // handle copy script for non-button, these are attributes name sand attribute values
-      const closest = target.closest(config.text) as HTMLElement;
-      const parent = target.parentElement;
-
-      let textElement = parent?.querySelector(config.text) as HTMLElement;
-
-      if (closest) textElement = closest;
-
-      addClickEventListener(target, textElement, config);
-
-      return;
-    }
-
-    // handle copy script for non-button, these are attributes names and attribute values
-    addClickEventListener(target, target, config);
-  });
-};
-
-/**
- * Add click event to the copy button.
- * @param target - The target element to add the event listener to.
- * @param textElement - The element to copy the text from.
- * @param element - The copy element object.
- */
-const addClickEventListener = (target: HTMLElement, textElement: HTMLElement, config: Configurator) => {
-  textElement.classList.add('copied-text');
-
-  target.addEventListener('click', (e) => handleCopy(e, textElement, config, target), {
-    capture: config?.stopPropagation ? true : false,
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      callback(el);
+    });
   });
 };
 
@@ -331,5 +225,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject the CSS into the <head>
   injectCSS(cssString);
 
-  configurator.forEach(initCopy);
+  // Get all trigger elements
+  const triggers = document.querySelectorAll<HTMLElement>('[fs-docs-copy="trigger"]');
+  addClickListener(triggers, handleTrigger);
+
+  // Get all text content triggers
+  const textContentTriggers = document.querySelectorAll<HTMLElement>('[fs-docs-copy="text-content"]');
+  addClickListener(textContentTriggers, (el) => {
+    if (el.textContent) copyText(el.textContent, el);
+  });
 });

@@ -1,5 +1,11 @@
 # @finsweet/attributes-docs
 
+## 2.0.2
+
+### Patch Changes
+
+- 61ec9a1: feat: replace classnames with attributes in copy helper
+
 ## 2.0.1
 
 ### Patch Changes
