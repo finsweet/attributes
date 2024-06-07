@@ -12,6 +12,7 @@ import {
   getElementSelector,
   queryElement,
   renderComponentsFromSource,
+  showWrapperElement,
 } from './utils';
 
 /**
@@ -54,6 +55,8 @@ export default class FsCookieConsent {
     if (componentsSource) await renderComponentsFromSource(componentsSource, store?.resetix === 'true');
 
     await waitDOMReady();
+
+    showWrapperElement();
 
     const bannerElement = queryElement('banner');
     if (bannerElement) {

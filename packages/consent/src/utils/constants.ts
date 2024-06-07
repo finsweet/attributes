@@ -4,26 +4,69 @@ import type { ConsentKey, Consents } from '../utils';
 
 export const ELEMENTS = [
   /**
-   * This is an element example definition.
+   * Banner element
    */
   'banner',
+  /**
+   * Preferences banner element
+   */
   'preferences',
+  /**
+   * Open preferences element. This element will open the preferences banner.
+   */
   'open-preferences',
+  /**
+   * Fixed preferences element.
+   */
   'fixed-preferences',
+  /**
+   * Triggers allow preferences
+   */
   'allow',
+  /**
+   * Triggers deny preferences element
+   */
   'deny',
+  /**
+   * Closes preferences banner element
+   */
   'close',
+  /**
+   * Submits preferences selected
+   */
   'submit',
+  /**
+   * Interaction trigger element
+   */
   'interaction',
-  'marketing',
-  'personalization',
-  'analytics',
-  'cookie-consent',
-  'opt-in',
-  'disable',
+  /**
+   * Placeholder element
+   */
   'placeholder',
+  /**
+   * Preferences Form element
+   */
   'form',
+  /**
+   * Preferences Form Checkbox element
+   */
   'checkbox-essential',
+  /**
+   * Preferences Form Checkbox element
+   */
+  'checkbox-marketing',
+  /**
+   * Preferences Form Checkbox element
+   */
+  'checkbox-personalization',
+  /**
+   * Preferences Form Checkbox element
+   */
+  'checkbox-analytics',
+  /**
+   * Internal component element, identifies element that wraps banner elements
+   */
+  'internal-component',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

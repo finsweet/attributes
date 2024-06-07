@@ -8,7 +8,7 @@ import {
 
 import { Debug } from '../components';
 import { type IFrameData, type ScriptData } from '../utils';
-import { getElementSelector } from './selectors';
+import { getElementSelector, queryElement } from './selectors';
 
 /**
  * Fetches the components from a specified source and renders them to the DOM.
@@ -59,6 +59,22 @@ export const renderComponentsFromSource = async (source: string, resetix: boolea
   } catch (error) {
     Debug.alert(`${error}`, 'error');
   }
+};
+
+/**
+ * Checks if the wrapper element exists and hidden and shows it if it is
+ */
+export const showWrapperElement = (): void => {
+  const banner = queryElement('banner');
+  const selector = getElementSelector('internal-component');
+
+  const wrapper = banner?.closest<HTMLDivElement>(selector);
+
+  if (!wrapper) return;
+
+  const isVisible = wrapper.checkVisibility();
+
+  if (!isVisible) wrapper.style.display = 'block';
 };
 
 /**
