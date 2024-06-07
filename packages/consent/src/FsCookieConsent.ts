@@ -187,4 +187,26 @@ export default class FsCookieConsent {
       Debug.alert(`Open Preferences button was clicked.`, 'info');
     }
   }
+
+  /**
+   * Destroys the instance
+   */
+  public destroy() {
+    // Remove event listeners
+    document.removeEventListener('click', this.handleMouseAndKeyboard);
+    document.removeEventListener('keydown', this.handleMouseAndKeyboard);
+
+    this.consentController?.clearListeners();
+    this.banner?.clearListeners();
+    this.preferences?.clearListeners();
+    this.manager?.clearListeners();
+
+    // remove elements
+    this.banner?.element?.remove();
+    this.preferences?.element?.remove();
+    this.manager?.element?.remove();
+
+    // Debug mode
+    Debug.alert('FsCookieConsent instance destroyed.', 'info');
+  }
 }

@@ -13,5 +13,8 @@ export const init: FsAttributeInit = async () => {
 
   return {
     result: instance,
+    destroy() {
+      instance.destroy();
+    },
   };
 };

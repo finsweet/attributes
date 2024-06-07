@@ -239,6 +239,7 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
 
     // Set consent mode for GTM and fire the correspondent GTM events
     const consentMode: ConsentMode = {};
+    const consentedConsents: string[] = [];
 
     for (const updatedConsent of updatedConsents) {
       const consented = consents[updatedConsent];
@@ -261,7 +262,7 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
 
       if (consented) {
         const event = DYNAMIC_KEYS.gtmEvent(updatedConsent);
-        fireUniqueGTMEvent(event);
+        consentedConsents.push(event);
       }
     }
 
@@ -270,6 +271,9 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
 
     // Set consent mode for GTM
     setConsentMode('update', consentMode);
+
+    // Fire the correspondent GTM events as last after setting the consent modes
+    if (consentedConsents.length > 0) consentedConsents.forEach((event) => fireUniqueGTMEvent(event));
 
     // POST the consents to the endpoint
     if (endpoint)
