@@ -1,6 +1,6 @@
 export type ComponentTargetData = {
   target: HTMLElement;
-  componentId: string;
+  instance: string | null;
   source: URL;
   proxiedSource?: URL;
   loadCSS: boolean;

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-inputactive",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Set custom active CSS classes for Webflow form elements.",
   "private": true,
   "type": "module",

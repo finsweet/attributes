@@ -1,10 +1,10 @@
-import { type FsAttributeKey } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeKey } from '@finsweet/attributes-utils';
 
 /**
  * Dynamically loads an attribute package.
  * @param solution
  */
-export const loadAttribute = async (solution: FsAttributeKey) => {
+export const loadAttribute = async (solution: FinsweetAttributeKey) => {
   switch (solution) {
     case 'a11y': {
       return import('@finsweet/attributes-a11y');
@@ -18,44 +18,12 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-autovideo');
     }
 
-    case 'cmscombine': {
-      return import('@finsweet/attributes-cmscombine');
+    case 'beforeafter': {
+      return import('@finsweet/attributes-beforeafter');
     }
 
-    case 'cmsfilter': {
-      return import('@finsweet/attributes-cmsfilter');
-    }
-
-    case 'cmsload': {
-      return import('@finsweet/attributes-cmsload');
-    }
-
-    case 'cmsnest': {
-      return import('@finsweet/attributes-cmsnest');
-    }
-
-    case 'cmsprevnext': {
-      return import('@finsweet/attributes-cmsprevnext');
-    }
-
-    case 'cmsselect': {
-      return import('@finsweet/attributes-cmsselect');
-    }
-
-    case 'cmsslider': {
-      return import('@finsweet/attributes-cmsslider');
-    }
-
-    case 'cmssort': {
-      return import('@finsweet/attributes-cmssort');
-    }
-
-    case 'cmsstatic': {
-      return import('@finsweet/attributes-cmsstatic');
-    }
-
-    case 'cmstabs': {
-      return import('@finsweet/attributes-cmstabs');
+    case 'calevent': {
+      return import('@finsweet/attributes-calevent');
     }
 
     case 'codehighlight': {
@@ -114,6 +82,14 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-linkblockedit');
     }
 
+    case 'list': {
+      return import('@finsweet/attributes-list');
+    }
+
+    case 'masonry': {
+      return import('@finsweet/attributes-masonry');
+    }
+
     case 'mirrorclick': {
       return import('@finsweet/attributes-mirrorclick');
     }
@@ -124,6 +100,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'modal': {
       return import('@finsweet/attributes-modal');
+    }
+
+    case 'nativesearch': {
+      return import('@finsweet/attributes-nativesearch');
     }
 
     case 'numbercount': {
@@ -180,6 +160,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'toc': {
       return import('@finsweet/attributes-toc');
+    }
+
+    case 'typing': {
+      return import('@finsweet/attributes-typing');
     }
 
     case 'videohls': {

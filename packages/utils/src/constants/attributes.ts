@@ -6,6 +6,10 @@ export const ANIMATION_ATTRIBUTE = 'animation';
 
 export const AUTO_VIDEO_ATTRIBUTE = 'autovideo';
 
+export const BEFORE_AFTER_ATTRIBUTE = 'beforeafter';
+
+export const CAL_EVENT_ATTRIBUTE = 'calevent';
+
 export const CMS_ATTRIBUTE_ATTRIBUTE = 'cmsattribute';
 
 export const CMS_COMBINE_ATTRIBUTE = 'cmscombine';
@@ -58,15 +62,21 @@ export const GREENHOUSE_ATTRIBUTE = 'greenhouse';
 
 export const LINK_BLOCK_EDIT_ATTRIBUTE = 'linkblockedit';
 
+export const MASONRY_ATTRIBUTE = 'masonry';
+
 export const MIRROR_CLICK_ATTRIBUTE = 'mirrorclick';
 
 export const MIRROR_INPUT_ATTRIBUTE = 'mirrorinput';
 
 export const MODAL_ATTRIBUTE = 'modal';
 
+export const NATIVE_SEARCH_ATTRIBUTE = 'nativesearch';
+
 export const NUMBER_COUNT_ATTRIBUTE = 'numbercount';
 
 export const LAUNCHDARKLY_ATTRIBUTE = 'launchdarkly';
+
+export const LIST_ATTRIBUTE = 'list';
 
 export const QUERY_PARAM_ATTRIBUTE = 'queryparam';
 
@@ -93,6 +103,8 @@ export const SUPPORT_ATTRIBUTE = 'support';
 export const TABS_ATTRIBUTE = 'tabs';
 
 export const TOC_ATTRIBUTE = 'toc';
+
+export const TYPING_ATTRIBUTE = 'typing';
 
 export const READ_TIME_ATTRIBUTE = 'readtime';
 

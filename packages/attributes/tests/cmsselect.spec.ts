@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('cmsselect', () => {
-  test('Populates options from lists', async ({ page }) => {
+  test.skip('Populates options from lists', async ({ page }) => {
     const select1 = page.getByTestId('select-1');
     const select2 = page.getByTestId('select-2');
     const select3 = page.getByTestId('select-3');

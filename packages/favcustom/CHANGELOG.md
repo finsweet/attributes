@@ -1,5 +1,19 @@
 # @finsweet/attributes-favcustom
 
+## 2.0.1
+
+### Patch Changes
+
+- b56e5e5: rename fsAttribute in places of usage to finsweetAttribute
+- Updated dependencies [b56e5e5]
+  - @finsweet/attributes-utils@0.0.1
+
+## 2.0.0
+
+### Major Changes
+
+- 542c642: favcustom: prepared for v2 release
+
 ## 1.5.0
 
 ### Minor Changes

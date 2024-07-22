@@ -64,7 +64,7 @@ export const SETTINGS = {
   },
 
   /**
-   * if set to true, `restartWebflow()` will be called after the consent is updated
+   * if set to true, `restartWebflow(["ix2"])` will be called after the consent is updated
    */
   resetix: {
     key: 'resetix',
@@ -123,6 +123,9 @@ export const SETTINGS = {
    */
   scroll: {
     key: 'scroll',
+    values: {
+      disable: 'disable',
+    },
   },
 
   /**
@@ -241,4 +244,4 @@ export const CONSENT_ALL: Consents = Object.freeze({
   uncategorized: true,
 } as const);
 
-export const DEFAULT_COOKIE_MAX_AGE = '180';
+export const DEFAULT_COOKIE_MAX_AGE = 180;

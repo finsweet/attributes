@@ -24,15 +24,17 @@ test.describe('component', () => {
     const target4 = page.getByTestId('target-4');
 
     // Components are rendered
-    const target3Component = target3.locator('[fs-component-id]');
-    const target4Component = target4.locator('[fs-component-id]');
+    const target3Component = target3.locator('[fs-component-element="component"]');
+    const target4Component = target4.locator('[fs-component-element="component"]');
 
     await expect(target3Component).toBeVisible();
     await expect(target4Component).toBeVisible();
 
-    // External CSS is loaded
-    const target3CSS = target3.locator('link');
+    // External CSS is loaded when css is true
+    const target3CSS = target3.locator('link[type="text/css"]');
+    const target4CSS = target4.locator('link[type="text/css"]');
 
     await expect(target3CSS).toHaveCount(1);
+    await expect(target4CSS).toHaveCount(0);
   });
 });

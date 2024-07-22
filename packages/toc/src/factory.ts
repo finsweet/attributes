@@ -4,7 +4,7 @@ import { observeLinksState } from './actions/observe';
 import { populateLinks } from './actions/populate';
 import { prepareTOC } from './actions/prepare';
 import { setScrollOffsets } from './actions/scroll';
-import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from './utils/selectors';
+import { getAttribute, getInstance, hasAttributeValue, queryElement } from './utils/selectors';
 
 /**
  * Inits a TOC instance.
@@ -12,9 +12,9 @@ import { getAttribute, getInstanceIndex, hasAttributeValue, queryElement } from 
  * @returns
  */
 export const initTOCInstance = (contentsElement: HTMLElement) => {
-  const instanceIndex = getInstanceIndex(contentsElement);
+  const instance = getInstance(contentsElement);
 
-  const linkTemplate = queryElement('link', { instanceIndex });
+  const linkTemplate = queryElement('link', { instance });
   if (!linkTemplate) return;
 
   const headingsData = collectHeadingsData(contentsElement);
@@ -22,7 +22,7 @@ export const initTOCInstance = (contentsElement: HTMLElement) => {
 
   if (!headingsData.length || !linksData.length) return;
 
-  const tocWrapper = prepareTOC(linksData, instanceIndex);
+  const tocWrapper = prepareTOC(linksData, instance);
   if (!tocWrapper) return;
 
   const tocItems = populateLinks(headingsData, linksData, tocWrapper);

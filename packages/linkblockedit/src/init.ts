@@ -3,7 +3,7 @@ import {
   ARIA_LABEL_KEY,
   ARIA_ROLE_KEY,
   ARIA_ROLE_VALUES,
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isHTMLAnchorElement,
   isHTMLElement,
   TABINDEX_KEY,
@@ -15,7 +15,7 @@ import { getElementSelector, queryAllElements } from './utils/selectors';
 /**
  * Inits editor friendly link blocks.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const elements = queryAllElements('parent');

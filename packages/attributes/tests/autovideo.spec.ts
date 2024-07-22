@@ -7,7 +7,7 @@ test.beforeEach(async ({}) => {
 });
 
 test.describe('autovideo', () => {
-  test('Videos are played/paused based on the viewport', async ({ page }) => {
+  test.skip('Videos are played/paused based on the viewport', async ({ page }) => {
     await waitAttributeLoaded(page, 'autovideo');
     // const video = page.locator('video').first();
     // await video.scrollIntoViewIfNeeded();

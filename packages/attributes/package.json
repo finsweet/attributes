@@ -1,12 +1,14 @@
 {
   "name": "@finsweet/attributes",
-  "version": "0.0.0",
-  "description": "Finsweet Attributes.",
+  "version": "2.0.5",
+  "description": "Finsweet Attributes V2.",
   "homepage": "https://finsweet.com/attributes",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "attributes.js",
   "files": [
-    "dist"
+    "attributes.js",
+    "dist",
+    "schemas"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx ./bin/build.ts",
@@ -37,16 +39,8 @@
     "@finsweet/attributes-a11y": "workspace:*",
     "@finsweet/attributes-accordion": "workspace:*",
     "@finsweet/attributes-autovideo": "workspace:*",
-    "@finsweet/attributes-cmscombine": "workspace:*",
-    "@finsweet/attributes-cmsfilter": "workspace:*",
-    "@finsweet/attributes-cmsload": "workspace:*",
-    "@finsweet/attributes-cmsnest": "workspace:*",
-    "@finsweet/attributes-cmsprevnext": "workspace:*",
-    "@finsweet/attributes-cmsselect": "workspace:*",
-    "@finsweet/attributes-cmsslider": "workspace:*",
-    "@finsweet/attributes-cmssort": "workspace:*",
-    "@finsweet/attributes-cmsstatic": "workspace:*",
-    "@finsweet/attributes-cmstabs": "workspace:*",
+    "@finsweet/attributes-beforeafter": "workspace:*",
+    "@finsweet/attributes-calevent": "workspace:*",
     "@finsweet/attributes-codehighlight": "workspace:*",
     "@finsweet/attributes-combobox": "workspace:*",
     "@finsweet/attributes-component": "workspace:*",
@@ -61,9 +55,12 @@
     "@finsweet/attributes-inputcounter": "workspace:*",
     "@finsweet/attributes-launchdarkly": "workspace:*",
     "@finsweet/attributes-linkblockedit": "workspace:*",
+    "@finsweet/attributes-list": "workspace:*",
+    "@finsweet/attributes-masonry": "workspace:*",
     "@finsweet/attributes-mirrorclick": "workspace:*",
     "@finsweet/attributes-mirrorinput": "workspace:*",
     "@finsweet/attributes-modal": "workspace:*",
+    "@finsweet/attributes-nativesearch": "workspace:*",
     "@finsweet/attributes-numbercount": "workspace:*",
     "@finsweet/attributes-queryparam": "workspace:*",
     "@finsweet/attributes-rangeslider": "workspace:*",
@@ -78,11 +75,12 @@
     "@finsweet/attributes-starrating": "workspace:*",
     "@finsweet/attributes-tabs": "workspace:*",
     "@finsweet/attributes-toc": "workspace:*",
+    "@finsweet/attributes-typing": "workspace:*",
     "@finsweet/attributes-utils": "workspace:*",
     "@finsweet/attributes-videohls": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
-    "tsx": "^3.12.7"
+    "tsx": "^4.7.1"
   }
 }

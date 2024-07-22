@@ -25,7 +25,7 @@ export const getGroupSettings = (group: HTMLElement): AccordionGroupData => {
     }
   }
 
-  return { single, initial, activeClass, accordions: [] };
+  return { group, single, initial, activeClass, accordions: [] };
 };
 
 /**

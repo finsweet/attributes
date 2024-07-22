@@ -14,6 +14,7 @@ import {
   fireUniqueGTMEvent,
   getAttribute,
   getConsentsCookie,
+  getConsentStatus,
   getSettingSelector,
   getUpdatedStateCookie,
   MAIN_KEY,
@@ -45,6 +46,8 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
     super();
 
     this.loadConsents();
+
+    this.setConsentMode();
 
     this.storeElements();
 
@@ -137,6 +140,73 @@ export default class ConsentController extends Emittery<ConsentManagerEvents> {
       // Debug mode
       Debug.alert('Previously denied cookies have been deleted.', 'info');
     }
+  }
+
+  /**
+   * Initializes the Consent Mode and updates it when the consent controller changes.
+   * Ref: https://support.google.com/analytics/answer/9976101
+   * Ref: https://www.youtube.com/watch?v=MqAEbshMv84&t=493s
+   * Consent Mode Docs: https://support.google.com/analytics/answer/9976101
+   * Article: https://www.simoahava.com/analytics/consent-settings-google-tag-manager/
+   */
+  public setConsentMode() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line prefer-rest-params
+      dataLayer.push(arguments);
+    }
+
+    const consents = this.store.getConsents();
+
+    const consentMode = {
+      /**
+       * Google Analytics: Enables storage that supports the functionality of the website or app e.g. language settings.
+       */
+      functionality_storage: getConsentStatus('essential', consents),
+
+      /**
+       * Google Analytics: Enables storage related to security such as authentication functionality, fraud prevention, and other user protection.
+       */
+      security_storage: getConsentStatus('essential', consents),
+
+      /**
+       * Google Analytics: : Enables storage (such as cookies) related to advertising.
+       */
+      ad_storage: getConsentStatus('essential', consents),
+
+      /**
+       * Google Analytics: Enables storage (such as cookies) related to analytics e.g. visit duration.
+       */
+      analytics_storage: getConsentStatus('analytics', consents),
+
+      /**
+       * Google Analytics: Enables storage related to personalization e.g. video recommendations
+       */
+      personalization_storage: getConsentStatus('personalization', consents),
+
+      /**
+       * Uncategorised: This is not part of the default consent modes, can be added as a custom required consent under GTM consent settings.
+       */
+      uncategorized_storage: getConsentStatus('uncategorized', consents),
+
+      /**
+       * Google Analytics: Sets consent for sending user data related to advertising to Google.
+       */
+      ad_user_data: getConsentStatus('personalization', consents),
+
+      /**
+       * Google Analytics: Sets consent for personalized advertising.
+       */
+      ad_personalization: getConsentStatus('personalization', consents),
+    };
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    gtag('consent', !consents ? 'default' : 'update', {
+      ...consentMode,
+    });
   }
 
   /**

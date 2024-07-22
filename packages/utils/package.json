@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-utils",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Attributes utils",
   "private": true,
   "sideEffects": false,

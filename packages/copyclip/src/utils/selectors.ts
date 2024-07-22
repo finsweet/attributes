@@ -2,7 +2,7 @@ import { COPY_CLIP_ATTRIBUTE, generateSelectors } from '@finsweet/attributes-uti
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { queryElement, queryAllElements, getAttribute, getInstanceIndex } = generateSelectors(
+export const { queryElement, queryAllElements, getAttribute, getInstance } = generateSelectors(
   COPY_CLIP_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

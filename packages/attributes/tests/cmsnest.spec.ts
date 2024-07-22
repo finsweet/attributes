@@ -2,8 +2,9 @@ import { expect, test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 
+// TODO: migrate to fs-list
 test.describe('cmsnest', () => {
-  test('Populates external lists correctly', async ({ page }) => {
+  test.skip('Populates external lists correctly', async ({ page }) => {
     await page.goto('http://fs-attributes.webflow.io/cmsnest/external');
 
     await waitAttributeLoaded(page, 'cmsload');
@@ -27,7 +28,7 @@ test.describe('cmsnest', () => {
     await expect(colors2Empty).toBeVisible();
   });
 
-  test('Populates manual lists correctly', async ({ page }) => {
+  test.skip('Populates manual lists correctly', async ({ page }) => {
     await page.goto('http://fs-attributes.webflow.io/cmsnest/manual');
 
     await waitAttributeLoaded(page, 'cmsload');

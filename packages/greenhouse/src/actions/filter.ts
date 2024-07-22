@@ -1,4 +1,3 @@
-import { type CMSFilters, type FiltersData } from '@finsweet/attributes-cmsfilter';
 import {
   cloneNode,
   DROPDOWN_CSS_CLASSES,
@@ -16,6 +15,7 @@ import { getNestedKey } from './jobs';
 
 export async function createFilters(
   queryParam: string,
+  // @ts-expect-error TODO: Support fs-list
   filtersInstances: CMSFilters[],
   filtersElements: FormField[],
   jobs: JobWithContent[]
@@ -57,7 +57,9 @@ export async function createFilters(
       }
 
       if (groupByKey) {
+        // @ts-expect-error TODO: Support fs-list
         const deparmentsFilter = filtersData.find((filterData) => filterData.filterKeys.includes(GH_DEPARTMENT));
+        // @ts-expect-error TODO: Support fs-list
         const officesFilter = filtersData.find((filterData) => filterData.filterKeys.includes(GH_OFFICE));
 
         const jobFilters: JobsFilters = {
@@ -81,6 +83,7 @@ export async function createFilters(
 }
 
 function displayFilterValues(
+  // @ts-expect-error TODO: Support fs-list
   filtersData: FiltersData,
   displayElements: HTMLElement[],
   defaultValues: Map<HTMLElement, string>
@@ -98,6 +101,7 @@ function displayFilterValues(
       continue;
     }
 
+    // @ts-expect-error TODO: Support fs-list
     const filteredKey = filtersData.find((filterData) => filterData.filterKeys.includes(key));
 
     if (!filteredKey) {

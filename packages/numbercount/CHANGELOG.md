@@ -1,5 +1,19 @@
 # @finsweet/attributes-numbercount
 
+## 1.2.2
+
+### Patch Changes
+
+- b56e5e5: rename fsAttribute in places of usage to finsweetAttribute
+- Updated dependencies [b56e5e5]
+  - @finsweet/attributes-utils@0.0.1
+
+## 1.2.1
+
+### Patch Changes
+
+- 98b81a40: fix: ensure numbercount stops at the end value, added requestAnimationFrame api to further improve this animation
+
 ## 1.2.0
 
 ### Minor Changes

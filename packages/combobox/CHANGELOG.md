@@ -1,5 +1,25 @@
 # @finsweet/attributes-combobox
 
+## 2.0.1
+
+### Patch Changes
+
+- b56e5e5: rename fsAttribute in places of usage to finsweetAttribute
+- Updated dependencies [b56e5e5]
+  - @finsweet/attributes-utils@0.0.1
+
+## 2.0.0
+
+### Major Changes
+
+- 589bd31: combobox: prepared for v2 release
+
+## 1.0.6
+
+### Patch Changes
+
+- 358dcc88: preventclear - if true this attribute will retain combobox input value when user types a value that does not exist in the options
+
 ## 1.0.5
 
 ### Patch Changes

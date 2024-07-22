@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-mirrorinput",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Mirrors input events between two elements.",
   "private": true,
   "type": "module",

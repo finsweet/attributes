@@ -12,7 +12,7 @@ export const getAnimationSettings = (element: Element): AnimationSettings => {
   const actions = animationName ? animations[animationName] : animations.fade;
 
   const animationDuration = getAttribute(element, 'duration');
-  const duration = animationDuration ? parseFloat(animationDuration) / 1000 : undefined;
+  const duration = animationDuration ? parseFloat(animationDuration) : undefined;
 
   const easing = getAttribute(element, 'easing', true);
   const display = getAttribute(element, 'display', true);

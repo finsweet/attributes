@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-sliderdots",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Create custom Slider Dots for a Slider.",
   "private": true,
   "type": "module",

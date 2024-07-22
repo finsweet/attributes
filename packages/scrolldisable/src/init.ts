@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initClickTriggers } from './click';
 import { initDisplayTriggers } from './display';
@@ -8,7 +8,7 @@ import { getSettingSelector, hasAttributeValue, queryAllElements } from './utils
 /**
  * Inits the scrolldisable functionalities.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const preserveScrollTargets = queryAllElements('preserve');
