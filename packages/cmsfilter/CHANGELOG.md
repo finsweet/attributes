@@ -1,5 +1,11 @@
 # @finsweet/attributes-cmsfilter
 
+## 1.16.3
+
+### Patch Changes
+
+- 78affc6: fix: date normalization in different locales
+
 ## 1.16.2
 
 ### Patch Changes
