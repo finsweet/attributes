@@ -176,17 +176,40 @@ const extractAttributes = (scriptString: string): string => {
 };
 
 /**
- * Handle the trigger element click event.
+ * Find the closest target element
  * @param element
  * @returns
  */
-const handleTrigger = (element: HTMLElement) => {
+const findClosestTarget = (element: HTMLElement): HTMLElement | null => {
+  let currentNode: HTMLElement | null = element;
+
+  while (currentNode) {
+    // Check all children of current node for target
+    const target = currentNode.querySelector<HTMLElement>('[fs-docs-copy="target"]');
+    if (target) return target;
+
+    // Move up to parent node
+    currentNode = currentNode.parentElement;
+  }
+
+  return null;
+};
+
+/**
+ * Handle the trigger element click event.
+ * @param element - The trigger element that was clicked
+ * @returns void
+ */
+const handleTrigger = (element: HTMLElement): void => {
   const instance = element.getAttribute('fs-docs-instance');
+  let target: HTMLElement | null = null;
 
-  if (!instance) return;
-
-  // get target element with matching instance
-  const target = document.querySelector<HTMLElement>(`[fs-docs-copy="target"][fs-docs-instance="${instance}"]`);
+  if (instance) {
+    target = document.querySelector<HTMLElement>(`[fs-docs-copy="target"][fs-docs-instance="${instance}"]`);
+  } else {
+    // If no instance match, look up the DOM tree and find closest target
+    target = findClosestTarget(element);
+  }
 
   if (!target) return;
 
