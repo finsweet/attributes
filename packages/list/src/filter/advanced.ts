@@ -1,10 +1,17 @@
 import { addListener, cloneNode, type FormField, RenderController, simulateEvent } from '@finsweet/attributes-utils';
-import { atom, computed, type ReadableAtom, type WritableAtom } from 'nanostores';
+import { computed, effect, type Ref, ref, watch } from '@vue/reactivity';
+import { dset } from 'dset';
 
 import type { List } from '../components/List';
 import type { ListItem } from '../components/ListItem';
 import { queryAllElements, queryElement } from '../utils/selectors';
 import type { FilterMatch, FilterOperator } from './types';
+
+declare module '@vue/reactivity' {
+  export interface RefUnwrapBailTypes {
+    htmlElements: HTMLElement;
+  }
+}
 
 /**
  * Inits advanced filters for a list.
@@ -21,7 +28,7 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
 
   const conditionGroupTemplate = cloneNode(conditionGroup);
 
-  const conditionGroups = atom<HTMLElement[]>([]);
+  const conditionGroups = ref<HTMLElement[]>([]);
 
   const cleanups = new Set<() => void>();
 
@@ -30,16 +37,14 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
   if (conditionGroupMatch) {
     const renderController = new RenderController(conditionGroupMatch);
 
-    const renderCleanup = conditionGroups.subscribe(($conditionGroups) => {
-      const shouldRender = $conditionGroups.length > 1;
+    const renderCleanup = effect(() => {
+      const shouldRender = conditionGroups.value.length > 1;
 
       renderController.update(shouldRender);
     });
 
     const inputCleanup = addListener(conditionGroupMatch, 'input', () => {
-      const match = conditionGroupMatch.value as FilterMatch;
-
-      list.filters.setKey('match', match);
+      list.filters.match = conditionGroupMatch.value as FilterMatch;
     });
 
     cleanups.add(renderCleanup);
@@ -58,7 +63,7 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
 
       cleanups.add(groupCleanup);
 
-      const $conditionGroups = conditionGroups.get();
+      const $conditionGroups = conditionGroups.value;
       const previousConditionGroup = $conditionGroups[$conditionGroups.length - 2];
 
       if (previousConditionGroup) {
@@ -87,30 +92,27 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
 
     conditionGroup.remove();
 
-    conditionGroups.set(conditionGroups.get().filter(($conditionGroup) => $conditionGroup !== conditionGroup));
+    conditionGroups.value = conditionGroups.value.filter(($conditionGroup) => $conditionGroup !== conditionGroup);
   };
 
   return destroy;
 };
 
-const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGroups: WritableAtom<HTMLElement[]>) => {
+const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGroups: Ref<HTMLElement[]>) => {
   const condition = queryElement('condition', { scope: conditionGroup });
   if (!condition) return;
 
   const conditionTemplate = cloneNode(condition);
 
-  const groupConditions = atom<HTMLElement[]>([]);
+  const groupConditions = ref<HTMLElement[]>([]);
 
   // Store the condition group
-  conditionGroups.set([...conditionGroups.get(), conditionGroup]);
+  conditionGroups.value = [...conditionGroups.value, conditionGroup];
 
   // Compute the condition group index
-  const conditionGroupIndex = computed(conditionGroups, ($conditionGroups) => $conditionGroups.indexOf(conditionGroup));
+  const conditionGroupIndex = computed(() => conditionGroups.value.indexOf(conditionGroup));
 
-  const conditionGroupPath = computed(
-    [conditionGroupIndex],
-    ($conditionGroupIndex) => `groups[${$conditionGroupIndex}]` as const
-  );
+  const conditionGroupPath = computed(() => `groups.${conditionGroupIndex.value}`);
 
   // Store cleanups
   const cleanups = new Set<() => void>();
@@ -120,8 +122,8 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
   if (conditionMatch) {
     const renderController = new RenderController(conditionMatch);
 
-    const renderCleanup = groupConditions.subscribe(($groupConditions) => {
-      const shouldRender = $groupConditions.length > 1;
+    const renderCleanup = effect(() => {
+      const shouldRender = groupConditions.value.length > 1;
 
       renderController.update(shouldRender);
     });
@@ -129,7 +131,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
     const inputCleanup = addListener(conditionMatch, 'input', () => {
       const match = conditionMatch.value as FilterMatch;
 
-      list.filters.setKey(`${conditionGroupPath.get()}.match`, match);
+      dset(list.filters, conditionGroupPath.value, { match, conditions: [] });
     });
 
     cleanups.add(renderCleanup);
@@ -148,7 +150,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
 
       cleanups.add(conditionCleanup);
 
-      const $groupConditions = groupConditions.get();
+      const $groupConditions = groupConditions.value;
       const previousCondition = $groupConditions[$groupConditions.length - 2];
 
       if (previousCondition) {
@@ -166,7 +168,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
   if (conditionGroupRemove) {
     // Handle remove button click
     const clickCleanup = addListener(conditionGroupRemove, 'click', () => {
-      if (conditionGroups.get().length <= 1) return;
+      if (conditionGroups.value.length <= 1) return;
 
       destroy();
     });
@@ -174,8 +176,8 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
     // Handle remove button display
     const renderController = new RenderController(conditionGroupRemove);
 
-    const renderCleanup = conditionGroups.subscribe(($conditionGroups) => {
-      const shouldRender = $conditionGroups.length > 1;
+    const renderCleanup = effect(() => {
+      const shouldRender = conditionGroups.value.length > 1;
 
       renderController.update(shouldRender);
     });
@@ -201,7 +203,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
 
     conditionGroup.remove();
 
-    conditionGroups.set(conditionGroups.get().filter(($conditionGroup) => $conditionGroup !== conditionGroup));
+    conditionGroups.value = conditionGroups.value.filter(($conditionGroup) => $conditionGroup !== conditionGroup);
   };
 
   return destroy;
@@ -217,8 +219,8 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
 const initCondition = (
   list: List,
   condition: HTMLElement,
-  groupConditions: WritableAtom<HTMLElement[]>,
-  conditionGroupPath: ReadableAtom<`groups[${number}]`>
+  groupConditions: Ref<HTMLElement[]>,
+  conditionGroupPath: Ref<string>
 ) => {
   const conditionField = queryElement<HTMLSelectElement>('condition-field', { scope: condition });
   if (!(conditionField instanceof HTMLSelectElement)) return;
@@ -230,15 +232,11 @@ const initCondition = (
   if (!conditionValue) return;
 
   // Store the condition
-  groupConditions.set([...groupConditions.get(), condition]);
+  groupConditions.value = [...groupConditions.value, condition];
 
   // Compute the condition index
-  const conditionIndex = computed(groupConditions, ($groupConditions) => $groupConditions.indexOf(condition));
-
-  const conditionPath = computed(
-    [conditionGroupPath, conditionIndex],
-    ($conditionGroupPath, $conditionIndex) => `${$conditionGroupPath}.conditions[${$conditionIndex}]` as const
-  );
+  const conditionIndex = computed(() => groupConditions.value.indexOf(condition));
+  const conditionPath = computed(() => `${conditionGroupPath.value}.conditions.${conditionIndex.value}`);
 
   // Store cleanups
   const cleanups = new Set<() => void>();
@@ -247,19 +245,19 @@ const initCondition = (
   const fieldInputCleanup = addListener(conditionField, 'input', () => {
     const field = conditionField.value;
 
-    list.filters.setKey(`${conditionPath.get()}.field`, field);
+    dset(list.filters, `${conditionPath.value}.field`, field);
   });
 
   const operatorInputCleanup = addListener(conditionOperator, 'input', () => {
     const op = conditionOperator.value as FilterOperator;
 
-    list.filters.setKey(`${conditionPath.get()}.op`, op);
+    dset(list.filters, `${conditionPath.value}.op`, op);
   });
 
   const valueInputCleanup = addListener(conditionValue, 'input', () => {
     const value = getConditionValue(conditionValue);
 
-    list.filters.setKey(`${conditionPath.get()}.value`, value);
+    dset(list.filters, `${conditionPath.value}.value`, value);
   });
 
   cleanups.add(fieldInputCleanup);
@@ -267,9 +265,7 @@ const initCondition = (
   cleanups.add(valueInputCleanup);
 
   // Populate condition field options
-  const itemsCleanup = list.items.subscribe((items) => {
-    populateConditionField(items, conditionField);
-  });
+  const itemsCleanup = watch(list.items, (items) => populateConditionField(items, conditionField), { immediate: true });
 
   cleanups.add(itemsCleanup);
 
@@ -277,13 +273,13 @@ const initCondition = (
   const conditionRemove = queryElement('condition-remove', { scope: condition });
   if (conditionRemove) {
     // Handle remove button display
-    const displayCleanup = groupConditions.subscribe(($groupConditions) => {
-      conditionRemove.style.display = $groupConditions.length > 1 ? '' : 'none';
+    const displayCleanup = effect(() => {
+      conditionRemove.style.display = groupConditions.value.length > 1 ? '' : 'none';
     });
 
     // Handle removing the condition
     const clickCleanup = addListener(conditionRemove, 'click', () => {
-      if (groupConditions.get().length <= 1) return;
+      if (groupConditions.value.length <= 1) return;
 
       destroy();
     });
@@ -302,7 +298,7 @@ const initCondition = (
 
     condition.remove();
 
-    groupConditions.set(groupConditions.get().filter(($conditionWrapper) => $conditionWrapper !== condition));
+    groupConditions.value = groupConditions.value.filter(($conditionWrapper) => $conditionWrapper !== condition);
   };
 
   return destroy;

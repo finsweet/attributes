@@ -1,5 +1,7 @@
+import { effect, watch } from '@vue/reactivity';
+
 import type { List } from '../components/List';
-import { subscribeMultiple } from '../utils/reactivity';
+import { setReactive } from '../utils/reactivity';
 import { queryElement } from '../utils/selectors';
 import { getAdvancedFilters, initAdvancedFilters } from './advanced';
 import { filterItems } from './filter';
@@ -15,48 +17,48 @@ export const initListFiltering = (list: List, form: HTMLFormElement) => {
   // Init hook
   // TODO: Remove hook for cleanup
   list.addHook('filter', (items) => {
-    const filters = list.filters.get();
-
-    const filteredItems = filterItems(filters, items);
+    const filteredItems = filterItems(list.filters, items);
     return filteredItems;
   });
 
   // Handle elements
-  const elementsCleanup = subscribeMultiple(
-    [list.hooks.filter.result, list.emptyElement],
-    ([filteredItems, emptyElement]) => {
-      const hasItems = !!filteredItems?.length;
+  const elementsCleanup = effect(() => {
+    const hasItems = !!list.hooks.filter.result.value.length;
 
-      if (list.listElement) {
-        list.listElement.style.display = hasItems ? '' : 'none';
-      }
-
-      if (emptyElement) {
-        emptyElement.style.display = hasItems ? 'none' : '';
-      }
+    if (list.listElement) {
+      list.listElement.style.display = hasItems ? '' : 'none';
     }
-  );
+
+    if (list.emptyElement.value) {
+      list.emptyElement.value.style.display = hasItems ? 'none' : '';
+    }
+  });
 
   const isAdvanced = !!queryElement('condition-group', { scope: form });
 
   // Get filters data
   const filters = isAdvanced ? getAdvancedFilters(form) : getSimpleFilters(list, form);
-  list.filters.set(filters);
+
+  setReactive(list.filters, filters);
 
   // Trigger the hook when the filters change
   let queued = false;
 
-  const filtersCleanup = list.filters.subscribe(() => {
-    if (queued) return;
+  // TODO: watcher seems to fire twice on each filter change
+  const filtersCleanup = watch(
+    list.filters,
+    () => {
+      if (queued) return;
 
-    queued = true;
+      queued = true;
 
-    queueMicrotask(() => {
-      console.log(list.filters.get());
-      list.triggerHook('filter');
-      queued = false;
-    });
-  });
+      queueMicrotask(() => {
+        list.triggerHook('filter');
+        queued = false;
+      });
+    },
+    { deep: true, immediate: true }
+  );
 
   // TODO - Init tags + cleanup
   initTags(list);
@@ -65,7 +67,7 @@ export const initListFiltering = (list: List, form: HTMLFormElement) => {
 
   const mutationObserver = new MutationObserver(() => {
     const filters = isAdvanced ? getAdvancedFilters(form) : getSimpleFilters(list, form);
-    list.filters.set(filters);
+    setReactive(list.filters, filters);
   });
 
   mutationObserver.observe(form, {

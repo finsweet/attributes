@@ -43,6 +43,7 @@ export type FiltersCondition = {
   field?: string;
   op?: FilterOperator;
   value?: string | string[];
+  match?: FilterMatch;
 };
 
 export type FiltersGroup = {

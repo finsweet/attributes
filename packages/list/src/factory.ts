@@ -46,7 +46,7 @@ export const createListInstance = (referenceElement: HTMLElement): List | undefi
 export const initList = (list: List) => {
   const { instance } = list;
 
-  const items = list.items.get();
+  const items = list.items.value;
 
   const filtersForm = queryElement('filters', { instance });
   const sortTriggers = queryAllElements('sort-trigger', { instance });

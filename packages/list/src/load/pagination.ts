@@ -9,13 +9,12 @@ import {
   isNotEmpty,
   isNumber,
 } from '@finsweet/attributes-utils';
+import { effect, type Ref, ref, watch } from '@vue/reactivity';
 import debounce from 'just-debounce';
-import { atom, type WritableAtom } from 'nanostores';
 
 import type { List } from '../components/List';
 import { BREAKPOINTS_INDEX, DEFAULT_PAGE_BOUNDARY, DEFAULT_PAGE_SIBLINGS } from '../utils/constants';
 import { getCMSElementSelector } from '../utils/dom';
-import { subscribeMultiple } from '../utils/reactivity';
 import { getAttribute, getElementSelector, hasAttributeValue, queryElement } from '../utils/selectors';
 import { loadPaginatedItems } from './load';
 
@@ -31,21 +30,25 @@ export const initPaginationMode = (list: List) => {
 
   // Init hook
   list.addHook('paginate', (items) => {
-    const $itemsPerPage = itemsPerPage.get();
+    const $itemsPerPage = itemsPerPage.value;
 
-    const start = (currentPage.get() - 1) * $itemsPerPage;
+    const start = (currentPage.value - 1) * $itemsPerPage;
     const end = start + $itemsPerPage;
 
     const paginatedItems = items.slice(start, end);
     return paginatedItems;
   });
 
-  list.currentPage.listen(() => list.triggerHook('paginate'));
-  list.itemsPerPage.listen(() => list.triggerHook('paginate'));
+  watch(list.currentPage, () => list.triggerHook('paginate'));
+  watch(list.itemsPerPage, () => list.triggerHook('paginate'));
 
-  subscribeMultiple([list.items, list.itemsPerPage], ([$items, $itemsPerPage]) => {
-    list.totalPages.set(Math.ceil($items.length / $itemsPerPage) || 1);
-  });
+  watch(
+    [list.items, list.itemsPerPage],
+    ([$items, $itemsPerPage]) => {
+      list.totalPages.value = Math.ceil($items.length / $itemsPerPage) || 1;
+    },
+    { immediate: true }
+  );
 
   // Get settings
   const showQueryParams = hasAttributeValue(listOrWrapper, 'showquery', 'true');
@@ -122,92 +125,90 @@ const handlePageButtons = (
   parentElement: HTMLElement,
   pageButtonTemplate: HTMLElement,
   pageDotsTemplate: HTMLElement,
-  pageSiblings: WritableAtom<number>,
-  pageBoundary: WritableAtom<number>
+  pageSiblings: Ref<number>,
+  pageBoundary: Ref<number>
 ) => {
   const { currentPage, totalPages } = list;
+
   let renderedButtons = new Map<HTMLElement, number | null>();
 
-  subscribeMultiple(
-    [currentPage, totalPages, pageSiblings, pageBoundary],
-    ([$currentPage, $totalPages, $pageSiblings, $pageBoundary]) => {
-      const totalSiblings = $pageSiblings * 2 + 1;
-      const totalBoundary = $pageBoundary * 2;
+  effect(() => {
+    const totalSiblings = pageSiblings.value * 2 + 1;
+    const totalBoundary = pageBoundary.value * 2;
 
-      const maxElements = totalBoundary + totalSiblings + 2;
+    const maxElements = totalBoundary + totalSiblings + 2;
 
-      const isStartRange = $currentPage - 1 < maxElements - totalSiblings;
-      const isEndRange = $totalPages - $currentPage < maxElements - totalSiblings;
+    const isStartRange = currentPage.value - 1 < maxElements - totalSiblings;
+    const isEndRange = totalPages.value - currentPage.value < maxElements - totalSiblings;
 
-      const existingElements: Array<[HTMLElement, number | null] | undefined> = [...renderedButtons];
+    const existingElements: Array<[HTMLElement, number | null] | undefined> = [...renderedButtons];
 
-      for (let index = 1; index <= maxElements; index++) {
-        // Get previous elements
-        const [existingElement, existingTargetPage] = existingElements[index - 1] || [];
-        const [lastElement] = existingElements[index - 2] || [];
+    for (let index = 1; index <= maxElements; index++) {
+      // Get previous elements
+      const [existingElement, existingTargetPage] = existingElements[index - 1] || [];
+      const [lastElement] = existingElements[index - 2] || [];
 
-        // Get rid of invalid elements
-        if (index > $totalPages) {
-          if (existingElement) {
-            existingElement.remove();
-            existingElements[index - 1] = undefined;
-          }
-          continue;
+      // Get rid of invalid elements
+      if (index > totalPages.value) {
+        if (existingElement) {
+          existingElement.remove();
+          existingElements[index - 1] = undefined;
         }
-
-        // Collect new target page
-        let targetPage: number | null;
-
-        if ($totalPages <= maxElements) targetPage = index;
-        else if (isStartRange) {
-          if (index > maxElements - $pageBoundary) targetPage = $totalPages - (maxElements - index);
-          else if (index === maxElements - $pageBoundary) targetPage = null;
-          else targetPage = index;
-        } else if (isEndRange) {
-          if (index < $pageBoundary + 1) targetPage = index;
-          else if (index === $pageBoundary + 1) targetPage = null;
-          else targetPage = $totalPages - (maxElements - index);
-        } else {
-          if (index < $pageBoundary + 1) targetPage = index;
-          else if (index > maxElements - $pageBoundary) targetPage = $totalPages - (maxElements - index);
-          else if (index === $pageBoundary + 1 || index === maxElements - $pageBoundary) targetPage = null;
-          else targetPage = $currentPage + (index - ($pageBoundary + 1) - (1 + $pageSiblings));
-        }
-
-        // Render a new item only when needed
-        let newElement: HTMLElement | undefined;
-
-        if (existingTargetPage !== targetPage) {
-          // Remove the existing element
-          existingElement?.remove();
-
-          // Add the new item
-          newElement = createPageButton(pageButtonTemplate, pageDotsTemplate, targetPage, list);
-          existingElements[index - 1] = [newElement, targetPage];
-
-          if (lastElement) parentElement.insertBefore(newElement, lastElement.nextSibling);
-          else parentElement.appendChild(newElement);
-
-          newElement.style.opacity = '';
-        }
-
-        const elementToUpdate = newElement || existingElement;
-        if (!elementToUpdate) continue;
-
-        // Update CSS and Aria
-        if (targetPage === $currentPage) {
-          elementToUpdate.classList.add(CURRENT_CSS_CLASS);
-          elementToUpdate.setAttribute('aria-current', 'page');
-        } else {
-          elementToUpdate.classList.remove(CURRENT_CSS_CLASS);
-          elementToUpdate.removeAttribute('aria-current');
-        }
+        continue;
       }
 
-      // Store new state
-      renderedButtons = new Map([...existingElements.filter(isNotEmpty)]);
+      // Collect new target page
+      let targetPage: number | null;
+
+      if (totalPages.value <= maxElements) targetPage = index;
+      else if (isStartRange) {
+        if (index > maxElements - pageBoundary.value) targetPage = totalPages.value - (maxElements - index);
+        else if (index === maxElements - pageBoundary.value) targetPage = null;
+        else targetPage = index;
+      } else if (isEndRange) {
+        if (index < pageBoundary.value + 1) targetPage = index;
+        else if (index === pageBoundary.value + 1) targetPage = null;
+        else targetPage = totalPages.value - (maxElements - index);
+      } else {
+        if (index < pageBoundary.value + 1) targetPage = index;
+        else if (index > maxElements - pageBoundary.value) targetPage = totalPages.value - (maxElements - index);
+        else if (index === pageBoundary.value + 1 || index === maxElements - pageBoundary.value) targetPage = null;
+        else targetPage = currentPage.value + (index - (pageBoundary.value + 1) - (1 + pageSiblings.value));
+      }
+
+      // Render a new item only when needed
+      let newElement: HTMLElement | undefined;
+
+      if (existingTargetPage !== targetPage) {
+        // Remove the existing element
+        existingElement?.remove();
+
+        // Add the new item
+        newElement = createPageButton(pageButtonTemplate, pageDotsTemplate, targetPage, list);
+        existingElements[index - 1] = [newElement, targetPage];
+
+        if (lastElement) parentElement.insertBefore(newElement, lastElement.nextSibling);
+        else parentElement.appendChild(newElement);
+
+        newElement.style.opacity = '';
+      }
+
+      const elementToUpdate = newElement || existingElement;
+      if (!elementToUpdate) continue;
+
+      // Update CSS and Aria
+      if (targetPage === currentPage.value) {
+        elementToUpdate.classList.add(CURRENT_CSS_CLASS);
+        elementToUpdate.setAttribute('aria-current', 'page');
+      } else {
+        elementToUpdate.classList.remove(CURRENT_CSS_CLASS);
+        elementToUpdate.removeAttribute('aria-current');
+      }
     }
-  );
+
+    // Store new state
+    renderedButtons = new Map([...existingElements.filter(isNotEmpty)]);
+  });
 
   // Handle clicks
   const cleanupClicks = addListener(parentElement, 'click', (e) => {
@@ -223,7 +224,7 @@ const handlePageButtons = (
     const targetPage = renderedButtons.get(isPageButton);
     if (!targetPage) return;
 
-    list.currentPage.set(targetPage);
+    list.currentPage.value = targetPage;
   });
 
   return cleanupClicks;
@@ -265,9 +266,10 @@ const createPageButton = (
 const handlePaginationCount = ({ paginationCountElement, currentPage, totalPages }: List) => {
   if (!paginationCountElement) return;
 
-  subscribeMultiple([currentPage, totalPages], ([$currentPage, $totalPages]) => {
-    paginationCountElement.setAttribute('aria-label', `Page ${$currentPage} of ${$totalPages}`);
-    paginationCountElement.textContent = `${$currentPage} / ${$totalPages}`;
+  // TODO: Cleanup
+  effect(() => {
+    paginationCountElement.setAttribute('aria-label', `Page ${currentPage.value} of ${totalPages.value}`);
+    paginationCountElement.textContent = `${currentPage.value} / ${totalPages.value}`;
   });
 };
 
@@ -278,22 +280,20 @@ const handlePaginationCount = ({ paginationCountElement, currentPage, totalPages
 const handlePaginationButtons = (list: List) => {
   const { pagesQuery, currentPage, totalPages, paginationNextElement, paginationPreviousElement } = list;
 
-  subscribeMultiple(
-    [currentPage, totalPages, paginationNextElement, paginationPreviousElement],
-    ([$currentPage, $totalPages, $paginationNext, $paginationPrevious]) => {
-      if ($paginationPrevious) {
-        $paginationPrevious.style.display = $currentPage !== 1 ? '' : 'none';
+  // TODO: Cleanup
+  effect(() => {
+    if (paginationPreviousElement.value) {
+      paginationPreviousElement.value.style.display = currentPage.value !== 1 ? '' : 'none';
 
-        $paginationPrevious.href = `?${pagesQuery}=${$currentPage - 1}`;
-      }
-
-      if ($paginationNext) {
-        $paginationNext.style.display = $currentPage !== $totalPages ? '' : 'none';
-
-        $paginationNext.href = `?${pagesQuery}=${$currentPage + 1}`;
-      }
+      paginationPreviousElement.value.href = `?${pagesQuery}=${currentPage.value - 1}`;
     }
-  );
+
+    if (paginationNextElement.value) {
+      paginationNextElement.value.style.display = currentPage.value !== totalPages.value ? '' : 'none';
+
+      paginationNextElement.value.href = `?${pagesQuery}=${currentPage.value + 1}`;
+    }
+  });
 
   const cleanup = addListener(window, 'click', (e) => {
     const { target } = e;
@@ -311,14 +311,14 @@ const handlePaginationButtons = (list: List) => {
 
     let targetPage: number | null | undefined;
 
-    if (isNextButton) targetPage = currentPage.get() + 1;
-    else targetPage = currentPage.get() - 1;
+    if (isNextButton) targetPage = currentPage.value + 1;
+    else targetPage = currentPage.value - 1;
 
     if (!targetPage) return;
     if (targetPage < 1) return;
-    if (targetPage > totalPages.get()) return;
+    if (targetPage > totalPages.value) return;
 
-    list.currentPage.set(targetPage);
+    list.currentPage.value = targetPage;
   });
 
   return cleanup;
@@ -336,7 +336,7 @@ const getBreakpointSetting = (
   setting: 'pagesiblings' | 'pageboundary',
   defaultValue: number
 ) => {
-  const store = atom(defaultValue);
+  const store = ref(defaultValue);
 
   const rawValues = getAttribute(listOrWrapper, setting);
   const values = extractCommaSeparatedValues(rawValues).map(parseInt);
@@ -349,7 +349,7 @@ const getBreakpointSetting = (
       const value = values[i];
 
       if (isNumber(value)) {
-        store.set(value);
+        store.value = value;
         break;
       }
     }
@@ -367,10 +367,10 @@ const getBreakpointSetting = (
 export const handlePaginationQuery = ({ currentPage, pagesQuery }: List) => {
   if (!pagesQuery) return;
 
-  currentPage.subscribe(($currentPage) => {
+  effect(() => {
     const url = new URL(location.href);
 
-    url.searchParams.set(pagesQuery, $currentPage.toString());
+    url.searchParams.set(pagesQuery, currentPage.value.toString());
 
     history.replaceState(null, '', url);
   });

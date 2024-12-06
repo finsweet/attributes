@@ -7,7 +7,7 @@ import {
   isNotEmpty,
   TABINDEX_KEY,
 } from '@finsweet/attributes-utils';
-import { atom, computed } from 'nanostores';
+import { computed, effect, ref } from '@vue/reactivity';
 
 import type { List } from '../components/List';
 import { SETTINGS } from '../utils/constants';
@@ -22,7 +22,7 @@ import type { SortingDirection } from './types';
 
  */
 export const initButtons = (buttons: HTMLElement[], list: List) => {
-  const activeButton = atom<HTMLElement | undefined>();
+  const activeButton = ref<HTMLElement | undefined>();
 
   let sortDirection: SortingDirection | undefined;
   let sortKey: string;
@@ -38,31 +38,35 @@ export const initButtons = (buttons: HTMLElement[], list: List) => {
       const ascClass = getAttribute(button, 'ascclass') || SETTINGS.ascclass.values.default;
       const desClass = getAttribute(button, 'descclass') || SETTINGS.descclass.values.default;
 
-      const currentDirection = atom<SortingDirection | undefined>();
+      const currentDirection = ref<SortingDirection | undefined>();
 
       button.setAttribute(ARIA_ROLE_KEY, ARIA_ROLE_VALUES.columnheader);
       button.setAttribute(TABINDEX_KEY, '0');
 
       // Dynamically set the `aria-sort` attribute
-      const ariaSort = computed([activeButton, currentDirection], ($activeButton, $currentDirection) => {
-        if ($activeButton !== button) return 'none';
+      const ariaSort = computed(() => {
+        if (activeButton.value !== button) return 'none';
 
-        return $currentDirection === 'asc' ? ARIA_SORT_VALUES.ascending : ARIA_SORT_VALUES.descending;
+        return currentDirection.value === 'asc' ? ARIA_SORT_VALUES.ascending : ARIA_SORT_VALUES.descending;
       });
 
-      const ariaSortCleanup = ariaSort.listen((value) => button.setAttribute(ARIA_SORT_KEY, value));
+      const ariaSortCleanup = effect(() => {
+        button.setAttribute(ARIA_SORT_KEY, ariaSort.value);
+      });
 
       // Dynamically set the direction CSS class
-      const cssClass = computed([activeButton, currentDirection], ($activeButton, $currentDirection) => {
-        if ($activeButton !== button) return null;
+      const cssClass = computed(() => {
+        if (activeButton.value !== button) return null;
 
-        return $currentDirection === 'asc' ? ascClass : desClass;
+        return currentDirection.value === 'asc' ? ascClass : desClass;
       });
 
-      const cssClassCleanup = cssClass.listen((value) => {
+      const cssClassCleanup = effect(() => {
         button.classList.remove(ascClass, desClass);
 
-        if (value) button.classList.add(value);
+        if (cssClass.value) {
+          button.classList.add(cssClass.value);
+        }
       });
 
       // Sort on click
@@ -70,10 +74,10 @@ export const initButtons = (buttons: HTMLElement[], list: List) => {
         e.preventDefault();
 
         sortKey = buttonSortKey;
-        sortDirection = getNextDirection(currentDirection.get(), reverse);
+        sortDirection = getNextDirection(currentDirection.value, reverse);
 
-        activeButton.set(button);
-        currentDirection.set(sortDirection);
+        activeButton.value = button;
+        currentDirection.value = sortDirection;
 
         await list.triggerHook('sort');
       });

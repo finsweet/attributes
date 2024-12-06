@@ -1,5 +1,5 @@
 import { addListener } from '@finsweet/attributes-utils';
-import { atom } from 'nanostores';
+import { ref } from '@vue/reactivity';
 
 import type { List } from '../components/List';
 import { loadPaginatedItems } from './load';
@@ -13,8 +13,8 @@ import { loadPaginatedItems } from './load';
 export const initMoreMode = (list: List) => {
   const { paginationNextElement, paginationPreviousElement, paginationCountElement, itemsPerPage } = list;
 
-  const paginationPrevious = paginationPreviousElement.get();
-  const paginationNext = paginationNextElement.get();
+  const paginationPrevious = paginationPreviousElement.value;
+  const paginationNext = paginationNextElement.value;
 
   if (!paginationNext) return;
 
@@ -26,10 +26,10 @@ export const initMoreMode = (list: List) => {
 
   paginationCountElement?.remove();
 
-  const itemsToDisplay = atom(itemsPerPage.get());
+  const itemsToDisplay = ref(itemsPerPage.value);
 
   list.addHook('paginate', (items) => {
-    const paginatedItems = items.slice(0, itemsToDisplay.get());
+    const paginatedItems = items.slice(0, itemsToDisplay.value);
     const allItemsDisplayed = paginatedItems.length === items.length;
 
     paginationNext.style.display = allItemsDisplayed ? 'none' : '';
@@ -46,7 +46,7 @@ export const initMoreMode = (list: List) => {
   const cleanup = addListener(paginationNext, 'click', async (e) => {
     e.preventDefault();
 
-    itemsToDisplay.set(itemsToDisplay.get() + itemsPerPage.get());
+    itemsToDisplay.value = itemsToDisplay.value + itemsPerPage.value;
     list.triggerHook('paginate');
   });
 

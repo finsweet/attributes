@@ -8,6 +8,12 @@ import {
 
 import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 
+declare module '@vue/reactivity' {
+  export interface RefUnwrapBailTypes {
+    classes: ListItem;
+  }
+}
+
 export type ListItemField =
   | {
       type: 'text';

@@ -1,23 +1,11 @@
-import type { Atom } from 'nanostores';
-
-type StoresValues<T> = { [K in keyof T]: T[K] extends Atom<infer U> ? U : never };
+import type { Reactive } from '@vue/reactivity';
 
 /**
- * Subscribes to multiple nanostores.
- * @param atoms
- * @param callback
- * @returns A cleanup function.
+ * Sets a reactive object's value.
+ * @param target
+ * @param value
  */
-export const subscribeMultiple = <T extends readonly [Atom, ...Array<Atom>]>(
-  atoms: T,
-  callback: (values: StoresValues<T>) => void
-) => {
-  const listener = () => {
-    const values = atoms.map((i) => i.get()) as StoresValues<T>;
-    callback(values);
-  };
-
-  const cleanups = atoms.map((i) => i.subscribe(listener));
-
-  return () => cleanups.forEach((i) => i());
+export const setReactive = (target: Reactive<unknown>, value: unknown) => {
+  Object.keys(target).forEach((key) => delete target[key as keyof typeof target]);
+  Object.assign(target, value);
 };

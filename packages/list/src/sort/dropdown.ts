@@ -14,7 +14,7 @@ import {
   isElement,
   normalizePropKey,
 } from '@finsweet/attributes-utils';
-import { atom, type WritableAtom } from 'nanostores';
+import { effect, type Ref, ref } from '@vue/reactivity';
 
 import type { List } from '../components/List';
 import { getAttribute, queryElement } from '../utils/selectors';
@@ -45,7 +45,7 @@ export const initDropdown = (dropdown: DropdownElement, list: List) => {
 
   setDropdownAria(dropdownToggle, dropdownList);
 
-  const activeOption = atom<DropdownOption | undefined>();
+  const activeOption = ref<DropdownOption | undefined>();
 
   let sortKey: string | undefined;
   let sortDirection: SortingDirection | undefined;
@@ -75,10 +75,10 @@ export const initDropdown = (dropdown: DropdownElement, list: List) => {
     const optionData = dropdownOptions.get(optionElement);
     if (!optionData) return;
 
-    const isSelected = activeOption.get()?.element === optionElement;
+    const isSelected = activeOption.value?.element === optionElement;
     if (isSelected) return;
 
-    activeOption.set(optionData);
+    activeOption.value = optionData;
 
     ({ sortKey, sortDirection } = optionData);
 
@@ -98,7 +98,7 @@ export const initDropdown = (dropdown: DropdownElement, list: List) => {
  * @param dropdownList The {@link DropdownList} element.
  * @returns
  */
-const initDropdownOptions = (dropdownList: DropdownList, activeOption: WritableAtom<DropdownOption | undefined>) => {
+const initDropdownOptions = (dropdownList: DropdownList, activeOption: Ref<DropdownOption | undefined>) => {
   const dropdownOptions: DropdownOptions = new Map();
 
   const options = [...dropdownList.querySelectorAll('a')];
@@ -130,8 +130,8 @@ const initDropdownOptions = (dropdownList: DropdownList, activeOption: WritableA
     }
 
     // Handle active state
-    const cleanup = activeOption.subscribe((option) => {
-      const isSelected = option?.element === element;
+    const cleanup = effect(() => {
+      const isSelected = activeOption.value?.element === element;
 
       if (isSelected) {
         element.setAttribute(ARIA_SELECTED_KEY, 'true');
@@ -153,19 +153,19 @@ const initDropdownOptions = (dropdownList: DropdownList, activeOption: WritableA
  * @param dropdownToggle The {@link DropdownToggle}.
  * @returns A cleanup function.
  */
-const initDropdownLabel = (dropdownToggle: DropdownToggle, activeOption: WritableAtom<DropdownOption | undefined>) => {
+const initDropdownLabel = (dropdownToggle: DropdownToggle, activeOption: Ref<DropdownOption | undefined>) => {
   const dropdownLabel = queryElement('dropdown-label', { scope: dropdownToggle });
   if (!dropdownLabel) return;
 
   const originalHTML = dropdownLabel.innerHTML;
 
-  const cleanup = activeOption.subscribe((option) => {
-    if (!option) {
+  const cleanup = effect(() => {
+    if (!activeOption.value) {
       dropdownLabel.innerHTML = originalHTML;
       return;
     }
 
-    dropdownLabel.innerHTML = option.element.innerHTML;
+    dropdownLabel.innerHTML = activeOption.value.element.innerHTML;
   });
 
   return cleanup;

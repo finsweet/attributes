@@ -1,5 +1,6 @@
 import {
   CMS_CSS_CLASSES,
+  type CollectionEmptyElement,
   type CollectionItemElement,
   type CollectionListElement,
   type CollectionListWrapperElement,
@@ -14,12 +15,11 @@ import {
   type WebflowModule,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
-import { atom, deepMap, map, type WritableAtom } from 'nanostores';
+import { effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
-import { subscribeMultiple } from '../utils/reactivity';
 import { getAttribute, getInstance, hasAttributeValue, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
@@ -30,7 +30,7 @@ type Hooks = {
   [key in HookKey]: {
     previous?: HookKey;
     callbacks: HookCallback[];
-    result: WritableAtom<ListItem[] | undefined>;
+    result: ShallowRef<ListItem[]>;
   };
 };
 
@@ -41,44 +41,44 @@ export class List {
   public readonly hooks: Hooks = {
     filter: {
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     sort: {
       previous: 'filter',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     paginate: {
       previous: 'sort',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     beforeRender: {
       previous: 'paginate',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     render: {
       previous: 'beforeRender',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     afterRender: {
       previous: 'render',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
   };
 
   /**
    * A signal holding all {@link ListItem} instances of the list.
    */
-  public readonly items = map<ListItem[]>([]);
+  public readonly items = shallowRef<ListItem[]>([]);
 
   /**
    * A set holding all rendered {@link ListItem} instances.
@@ -108,17 +108,17 @@ export class List {
   /**
    * The `Previous` button.
    */
-  public readonly paginationPreviousElement: WritableAtom<PaginationButtonElement | null>;
+  public readonly paginationPreviousElement = ref<PaginationButtonElement | null | undefined>();
 
   /**
    * The `Next` button.
    */
-  public readonly paginationNextElement: WritableAtom<PaginationButtonElement | null>;
+  public readonly paginationNextElement = ref<PaginationButtonElement | null | undefined>();
 
   /**
    * The `Empty State` element.
    */
-  public readonly emptyElement: WritableAtom<HTMLElement | null>;
+  public readonly emptyElement = ref<CollectionEmptyElement | null | undefined>();
 
   /**
    * A custom loader element.
@@ -153,28 +153,28 @@ export class List {
   /**
    * Defines the amount of items per page.
    */
-  public readonly itemsPerPage: WritableAtom<number>;
+  public readonly itemsPerPage: Ref<number>;
 
   /**
    * Defines the total amount of pages in the list.
    */
-  public readonly totalPages = atom(1);
+  public readonly totalPages = ref(1);
 
   /**
    * Defines the current page in `Pagination` mode.
    */
-  public readonly currentPage = atom(1);
+  public readonly currentPage = ref(1);
 
   /**
    * Defines the active filters.
    */
-  public readonly filters = deepMap<Filters>({ groups: [{ conditions: [] }] });
+  public readonly filters = reactive<Filters>({ groups: [{ conditions: [] }] });
 
   /**
    * Defines if the pagination query param should be added to the URL when switching pages.
    * @example '?5f7457b3_page=1'
    */
-  public readonly showPagesQuery = atom(false);
+  public readonly showPagesQuery = ref(false);
 
   /**
    * Defines the Webflow modules to restart after rendering.
@@ -212,9 +212,10 @@ export class List {
 
     this.paginationWrapperElement = getCollectionElements(wrapperElement, 'pagination-wrapper');
     this.paginationCountElement = getCollectionElements(wrapperElement, 'page-count');
-    this.paginationNextElement = atom(getCollectionElements(wrapperElement, 'pagination-next'));
-    this.paginationPreviousElement = atom(getCollectionElements(wrapperElement, 'pagination-previous'));
-    this.emptyElement = atom(getCollectionElements(wrapperElement, 'empty') || queryElement('empty', { instance }));
+    this.paginationNextElement.value = getCollectionElements(wrapperElement, 'pagination-next');
+    this.paginationPreviousElement.value = getCollectionElements(wrapperElement, 'pagination-previous');
+    this.emptyElement.value =
+      getCollectionElements(wrapperElement, 'empty') || queryElement<CollectionEmptyElement>('empty', { instance });
     this.loaderElement = queryElement('loader', { instance });
     this.itemsCountElement = queryElement('items-count', { instance });
     this.visibleCountElement = queryElement('visible-count', { instance });
@@ -226,12 +227,12 @@ export class List {
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
 
-    this.itemsPerPage = atom(collectionItemElements.length);
+    this.itemsPerPage = ref(collectionItemElements.length);
 
     if (listElement) {
       const items = collectionItemElements.map((element) => new ListItem(element, listElement));
 
-      this.items.set(items);
+      this.items.value = items;
       this.renderedItems = new Set(items);
     }
 
@@ -304,7 +305,8 @@ export class List {
     for (const [key, { previous }] of getObjectEntries(this.hooks)) {
       const items = previous ? this.hooks[previous].result : this.items;
 
-      items.subscribe(() => this.triggerHook(key));
+      // TODO: Cleanups
+      watch(items, () => this.triggerHook(key), { immediate: true });
     }
   }
 
@@ -315,11 +317,12 @@ export class List {
     const { items, itemsPerPage, currentPage, hooks } = this;
 
     // items-count
-    items.subscribe((items) => {
+    // TODO: Cleanup
+    effect(() => {
       const { itemsCountElement } = this;
 
       if (itemsCountElement) {
-        itemsCountElement.textContent = `${items.length}`;
+        itemsCountElement.textContent = `${items.value.length}`;
       }
     });
 
@@ -329,34 +332,34 @@ export class List {
      * visible-count-to
      * results-count
      */
-    subscribeMultiple(
-      [itemsPerPage, currentPage, hooks.filter.result],
-      ([$itemsPerPage, $currentPage, $filteredItems = []]) => {
-        const { visibleCountElement, visibleCountFromElement, visibleCountToElement, resultsCountElement } = this;
+    // TODO: Cleanup
+    effect(() => {
+      const { visibleCountElement, visibleCountFromElement, visibleCountToElement, resultsCountElement } = this;
 
-        if (visibleCountElement) {
-          const visibleCountTotal = Math.min($itemsPerPage, $filteredItems.length);
+      const filteredItems = hooks.filter.result.value;
 
-          visibleCountElement.textContent = `${visibleCountTotal}`;
-        }
+      if (visibleCountElement) {
+        const visibleCountTotal = Math.min(itemsPerPage.value, filteredItems.length);
 
-        if (visibleCountFromElement) {
-          const visibleCountFrom = Math.min(($currentPage - 1) * $itemsPerPage + 1, $filteredItems.length);
-
-          visibleCountFromElement.textContent = `${visibleCountFrom}`;
-        }
-
-        if (visibleCountToElement) {
-          const visibleCountTo = Math.min($currentPage * $itemsPerPage, $filteredItems.length);
-
-          visibleCountToElement.textContent = `${visibleCountTo}`;
-        }
-
-        if (resultsCountElement) {
-          resultsCountElement.textContent = `${$filteredItems.length}`;
-        }
+        visibleCountElement.textContent = `${visibleCountTotal}`;
       }
-    );
+
+      if (visibleCountFromElement) {
+        const visibleCountFrom = Math.min((currentPage.value - 1) * itemsPerPage.value + 1, filteredItems.length);
+
+        visibleCountFromElement.textContent = `${visibleCountFrom}`;
+      }
+
+      if (visibleCountToElement) {
+        const visibleCountTo = Math.min(currentPage.value * itemsPerPage.value, filteredItems.length);
+
+        visibleCountToElement.textContent = `${visibleCountTo}`;
+      }
+
+      if (resultsCountElement) {
+        resultsCountElement.textContent = `${filteredItems.length}`;
+      }
+    });
   }
 
   /**
@@ -366,8 +369,8 @@ export class List {
   async #getPaginationQuery() {
     const { paginationNextElement, paginationPreviousElement } = this;
 
-    const paginationNext = paginationNextElement.get();
-    const paginationPrevious = paginationPreviousElement.get();
+    const paginationNext = paginationNextElement.value;
+    const paginationPrevious = paginationPreviousElement.value;
     const paginationButton = paginationNext || paginationPrevious;
     if (!paginationButton) return;
 
@@ -414,7 +417,7 @@ export class List {
     const currentPage = paginationNext ? targetPage - 1 : targetPage + 1;
 
     this.pagesQuery = pagesQuery;
-    this.currentPage.set(currentPage);
+    this.currentPage.value = currentPage;
   }
 
   /**
@@ -440,9 +443,9 @@ export class List {
     await Promise.all([
       // Pagination next
       (async () => {
-        if (paginationNextElement.get()) return;
+        if (paginationNextElement.value) return;
 
-        const $currentPage = currentPage.get();
+        const $currentPage = currentPage.value;
         if (!$currentPage || $currentPage === 1) return;
 
         const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=${$currentPage - 1}`);
@@ -455,18 +458,18 @@ export class List {
         const paginationNext = getCollectionElements(collectionListWrapper, 'pagination-next');
         if (!paginationNext) return;
 
-        const anchor = paginationPreviousElement.get()?.parentElement || paginationWrapperElement;
+        const anchor = paginationPreviousElement.value?.parentElement || paginationWrapperElement;
         if (!anchor) return;
 
         paginationNext.style.display = 'none';
 
         anchor.append(paginationNext);
-        paginationNextElement.set(paginationNext);
+        paginationNextElement.value = paginationNext;
       })(),
 
       // Pagination previous & Empty state
       (async () => {
-        if (paginationPreviousElement.get() && emptyElement.get()) return;
+        if (paginationPreviousElement.value && emptyElement.value) return;
 
         const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=9999`);
         if (!page) return;
@@ -479,22 +482,22 @@ export class List {
         const empty = getCollectionElements(collectionListWrapper, 'empty');
 
         // Pagination previous
-        if (paginationPrevious && !paginationPreviousElement.get()) {
-          const anchor = paginationNextElement.get()?.parentElement || paginationWrapperElement;
+        if (paginationPrevious && !paginationPreviousElement.value) {
+          const anchor = paginationNextElement.value?.parentElement || paginationWrapperElement;
           if (!anchor) return;
 
           paginationPrevious.style.display = 'none';
 
           anchor.prepend(paginationPrevious);
-          paginationPreviousElement.set(paginationPrevious);
+          paginationPreviousElement.value = paginationPrevious;
         }
 
         // Empty state
-        if (empty && !emptyElement.get()) {
+        if (empty && !emptyElement.value) {
           empty.style.display = 'none';
 
           wrapperElement.insertBefore(empty, listElement?.nextSibling || null);
-          emptyElement.set(empty);
+          emptyElement.value = empty;
         }
       })(),
     ]);
@@ -522,13 +525,13 @@ export class List {
 
     const previousHookResult = previous ? this.hooks[previous].result : undefined;
 
-    let result = previousHookResult?.get() || this.items.get();
+    let result = previousHookResult?.value || this.items.value;
 
     for (const callback of hook.callbacks) {
       result = (await callback(result)) || result;
     }
 
-    hook.result.set(result);
+    hook.result.value = result;
   }
 
   /**
@@ -550,9 +553,9 @@ export class List {
     const newItems = itemElements.map((item) => new ListItem(item, listElement));
 
     if (method === 'push') {
-      items.set([...items.get(), ...newItems]);
+      items.value = [...items.value, ...newItems];
     } else {
-      items.set([...newItems, ...items.get()]);
+      items.value = [...newItems, ...items.value];
     }
   }
 

@@ -6,7 +6,7 @@ import {
   isFormField,
   parseNumericAttribute,
 } from '@finsweet/attributes-utils';
-import { getPath } from 'nanostores';
+import { dset } from 'dset';
 
 import type { List } from '../components/List';
 import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
@@ -21,29 +21,28 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
 
     if (!isFormField(target)) return;
 
-    const rawField = getAttribute(target, 'field');
-    if (!rawField) return;
+    const field = getAttribute(target, 'field');
+    if (!field) return;
+
+    console.log({ field });
 
     const update = () => {
-      const fields =
-        rawField === '*' ? Object.keys(list.items.get()[0]?.fields || {}) : extractCommaSeparatedValues(rawField);
-
       const op = getAttribute(target, 'operator', true) || 'contains';
 
-      const conditions = getPath(list.filters.get(), 'groups[0].conditions');
+      const conditions = list.filters.groups[0]?.conditions || [];
 
-      for (const field of fields) {
-        const data = getConditionData(target, field, op);
+      const data = getConditionData(target, field, op);
 
-        const conditionIndex = conditions.findIndex((c) => c.field === field && c.op === op);
-        if (conditionIndex >= 0) {
-          conditions[conditionIndex] = data;
-        } else {
-          conditions.push(data);
-        }
+      const conditionIndex = conditions.findIndex((c) => c.field === field && c.op === op);
+      if (conditionIndex >= 0) {
+        conditions[conditionIndex] = data;
+      } else {
+        conditions.push(data);
       }
 
-      list.filters.setKey('groups[0].conditions', conditions);
+      console.log({ conditions });
+
+      dset(list.filters, 'groups.0.conditions', conditions);
     };
 
     const debounce = debounces.get(target);
@@ -53,6 +52,7 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
 
     // With debouncing
     const rawTimeout = getAttribute(target, 'debounce');
+    console.log({ rawTimeout });
     if (rawTimeout) {
       const timeout = rawTimeout ? parseNumericAttribute(rawTimeout, 0) : 0;
 
@@ -196,16 +196,13 @@ export const getSimpleFilters = (list: List, form: HTMLFormElement) => {
     const { type } = formField;
     if (type === 'submit') continue;
 
-    const rawField = getAttribute(formField, 'field');
-    if (!rawField) continue;
-
-    const fields =
-      rawField === '*' ? Object.keys(list.items.get()[0]?.fields || {}) : extractCommaSeparatedValues(rawField);
+    const field = getAttribute(formField, 'field');
+    if (!field) continue;
 
     const op = getAttribute(formField, 'operator', true) || 'contains';
+    const data = getConditionData(formField, field, op);
 
-    for (const field of fields) {
-      const data = getConditionData(formField, field, op);
+    if (!filters.groups[0].conditions.some((c) => c.field === field && c.op === op)) {
       filters.groups[0].conditions.push(data);
     }
   }
