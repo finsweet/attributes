@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initSlider } from './actions/slider';
 import { queryAllElements } from './utils';
@@ -7,7 +7,7 @@ import { swiperInstancesStore } from './utils';
 /**
  * Inits the slider attribute.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const sliderElements = queryAllElements<HTMLElement>('slider');

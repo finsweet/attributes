@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-queryparam",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Use query parameter values to populate form inputs and text elements.",
   "private": true,
   "type": "module",

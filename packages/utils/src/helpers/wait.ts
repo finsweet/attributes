@@ -1,4 +1,4 @@
-import type { FsAttributeKey } from '../types';
+import type { FinsweetAttributeKey } from '../types';
 
 /**
  * @returns Awaitable promise for waiting X time.
@@ -10,7 +10,7 @@ export const wait = (time: number): Promise<unknown> => new Promise((resolve) =>
  * Waits for the defined Attribute to be fully loaded.
  * @param key The Attribute key.
  */
-export const waitAttributeLoaded = (key: FsAttributeKey) => window.fsAttributes.solutions[key]?.loading;
+export const waitAttributeLoaded = (key: FinsweetAttributeKey) => window.finsweetAttributes.solutions[key]?.loading;
 
 /**
  * @returns A promise that resolves once Webflow has fully loaded.

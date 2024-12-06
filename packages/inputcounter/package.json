@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-inputcounter",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Increment and decrement (+ and -) counter in a Webflow Form.",
   "private": true,
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-masonry",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Implement Masonry to a Webflow project.",
   "private": true,
   "type": "module",

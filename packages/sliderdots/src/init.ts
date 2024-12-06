@@ -1,5 +1,5 @@
 import {
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isNotEmpty,
   SLIDER_CSS_CLASSES,
   type SliderElement,
@@ -12,7 +12,7 @@ import { getElementSelector } from './utils/selectors';
 /**
  * Inits the custom slider dots.
  */
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const sliders = [

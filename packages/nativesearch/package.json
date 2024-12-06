@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-nativesearch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Finsweet attribute that allows you to search through Webflow search results in real time on the same page.",
   "private": true,
   "type": "module",

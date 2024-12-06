@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-socialshare",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Share content to social media platforms. Works with Collection Lists, Templates, and static content.",
   "private": true,
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-list",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Supercharge your Webflow CMS and static lists.",
   "private": true,
   "type": "module",

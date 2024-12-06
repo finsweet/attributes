@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-toc",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Automatically generate a table of contents based on heading tags. Works with Webflow Rich Text, Webflow \"Current\" class, and anchor scroll. CMS, static, and all text elements are supported.",
   "private": true,
   "type": "module",

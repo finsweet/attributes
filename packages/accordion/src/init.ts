@@ -1,4 +1,4 @@
-import { type FsAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initListAccordions } from './actions/list';
 import { initAccordionGroup } from './factory';
@@ -6,7 +6,7 @@ import { LIST_ELEMENT_SELECTOR } from './utils/constants';
 import { queryAllElements } from './utils/selectors';
 import type { AccordionGroupData } from './utils/types';
 
-export const init: FsAttributeInit = async () => {
+export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   // Get all accordions
@@ -24,7 +24,7 @@ export const init: FsAttributeInit = async () => {
   const listsCleanup = usesList ? await initListAccordions(groupsData) : undefined;
 
   // Ensure fs-a11y is present
-  window.fsAttributes.load('a11y');
+  window.finsweetAttributes.load('a11y');
 
   // Finalize
   return {

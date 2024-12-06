@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-beforeafter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Before and after image slider to compare two different images.",
   "private": true,
   "type": "module",

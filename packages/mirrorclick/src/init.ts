@@ -1,6 +1,6 @@
 import {
   addListener,
-  type FsAttributeInit,
+  type FinsweetAttributeInit,
   isElement,
   isHTMLElement,
   parseNumericAttribute,
@@ -11,7 +11,7 @@ import { getAttribute, getElementSelector, getInstance, queryAllElements } from 
 /**
  * Inits click events mirroring.
  */
-export const init: FsAttributeInit = () => {
+export const init: FinsweetAttributeInit = () => {
   const clickCleanup = addListener(window, 'click', ({ target }) => {
     if (!isElement(target)) return;
 

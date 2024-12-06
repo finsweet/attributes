@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-formsubmit",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Smart actions after Webflow form submission.",
   "private": true,
   "type": "module",

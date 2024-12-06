@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-displayvalues",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Display the value of a Form Element.",
   "private": true,
   "type": "module",
