@@ -1,23 +1,24 @@
 import { isNotEmpty } from '@finsweet/attributes-utils';
 
-import { getAttribute, getSettingSelector } from '../utils/selectors';
+import { getAttribute, getInstance, queryAllElements } from '../utils/selectors';
 import type { ComponentTargetData } from '../utils/types';
 
 /**
  * Collects the component targets.
  * @param proxy A CORS proxy to use for external sources.
  */
-export const collectComponentTargetsData = (proxy?: string | null) => {
-  const targetElements = document.querySelectorAll<HTMLElement>(getSettingSelector('id'));
+export const collectComponentTargetsData = () => {
+  const targetElements = queryAllElements('target');
   const targetsData: ComponentTargetData[] = [...targetElements]
     .map((target) => {
-      const componentId = getAttribute(target, 'id');
+      const instance = getInstance(target);
+      const proxy = getAttribute(null, 'proxy');
       const rawSource = getAttribute(target, 'source');
       const rawLoadCSS = getAttribute(target, 'css');
       const rawAutoRender = getAttribute(target, 'render');
       const rawResetIx = getAttribute(target, 'resetix');
 
-      if (!componentId || !rawSource) return;
+      if (!rawSource) return;
 
       const loadCSS = !rawLoadCSS || rawLoadCSS === 'true';
       const autoRender = !rawAutoRender || rawAutoRender === 'true';
@@ -38,7 +39,7 @@ export const collectComponentTargetsData = (proxy?: string | null) => {
         return;
       }
 
-      return { target, componentId, source, proxiedSource, loadCSS, autoRender, resetIx };
+      return { target, instance, source, proxiedSource, loadCSS, autoRender, resetIx };
     })
     .filter(isNotEmpty);
 

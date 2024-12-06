@@ -7,7 +7,8 @@ export const {
   queryElement,
   queryAllElements,
   getSettingSelector,
+  getClosestElement,
   getAttribute,
   hasAttributeValue,
-  getInstanceIndex,
+  getInstance,
 } = generateSelectors(LIST_ATTRIBUTE, ELEMENTS, SETTINGS);

@@ -12,7 +12,16 @@ export const init: FsAttributeInit = async () => {
   const listElements = queryAllElements('list');
   const lists = listElements.map(createListInstance).filter(isNotEmpty);
 
-  lists.map(initList);
+  const cleanups = lists.map(initList);
 
-  return {};
+  console.log(lists);
+
+  return {
+    result: lists,
+    destroy() {
+      for (const cleanup of cleanups) {
+        cleanup();
+      }
+    },
+  };
 };

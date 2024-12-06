@@ -11,5 +11,8 @@ const dateFormatter = Intl.DateTimeFormat();
 export const normalizeDate = (value: string) => {
   if (!value) return;
 
-  return new Date(dateFormatter.format(new Date(value)));
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return;
+
+  return new Date(dateFormatter.format(date));
 };

@@ -1,4 +1,4 @@
-import { type Entry, getObjectEntries, getObjectKeys, isKeyOf } from '@finsweet/attributes-utils';
+import { type Entry, getObjectEntries, getObjectKeys, parseNumericAttribute } from '@finsweet/attributes-utils';
 
 import { Debug } from './components';
 import {
@@ -7,10 +7,9 @@ import {
   type ConsentKey,
   type Consents,
   DEFAULT_COOKIE_MAX_AGE,
-  type GlobalSettings,
+  getAttribute,
   type IFrameData,
   type ModeKey,
-  MODES,
   type ScriptData,
 } from './utils';
 
@@ -31,15 +30,15 @@ export default class Store {
   private scripts: ScriptData[] = [];
   private iFrames: IFrameData[] = [];
 
-  constructor({ source, expires, debug, mode, endpoint, domain, resetix }: GlobalSettings) {
-    if (!endpoint) {
-      console.error('Oops! Finsweet consent element has no endpoint url.');
-      return;
-    }
+  constructor() {
+    this.mode = getAttribute(null, 'mode', true) || 'opt-in';
+    this.componentsSource = getAttribute(null, 'source');
+    this.endpoint = getAttribute(null, 'endpoint');
+    this.domain = getAttribute(null, 'domain');
+    this.resetix = getAttribute(null, 'resetix');
+    this.cookieMaxAge = parseNumericAttribute(getAttribute(null, 'expires'), DEFAULT_COOKIE_MAX_AGE);
 
-    // Get the mode
-    this.mode = isKeyOf(mode, MODES) ? mode : 'opt-in';
-
+    // Get the consents
     switch (this.mode) {
       case 'informational':
       case 'opt-out':
@@ -49,24 +48,14 @@ export default class Store {
         this.consents = { ...CONSENT_REQUIRED };
     }
 
-    // Get the cookie max age
-    this.cookieMaxAge = parseInt(expires || DEFAULT_COOKIE_MAX_AGE);
-
     // Get the debug mode
-    this.debugMode = debug || false;
-    if (this.debugMode) Debug.activate();
+    const { searchParams, origin } = new URL(window.location.href);
 
-    // Get the endpoint
-    this.endpoint = endpoint;
+    this.debugMode = searchParams.get('fs-consent') === 'debugger' && origin.includes('webflow.io');
 
-    // Get the components source
-    this.componentsSource = source;
-
-    // Get the cookies domain
-    this.domain = domain;
-
-    // Get the resetix value
-    this.resetix = resetix;
+    if (this.debugMode) {
+      Debug.activate();
+    }
 
     // Alert the setup
     Debug.alert(

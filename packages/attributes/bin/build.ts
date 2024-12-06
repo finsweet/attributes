@@ -4,8 +4,6 @@ import * as esbuild from 'esbuild';
 import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { name } from '../package.json';
-
 declare const process: {
   env: {
     NODE_ENV?: 'production' | 'development';
@@ -16,30 +14,22 @@ declare const process: {
 // Config output
 const ENV = process.env.VERCEL_ENV || process.env.NODE_ENV || 'development';
 const DEV = ENV === 'development';
-const BUILD_DIRECTORY = './dist';
+const BUILD_DIRECTORY = './';
 
 // Config entrypoint files
-const ENTRY_POINTS = ['src/index.ts'];
+const ENTRY_POINTS = ['src/attributes.ts'];
 
 // Config dev serving
 const SERVE_PORT = 3000;
-
-const SCRIPT_SRC =
-  ENV === 'production'
-    ? `https://cdn.jsdelivr.net/npm/${name}@2`
-    : ENV === 'preview'
-    ? `https://attributes-git`
-    : `http://localhost:${SERVE_PORT}`;
 
 const buildOptions: esbuild.BuildOptions = {
   bundle: true,
   entryPoints: ENTRY_POINTS,
   minify: !DEV,
   sourcemap: DEV,
-  target: DEV ? 'esnext' : 'es2019',
+  target: 'esnext',
   define: {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    SCRIPT_SRC: JSON.stringify(SCRIPT_SRC),
     SERVE_PORT: JSON.stringify(SERVE_PORT),
   },
 };
@@ -48,6 +38,7 @@ const buildOptions: esbuild.BuildOptions = {
 const context = await esbuild.context({
   ...buildOptions,
   outdir: BUILD_DIRECTORY,
+  chunkNames: '/dist/[name]-[hash]',
   inject: DEV ? ['./bin/live-reload.js'] : undefined,
   format: 'esm',
   splitting: true,
@@ -55,7 +46,12 @@ const context = await esbuild.context({
 
 // Remove old output files
 try {
-  readdirSync(BUILD_DIRECTORY).map((file) => unlinkSync(join(BUILD_DIRECTORY, file)));
+  const files = readdirSync(BUILD_DIRECTORY);
+  files.forEach((file) => {
+    if (file.startsWith('dist') || file.startsWith('schemas')) {
+      unlinkSync(join(BUILD_DIRECTORY, file));
+    }
+  });
 } catch (err) {}
 
 // Watch and serve files in dev
@@ -66,7 +62,10 @@ if (DEV) {
       servedir: '.',
       port: SERVE_PORT,
     })
-    .then(() => console.log(`Serving library at http://localhost:${SERVE_PORT}/dist/index.js`));
+    .then(() => {
+      console.log(`Serving:`);
+      console.log(`<script async type="module" src="http://localhost:${SERVE_PORT}/attributes.js"></script>`);
+    });
 }
 
 // Build files in prod

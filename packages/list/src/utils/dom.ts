@@ -107,3 +107,10 @@ export function getCollectionElements(
 
   return collectionListWrapper.querySelector<PaginationButtonElement>(getCMSElementSelector(target));
 }
+
+/**
+ * @returns All the `Collection List Wrapper` elements in the page.
+ * @param page
+ */
+export const getAllCollectionListWrappers = (page: Document) =>
+  page.querySelectorAll<CollectionListWrapperElement>(getCMSElementSelector('wrapper'));

@@ -2,11 +2,5 @@ import { generateSelectors, SOCIAL_SHARE_ATTRIBUTE } from '@finsweet/attributes-
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const {
-  queryElement,
-  getAttribute,
-  getSettingSelector,
-  getElementSelector,
-  queryAllElements,
-  getInstanceIndex,
-} = generateSelectors(SOCIAL_SHARE_ATTRIBUTE, ELEMENTS, SETTINGS);
+export const { queryElement, getAttribute, getSettingSelector, getElementSelector, queryAllElements, getInstance } =
+  generateSelectors(SOCIAL_SHARE_ATTRIBUTE, ELEMENTS, SETTINGS);

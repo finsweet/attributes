@@ -1,6 +1,6 @@
 import type { FormField } from '@finsweet/attributes-utils';
 
-import { getInstanceIndex, queryAllElements } from '../utils/selectors';
+import { getInstance, queryAllElements } from '../utils/selectors';
 import { relationshipsStore } from '../utils/stores';
 
 /**
@@ -8,9 +8,9 @@ import { relationshipsStore } from '../utils/stores';
  * @param sourceElement
  */
 export const collectTargets = (sourceElement: FormField) => {
-  const instanceIndex = getInstanceIndex(sourceElement);
+  const instance = getInstance(sourceElement);
 
-  const displayTargets = queryAllElements('target', { instanceIndex });
+  const displayTargets = queryAllElements('target', { instance });
   if (!displayTargets.length) return;
 
   relationshipsStore.set(sourceElement, displayTargets);

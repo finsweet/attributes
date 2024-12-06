@@ -31,6 +31,11 @@ export const ELEMENTS = [
 
 export const SETTINGS = {
   /**
+   * If no results were found from `input` field search, it prevents input field from being cleared.
+   */
+  preventClear: { key: 'preventclear', values: { true: 'true' } },
+
+  /**
    * Defines if the reset option should be hidden whenever there isn't an active selection.
    */
   hideinitial: { key: 'hideinitial', values: { true: 'true' } },

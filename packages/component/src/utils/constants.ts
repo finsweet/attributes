@@ -1,6 +1,16 @@
 import type { AttributeElements, AttributeSettings } from '@finsweet/attributes-utils';
 
-export const ELEMENTS = [] as const satisfies AttributeElements;
+export const ELEMENTS = [
+  /**
+   * Defines a target where to load the component.
+   */
+  'target',
+
+  /**
+   * Defines a component to be loaded.
+   */
+  'component',
+] as const satisfies AttributeElements;
 
 export const SETTINGS = {
   /**
@@ -8,13 +18,6 @@ export const SETTINGS = {
    */
   source: {
     key: 'source',
-  },
-
-  /**
-   * Defines a component source.
-   */
-  id: {
-    key: 'id',
   },
 
   /**

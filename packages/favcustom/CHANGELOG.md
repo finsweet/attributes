@@ -1,5 +1,11 @@
 # @finsweet/attributes-favcustom
 
+## 2.0.0
+
+### Major Changes
+
+- 542c642: favcustom: prepared for v2 release
+
 ## 1.5.0
 
 ### Minor Changes

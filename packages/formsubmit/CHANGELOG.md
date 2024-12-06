@@ -1,5 +1,11 @@
 # @finsweet/attributes-formsubmit
 
+## 2.0.0
+
+### Major Changes
+
+- 01f7277: formsubmit: prepared for v2 release
+
 ## 1.4.1
 
 ### Patch Changes

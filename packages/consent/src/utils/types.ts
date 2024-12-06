@@ -1,6 +1,4 @@
-import type { FsAttributeInit } from '@finsweet/attributes-utils';
-
-import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS, SETTINGS } from '.';
+import { ACTIONS, CONSENTS, MODES, OPTIONAL_CONSENTS } from '.';
 
 // Consents
 export type ConsentKey = (typeof CONSENTS)[number];
@@ -41,10 +39,6 @@ export interface IFrameData {
 declare global {
   interface Window {
     doNotTrack: string | null;
-    dataLayer?: { event: string }[];
+    dataLayer: Record<string, unknown>[];
   }
 }
-
-export type GlobalSettings = Parameters<FsAttributeInit<typeof SETTINGS>>['0'] & {
-  debug: boolean;
-};

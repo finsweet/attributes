@@ -7,10 +7,14 @@ test.beforeEach(async ({ page }) => {
 });
 
 const getSourceLocators = (page: Page) =>
-  [1, 2, 3, 4, 5, 6].map((id) => page.locator(`[fs-displayvalues-element="source-${id}"]`));
+  [1, 2, 3, 4, 5, 6].map((id) =>
+    page.locator(`[fs-displayvalues-element="source"][fs-displayvalues-instance="${id}"]`)
+  );
 
 const getTargetLocators = (page: Page) =>
-  [1, 2, 3, 4, 5, 6].map((id) => page.locator(`[fs-displayvalues-element="target-${id}"]`));
+  [1, 2, 3, 4, 5, 6].map((id) =>
+    page.locator(`[fs-displayvalues-element="target"][fs-displayvalues-instance="${id}"]`)
+  );
 
 test.describe('displayvalues', () => {
   test("Displays each element's value", async ({ page }) => {

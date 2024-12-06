@@ -1,165 +1,211 @@
-import { extractCommaSeparatedValues, isNumber } from '@finsweet/attributes-utils';
+import {
+  extractCommaSeparatedValues,
+  isNumber,
+  isString,
+  normalizeDate,
+  normalizeNumber,
+} from '@finsweet/attributes-utils';
 
-import type { ListItem } from '../components/ListItem';
-import { normalizeFieldKey } from '../utils/fields';
-import { highlightItems, removeHighlight } from './highlight';
-import { type FiltersGroup } from './types';
+import type { ListItem, ListItemField } from '../components/ListItem';
+import type { Filters, FiltersCondition, FiltersGroup } from './types';
 
-export const filterItems = (filtersGroup: FiltersGroup, items: ListItem[]) => {
-  const filtersEntries = Object.entries(filtersGroup.filters);
-  const method = filtersGroup.match;
-  const highlightFields = new Set();
-
-  if (
-    method === 'or' &&
-    filtersEntries.every(
-      ([, filterData]) => !filterData.value || (Array.isArray(filterData.value) && filterData.value.length === 0)
-    )
-  ) {
-    return items;
-  }
+export const filterItems = (filters: Filters, items: ListItem[]) => {
+  console.log({ filters, items });
 
   const filteredItems = items.filter((item) => {
-    const matchesFilters = filtersEntries.map(([rawFieldKey, filterData]) => {
-      if (!filterData.value && method === 'and') return true;
-      if (Array.isArray(filterData.value) && filterData.value.length === 0 && method === 'and') return true;
-      if (!filterData.value && method === 'or') return false;
+    const groupsPredicate = (groupData: FiltersGroup) => {
+      const conditionsPredicate = (filterData: FiltersCondition) => {
+        const fieldsPredicate = (field: string) => {
+          if (!filterData.field || !filterData.op || !filterData.value) return true;
 
-      const fieldKeys = rawFieldKey === '*' ? Object.keys(item.fields) : extractCommaSeparatedValues(rawFieldKey);
+          const fieldData = item.fields[field];
+          if (!fieldData) return false;
 
-      return fieldKeys.some((fieldKey) => {
-        highlightFields.add(fieldKey);
-        const normalizedFieldKey = normalizeFieldKey(fieldKey);
+          switch (filterData.op) {
+            case 'empty': {
+              return !fieldData.value.length;
+            }
 
-        const fieldData = item.fields[normalizedFieldKey];
-        if (!fieldData) return false;
+            case 'not-empty': {
+              return !!fieldData.value.length;
+            }
 
-        switch (filterData.op) {
-          case 'exists': {
-            return !!fieldData.value;
-          }
+            case 'equal': {
+              if (isString(filterData.value)) {
+                const filterValue = parseFilterValue(filterData.value, fieldData);
+                if (filterValue === null) return false;
 
-          case 'nexists': {
-            return !fieldData.value;
-          }
+                return fieldData.value.length === 1 && areEqual(fieldData.value[0], filterValue);
+              }
 
-          case 'eq':
-          case 'neq': {
-            // Multiple
-            if (filterData.type === 'multiple') {
-              const fieldValue = fieldData.value;
+              return (
+                fieldData.value.length === filterData.value.length &&
+                fieldData.value.every((value) => {
+                  if (!Array.isArray(filterData.value)) return true;
 
-              return filterData.value.some((filterValue) => {
-                return filterData.op === 'eq'
-                  ? fieldValue.some((value) => value === filterValue)
-                  : // @ts-expect-error weird type inference breaks TS here
-                    fieldValue.every((value) => value !== filterValue);
+                  return filterData.value.some((rawFilterValue) => {
+                    const filterValue = parseFilterValue(rawFilterValue, fieldData);
+                    if (filterValue === null) return false;
+
+                    return areEqual(value, filterValue);
+                  });
+                })
+              );
+            }
+
+            case 'not-equal': {
+              if (isString(filterData.value)) {
+                const filterValue = parseFilterValue(filterData.value, fieldData);
+                if (filterValue === null) return false;
+
+                return fieldData.value.length !== 1 || !areEqual(fieldData.value[0], filterValue);
+              }
+
+              return (
+                fieldData.value.length !== filterData.value.length ||
+                fieldData.value.some((value) => {
+                  if (!Array.isArray(filterData.value)) return true;
+
+                  return filterData.value.every((rawFilterValue) => {
+                    const filterValue = parseFilterValue(rawFilterValue, fieldData);
+                    if (filterValue === null) return false;
+
+                    return !areEqual(value, filterValue);
+                  });
+                })
+              );
+            }
+
+            case 'contains': {
+              if (isString(filterData.value)) {
+                const lowerCaseFilterValue = filterData.value.toLowerCase();
+
+                return fieldData.value.some((value) => {
+                  const lowerCaseValue = String(value).toLowerCase();
+                  return lowerCaseValue.includes(lowerCaseFilterValue);
+                });
+              }
+
+              if (!filterData.value.length) return true;
+
+              return filterData.value.some((rawFilterValue) => {
+                const filterValue = parseFilterValue(rawFilterValue, fieldData);
+                if (filterValue === null) return false;
+
+                return fieldData.value.some((value) => areEqual(value, filterValue));
               });
             }
 
-            // Date
-            if (filterData.type === 'date') {
-              if (fieldData.type !== 'date') return false;
+            case 'not-contains': {
+              if (isString(filterData.value)) {
+                const lowerCaseFilterValue = filterData.value.toLowerCase();
 
-              const fieldValue = fieldData.value;
-              const filterTime = filterData.value?.getTime();
-
-              if (!filterTime) return false;
-
-              return filterData.op === 'eq'
-                ? fieldValue.some((value) => filterTime === value.getTime())
-                : fieldValue.every((value) => filterTime !== value.getTime());
-            }
-
-            // Number
-            if (filterData.type === 'number') {
-              if (fieldData.type !== 'number') return false;
-
-              const fieldValue = fieldData.value;
-
-              return filterData.op === 'eq'
-                ? fieldValue.some((value) => filterData.value === value)
-                : fieldValue.every((value) => filterData.value !== value);
-            }
-
-            // Other
-            const filterValue = String(filterData.value);
-            const fieldValue = fieldData.value;
-
-            const lowerCaseFilterValue = filterValue.toLowerCase();
-
-            return filterData.op === 'eq'
-              ? fieldValue.some((value) => String(value).toLowerCase() === lowerCaseFilterValue)
-              : // @ts-expect-error weird type inference breaks TS here
-                fieldValue.every((value) => String(value).toLowerCase() !== lowerCaseFilterValue);
-          }
-
-          case 'gt':
-          case 'gte':
-          case 'lt':
-          case 'lte': {
-            if (filterData.type !== 'number' && filterData.type !== 'date') return false;
-            if (fieldData.type !== 'number' && fieldData.type !== 'date') return false;
-
-            const fieldValue = fieldData.value;
-            const filterValue = filterData.type === 'date' ? filterData.value?.getTime() : filterData.value;
-
-            if (!isNumber(filterValue)) return false;
-
-            return fieldValue.some((value) => {
-              const numberValue = isNumber(value) ? value : value.getTime();
-
-              switch (filterData.op) {
-                case 'gt': {
-                  return numberValue > filterValue;
-                }
-                case 'gte': {
-                  return numberValue >= filterValue;
-                }
-                case 'lt': {
-                  return numberValue < filterValue;
-                }
-                case 'lte': {
-                  return numberValue <= filterValue;
-                }
+                return fieldData.value.every((value) => {
+                  const lowerCaseValue = String(value).toLowerCase();
+                  return !lowerCaseValue.includes(lowerCaseFilterValue);
+                });
               }
-            });
-          }
 
-          case 'includes':
-          case 'nincludes': {
-            if (filterData.type === 'multiple') {
-              return filterData.op === 'includes'
-                ? filterData.value.some((filterValue) => {
-                    const fieldValue = fieldData.value;
-                    return fieldValue.some((value) => value === filterValue);
-                  })
-                : filterData.value.every((filterValue) => {
-                    const fieldValue = fieldData.value;
+              return filterData.value.every((rawFilterValue) => {
+                const filterValue = parseFilterValue(rawFilterValue, fieldData);
+                if (filterValue === null) return false;
 
-                    // @ts-expect-error weird type inference breaks TS here
-                    return fieldValue.every((value) => value !== filterValue);
-                  });
+                return fieldData.value.every((value) => !areEqual(value, filterValue));
+              });
             }
 
-            const fieldValue = fieldData.value;
-            const lowerCaseFilterValue = String(filterData.value).toLowerCase();
+            case 'greater':
+            case 'greater-equal':
+            case 'less':
+            case 'less-equal': {
+              if (fieldData.type !== 'number' && fieldData.type !== 'date') return true;
+              if (Array.isArray(filterData.value)) return true;
 
-            return filterData.op === 'includes'
-              ? fieldValue.some((value) => String(value).toLowerCase().includes(lowerCaseFilterValue))
-              : // @ts-expect-error weird type inference breaks TS here
-                fieldValue.every((value) => !String(value).toLowerCase().includes(lowerCaseFilterValue));
+              const filterValue = parseFilterValue(filterData.value, fieldData);
+              if (filterValue === null) return false;
+
+              return fieldData.value.some((fieldValue) => {
+                if (isString(filterValue)) return true;
+
+                const numericFieldValue = isNumber(fieldValue) ? fieldValue : fieldValue.getTime();
+                const numericFilterValue = isNumber(filterValue) ? filterValue : filterValue.getTime();
+
+                switch (filterData.op) {
+                  case 'greater': {
+                    return numericFieldValue > numericFilterValue;
+                  }
+                  case 'greater-equal': {
+                    return numericFieldValue >= numericFilterValue;
+                  }
+                  case 'less': {
+                    return numericFieldValue < numericFilterValue;
+                  }
+                  case 'less-equal': {
+                    return numericFieldValue <= numericFilterValue;
+                  }
+                }
+              });
+            }
           }
-        }
-      });
-    });
-    return method === 'and' ? matchesFilters.every(Boolean) : matchesFilters.some(Boolean);
-  });
+        };
 
-  filteredItems.forEach((item) => {
-    removeHighlight(item);
-    highlightItems(highlightFields, item);
+        const fields =
+          filterData.field === '*'
+            ? Object.keys(items[0]?.fields || {})
+            : extractCommaSeparatedValues(filterData.field);
+
+        return filterData.match === 'and' ? fields.every(fieldsPredicate) : fields.some(fieldsPredicate);
+      };
+
+      return groupData.match === 'or'
+        ? groupData.conditions.some(conditionsPredicate)
+        : groupData.conditions.every(conditionsPredicate);
+    };
+
+    return filters.match === 'or' ? filters.groups.some(groupsPredicate) : filters.groups.every(groupsPredicate);
   });
 
   return filteredItems;
+};
+
+/**
+ * Parses the filter value based on the field type.
+ * @param rawFilterValue
+ * @param fieldData
+ * @returns The parsed filter value, if it could be parsed. Otherwise, `null`.
+ */
+const parseFilterValue = (rawFilterValue: string, { type }: ListItemField) => {
+  if (type === 'date') {
+    const filterValue = normalizeDate(rawFilterValue);
+
+    if (filterValue === undefined || isNaN(filterValue.getTime())) {
+      return null;
+    }
+
+    return filterValue;
+  }
+
+  if (type === 'number') {
+    const filterValue = normalizeNumber(rawFilterValue);
+
+    if (filterValue === undefined || isNaN(filterValue)) {
+      return null;
+    }
+
+    return filterValue;
+  }
+
+  return rawFilterValue;
+};
+
+/**
+ * Checks if two values are equal.
+ * @param rawA
+ * @param rawB
+ */
+const areEqual = <Value = ListItemField['value'][number]>(rawA: Value, rawB: Value) => {
+  const a = rawA instanceof Date ? rawA.getTime() : rawA;
+  const b = rawB instanceof Date ? rawB.getTime() : rawB;
+
+  return a === b;
 };

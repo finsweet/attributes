@@ -29,11 +29,9 @@ export const initHTMLSelect = (selectElement: HTMLSelectElement, list: List) => 
 
   const submitCleanup = addListener(form, 'submit', handleFormSubmit);
 
-  return {
-    cleanup: () => {
-      changeCleanup();
-      submitCleanup();
-    },
+  return () => {
+    changeCleanup();
+    submitCleanup();
   };
 };
 

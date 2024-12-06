@@ -1,86 +1,84 @@
-import { clearFormField, isFormField, parseNumericAttribute } from '@finsweet/attributes-utils';
+import { effect, watch } from '@vue/reactivity';
 
 import type { List } from '../components/List';
-import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
-import { filterConditions, initCondition } from './conditions';
-import { getFilterData, getFiltersData } from './data';
+import { setReactive } from '../utils/reactivity';
+import { queryElement } from '../utils/selectors';
+import { getAdvancedFilters, initAdvancedFilters } from './advanced';
 import { filterItems } from './filter';
-import { initTag } from './tag';
+import { getSimpleFilters, initSimpleFilters } from './simple';
+import { initTags } from './tags';
 
 /**
  * Inits loading functionality for the list.
  * @param list
  * @param form
  */
-export const initListFiltering = async (list: List, form: HTMLFormElement) => {
-  const emptyElement = queryElement('empty');
-
+export const initListFiltering = (list: List, form: HTMLFormElement) => {
   // Init hook
+  // TODO: Remove hook for cleanup
   list.addHook('filter', (items) => {
-    const filters = list.filters.get();
-    const match = getAttribute(form, 'match', true) || 'and';
-    const filteredItems = filterItems({ filters, match }, items);
-    if (list.wrapperElement) {
-      if (filteredItems.length === 0) {
-        list.wrapperElement.style.display = 'none';
-        if (emptyElement) emptyElement.style.display = 'flex';
-      } else {
-        list.wrapperElement.style.display = 'block';
-        if (emptyElement) emptyElement.style.display = 'none';
-      }
-    }
+    const filteredItems = filterItems(list.filters, items);
     return filteredItems;
   });
 
-  const selector = getSettingSelector('field');
-  const formFields = Array.from(form.querySelectorAll<HTMLInputElement>(selector)).filter((item) => isFormField(item));
+  // Handle elements
+  const elementsCleanup = effect(() => {
+    const hasItems = !!list.hooks.filter.result.value.length;
+
+    if (list.listElement) {
+      list.listElement.style.display = hasItems ? '' : 'none';
+    }
+
+    if (list.emptyElement.value) {
+      list.emptyElement.value.style.display = hasItems ? 'none' : '';
+    }
+  });
+
+  const isAdvanced = !!queryElement('condition-group', { scope: form });
 
   // Get filters data
-  const filtersData = getFiltersData(form);
+  const filters = isAdvanced ? getAdvancedFilters(form) : getSimpleFilters(list, form);
 
-  initTag(list);
-  initCondition();
+  setReactive(list.filters, filters);
 
-  list.filters.set(filtersData);
+  // Trigger the hook when the filters change
+  let queued = false;
 
-  let debouncedFiltration = 0;
+  // TODO: watcher seems to fire twice on each filter change
+  const filtersCleanup = watch(
+    list.filters,
+    () => {
+      if (queued) return;
 
-  // Listen for changes
-  form.addEventListener('input', (e) => {
-    const { target } = e;
+      queued = true;
 
-    if (!isFormField(target)) return;
+      queueMicrotask(() => {
+        list.triggerHook('filter');
+        queued = false;
+      });
+    },
+    { deep: true, immediate: true }
+  );
 
-    filterConditions(target, list);
+  // TODO - Init tags + cleanup
+  initTags(list);
 
-    const rawFieldKey = getAttribute(target, 'field');
-    const debounceValue = parseNumericAttribute(getAttribute(target, 'debounce'), 0);
-    if (!rawFieldKey) return;
+  const filteringCleanup = isAdvanced ? initAdvancedFilters(list, form) : initSimpleFilters(list, form);
 
-    // Avoid unnecessary calls
-    if (debouncedFiltration) {
-      clearTimeout(debouncedFiltration);
-    }
-
-    debouncedFiltration = setTimeout(() => {
-      const filterData = getFilterData(target);
-      list.filters.setKey(rawFieldKey, filterData);
-    }, debounceValue);
+  const mutationObserver = new MutationObserver(() => {
+    const filters = isAdvanced ? getAdvancedFilters(form) : getSimpleFilters(list, form);
+    setReactive(list.filters, filters);
   });
 
-  // Global click event listener on the form
-  form.addEventListener('click', (e) => {
-    const { target } = e;
-    const clearElement = (target as Element)?.closest(getElementSelector('clear'));
-    if (clearElement) {
-      const rawFilterKey = getAttribute(clearElement, 'field');
-      const fieldsToClear = rawFilterKey
-        ? formFields.filter((item) => getAttribute(item, 'field') === rawFilterKey)
-        : formFields;
-      for (const element of fieldsToClear) {
-        clearFormField(element);
-        debouncedFiltration = 0;
-      }
-    }
+  mutationObserver.observe(form, {
+    childList: true,
+    subtree: true,
   });
+
+  return () => {
+    elementsCleanup();
+    filtersCleanup();
+    filteringCleanup?.();
+    mutationObserver.disconnect();
+  };
 };

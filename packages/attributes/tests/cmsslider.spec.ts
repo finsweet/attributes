@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Example', () => {
-  test('Example', async ({ page }) => {
+  test.skip('Example', async ({ page }) => {
     await waitAttributeLoaded(page, 'cmsslider');
     await waitAttributeLoaded(page, 'cmsload');
 

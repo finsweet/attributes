@@ -6,7 +6,7 @@ import {
   parseNumericAttribute,
 } from '@finsweet/attributes-utils';
 
-import { getAttribute, getElementSelector, getInstanceIndex, queryAllElements } from './utils/selectors';
+import { getAttribute, getElementSelector, getInstance, queryAllElements } from './utils/selectors';
 
 /**
  * Inits click events mirroring.
@@ -19,9 +19,9 @@ export const init: FsAttributeInit = () => {
     if (!mirrorTrigger) return;
 
     // Get the instance index
-    const instanceIndex = getInstanceIndex(mirrorTrigger);
+    const instance = getInstance(mirrorTrigger);
 
-    const mirrorTargets = queryAllElements('target', { instanceIndex });
+    const mirrorTargets = queryAllElements('target', { instance });
 
     for (const mirrorTarget of mirrorTargets) {
       if (!isHTMLElement(mirrorTarget)) continue;

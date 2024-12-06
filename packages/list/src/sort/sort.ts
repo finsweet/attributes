@@ -3,7 +3,7 @@ import type { SortingDirection } from './types';
 
 /**
  * Sorts the items of a `CMSList`.
- * **Important:** This method mutates the {@link CMSList.items} property.
+ * **Important:** This method mutates the {@link ListItem.items} property.
  *
  * @param listInstance The {@link CMSList} instance.
  * @param direction The direction to sort.
@@ -15,7 +15,6 @@ export const sortListItems = (
   direction?: SortingDirection
 ): ListItem[] | undefined => {
   const validSortKey = !!direction && !!sortKey && items.some(({ fields }) => sortKey in fields);
-
   if (!validSortKey) return;
 
   const sorted = [...items].sort((firstItem, secondItem) => {

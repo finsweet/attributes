@@ -8,7 +8,7 @@ import {
   CALENDAR_EVENT_PLATFORMS,
   type CalendarEventPlatform,
   getCMSItemWrapper,
-  getInstanceIndex,
+  getInstance,
   queryAllElements,
   stores,
 } from './utils';
@@ -40,11 +40,11 @@ const creators: Record<CalendarEventPlatform, (trigger: HTMLElement) => void> = 
   google: (trigger) => {
     if (stores.google.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const google = collectGoogleData(trigger, instanceIndex, cmsListItem);
+    const google = collectGoogleData(trigger, instance, cmsListItem);
 
     const inviteUrl = createGoogleCalendarEventURL(google);
 
@@ -53,11 +53,11 @@ const creators: Record<CalendarEventPlatform, (trigger: HTMLElement) => void> = 
   outlook: function (trigger: HTMLElement): void {
     if (stores.outlook.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const outlook = collectOutlookData(trigger, instanceIndex, cmsListItem);
+    const outlook = collectOutlookData(trigger, instance, cmsListItem);
 
     const inviteUrl = createOutlookCalendarEventURL(outlook);
 
@@ -66,11 +66,11 @@ const creators: Record<CalendarEventPlatform, (trigger: HTMLElement) => void> = 
   apple: function (trigger: HTMLElement): void {
     if (stores.apple.has(trigger)) return;
 
-    const instanceIndex = getInstanceIndex(trigger);
+    const instance = getInstance(trigger);
 
     const cmsListItem = getCMSItemWrapper(trigger);
 
-    const apple = collectIcsData(trigger, instanceIndex, cmsListItem);
+    const apple = collectIcsData(trigger, instance, cmsListItem);
 
     const inviteUrl = createIcsCalendarDownloadURL(apple);
 

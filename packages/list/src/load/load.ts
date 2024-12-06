@@ -14,9 +14,9 @@ export const loadPaginatedItems = async (list: List): Promise<void> => {
     paginationNextElement,
     paginationPreviousElement,
     paginationCountElement,
-    loadingPaginationData,
+    loadingPaginationQuery: loadingPaginationData,
     loaderElement,
-    cacheItems,
+    cache: cacheItems,
   } = list;
 
   if (!paginationNextElement && !paginationPreviousElement) return;
@@ -147,33 +147,12 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
  * @returns The URL of the next page, if any.
  */
 const parseLoadedPage = async (page: Document, list: List, itemsTarget?: Parameters<List['addItems']>[1]) => {
-  const { pageIndex, paginationNextElement, paginationPreviousElement, itemsPerPage } = list;
+  const { pageIndex, itemsPerPage } = list;
 
   // Get DOM Elements
   const allCollectionWrappers = page.querySelectorAll(`.${CMS_CSS_CLASSES.wrapper}`);
   const collectionListWrapper = allCollectionWrappers[pageIndex];
   if (!collectionListWrapper) return;
-
-  // Store and mount the Pagination Previous element, if required
-  if (!paginationPreviousElement.get() || !paginationNextElement.get()) {
-    const newPaginationWrapper = getCollectionElements(collectionListWrapper, 'pagination-wrapper');
-    const newPaginationPrevious = getCollectionElements(collectionListWrapper, 'pagination-previous');
-    const newPaginationNext = getCollectionElements(collectionListWrapper, 'pagination-next');
-
-    if (newPaginationPrevious) {
-      const childIndex = [...(newPaginationWrapper?.children || [])].indexOf(newPaginationPrevious);
-
-      list.addPaginationButton(newPaginationPrevious, 'paginationPreviousElement', childIndex);
-    }
-
-    if (newPaginationNext) {
-      let childIndex = [...(newPaginationWrapper?.children || [])].indexOf(newPaginationNext);
-
-      if (!newPaginationPrevious) childIndex += 1;
-
-      list.addPaginationButton(newPaginationNext, 'paginationNextElement', childIndex);
-    }
-  }
 
   // Store and mount the new items
   const nextPageURL = getCollectionElements(collectionListWrapper, 'pagination-next')?.href;

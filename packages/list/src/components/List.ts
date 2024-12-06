@@ -1,22 +1,26 @@
 import {
+  CMS_CSS_CLASSES,
+  type CollectionEmptyElement,
   type CollectionItemElement,
   type CollectionListElement,
   type CollectionListWrapperElement,
+  fetchPageDocument,
   getObjectEntries,
   isNumber,
   type PageCountElement,
   type PaginationButtonElement,
   type PaginationWrapperElement,
   parseNumericAttribute,
+  restartWebflow,
+  type WebflowModule,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
-import { atom, deepMap, type WritableAtom } from 'nanostores';
+import { effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 
-import type { FiltersData } from '../filter/types';
-import { getCollectionElements } from '../utils/dom';
-import { getPaginationQuery } from '../utils/pagination';
-import { subscribeMultiple } from '../utils/reactivity';
-import { getAttribute, getInstanceIndex, queryElement } from '../utils/selectors';
+import type { Filters } from '../filter/types';
+import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
+import { getPaginationSearchEntries } from '../utils/pagination';
+import { getAttribute, getInstance, hasAttributeValue, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
@@ -26,7 +30,7 @@ type Hooks = {
   [key in HookKey]: {
     previous?: HookKey;
     callbacks: HookCallback[];
-    result: WritableAtom<ListItem[] | undefined>;
+    result: ShallowRef<ListItem[]>;
   };
 };
 
@@ -34,194 +38,207 @@ export class List {
   /**
    * Contains all lifecycle hooks with their callbacks and last result.
    */
-  readonly hooks: Hooks = {
+  public readonly hooks: Hooks = {
     filter: {
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     sort: {
       previous: 'filter',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     paginate: {
       previous: 'sort',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     beforeRender: {
       previous: 'paginate',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     render: {
       previous: 'beforeRender',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
 
     afterRender: {
       previous: 'render',
       callbacks: [],
-      result: atom(),
+      result: shallowRef([]),
     },
   };
 
   /**
    * A signal holding all {@link ListItem} instances of the list.
    */
-  readonly items: WritableAtom<ListItem[]> = atom([]);
+  public readonly items = shallowRef<ListItem[]>([]);
 
   /**
    * A set holding all rendered {@link ListItem} instances.
    */
-  renderedItems: Set<ListItem> = new Set();
+  public renderedItems: Set<ListItem> = new Set();
 
   /**
-   * The instance index.
+   * The instance.
    */
-  readonly instanceIndex?: number;
+  public readonly instance: string | null;
 
   /**
    * The `Collection List` element.
    */
-  readonly listElement?: CollectionListElement | null;
+  public readonly listElement?: CollectionListElement | null;
 
   /**
    * The `Pagination` wrapper element.
    */
-  readonly paginationWrapperElement?: PaginationWrapperElement | null;
+  public readonly paginationWrapperElement?: PaginationWrapperElement | null;
 
   /**
    * The `Page Count` element.
    */
-  readonly paginationCountElement?: PageCountElement | null;
+  public readonly paginationCountElement?: PageCountElement | null;
 
   /**
    * The `Previous` button.
    */
-  readonly paginationPreviousElement: WritableAtom<PaginationButtonElement | null>;
+  public readonly paginationPreviousElement = ref<PaginationButtonElement | null | undefined>();
 
   /**
    * The `Next` button.
    */
-  readonly paginationNextElement: WritableAtom<PaginationButtonElement | null>;
+  public readonly paginationNextElement = ref<PaginationButtonElement | null | undefined>();
 
   /**
-   * A custom `Empty State` element.
+   * The `Empty State` element.
    */
-  readonly emptyElement?: HTMLElement | null;
+  public readonly emptyElement = ref<CollectionEmptyElement | null | undefined>();
 
   /**
    * A custom loader element.
    */
-  readonly loaderElement?: HTMLElement | null;
+  public readonly loaderElement?: HTMLElement | null;
 
   /**
    * An element that displays the total amount of items in the list.
    */
-  readonly itemsCountElement?: HTMLElement | null;
+  public readonly itemsCountElement?: HTMLElement | null;
 
   /**
    * An element that displays the total amount of items in the list after filtering.
    */
-  readonly resultsCountElement?: HTMLElement | null;
+  public readonly resultsCountElement?: HTMLElement | null;
 
   /**
    * An element that displays the amount of visible items.
    */
-  readonly visibleCountElement?: HTMLElement | null;
+  public readonly visibleCountElement?: HTMLElement | null;
 
   /**
    * An element that displays the lower range of visible items.
    */
-  readonly visibleCountFromElement?: HTMLElement | null;
+  public readonly visibleCountFromElement?: HTMLElement | null;
 
   /**
    * An element that displays the upper range of visible items.
    */
-  readonly visibleCountToElement?: HTMLElement | null;
+  public readonly visibleCountToElement?: HTMLElement | null;
 
   /**
    * Defines the amount of items per page.
    */
-  readonly itemsPerPage: WritableAtom<number>;
+  public readonly itemsPerPage: Ref<number>;
 
   /**
    * Defines the total amount of pages in the list.
    */
-  readonly totalPages = atom(1);
+  public readonly totalPages = ref(1);
 
   /**
    * Defines the current page in `Pagination` mode.
    */
-  readonly currentPage = atom(1);
+  public readonly currentPage = ref(1);
 
   /**
    * Defines the active filters.
    */
-  readonly filters = deepMap<FiltersData>({});
+  public readonly filters = reactive<Filters>({ groups: [{ conditions: [] }] });
 
   /**
    * Defines if the pagination query param should be added to the URL when switching pages.
    * @example '?5f7457b3_page=1'
    */
-  readonly showPagesQuery = atom(false);
+  public readonly showPagesQuery = ref(false);
+
+  /**
+   * Defines the Webflow modules to restart after rendering.
+   */
+  public readonly webflowModules = new Set<WebflowModule>();
+
+  /**
+   * Defines if loaded Items can be cached using IndexedDB after fetching them.
+   */
+  public readonly cache: boolean;
 
   /**
    * Defines the query key for the paginated pages.
    * @example '5f7457b3_page'
    */
-  pagesQuery?: string;
+  public pagesQuery?: string;
 
   /**
-   * Defines an awaitable Promise that resolves once the pagination data (`currentPage` + `pagesQuery`) has been extracted.
+   * Defines an awaitable Promise that resolves once the pagination data (`currentPage` + `pagesQuery`) has been retrieved.
    */
-  loadingPaginationData?: Promise<void>;
+  public loadingPaginationQuery?: Promise<void>;
 
   /**
-   * Defines if loaded CMS Items can be cached using IndexedDB after fetching them.
+   * Defines an awaitable Promise that resolves once the pagination elements have been loaded.
    */
-  cacheItems = true;
+  public loadingPaginationElements?: Promise<void>;
 
   constructor(public readonly wrapperElement: CollectionListWrapperElement, public readonly pageIndex: number) {
     // Collect elements
     const listElement = getCollectionElements(wrapperElement, 'list');
     this.listElement = listElement;
 
-    const instanceIndex = getInstanceIndex(listElement || wrapperElement);
-    this.instanceIndex = instanceIndex;
+    const instance = getInstance(listElement || wrapperElement);
+    this.instance = instance;
 
     this.paginationWrapperElement = getCollectionElements(wrapperElement, 'pagination-wrapper');
     this.paginationCountElement = getCollectionElements(wrapperElement, 'page-count');
-    this.paginationNextElement = atom(getCollectionElements(wrapperElement, 'pagination-next'));
-    this.paginationPreviousElement = atom(getCollectionElements(wrapperElement, 'pagination-previous'));
-    this.emptyElement = getCollectionElements(wrapperElement, 'empty');
-    this.loaderElement = queryElement('loader', { instanceIndex });
-    this.itemsCountElement = queryElement('items-count', { instanceIndex });
-    this.visibleCountElement = queryElement('visible-count', { instanceIndex });
-    this.visibleCountFromElement = queryElement('visible-count-from', { instanceIndex });
-    this.visibleCountToElement = queryElement('visible-count-to', { instanceIndex });
-    this.resultsCountElement = queryElement('results-count', { instanceIndex });
+    this.paginationNextElement.value = getCollectionElements(wrapperElement, 'pagination-next');
+    this.paginationPreviousElement.value = getCollectionElements(wrapperElement, 'pagination-previous');
+    this.emptyElement.value =
+      getCollectionElements(wrapperElement, 'empty') || queryElement<CollectionEmptyElement>('empty', { instance });
+    this.loaderElement = queryElement('loader', { instance });
+    this.itemsCountElement = queryElement('items-count', { instance });
+    this.visibleCountElement = queryElement('visible-count', { instance });
+    this.visibleCountFromElement = queryElement('visible-count-from', { instance });
+    this.visibleCountToElement = queryElement('visible-count-to', { instance });
+    this.resultsCountElement = queryElement('results-count', { instance });
+    this.cache = hasAttributeValue(this.listOrWrapper, 'cache', 'true');
 
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
 
-    this.itemsPerPage = atom(collectionItemElements.length);
+    this.itemsPerPage = ref(collectionItemElements.length);
 
     if (listElement) {
       const items = collectionItemElements.map((element) => new ListItem(element, listElement));
 
-      this.items.set(items);
+      this.items.value = items;
       this.renderedItems = new Set(items);
     }
 
     // Extract pagination data
-    this.loadingPaginationData = getPaginationQuery(this);
+    this.loadingPaginationQuery = this.#getPaginationQuery();
+    this.loadingPaginationElements = this.#getPaginationElements();
 
     // Init hooks
     this.#initHooks();
@@ -279,11 +296,17 @@ export class List {
       return items;
     });
 
+    // Restart Webflow modules
+    this.addHook('afterRender', async () => {
+      restartWebflow([...this.webflowModules]);
+    });
+
     // Start hooks chain
     for (const [key, { previous }] of getObjectEntries(this.hooks)) {
       const items = previous ? this.hooks[previous].result : this.items;
 
-      items.listen(() => this.triggerHook(key));
+      // TODO: Cleanups
+      watch(items, () => this.triggerHook(key), { immediate: true });
     }
   }
 
@@ -294,11 +317,12 @@ export class List {
     const { items, itemsPerPage, currentPage, hooks } = this;
 
     // items-count
-    items.subscribe((items) => {
+    // TODO: Cleanup
+    effect(() => {
       const { itemsCountElement } = this;
 
       if (itemsCountElement) {
-        itemsCountElement.textContent = `${items.length}`;
+        itemsCountElement.textContent = `${items.value.length}`;
       }
     });
 
@@ -308,34 +332,175 @@ export class List {
      * visible-count-to
      * results-count
      */
-    subscribeMultiple(
-      [itemsPerPage, currentPage, hooks.filter.result],
-      ([$itemsPerPage, $currentPage, $filteredItems = []]) => {
-        const { visibleCountElement, visibleCountFromElement, visibleCountToElement, resultsCountElement } = this;
+    // TODO: Cleanup
+    effect(() => {
+      const { visibleCountElement, visibleCountFromElement, visibleCountToElement, resultsCountElement } = this;
 
-        if (visibleCountElement) {
-          const visibleCountTotal = Math.min($itemsPerPage, $filteredItems.length);
+      const filteredItems = hooks.filter.result.value;
 
-          visibleCountElement.textContent = `${visibleCountTotal}`;
-        }
+      if (visibleCountElement) {
+        const visibleCountTotal = Math.min(itemsPerPage.value, filteredItems.length);
 
-        if (visibleCountFromElement) {
-          const visibleCountFrom = Math.min(($currentPage - 1) * $itemsPerPage + 1, $filteredItems.length);
-
-          visibleCountFromElement.textContent = `${visibleCountFrom}`;
-        }
-
-        if (visibleCountToElement) {
-          const visibleCountTo = Math.min($currentPage * $itemsPerPage, $filteredItems.length);
-
-          visibleCountToElement.textContent = `${visibleCountTo}`;
-        }
-
-        if (resultsCountElement) {
-          resultsCountElement.textContent = `${$filteredItems.length}`;
-        }
+        visibleCountElement.textContent = `${visibleCountTotal}`;
       }
-    );
+
+      if (visibleCountFromElement) {
+        const visibleCountFrom = Math.min((currentPage.value - 1) * itemsPerPage.value + 1, filteredItems.length);
+
+        visibleCountFromElement.textContent = `${visibleCountFrom}`;
+      }
+
+      if (visibleCountToElement) {
+        const visibleCountTo = Math.min(currentPage.value * itemsPerPage.value, filteredItems.length);
+
+        visibleCountToElement.textContent = `${visibleCountTo}`;
+      }
+
+      if (resultsCountElement) {
+        resultsCountElement.textContent = `${filteredItems.length}`;
+      }
+    });
+  }
+
+  /**
+   * Collects the pagination query info.
+   * @returns A Promise that resolves once the pagination query info has been collected.
+   */
+  async #getPaginationQuery() {
+    const { paginationNextElement, paginationPreviousElement } = this;
+
+    const paginationNext = paginationNextElement.value;
+    const paginationPrevious = paginationPreviousElement.value;
+    const paginationButton = paginationNext || paginationPrevious;
+    if (!paginationButton) return;
+
+    const searchEntries = getPaginationSearchEntries(paginationButton);
+    if (!searchEntries.length) return;
+
+    let pagesQuery: string | undefined;
+    let rawTargetPage: string | undefined;
+
+    if (searchEntries.length === 1) {
+      const [pageEntry] = searchEntries;
+
+      if (!pageEntry) return;
+
+      [pagesQuery, rawTargetPage] = pageEntry;
+    }
+
+    // If there's more than one `searchParam` we need to fetch the original page to find the correspondent pageQuery.
+    else {
+      const { origin, pathname } = location;
+
+      const initialPage = await fetchPageDocument(origin + pathname);
+      if (!initialPage) return;
+
+      const initialCollectionListWrappers = initialPage.querySelectorAll(`.${CMS_CSS_CLASSES.wrapper}`);
+
+      const initialCollectionListWrapper = initialCollectionListWrappers[this.pageIndex];
+      if (!initialCollectionListWrapper) return;
+
+      const initialPaginationNext = getCollectionElements(initialCollectionListWrapper, 'pagination-next');
+      if (!initialPaginationNext) return;
+
+      const [initialPageEntry] = getPaginationSearchEntries(initialPaginationNext) || [];
+      if (!initialPageEntry) return;
+
+      [pagesQuery] = initialPageEntry;
+
+      [, rawTargetPage] = searchEntries.find(([query]) => query === pagesQuery) || [];
+    }
+
+    if (!pagesQuery || !rawTargetPage) return;
+
+    const targetPage = parseInt(rawTargetPage);
+    const currentPage = paginationNext ? targetPage - 1 : targetPage + 1;
+
+    this.pagesQuery = pagesQuery;
+    this.currentPage.value = currentPage;
+  }
+
+  /**
+   * Collects the missing pagination elements.
+   * @returns A Promise that resolves once the missing pagination elements have been collected.
+   */
+  async #getPaginationElements() {
+    await this.loadingPaginationQuery;
+
+    const { origin, pathname } = window.location;
+    const {
+      wrapperElement,
+      listElement,
+      paginationWrapperElement,
+      paginationNextElement,
+      paginationPreviousElement,
+      emptyElement,
+      currentPage,
+      pagesQuery,
+      pageIndex,
+    } = this;
+
+    await Promise.all([
+      // Pagination next
+      (async () => {
+        if (paginationNextElement.value) return;
+
+        const $currentPage = currentPage.value;
+        if (!$currentPage || $currentPage === 1) return;
+
+        const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=${$currentPage - 1}`);
+        if (!page) return;
+
+        const allCollectionWrappers = getAllCollectionListWrappers(page);
+        const collectionListWrapper = allCollectionWrappers[pageIndex];
+        if (!collectionListWrapper) return;
+
+        const paginationNext = getCollectionElements(collectionListWrapper, 'pagination-next');
+        if (!paginationNext) return;
+
+        const anchor = paginationPreviousElement.value?.parentElement || paginationWrapperElement;
+        if (!anchor) return;
+
+        paginationNext.style.display = 'none';
+
+        anchor.append(paginationNext);
+        paginationNextElement.value = paginationNext;
+      })(),
+
+      // Pagination previous & Empty state
+      (async () => {
+        if (paginationPreviousElement.value && emptyElement.value) return;
+
+        const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=9999`);
+        if (!page) return;
+
+        const allCollectionWrappers = getAllCollectionListWrappers(page);
+        const collectionListWrapper = allCollectionWrappers[pageIndex];
+        if (!collectionListWrapper) return;
+
+        const paginationPrevious = getCollectionElements(collectionListWrapper, 'pagination-previous');
+        const empty = getCollectionElements(collectionListWrapper, 'empty');
+
+        // Pagination previous
+        if (paginationPrevious && !paginationPreviousElement.value) {
+          const anchor = paginationNextElement.value?.parentElement || paginationWrapperElement;
+          if (!anchor) return;
+
+          paginationPrevious.style.display = 'none';
+
+          anchor.prepend(paginationPrevious);
+          paginationPreviousElement.value = paginationPrevious;
+        }
+
+        // Empty state
+        if (empty && !emptyElement.value) {
+          empty.style.display = 'none';
+
+          wrapperElement.insertBefore(empty, listElement?.nextSibling || null);
+          emptyElement.value = empty;
+        }
+      })(),
+    ]);
   }
 
   /**
@@ -360,13 +525,13 @@ export class List {
 
     const previousHookResult = previous ? this.hooks[previous].result : undefined;
 
-    let result = previousHookResult?.get() || this.items.get();
+    let result = previousHookResult?.value || this.items.value;
 
     for (const callback of hook.callbacks) {
       result = (await callback(result)) || result;
     }
 
-    hook.result.set(result);
+    hook.result.value = result;
   }
 
   /**
@@ -388,30 +553,10 @@ export class List {
     const newItems = itemElements.map((item) => new ListItem(item, listElement));
 
     if (method === 'push') {
-      items.set([...items.get(), ...newItems]);
+      items.value = [...items.value, ...newItems];
     } else {
-      items.set([...newItems, ...items.get()]);
+      items.value = [...newItems, ...items.value];
     }
-  }
-
-  /**
-   * Adds a missing `PaginationButtonElement` to the list.
-   * @param element A {@link PaginationButtonElement}.
-   * @param elementKey The button element key.
-   * @param childIndex The button element key.
-   */
-  addPaginationButton(
-    element: PaginationButtonElement,
-    elementKey: 'paginationNextElement' | 'paginationPreviousElement',
-    childIndex: number
-  ) {
-    const { paginationWrapperElement } = this;
-
-    if (!paginationWrapperElement || this[elementKey].get() || childIndex < 0) return;
-
-    paginationWrapperElement.insertBefore(element, paginationWrapperElement.children[childIndex]);
-
-    this[elementKey].set(element);
   }
 
   /**

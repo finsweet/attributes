@@ -1,4 +1,3 @@
-import { CMSItem, CMSList } from '@finsweet/attributes-cmscore';
 import { getCMSElementSelector, isNotEmpty } from '@finsweet/attributes-utils';
 
 import type { JobWithContent } from '../types';
@@ -6,6 +5,7 @@ import { filterJobsByKey, getDepartmentsOrOfficesFromJobs } from '../utils/jobs'
 import { populateJob } from '../utils/populate';
 import { getSettingSelector } from './selectors';
 
+// @ts-expect-error TODO: Support fs-list
 export function addJobsToCMSItems(listInstance: CMSList, jobs: JobWithContent[], queryParam: string) {
   const element = getListTemplate(listInstance);
 
@@ -18,6 +18,7 @@ export function addJobsToCMSItems(listInstance: CMSList, jobs: JobWithContent[],
 }
 
 export function addNestedJobsToCMSItems(
+  // @ts-expect-error TODO: Support fs-list
   listInstance: CMSList,
   jobs: JobWithContent[],
   queryParam: string,
@@ -40,6 +41,7 @@ export function addNestedJobsToCMSItems(
       return mainItem;
     }
 
+    // @ts-expect-error TODO: Support fs-list
     const jobsList = new CMSList(jobsWrapper, 0);
     const innerTemplate = getListTemplate(jobsList);
     if (!innerTemplate) return;
@@ -60,6 +62,7 @@ export function addNestedJobsToCMSItems(
 }
 
 export function appendNestedJobsToCMSItems(
+  // @ts-expect-error TODO: Support fs-list
   listInstance: CMSList,
   jobs: JobWithContent[],
   queryParam: string,
@@ -82,6 +85,7 @@ export function appendNestedJobsToCMSItems(
       return;
     }
 
+    // @ts-expect-error TODO: Support fs-list
     const jobsList = new CMSList(jobsWrapper, 0);
 
     const innerTemplate = getListTemplate(jobsList);
@@ -109,9 +113,11 @@ function setMainGroup(mainItem: HTMLDivElement, attributeGroup: string, valueGro
   }
 }
 
+// @ts-expect-error TODO: Support fs-list
 function getListTemplate(listInstance: CMSList) {
   const templateItems = [...listInstance.items];
 
+  // @ts-expect-error TODO: Support fs-list
   const template: CMSItem = templateItems[0];
 
   if (!template) {

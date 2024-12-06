@@ -7,10 +7,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('cmsload', () => {
-  test('Loads items correctly', async ({ page }) => {
+  test.skip('Loads items correctly', async ({ page }) => {
     await waitAttributeLoaded(page, 'cmsload');
 
     // Pagination mode
+    // TODO: migrate to fs-list
     const collectionWrapper1 = page.locator('[fs-cmsload-element="list-1"]');
     const collectionItems1 = collectionWrapper1.locator('.w-dyn-item');
     const paginationPrevious1 = collectionWrapper1.locator('.w-pagination-previous');

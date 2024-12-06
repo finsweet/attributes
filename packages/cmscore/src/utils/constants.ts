@@ -1,1 +1,0 @@
-export const DEFAULT_LIST_ANIMATION_DURATION = 0.1;

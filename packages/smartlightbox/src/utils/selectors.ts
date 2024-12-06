@@ -2,7 +2,7 @@ import { generateSelectors, SMART_LIGHTBOX_ATTRIBUTE } from '@finsweet/attribute
 
 import { ELEMENTS, SETTINGS } from './constants';
 
-export const { getInstanceIndex, getElementSelector, getAttribute } = generateSelectors(
+export const { getInstance, getElementSelector, getAttribute } = generateSelectors(
   SMART_LIGHTBOX_ATTRIBUTE,
   ELEMENTS,
   SETTINGS

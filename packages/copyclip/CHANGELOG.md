@@ -1,5 +1,11 @@
 # @finsweet/attributes-copyclip
 
+## 2.0.0
+
+### Major Changes
+
+- 1186678: copyclip: prepared for v2 release
+
 ## 1.7.0
 
 ### Minor Changes

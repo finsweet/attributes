@@ -1,11 +1,11 @@
 import type { List } from '../components/List';
 import type { SETTINGS } from '../utils/constants';
+import { initAllMode } from './all';
 import { initInfiniteMode } from './infinite';
-import { initLoadUnderMode } from './load-under';
+import { initMoreMode } from './more';
 import { initPaginationMode } from './pagination';
-import { initRenderAllMode } from './render-all';
 
-type LoadModeValues = (typeof SETTINGS)['loadmode']['values'];
+type LoadModeValues = (typeof SETTINGS)['load']['values'];
 type LoadMode = LoadModeValues[keyof LoadModeValues];
 
 /**
@@ -13,15 +13,15 @@ type LoadMode = LoadModeValues[keyof LoadModeValues];
  * @param list
  * @param mode
  */
-export const initListLoading = async (list: List, mode: LoadMode) => {
+export const initListLoading = (list: List, mode: LoadMode) => {
   const cleanup =
-    mode === 'render-all'
-      ? await initRenderAllMode(list)
-      : mode === 'load-under'
-      ? await initLoadUnderMode(list)
+    mode === 'all'
+      ? initAllMode(list)
+      : mode === 'more'
+      ? initMoreMode(list)
       : mode === 'infinite'
-      ? await initInfiniteMode(list)
-      : await initPaginationMode(list);
+      ? initInfiniteMode(list)
+      : initPaginationMode(list);
 
   return cleanup;
 };

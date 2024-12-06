@@ -23,15 +23,10 @@ export type FsAttributes = {
 
   /**
    * Dynamically imports an Attribute solution.
-   * @param solution
+   * @param attribute
    * @returns A Promise that resolves once the Attribute has loaded.
    */
-  import: (
-    solution: FsAttributeKey,
-    globalSettings?: {
-      [k: string]: string;
-    }
-  ) => Promise<any> | undefined;
+  load: (attribute: FsAttributeKey) => Promise<any> | undefined;
 
   /**
    * Destroys all Attributes instances.
@@ -49,6 +44,12 @@ export type FsAttributes = {
    * Contains the Attributes that are currently running.
    */
   process: Set<FsAttributeKey>;
+
+  /**
+   * Contains the script tags that define the Attributes library.
+   * Can be multiple as the user might import the library multiple times.
+   */
+  scripts: HTMLScriptElement[];
 };
 
 export type FsAttributesCallback = [FsAttributeKey, (value: any) => void];
@@ -87,9 +88,7 @@ type AttributeInitResult =
     }
   | undefined;
 
-export type FsAttributeInit<GlobalSettings extends AttributeSettings = AttributeSettings> = (settings?: {
-  [Key in keyof GlobalSettings]?: string;
-}) => AttributeInitResult | Promise<AttributeInitResult>;
+export type FsAttributeInit = () => AttributeInitResult | Promise<AttributeInitResult>;
 
 /**
  * Window object.

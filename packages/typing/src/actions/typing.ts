@@ -1,13 +1,13 @@
 import Typed, { type TypedOptions } from 'typed.js';
 
-import { getAttribute, getElementSelector, getInstanceIndex, typingInstancesStore } from '../utils';
+import { getAttribute, getElementSelector, getInstance, typingInstancesStore } from '../utils';
 
 export const initTyping = (textElement: HTMLElement) => {
   if (typingInstancesStore.has(textElement)) return;
 
-  const instanceIndex = getInstanceIndex(textElement);
+  const instance = getInstance(textElement);
   const contentElements = Array.from(
-    document.querySelectorAll(getElementSelector('content', { instanceIndex }).replace(/="content"/g, '^="content"'))
+    document.querySelectorAll(getElementSelector('content', { instance }).replace(/="content"/g, '^="content"'))
   );
   const strings = contentElements.map((element) => element.textContent || '');
 

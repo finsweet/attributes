@@ -18,36 +18,12 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
       return import('@finsweet/attributes-autovideo');
     }
 
+    case 'beforeafter': {
+      return import('@finsweet/attributes-beforeafter');
+    }
+
     case 'calevent': {
       return import('@finsweet/attributes-calevent');
-    }
-
-    case 'cmscombine': {
-      return import('@finsweet/attributes-cmscombine');
-    }
-
-    case 'cmsprevnext': {
-      return import('@finsweet/attributes-cmsprevnext');
-    }
-
-    case 'cmsselect': {
-      return import('@finsweet/attributes-cmsselect');
-    }
-
-    case 'cmsslider': {
-      return import('@finsweet/attributes-cmsslider');
-    }
-
-    case 'cmssort': {
-      return import('@finsweet/attributes-cmssort');
-    }
-
-    case 'cmsstatic': {
-      return import('@finsweet/attributes-cmsstatic');
-    }
-
-    case 'cmstabs': {
-      return import('@finsweet/attributes-cmstabs');
     }
 
     case 'codehighlight': {
@@ -124,6 +100,10 @@ export const loadAttribute = async (solution: FsAttributeKey) => {
 
     case 'modal': {
       return import('@finsweet/attributes-modal');
+    }
+
+    case 'nativesearch': {
+      return import('@finsweet/attributes-nativesearch');
     }
 
     case 'numbercount': {

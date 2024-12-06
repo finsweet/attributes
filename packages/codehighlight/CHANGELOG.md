@@ -1,5 +1,11 @@
 # @finsweet/attributes-codehighlight
 
+## 2.0.0
+
+### Major Changes
+
+- 9578ee9: codehighlight: prepare for v2 release
+
 ## 1.5.2
 
 ### Patch Changes

@@ -1,4 +1,3 @@
-import type { CMSList } from '@finsweet/attributes-cmscore';
 import { type FsAttributeInit, waitAttributeLoaded, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { listenTriggerClicks } from './actions/trigger';
@@ -18,6 +17,7 @@ export const init: FsAttributeInit = async () => {
   createCalendarEventInstances();
 
   // create button from dynamic list in memory
+  // @ts-expect-error TODO: Support fs-list
   const listInstances: CMSList[] = (await waitAttributeLoaded('cmsload')) || [];
 
   for (const { items } of listInstances) {
