@@ -1,4 +1,5 @@
 import { cloneNode, extractCommaSeparatedValues, fetchPageDocument } from '@finsweet/attributes-utils';
+import { effect } from '@vue/reactivity';
 
 import { type List, ListItem } from '../components';
 import { getCollectionElements } from '../utils/dom';
@@ -18,8 +19,8 @@ import { listInstancesStore } from '../utils/store';
 export const initListNest = (list: List) => {
   const handledItems = new Set<ListItem>();
 
-  const cleanup = list.items.subscribe((items) => {
-    for (const item of items) {
+  const cleanup = effect(() => {
+    for (const item of list.items.value) {
       if (handledItems.has(item)) continue;
 
       handledItems.add(item);
@@ -91,7 +92,7 @@ const handleManualNesting = async (
   );
   if (!source) return;
 
-  const sourceItems = source.items.get();
+  const sourceItems = source.items.value;
 
   const sourceWrapper = cloneNode(source.wrapperElement, false);
 
@@ -115,11 +116,11 @@ const handleManualNesting = async (
 
   // Empty state
   else {
-    let sourceEmpty = source.emptyElement.get();
+    let sourceEmpty = source.emptyElement.value;
 
     if (!sourceEmpty) {
       await source.loadingPaginationElements;
-      sourceEmpty = source.emptyElement.get();
+      sourceEmpty = source.emptyElement.value;
     }
 
     if (sourceEmpty) {

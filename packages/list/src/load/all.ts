@@ -8,8 +8,8 @@ import { loadPaginatedItems } from './load';
 export const initAllMode = (list: List) => {
   const { paginationNextElement, paginationPreviousElement, paginationCountElement } = list;
 
-  const paginationPrevious = paginationPreviousElement.get();
-  const paginationNext = paginationNextElement.get();
+  const paginationPrevious = paginationPreviousElement.value;
+  const paginationNext = paginationNextElement.value;
 
   if (paginationNext) {
     paginationNext.style.display = 'none';
@@ -22,6 +22,6 @@ export const initAllMode = (list: List) => {
   paginationCountElement?.remove();
 
   loadPaginatedItems(list).then(() => {
-    list.itemsPerPage.set(list.items.get().length);
+    list.itemsPerPage.value = list.items.value.length;
   });
 };

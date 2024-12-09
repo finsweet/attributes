@@ -1,4 +1,5 @@
 import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
+import { effect } from '@vue/reactivity';
 
 import type { List } from '../components';
 import { listInstancesStore } from '../utils/store';
@@ -19,13 +20,13 @@ export const initListCombine = (targetList: List, rawSourceInstances: string) =>
   if (!sourceLists.length) return;
 
   const cleanups = sourceLists.map((sourceList) => {
-    const cleanup = sourceList.items.subscribe((items) => {
-      if (!items.length) return;
+    const cleanup = effect(() => {
+      if (!sourceList.items.value.length) return;
 
-      const elements = items.map((item) => item.element);
+      const elements = sourceList.items.value.map((item) => item.element);
 
       targetList.addItems(elements);
-      sourceList.items.set([]);
+      sourceList.items.value.length = 0;
     });
 
     return cleanup;

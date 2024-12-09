@@ -56,12 +56,12 @@ export const loadPaginatedItems = async (list: List): Promise<void> => {
  * @returns Nothing, it mutates the `List` instance.
  */
 const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
-  const currentPage = list.currentPage.get();
+  const currentPage = list.currentPage.value;
   if (currentPage > 1) {
     await parallelItemsLoad(list, currentPage, cache);
   }
 
-  const paginationNext = list.paginationNextElement.get();
+  const paginationNext = list.paginationNextElement.value;
   if (!paginationNext) return;
 
   const { href } = paginationNext;
@@ -102,10 +102,10 @@ const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
 const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean) => {
   const { paginationNextElement, paginationPreviousElement } = list;
 
-  if (!paginationNextElement.get() && !paginationPreviousElement.get()) return;
+  if (!paginationNextElement.value && !paginationPreviousElement.value) return;
 
   const { pagesQuery } = list;
-  const currentPage = list.currentPage.get();
+  const currentPage = list.currentPage.value;
 
   if (!pagesQuery || !currentPage) return;
 
@@ -161,8 +161,8 @@ const parseLoadedPage = async (page: Document, list: List, itemsTarget?: Paramet
   const { length: itemsLength } = collectionItems;
 
   // Make sure the itemsPerPage value is correct
-  if (nextPageURL && itemsPerPage.get() !== itemsLength) {
-    itemsPerPage.set(itemsLength);
+  if (nextPageURL && itemsPerPage.value !== itemsLength) {
+    itemsPerPage.value = itemsLength;
   }
 
   list.addItems(collectionItems, itemsTarget);
