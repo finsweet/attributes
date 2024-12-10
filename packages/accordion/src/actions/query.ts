@@ -13,8 +13,8 @@ export const queryAllAccordions = (lists?: List[]) => {
 
   const allAccordionsSet = new Set(allAccordions);
 
-  for (const { items } of lists) {
-    for (const { element } of items.get()) {
+  for (const list of lists) {
+    for (const { element } of list.items.value) {
       const accordions = queryAllElements('accordion', { scope: element });
 
       for (const accordion of accordions) {

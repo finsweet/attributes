@@ -512,6 +512,10 @@ export class List {
     const hook = this.hooks[key];
 
     hook.callbacks.push(callback);
+
+    return () => {
+      hook.callbacks = hook.callbacks.filter((cb) => cb !== callback);
+    };
   }
 
   /**

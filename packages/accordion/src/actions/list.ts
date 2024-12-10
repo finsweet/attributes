@@ -14,7 +14,7 @@ export const initListAccordions = async (groupsData: AccordionGroupData[]) => {
   const lists: List[] = await waitAttributeLoaded('list');
 
   const cleanups = lists.map((list) => {
-    return list.hooks.afterRender.result.subscribe((items = []) => {
+    return list.addHook('afterRender', (items = []) => {
       for (const { element } of items) {
         const accordions = [
           ...queryAllElements('accordion', { scope: element }),
