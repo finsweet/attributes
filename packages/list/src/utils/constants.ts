@@ -296,7 +296,7 @@ export const SETTINGS = {
    */
   load: {
     key: 'load',
-    values: { more: 'more', infinite: 'infinite', pagination: 'pagination', all: 'all' },
+    values: { more: 'more', infinite: 'infinite', pagination: 'pagination', all: 'all', remaining: 'remaining' },
   },
 
   /**
