@@ -48,11 +48,6 @@ export class ListItem {
   public fields: ListItemFields = {};
 
   /**
-   * The element's current index in the rendered DOM.
-   */
-  public currentIndex?: number;
-
-  /**
    * Defines an awaitable Promise that resolves when the item's nesting is complete.
    */
   public nesting?: Promise<void>;
@@ -70,7 +65,12 @@ export class ListItem {
     /**
      * The `Collection List` parent element.
      */
-    public readonly listElement: CollectionListElement
+    public readonly listElement: CollectionListElement,
+
+    /**
+     * The element's current index in the rendered DOM.
+     */
+    public currentIndex?: number
   ) {
     let link = queryElement<HTMLAnchorElement>('item-link', { scope: element });
 
@@ -79,8 +79,6 @@ export class ListItem {
     }
 
     this.href = link?.href;
-
-    this.currentIndex = [...listElement.children].indexOf(element);
 
     this.collectFields();
   }

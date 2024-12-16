@@ -26,8 +26,6 @@ export const loadPaginatedItems = async (list: List): Promise<void> => {
     loaderElement.style.opacity = '1';
   }
 
-  await loadingPaginationData;
-
   // Attempt to get the total amount of pages from the `Page Count` element.
   let totalPages;
 
@@ -37,6 +35,8 @@ export const loadPaginatedItems = async (list: List): Promise<void> => {
       totalPages = parseInt(rawTotalPages.trim());
     }
   }
+
+  await loadingPaginationData;
 
   if (totalPages) await parallelItemsLoad(list, totalPages, cacheItems);
   else await chainedPagesLoad(list, cacheItems);

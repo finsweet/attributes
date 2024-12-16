@@ -386,4 +386,93 @@ test.describe('fs-list: load', () => {
 
     await expect(listItem).toHaveCount(300);
   });
+
+  test('list_load_pagination', async ({ page }) => {
+    await page.goto('http://fs-attributes-list.webflow.io/list-load-pagination?dev=true');
+
+    await waitAttributeLoaded(page, 'list');
+
+    await page.waitForTimeout(1000);
+
+    const paginationNext = page.getByTestId('pagination-next');
+    const paginationPrevious = page.getByTestId('pagination-previous');
+
+    let paginationCount = page.getByTestId('pagination-count');
+    let paginationButtons = page.getByTestId('pagination-buttons');
+    let paginationButtonsChildren = paginationButtons.locator('*');
+    let listItem = page.getByTestId('list-item');
+
+    await expect(listItem).toHaveCount(100);
+    await expect(paginationCount).toHaveText('1 / 10');
+    await expect(paginationNext).toBeVisible();
+    await expect(paginationPrevious).not.toBeVisible();
+    expect(await paginationButtonsChildren.count()).toBe(7);
+    await expect(paginationButtonsChildren.nth(0)).toHaveClass(/w--current/);
+    expect(await paginationButtonsChildren.nth(0).getAttribute('fs-list-element')).toBe('page-button');
+    await expect(paginationButtonsChildren.nth(0)).toHaveText('1');
+    await expect(paginationButtonsChildren.nth(1)).toHaveText('2');
+    await expect(paginationButtonsChildren.nth(2)).toHaveText('3');
+    await expect(paginationButtonsChildren.nth(3)).toHaveText('4');
+    await expect(paginationButtonsChildren.nth(4)).toHaveText('5');
+    await expect(paginationButtonsChildren.nth(5)).toHaveText('...');
+    expect(await paginationButtonsChildren.nth(5).getAttribute('fs-list-element')).toBe('page-dots');
+    await expect(paginationButtonsChildren.nth(6)).toHaveText('10');
+
+    await paginationNext.click();
+
+    listItem = page.getByTestId('list-item');
+
+    await expect(listItem).toHaveCount(100);
+    await expect(paginationCount).toHaveText('2 / 10');
+    await expect(paginationPrevious).toBeVisible();
+    await expect(paginationButtonsChildren.nth(0)).not.toHaveClass(/w--current/);
+    await expect(paginationButtonsChildren.nth(1)).toHaveClass(/w--current/);
+
+    await paginationButtonsChildren.nth(4).click();
+
+    listItem = page.getByTestId('list-item');
+    paginationButtonsChildren = paginationButtons.locator('*');
+
+    await expect(paginationCount).toHaveText('5 / 10');
+    await expect(listItem.first().getByTestId('field-name')).toHaveText('Eslezza');
+    await expect(paginationButtonsChildren.nth(1)).toHaveText('...');
+    expect(await paginationButtonsChildren.nth(1).getAttribute('fs-list-element')).toBe('page-dots');
+    await expect(paginationButtonsChildren.nth(5)).toHaveText('...');
+    expect(await paginationButtonsChildren.nth(5).getAttribute('fs-list-element')).toBe('page-dots');
+
+    await paginationButtonsChildren.nth(6).click();
+
+    paginationButtonsChildren = paginationButtons.locator('*');
+
+    await expect(paginationCount).toHaveText('10 / 10');
+    await expect(paginationNext).not.toBeVisible();
+    await expect(paginationPrevious).toBeVisible();
+    await expect(paginationButtonsChildren.nth(6)).toHaveText('10');
+    await expect(paginationButtonsChildren.nth(6)).toHaveClass(/w--current/);
+
+    await page.goto('http://fs-attributes-list.webflow.io/list-load-pagination?af0bd859_page=6&dev=true');
+
+    await waitAttributeLoaded(page, 'list');
+
+    await page.waitForTimeout(1000);
+
+    listItem = page.getByTestId('list-item');
+    paginationCount = page.getByTestId('pagination-count');
+    paginationButtons = page.getByTestId('pagination-buttons');
+    paginationButtonsChildren = paginationButtons.locator('*');
+
+    await expect(listItem).toHaveCount(100);
+    await expect(listItem.first().getByTestId('field-name')).toHaveText('Fijoallo');
+    await expect(paginationCount).toHaveText('6 / 10');
+    expect(await paginationButtonsChildren.count()).toBe(7);
+    await expect(paginationButtonsChildren.nth(0)).toHaveText('1');
+    await expect(paginationButtonsChildren.nth(1)).toHaveText('...');
+    await expect(paginationButtonsChildren.nth(2)).toHaveText('5');
+    await expect(paginationButtonsChildren.nth(3)).toHaveText('6');
+    await expect(paginationButtonsChildren.nth(3)).toHaveClass(/w--current/);
+    await expect(paginationButtonsChildren.nth(4)).toHaveText('7');
+    await expect(paginationButtonsChildren.nth(5)).toHaveText('...');
+    expect(await paginationButtonsChildren.nth(5).getAttribute('fs-list-element')).toBe('page-dots');
+    await expect(paginationButtonsChildren.nth(6)).toHaveText('10');
+  });
 });

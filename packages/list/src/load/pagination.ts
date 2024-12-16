@@ -96,11 +96,11 @@ export const initPaginationMode = (list: List) => {
   // Handle pagination buttons
   const paginationButtonsCleanup = handlePaginationButtons(list);
 
-  // Handle pagination count
-  handlePaginationCount(list);
-
   // Init items load
   loadPaginatedItems(list);
+
+  // Handle pagination count
+  handlePaginationCount(list);
 
   // Return destroy callback
   return () => {

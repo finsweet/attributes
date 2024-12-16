@@ -230,7 +230,7 @@ export class List {
     this.itemsPerPage = ref(collectionItemElements.length);
 
     if (listElement) {
-      const items = collectionItemElements.map((element) => new ListItem(element, listElement));
+      const items = collectionItemElements.map((element, index) => new ListItem(element, listElement, index));
 
       this.items.value = items;
       this.renderedItems = new Set(items);
@@ -265,7 +265,8 @@ export class List {
           } else {
             this.listElement?.prepend(item.element);
           }
-          fade.animateIn(item.element, { duration: duration / 1000 });
+
+          // fade.animateIn(item.element, { duration: duration / 1000 });
           item.currentIndex = index;
         };
 
@@ -286,7 +287,7 @@ export class List {
 
       // Remove items that should not be rendered anymore
       this.renderedItems.forEach((renderedItem) => {
-        fade.animateOut(renderedItem.element);
+        // fade.animateOut(renderedItem.element);
         renderedItem.element.remove();
         renderedItem.currentIndex = undefined;
       });
