@@ -1,10 +1,9 @@
 import { addListener, parseNumericAttribute } from '@finsweet/attributes-utils';
-import { ref } from '@vue/reactivity';
 import throttle from 'just-throttle';
 
 import type { List } from '../components/List';
 import { DEFAULT_INFINITE_THRESHOLD } from '../utils/constants';
-import { getAttribute } from '../utils/selectors';
+import { getAttribute, queryElement } from '../utils/selectors';
 import { loadPaginatedItems } from './load';
 
 /**
@@ -14,32 +13,42 @@ import { loadPaginatedItems } from './load';
  * @returns A callback to remove all event listeners.
  */
 export const initInfiniteMode = (list: List) => {
-  const { listElement, paginationNextElement, paginationPreviousElement, paginationCountElement, itemsPerPage } = list;
+  const {
+    listElement,
+    paginationNextElement,
+    paginationPreviousElement,
+    paginationCountElement,
+    itemsPerPage,
+    instance,
+  } = list;
 
-  const paginationPrevious = paginationPreviousElement.value;
-  const paginationNext = paginationNextElement.value;
+  if (!listElement) return;
 
-  if (!listElement || !paginationNext) return;
-
-  if (paginationPrevious) {
-    paginationPrevious.style.display = 'none';
-  }
+  const paginationNextButton = paginationNextElement.value;
+  if (!paginationNextButton) return;
 
   paginationCountElement?.remove();
 
+  const paginationPreviousButton = paginationPreviousElement.value;
+  if (paginationPreviousButton) {
+    paginationPreviousButton.style.display = 'none';
+  }
+
+  const initialItemsPerPage = itemsPerPage.value;
   const thresholdCoefficient = getInfiniteThreshold(list);
-  const itemsToDisplay = ref(itemsPerPage.value);
+  const loadRemainingButton = queryElement('load-remaining', { instance });
 
   let isLoading = true;
+  let loadRemainingClicked = false;
 
   list.addHook('paginate', (items) => {
-    const paginatedItems = items.slice(0, itemsToDisplay.value);
+    const paginatedItems = items.slice(0, itemsPerPage.value);
     const allItemsDisplayed = paginatedItems.length === items.length;
 
-    paginationNext.style.display = allItemsDisplayed ? 'none' : '';
+    paginationNextButton.style.display = allItemsDisplayed ? 'none' : '';
 
     if (!isLoading && allItemsDisplayed) {
-      conclude();
+      cleanup();
       return;
     }
 
@@ -58,7 +67,7 @@ export const initInfiniteMode = (list: List) => {
     const shouldLoad = bottom > 0 && bottom <= validRange;
 
     if (shouldLoad) {
-      itemsToDisplay.value = itemsToDisplay.value + itemsPerPage.value;
+      itemsPerPage.value += initialItemsPerPage;
       list.triggerHook('paginate');
     }
   }, 100);
@@ -70,26 +79,45 @@ export const initInfiniteMode = (list: List) => {
     }
   });
 
-  /**
-   * Destroys the `Pagination Next` button and the `Intersection Observer`.
-   */
-  const conclude = () => {
-    observer.disconnect();
-    cleanupScroll();
-    cleanupClicks();
-  };
-
-  // Init
+  // Set listeners
   observer.observe(listElement);
 
-  const cleanupClicks = addListener(paginationNext, 'click', (e) => e.preventDefault());
   const cleanupScroll = addListener(window, 'scroll', handleScroll);
+  const cleanupPaginationNextButton = addListener(paginationNextButton, 'click', (e) => e.preventDefault());
+  const cleanupLoadRemainingButton = loadRemainingButton
+    ? addListener(
+        loadRemainingButton,
+        'click',
+        async (e) => {
+          e.preventDefault();
 
+          loadRemainingClicked = true;
+
+          itemsPerPage.value = list.items.value.length;
+
+          list.triggerHook('paginate');
+        },
+        { once: true }
+      )
+    : undefined;
+
+  // Init
   loadPaginatedItems(list).then(() => {
     isLoading = false;
+
+    if (loadRemainingClicked) {
+      itemsPerPage.value = list.items.value.length;
+    }
   });
 
-  return conclude;
+  const cleanup = () => {
+    observer.disconnect();
+    cleanupScroll();
+    cleanupPaginationNextButton();
+    cleanupLoadRemainingButton?.();
+  };
+
+  return cleanup;
 };
 
 /**

@@ -4,7 +4,6 @@ import { initAllMode } from './all';
 import { initInfiniteMode } from './infinite';
 import { initMoreMode } from './more';
 import { initPaginationMode } from './pagination';
-import { initRemainingMode } from './remaining';
 
 type LoadModeValues = (typeof SETTINGS)['load']['values'];
 type LoadMode = LoadModeValues[keyof LoadModeValues];
@@ -18,8 +17,6 @@ export const initListLoading = (list: List, mode: LoadMode) => {
   const cleanup =
     mode === 'all'
       ? initAllMode(list)
-      : mode === 'remaining'
-      ? initRemainingMode(list)
       : mode === 'more'
       ? initMoreMode(list)
       : mode === 'infinite'

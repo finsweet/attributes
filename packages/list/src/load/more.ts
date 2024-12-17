@@ -1,6 +1,7 @@
 import { addListener } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
+import { queryElement } from '../utils/selectors';
 import { loadPaginatedItems } from './load';
 
 /**
@@ -10,27 +11,29 @@ import { loadPaginatedItems } from './load';
  * @returns A callback to remove event listeners.
  */
 export const initMoreMode = (list: List) => {
-  const { paginationNextElement, paginationPreviousElement, paginationCountElement, itemsPerPage } = list;
+  const { paginationNextElement, paginationPreviousElement, paginationCountElement, itemsPerPage, instance } = list;
 
-  const paginationPrevious = paginationPreviousElement.value;
-  const paginationNext = paginationNextElement.value;
-
-  if (!paginationNext) return;
-
-  let isLoading = true;
-  let itemsToDisplay = itemsPerPage.value;
-
-  if (paginationPrevious) {
-    paginationPrevious.style.display = 'none';
-  }
+  const paginationNextButton = paginationNextElement.value;
+  if (!paginationNextButton) return;
 
   paginationCountElement?.remove();
 
+  const paginationPreviousButton = paginationPreviousElement.value;
+  if (paginationPreviousButton) {
+    paginationPreviousButton.style.display = 'none';
+  }
+
+  const initialItemsPerPage = itemsPerPage.value;
+  const loadRemainingButton = queryElement('load-remaining', { instance });
+
+  let isLoading = true;
+  let loadRemainingClicked = false;
+
   list.addHook('paginate', (items) => {
-    const paginatedItems = items.slice(0, itemsToDisplay);
+    const paginatedItems = items.slice(0, itemsPerPage.value);
     const allItemsDisplayed = paginatedItems.length === items.length;
 
-    paginationNext.style.display = allItemsDisplayed ? 'none' : '';
+    paginationNextButton.style.display = allItemsDisplayed ? 'none' : '';
 
     if (!isLoading && allItemsDisplayed) {
       cleanup();
@@ -40,18 +43,47 @@ export const initMoreMode = (list: List) => {
     return paginatedItems;
   });
 
-  // Init
-  const cleanup = addListener(paginationNext, 'click', async (e) => {
+  // Listeners
+  const cleanupPaginationNextButton = addListener(paginationNextButton, 'click', async (e) => {
     e.preventDefault();
 
-    itemsToDisplay = itemsToDisplay + itemsPerPage.value;
+    itemsPerPage.value += initialItemsPerPage;
     list.triggerHook('paginate');
   });
 
+  const cleanupLoadRemainingButton = loadRemainingButton
+    ? addListener(
+        loadRemainingButton,
+        'click',
+        async (e) => {
+          e.preventDefault();
+
+          loadRemainingClicked = true;
+
+          itemsPerPage.value = list.items.value.length;
+
+          list.triggerHook('paginate');
+        },
+        { once: true }
+      )
+    : undefined;
+
+  // Init
   loadPaginatedItems(list).then(() => {
     isLoading = false;
+
+    if (loadRemainingClicked) {
+      itemsPerPage.value = list.items.value.length;
+    }
   });
 
-  // Destroy callback
+  /**
+   * Destroys the listeners.
+   */
+  const cleanup = () => {
+    cleanupPaginationNextButton();
+    cleanupLoadRemainingButton?.();
+  };
+
   return cleanup;
 };

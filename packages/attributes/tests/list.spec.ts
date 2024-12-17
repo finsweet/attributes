@@ -332,6 +332,8 @@ test.describe('fs-list: load', () => {
 
     await waitAttributeLoaded(page, 'list');
 
+    await page.waitForTimeout(1000);
+
     let listItem = page.getByTestId('list-item');
 
     await expect(listItem).toHaveCount(100);
@@ -349,6 +351,14 @@ test.describe('fs-list: load', () => {
     listItem = page.getByTestId('list-item');
 
     await expect(listItem).toHaveCount(300);
+
+    const loadRemainingButton = page.getByTestId('load-remaining');
+
+    await loadRemainingButton.click();
+
+    listItem = page.getByTestId('list-item');
+
+    await expect(listItem).toHaveCount(1000);
   });
 
   test('list_load_all', async ({ page }) => {
