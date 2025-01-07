@@ -17,7 +17,7 @@ export const initListFiltering = (list: List, form: HTMLFormElement) => {
   // Init hook
   // TODO: Remove hook for cleanup
   list.addHook('filter', (items) => {
-    const filteredItems = filterItems(list.filters, items);
+    const filteredItems = filterItems(list, items);
     return filteredItems;
   });
 

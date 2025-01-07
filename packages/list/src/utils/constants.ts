@@ -357,8 +357,14 @@ export const SETTINGS = {
       'less-equal': 'less-equal',
       empty: 'empty',
       'not-empty': 'not-empty',
+      fuzzy: 'fuzzy',
     },
   },
+
+  /**
+   * Defines a fuzzy ratio for a filter.
+   */
+  fuzzy: { key: 'fuzzy' },
 
   /**
    * Defines a filter value.
@@ -387,6 +393,8 @@ export const DEFAULT_INFINITE_THRESHOLD = -20;
 
 export const DEFAULT_PAGE_SIBLINGS = 1;
 export const DEFAULT_PAGE_BOUNDARY = 1;
+
+export const DEFAULT_FUZZY_RATIO = 0.2;
 
 export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {
   main: 0,

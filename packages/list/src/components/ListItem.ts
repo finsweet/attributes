@@ -5,6 +5,7 @@ import {
   normalizeDate,
   normalizeNumber,
 } from '@finsweet/attributes-utils';
+import { nanoid } from 'nanoid';
 
 import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 
@@ -36,6 +37,8 @@ type ListItemFields = {
  * An instance of a list item.
  */
 export class ListItem {
+  public readonly id = nanoid();
+
   /**
    * The URL of the item's `Template Page`.
    */

@@ -5,12 +5,14 @@ import {
   normalizeDate,
   normalizeNumber,
 } from '@finsweet/attributes-utils';
+import type { SearchResult } from 'minisearch';
 
+import type { List } from '../components';
 import type { ListItem, ListItemField } from '../components/ListItem';
-import type { Filters, FiltersCondition, FiltersGroup } from './types';
+import type { FiltersCondition, FiltersGroup } from './types';
 
-export const filterItems = (filters: Filters, items: ListItem[]) => {
-  console.log({ filters, items });
+export const filterItems = ({ filters, fuzzySearch }: List, items: ListItem[]) => {
+  const fuzzySearchCache = new Map<string, SearchResult[]>();
 
   const filteredItems = items.filter((item) => {
     const groupsPredicate = (groupData: FiltersGroup) => {
@@ -28,6 +30,18 @@ export const filterItems = (filters: Filters, items: ListItem[]) => {
 
             case 'not-empty': {
               return !!fieldData.value.length;
+            }
+
+            case 'fuzzy': {
+              if (!fuzzySearch) return true;
+              if (!isString(filterData.value)) return false;
+
+              const search =
+                fuzzySearchCache.get(field) || fuzzySearch.search(filterData.value, { fuzzy: filterData.fuzzy });
+
+              fuzzySearchCache.set(field, search);
+
+              return search.some((result) => result.id === item.id);
             }
 
             case 'equal': {

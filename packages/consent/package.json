@@ -30,6 +30,6 @@
     "body-scroll-lock": "^4.0.0-beta.0",
     "emittery": "^1.0.1",
     "js-cookie": "^3.0.5",
-    "nanoid": "^4.0.2"
+    "nanoid": "^5.0.9"
   }
 }

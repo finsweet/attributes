@@ -44,6 +44,7 @@ export type FiltersCondition = {
   op?: FilterOperator;
   value?: string | string[];
   match?: FilterMatch;
+  fuzzy?: number;
 };
 
 export type FiltersGroup = {

@@ -9,6 +9,7 @@ import {
 import { dset } from 'dset';
 
 import type { List } from '../components/List';
+import { DEFAULT_FUZZY_RATIO } from '../utils/constants';
 import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
 import type { FilterOperator, Filters, FiltersCondition } from './types';
 
@@ -172,10 +173,14 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
     default: {
       const { value } = formField;
 
+      const rawFuzzy = getAttribute(formField, 'fuzzy');
+      const fuzzy = rawFuzzy ? parseNumericAttribute(rawFuzzy, DEFAULT_FUZZY_RATIO) : DEFAULT_FUZZY_RATIO;
+
       return {
         value,
         field,
         op,
+        fuzzy,
       };
     }
   }

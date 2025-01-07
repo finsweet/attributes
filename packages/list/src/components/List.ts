@@ -16,6 +16,7 @@ import {
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
 import { effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
+import MiniSearch from 'minisearch';
 
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
@@ -79,6 +80,12 @@ export class List {
    * A signal holding all {@link ListItem} instances of the list.
    */
   public readonly items = shallowRef<ListItem[]>([]);
+
+  public readonly fuzzySearch = new MiniSearch({
+    fields: ['name'],
+    storeFields: ['name'],
+    extractField: (item, fieldKey) => (fieldKey === 'id' ? item.id : item.fields?.[fieldKey]?.value?.[0]),
+  });
 
   /**
    * A set holding all rendered {@link ListItem} instances.
@@ -149,6 +156,11 @@ export class List {
    * An element that displays the upper range of visible items.
    */
   public readonly visibleCountToElement?: HTMLElement | null;
+
+  /**
+   * Defines the original amount of items per page.
+   */
+  public initialItemsPerPage: number;
 
   /**
    * Defines the amount of items per page.
@@ -227,6 +239,7 @@ export class List {
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
 
+    this.initialItemsPerPage = collectionItemElements.length;
     this.itemsPerPage = ref(collectionItemElements.length);
 
     if (listElement) {
@@ -234,6 +247,7 @@ export class List {
 
       this.items.value = items;
       this.renderedItems = new Set(items);
+      this.fuzzySearch.addAll(items);
     }
 
     // Extract pagination data
@@ -562,6 +576,8 @@ export class List {
     } else {
       items.value = [...newItems, ...items.value];
     }
+
+    this.fuzzySearch.addAll(newItems);
   }
 
   /**

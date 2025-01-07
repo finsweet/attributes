@@ -23,7 +23,6 @@ export const initMoreMode = (list: List) => {
     paginationPreviousButton.style.display = 'none';
   }
 
-  const initialItemsPerPage = itemsPerPage.value;
   const loadRemainingButton = queryElement('load-remaining', { instance });
 
   let isLoading = true;
@@ -47,7 +46,8 @@ export const initMoreMode = (list: List) => {
   const cleanupPaginationNextButton = addListener(paginationNextButton, 'click', async (e) => {
     e.preventDefault();
 
-    itemsPerPage.value += initialItemsPerPage;
+    itemsPerPage.value += list.initialItemsPerPage;
+
     list.triggerHook('paginate');
   });
 

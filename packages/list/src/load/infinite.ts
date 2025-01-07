@@ -34,7 +34,6 @@ export const initInfiniteMode = (list: List) => {
     paginationPreviousButton.style.display = 'none';
   }
 
-  const initialItemsPerPage = itemsPerPage.value;
   const thresholdCoefficient = getInfiniteThreshold(list);
   const loadRemainingButton = queryElement('load-remaining', { instance });
 
@@ -67,7 +66,7 @@ export const initInfiniteMode = (list: List) => {
     const shouldLoad = bottom > 0 && bottom <= validRange;
 
     if (shouldLoad) {
-      itemsPerPage.value += initialItemsPerPage;
+      itemsPerPage.value += list.initialItemsPerPage;
       list.triggerHook('paginate');
     }
   }, 100);

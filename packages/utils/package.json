@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "motion": "^10.16.2",
-    "nanoid": "^4.0.2"
+    "nanoid": "^5.0.9"
   }
 }

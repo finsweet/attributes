@@ -147,11 +147,9 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
  * @returns The URL of the next page, if any.
  */
 const parseLoadedPage = async (page: Document, list: List, itemsTarget?: Parameters<List['addItems']>[1]) => {
-  const { pageIndex, itemsPerPage } = list;
-
   // Get DOM Elements
   const allCollectionWrappers = page.querySelectorAll(`.${CMS_CSS_CLASSES.wrapper}`);
-  const collectionListWrapper = allCollectionWrappers[pageIndex];
+  const collectionListWrapper = allCollectionWrappers[list.pageIndex];
   if (!collectionListWrapper) return;
 
   // Store and mount the new items
@@ -161,8 +159,8 @@ const parseLoadedPage = async (page: Document, list: List, itemsTarget?: Paramet
   const { length: itemsLength } = collectionItems;
 
   // Make sure the itemsPerPage value is correct
-  if (nextPageURL && itemsPerPage.value !== itemsLength) {
-    itemsPerPage.value = itemsLength;
+  if (nextPageURL && list.initialItemsPerPage !== itemsLength) {
+    list.initialItemsPerPage = itemsLength;
   }
 
   list.addItems(collectionItems, itemsTarget);
