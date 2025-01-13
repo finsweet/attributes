@@ -4,6 +4,7 @@ import { dset } from 'dset';
 
 import type { List } from '../components/List';
 import type { ListItem } from '../components/ListItem';
+import { setReactive } from '../utils/reactivity';
 import { queryAllElements, queryElement } from '../utils/selectors';
 import type { FilterMatch, FilterOperator } from './types';
 
@@ -82,6 +83,21 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
     cleanups.add(groupCleanup);
   }
 
+  // Get initial filters
+  const filters = getAdvancedFilters(form);
+  setReactive(list.filters, filters);
+
+  // Get filters on node changes
+  const mutationObserver = new MutationObserver(() => {
+    const filters = getAdvancedFilters(form);
+    setReactive(list.filters, filters);
+  });
+
+  mutationObserver.observe(form, {
+    childList: true,
+    subtree: true,
+  });
+
   // Construct destroy
   const destroy = () => {
     for (const cleanup of cleanups) {
@@ -89,8 +105,8 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
     }
 
     cleanups.clear();
-
     conditionGroup.remove();
+    mutationObserver.disconnect();
 
     conditionGroups.value = conditionGroups.value.filter(($conditionGroup) => $conditionGroup !== conditionGroup);
   };

@@ -6,12 +6,12 @@ import {
   normalizeNumber,
 } from '@finsweet/attributes-utils';
 import type { SearchResult } from 'minisearch';
+import type MiniSearch from 'minisearch';
 
-import type { List } from '../components';
 import type { ListItem, ListItemField } from '../components/ListItem';
-import type { FiltersCondition, FiltersGroup } from './types';
+import type { Filters, FiltersCondition, FiltersGroup } from './types';
 
-export const filterItems = ({ filters, fuzzySearch }: List, items: ListItem[]) => {
+export const filterItems = (filters: Filters, items: ListItem[], fuzzySearch?: MiniSearch) => {
   const fuzzySearchCache = new Map<string, SearchResult[]>();
 
   const filteredItems = items.filter((item) => {

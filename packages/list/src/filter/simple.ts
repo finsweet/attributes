@@ -6,11 +6,14 @@ import {
   isFormField,
   parseNumericAttribute,
 } from '@finsweet/attributes-utils';
+import { effect, toRaw, watch } from '@vue/reactivity';
 import { dset } from 'dset';
 
 import type { List } from '../components/List';
 import { DEFAULT_FUZZY_RATIO } from '../utils/constants';
-import { getAttribute, getElementSelector, getSettingSelector } from '../utils/selectors';
+import { setReactive } from '../utils/reactivity';
+import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
+import { filterItems } from './filter';
 import type { FilterOperator, Filters, FiltersCondition } from './types';
 
 export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
@@ -92,9 +95,28 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
     }
   });
 
+  // Get initial filters
+  const filters = getSimpleFilters(form);
+  setReactive(list.filters, filters);
+
+  // Get filters on node changes
+  // TODO: bail when added/removed nodes are not form fields
+  const mutationObserver = new MutationObserver(() => {
+    const filters = getSimpleFilters(form);
+    setReactive(list.filters, filters);
+  });
+
+  // mutationObserver.observe(form, {
+  //   childList: true,
+  //   subtree: true,
+  // });
+
+  initFiltersResults(list, form);
+
   return () => {
     inputCleanup();
     clickCleanup;
+    mutationObserver.disconnect();
   };
 };
 
@@ -190,7 +212,7 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
  * @returns An object with the form fields as keys and their values as values.
  * @param form A {@link HTMLFormElement} element.
  */
-export const getSimpleFilters = (list: List, form: HTMLFormElement) => {
+export const getSimpleFilters = (form: HTMLFormElement) => {
   const filters: Filters = {
     groups: [{ conditions: [] }],
   };
@@ -213,4 +235,44 @@ export const getSimpleFilters = (list: List, form: HTMLFormElement) => {
   }
 
   return filters;
+};
+
+const initFiltersResults = (list: List, form: HTMLFormElement) => {
+  for (const formField of form.elements) {
+    if (!isFormField(formField)) continue;
+
+    const { type } = formField;
+    if (type !== 'checkbox') continue;
+
+    const field = getAttribute(formField, 'field');
+    if (!field) continue;
+
+    const resultsCountElement = queryElement('filter-results-count', { scope: formField.parentElement! });
+    if (!resultsCountElement) continue;
+
+    const op = getAttribute(formField, 'operator', true) || 'contains';
+    const value = getAttribute(formField, 'value') || formField.value;
+
+    watch(
+      [list.filters, list.hooks.filter.result],
+      ([filters]) => {
+        const filtersClone = structuredClone(toRaw(filters)) as Filters;
+        console.log({ filtersClone });
+
+        const conditions = filtersClone.groups[0]?.conditions || [];
+        const conditionIndex = conditions.findIndex((c) => c.field === field && c.op === op);
+
+        if (!conditions[conditionIndex]) return;
+        if (conditions[conditionIndex].value === value) return;
+
+        conditions[conditionIndex].value = [value];
+
+        const result = filterItems(filtersClone, list.hooks.filter.result.value);
+        console.log(result.length);
+
+        resultsCountElement.textContent = `${result.length}`;
+      },
+      { deep: true, immediate: true }
+    );
+  }
 };

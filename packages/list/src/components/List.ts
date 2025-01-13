@@ -329,50 +329,11 @@ export class List {
    * Initializes the elements side effects.
    */
   #initElements() {
-    const { items, itemsPerPage, currentPage, hooks } = this;
-
     // items-count
     // TODO: Cleanup
     effect(() => {
-      const { itemsCountElement } = this;
-
-      if (itemsCountElement) {
-        itemsCountElement.textContent = `${items.value.length}`;
-      }
-    });
-
-    /**
-     * visible-count
-     * visible-count-from
-     * visible-count-to
-     * results-count
-     */
-    // TODO: Cleanup
-    effect(() => {
-      const { visibleCountElement, visibleCountFromElement, visibleCountToElement, resultsCountElement } = this;
-
-      const filteredItems = hooks.filter.result.value;
-
-      if (visibleCountElement) {
-        const visibleCountTotal = Math.min(itemsPerPage.value, filteredItems.length);
-
-        visibleCountElement.textContent = `${visibleCountTotal}`;
-      }
-
-      if (visibleCountFromElement) {
-        const visibleCountFrom = Math.min((currentPage.value - 1) * itemsPerPage.value + 1, filteredItems.length);
-
-        visibleCountFromElement.textContent = `${visibleCountFrom}`;
-      }
-
-      if (visibleCountToElement) {
-        const visibleCountTo = Math.min(currentPage.value * itemsPerPage.value, filteredItems.length);
-
-        visibleCountToElement.textContent = `${visibleCountTo}`;
-      }
-
-      if (resultsCountElement) {
-        resultsCountElement.textContent = `${filteredItems.length}`;
+      if (this.itemsCountElement) {
+        this.itemsCountElement.textContent = `${this.items.value.length}`;
       }
     });
   }
