@@ -103,21 +103,17 @@ const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
  * @returns Nothing, it mutates the `List` instance.
  */
 const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean) => {
-  const { paginationNextCMSElement: paginationNextElement, paginationPreviousCMSElement: paginationPreviousElement } =
-    list;
+  if (!list.paginationNextCMSElement.value && !list.paginationPreviousCMSElement.value) return;
 
-  if (!paginationNextElement.value && !paginationPreviousElement.value) return;
-
-  const { pagesQuery } = list;
   const currentPage = list.currentPage.value;
 
-  if (!pagesQuery || !currentPage) return;
+  if (!list.pagesQuery || !currentPage) return;
 
   const { origin, pathname } = window.location;
 
   // Previous Pages
   for (let pageNumber = currentPage - 1; pageNumber >= 1; pageNumber--) {
-    const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=${pageNumber}`, { cache });
+    const page = await fetchPageDocument(`${origin}${pathname}?${list.pagesQuery}=${pageNumber}`, { cache });
     if (!page) return;
 
     await parseLoadedPage(page, list, 'unshift');
@@ -130,7 +126,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
     fetchPromises[pageNumber] = (async () => {
       const previousPromise = fetchPromises[pageNumber - 1];
 
-      const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=${pageNumber}`, { cache });
+      const page = await fetchPageDocument(`${origin}${pathname}?${list.pagesQuery}=${pageNumber}`, { cache });
 
       await previousPromise;
 
