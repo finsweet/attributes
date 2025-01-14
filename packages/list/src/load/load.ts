@@ -9,41 +9,45 @@ import { getCollectionElements } from '../utils/dom';
  *
  * @returns Nothing, it mutates the `List` instance.
  */
-export const loadPaginatedItems = async (list: List): Promise<void> => {
+export const loadPaginatedCMSItems = async (list: List): Promise<void> => {
   const {
-    paginationNextElement,
-    paginationPreviousElement,
+    paginationNextCMSElement,
+    paginationPreviousCMSElement,
     paginationCountElement,
-    loadingPaginationQuery: loadingPaginationData,
+    loadingPaginationQuery,
     loaderElement,
     cache: cacheItems,
   } = list;
 
-  if (!paginationNextElement && !paginationPreviousElement) return;
+  if (!paginationNextCMSElement.value && !paginationPreviousCMSElement.value) return;
 
-  if (loaderElement) {
-    loaderElement.style.display = '';
-    loaderElement.style.opacity = '1';
-  }
-
-  // Attempt to get the total amount of pages from the `Page Count` element.
-  let totalPages;
-
-  if (paginationCountElement) {
-    const [, rawTotalPages] = paginationCountElement.textContent?.split('/') || [];
-    if (rawTotalPages) {
-      totalPages = parseInt(rawTotalPages.trim());
+  list.loadingPaginatedItems = new Promise(async (resolve) => {
+    if (loaderElement) {
+      loaderElement.style.display = '';
+      loaderElement.style.opacity = '1';
     }
-  }
 
-  await loadingPaginationData;
+    // Attempt to get the total amount of pages from the `Page Count` element.
+    let totalPages;
 
-  if (totalPages) await parallelItemsLoad(list, totalPages, cacheItems);
-  else await chainedPagesLoad(list, cacheItems);
+    if (paginationCountElement) {
+      const [, rawTotalPages] = paginationCountElement.textContent?.split('/') || [];
+      if (rawTotalPages) {
+        totalPages = parseInt(rawTotalPages.trim());
+      }
+    }
 
-  if (loaderElement) {
-    loaderElement.style.display = 'none';
-  }
+    await loadingPaginationQuery;
+
+    if (totalPages) await parallelItemsLoad(list, totalPages, cacheItems);
+    else await chainedPagesLoad(list, cacheItems);
+
+    if (loaderElement) {
+      loaderElement.style.display = 'none';
+    }
+
+    resolve();
+  });
 };
 
 /**
@@ -61,10 +65,9 @@ const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
     await parallelItemsLoad(list, currentPage, cache);
   }
 
-  const paginationNext = list.paginationNextElement.value;
-  if (!paginationNext) return;
+  if (!list.paginationNextCMSElement.value) return;
 
-  const { href } = paginationNext;
+  const { href } = list.paginationNextCMSElement.value;
   const pageLinks: string[] = [href];
 
   /**
@@ -100,7 +103,8 @@ const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
  * @returns Nothing, it mutates the `List` instance.
  */
 const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean) => {
-  const { paginationNextElement, paginationPreviousElement } = list;
+  const { paginationNextCMSElement: paginationNextElement, paginationPreviousCMSElement: paginationPreviousElement } =
+    list;
 
   if (!paginationNextElement.value && !paginationPreviousElement.value) return;
 

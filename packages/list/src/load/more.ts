@@ -1,8 +1,9 @@
-import { addListener } from '@finsweet/attributes-utils';
+import { addListener, isElement, parseNumericAttribute } from '@finsweet/attributes-utils';
+import { effect, watch, type WatchHandle } from '@vue/reactivity';
 
 import type { List } from '../components/List';
-import { queryElement } from '../utils/selectors';
-import { loadPaginatedItems } from './load';
+import { getAttribute } from '../utils/selectors';
+import { loadPaginatedCMSItems } from './load';
 
 /**
  * Inits the default mode.
@@ -11,78 +12,57 @@ import { loadPaginatedItems } from './load';
  * @returns A callback to remove event listeners.
  */
 export const initMoreMode = (list: List) => {
-  const { paginationNextElement, paginationPreviousElement, paginationCountElement, itemsPerPage, instance } = list;
-
-  const paginationNextButton = paginationNextElement.value;
-  if (!paginationNextButton) return;
-
-  paginationCountElement?.remove();
-
-  const paginationPreviousButton = paginationPreviousElement.value;
-  if (paginationPreviousButton) {
-    paginationPreviousButton.style.display = 'none';
-  }
-
-  const loadRemainingButton = queryElement('load-remaining', { instance });
-
-  let isLoading = true;
-  let loadRemainingClicked = false;
-
+  // Add hook
   list.addHook('paginate', (items) => {
-    const paginatedItems = items.slice(0, itemsPerPage.value);
-    const allItemsDisplayed = paginatedItems.length === items.length;
-
-    paginationNextButton.style.display = allItemsDisplayed ? 'none' : '';
-
-    if (!isLoading && allItemsDisplayed) {
-      cleanup();
-      return;
-    }
-
+    const paginatedItems = items.slice(0, list.itemsPerPage.value);
     return paginatedItems;
   });
 
   // Listeners
-  const cleanupPaginationNextButton = addListener(paginationNextButton, 'click', async (e) => {
+  let cleanupLoadRemaingWatcher: WatchHandle | undefined;
+
+  const cleanupPaginationNextButtons = addListener(list.allPaginationNextElements.value, 'click', async (e) => {
+    if (!e.target || !isElement(e.target)) return;
+
     e.preventDefault();
 
-    itemsPerPage.value += list.initialItemsPerPage;
+    const rawLoadCount = getAttribute(e.target, 'loadcount');
+
+    if (rawLoadCount === 'all') {
+      cleanupLoadRemaingWatcher ||= watch(
+        list.items,
+        (items) => {
+          list.itemsPerPage.value = items.length;
+        },
+        { immediate: true }
+      );
+    } else {
+      list.itemsPerPage.value += parseNumericAttribute(rawLoadCount, list.initialItemsPerPage);
+    }
 
     list.triggerHook('paginate');
   });
 
-  const cleanupLoadRemainingButton = loadRemainingButton
-    ? addListener(
-        loadRemainingButton,
-        'click',
-        async (e) => {
-          e.preventDefault();
+  // Handle pagination next buttons display
+  effect(() => {
+    const allItemsDisplayed = list.itemsPerPage.value === list.items.value.length;
 
-          loadRemainingClicked = true;
-
-          itemsPerPage.value = list.items.value.length;
-
-          list.triggerHook('paginate');
-        },
-        { once: true }
-      )
-    : undefined;
+    list.allPaginationNextElements.value.forEach((element) => {
+      element.style.display = allItemsDisplayed ? 'none' : '';
+      element.setAttribute('aria-hidden', allItemsDisplayed ? 'true' : 'false');
+      element.setAttribute('tabindex', allItemsDisplayed ? '-1' : '0');
+    });
+  });
 
   // Init
-  loadPaginatedItems(list).then(() => {
-    isLoading = false;
-
-    if (loadRemainingClicked) {
-      itemsPerPage.value = list.items.value.length;
-    }
-  });
+  loadPaginatedCMSItems(list);
 
   /**
    * Destroys the listeners.
    */
   const cleanup = () => {
-    cleanupPaginationNextButton();
-    cleanupLoadRemainingButton?.();
+    cleanupPaginationNextButtons();
+    cleanupLoadRemaingWatcher?.();
   };
 
   return cleanup;

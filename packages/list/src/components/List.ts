@@ -15,13 +15,13 @@ import {
   type WebflowModule,
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
-import { effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
+import { computed, effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 import MiniSearch from 'minisearch';
 
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
-import { getAttribute, getInstance, hasAttributeValue, queryElement } from '../utils/selectors';
+import { getAttribute, getInstance, hasAttributeValue, queryAllElements, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
@@ -36,6 +36,11 @@ type Hooks = {
 };
 
 export class List {
+  /**
+   * A signal holding all {@link ListItem} instances of the list.
+   */
+  public readonly items = shallowRef<ListItem[]>([]);
+
   /**
    * Contains all lifecycle hooks with their callbacks and last result.
    */
@@ -76,11 +81,6 @@ export class List {
     },
   };
 
-  /**
-   * A signal holding all {@link ListItem} instances of the list.
-   */
-  public readonly items = shallowRef<ListItem[]>([]);
-
   public readonly fuzzySearch = new MiniSearch({
     fields: ['name'],
     storeFields: ['name'],
@@ -113,14 +113,32 @@ export class List {
   public readonly paginationCountElement?: PageCountElement | null;
 
   /**
-   * The `Previous` button.
+   * All the `Previous` buttons defined by the user or native Webflow CMS.
    */
-  public readonly paginationPreviousElement = ref<PaginationButtonElement | null | undefined>();
+  public readonly allPaginationPreviousElements = shallowRef<Set<PaginationButtonElement>>(new Set());
 
   /**
-   * The `Next` button.
+   * The native Webflow CMS `Previous` button.
    */
-  public readonly paginationNextElement = ref<PaginationButtonElement | null | undefined>();
+  public readonly paginationPreviousCMSElement = computed(() =>
+    [...this.allPaginationPreviousElements.value].find((paginationPreviousElement: PaginationButtonElement) =>
+      paginationPreviousElement.classList.contains(CMS_CSS_CLASSES['paginationPrevious'])
+    )
+  );
+
+  /**
+   * The `Next` buttons defined by the user or native Webflow CMS.
+   */
+  public readonly allPaginationNextElements = shallowRef<Set<PaginationButtonElement>>(new Set());
+
+  /**
+   * The native Webflow CMS `Next` button.
+   */
+  public readonly paginationNextCMSElement = computed(() =>
+    [...this.allPaginationNextElements.value].find((paginationNextElement: PaginationButtonElement) =>
+      paginationNextElement.classList.contains(CMS_CSS_CLASSES['paginationNext'])
+    )
+  );
 
   /**
    * The `Empty State` element.
@@ -214,6 +232,11 @@ export class List {
    */
   public loadingPaginationElements?: Promise<void>;
 
+  /**
+   * Defines an awaitable Promise that resolves once all the Webflow CMS paginated items have been loaded.
+   */
+  public loadingPaginatedItems?: Promise<void>;
+
   constructor(public readonly wrapperElement: CollectionListWrapperElement, public readonly pageIndex: number) {
     // Collect elements
     const listElement = getCollectionElements(wrapperElement, 'list');
@@ -224,8 +247,7 @@ export class List {
 
     this.paginationWrapperElement = getCollectionElements(wrapperElement, 'pagination-wrapper');
     this.paginationCountElement = getCollectionElements(wrapperElement, 'page-count');
-    this.paginationNextElement.value = getCollectionElements(wrapperElement, 'pagination-next');
-    this.paginationPreviousElement.value = getCollectionElements(wrapperElement, 'pagination-previous');
+
     this.emptyElement.value =
       getCollectionElements(wrapperElement, 'empty') || queryElement<CollectionEmptyElement>('empty', { instance });
     this.loaderElement = queryElement('loader', { instance });
@@ -235,6 +257,26 @@ export class List {
     this.visibleCountToElement = queryElement('visible-count-to', { instance });
     this.resultsCountElement = queryElement('results-count', { instance });
     this.cache = hasAttributeValue(this.listOrWrapper, 'cache', 'true');
+
+    // Get pagination next elements
+    const paginationNextElement = getCollectionElements(wrapperElement, 'pagination-next');
+    if (paginationNextElement) {
+      this.allPaginationNextElements.value.add(paginationNextElement);
+    }
+
+    queryAllElements<HTMLAnchorElement>('pagination-next', { instance }).forEach((element) =>
+      this.allPaginationNextElements.value.add(element)
+    );
+
+    // Get pagination previous elements
+    const paginationPreviousElement = getCollectionElements(wrapperElement, 'pagination-previous');
+    if (paginationPreviousElement) {
+      this.allPaginationPreviousElements.value.add(paginationPreviousElement);
+    }
+
+    queryAllElements<HTMLAnchorElement>('pagination-previous', { instance }).forEach((element) =>
+      this.allPaginationPreviousElements.value.add(element)
+    );
 
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
@@ -252,7 +294,7 @@ export class List {
 
     // Extract pagination data
     this.loadingPaginationQuery = this.#getPaginationQuery();
-    this.loadingPaginationElements = this.#getPaginationElements();
+    this.loadingPaginationElements = this.#getCMSPaginationElements();
 
     // Init hooks
     this.#initHooks();
@@ -382,11 +424,7 @@ export class List {
    * @returns A Promise that resolves once the pagination query info has been collected.
    */
   async #getPaginationQuery() {
-    const { paginationNextElement, paginationPreviousElement } = this;
-
-    const paginationNext = paginationNextElement.value;
-    const paginationPrevious = paginationPreviousElement.value;
-    const paginationButton = paginationNext || paginationPrevious;
+    const paginationButton = this.paginationNextCMSElement.value || this.paginationPreviousCMSElement.value;
     if (!paginationButton) return;
 
     const searchEntries = getPaginationSearchEntries(paginationButton);
@@ -429,7 +467,7 @@ export class List {
     if (!pagesQuery || !rawTargetPage) return;
 
     const targetPage = parseInt(rawTargetPage);
-    const currentPage = paginationNext ? targetPage - 1 : targetPage + 1;
+    const currentPage = this.paginationNextCMSElement.value ? targetPage - 1 : targetPage + 1;
 
     this.pagesQuery = pagesQuery;
     this.currentPage.value = currentPage;
@@ -439,7 +477,7 @@ export class List {
    * Collects the missing pagination elements.
    * @returns A Promise that resolves once the missing pagination elements have been collected.
    */
-  async #getPaginationElements() {
+  async #getCMSPaginationElements() {
     await this.loadingPaginationQuery;
 
     const { origin, pathname } = window.location;
@@ -447,8 +485,8 @@ export class List {
       wrapperElement,
       listElement,
       paginationWrapperElement,
-      paginationNextElement,
-      paginationPreviousElement,
+      paginationNextCMSElement,
+      paginationPreviousCMSElement,
       emptyElement,
       currentPage,
       pagesQuery,
@@ -458,7 +496,7 @@ export class List {
     await Promise.all([
       // Pagination next
       (async () => {
-        if (paginationNextElement.value) return;
+        if (paginationNextCMSElement.value) return;
 
         const $currentPage = currentPage.value;
         if (!$currentPage || $currentPage === 1) return;
@@ -473,18 +511,18 @@ export class List {
         const paginationNext = getCollectionElements(collectionListWrapper, 'pagination-next');
         if (!paginationNext) return;
 
-        const anchor = paginationPreviousElement.value?.parentElement || paginationWrapperElement;
+        const anchor = paginationPreviousCMSElement.value?.parentElement || paginationWrapperElement;
         if (!anchor) return;
 
         paginationNext.style.display = 'none';
 
         anchor.append(paginationNext);
-        paginationNextElement.value = paginationNext;
+        this.allPaginationNextElements.value.add(paginationNext);
       })(),
 
       // Pagination previous & Empty state
       (async () => {
-        if (paginationPreviousElement.value && emptyElement.value) return;
+        if (paginationPreviousCMSElement.value && emptyElement.value) return;
 
         const page = await fetchPageDocument(`${origin}${pathname}?${pagesQuery}=9999`);
         if (!page) return;
@@ -497,14 +535,14 @@ export class List {
         const empty = getCollectionElements(collectionListWrapper, 'empty');
 
         // Pagination previous
-        if (paginationPrevious && !paginationPreviousElement.value) {
-          const anchor = paginationNextElement.value?.parentElement || paginationWrapperElement;
+        if (paginationPrevious && !paginationPreviousCMSElement.value) {
+          const anchor = paginationNextCMSElement.value?.parentElement || paginationWrapperElement;
           if (!anchor) return;
 
           paginationPrevious.style.display = 'none';
 
           anchor.prepend(paginationPrevious);
-          paginationPreviousElement.value = paginationPrevious;
+          this.allPaginationPreviousElements.value.add(paginationPrevious);
         }
 
         // Empty state

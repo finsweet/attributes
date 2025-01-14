@@ -220,11 +220,6 @@ export const ELEMENTS = [
    * Defines an element that has a comma-separated list of slugs of elements to nest into a specific target.
    */
   'nest-slugs',
-
-  /**
-   * Defines an element that will load the remaining items when clicked.
-   */
-  'load-remaining',
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {
@@ -302,6 +297,14 @@ export const SETTINGS = {
   load: {
     key: 'load',
     values: { more: 'more', infinite: 'infinite', pagination: 'pagination', all: 'all' },
+  },
+
+  /**
+   * Defines the amount of items to load when clicking the load more button or scrolling in infinite mode.
+   */
+  loadcount: {
+    key: 'loadcount',
+    values: { all: 'all' },
   },
 
   /**

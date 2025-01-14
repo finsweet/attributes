@@ -1,4 +1,5 @@
 import {
+  CMS_CSS_CLASSES,
   type CollectionEmptyElement,
   type CollectionItemElement,
   type CollectionListElement,
@@ -11,23 +12,23 @@ import {
 import type { ELEMENTS } from './constants';
 import { getElementSelector } from './selectors';
 
-const CMS_CSS_CLASSES = {
-  wrapper: '.w-dyn-list',
-  list: '.w-dyn-items',
-  item: '.w-dyn-item',
-  'pagination-wrapper': '.w-pagination-wrapper',
-  'pagination-next': '.w-pagination-next',
-  'pagination-previous': '.w-pagination-previous',
-  'page-count': '.w-page-count',
-  empty: '.w-dyn-empty',
+const CMS_CSS_SELECTORS = {
+  wrapper: `.${CMS_CSS_CLASSES.wrapper}`,
+  list: `.${CMS_CSS_CLASSES.list}`,
+  item: `.${CMS_CSS_CLASSES.item}`,
+  'pagination-wrapper': `.${CMS_CSS_CLASSES.paginationWrapper}`,
+  'pagination-next': `.${CMS_CSS_CLASSES.paginationNext}`,
+  'pagination-previous': `.${CMS_CSS_CLASSES.paginationPrevious}`,
+  'page-count': `.${CMS_CSS_CLASSES.pageCount}`,
+  empty: `.${CMS_CSS_CLASSES.emptyState}`,
 } satisfies Partial<Record<(typeof ELEMENTS)[number], string>>;
 
 /**
  * @returns A CSS selector for a CMS element.
  * @param key
  */
-export const getCMSElementSelector = (key: keyof typeof CMS_CSS_CLASSES) => {
-  return `:is(${CMS_CSS_CLASSES[key]}, ${getElementSelector(key)})`;
+export const getCMSElementSelector = (key: keyof typeof CMS_CSS_SELECTORS) => {
+  return `:is(${CMS_CSS_SELECTORS[key]}, ${getElementSelector(key)})`;
 };
 
 /**
@@ -65,7 +66,7 @@ export function getCollectionElements(
 ): CollectionListWrapperElement | null | undefined;
 export function getCollectionElements(
   referenceElement: Element,
-  target: keyof typeof CMS_CSS_CLASSES
+  target: keyof typeof CMS_CSS_SELECTORS
 ):
   | CollectionListWrapperElement
   | CollectionListElement

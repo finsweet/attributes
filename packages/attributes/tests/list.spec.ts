@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import type { List } from '@finsweet/attributes-list';
+import { expect, type Page, test } from '@playwright/test';
 
 import { waitAttributeLoaded } from './utils';
 
@@ -6,7 +7,7 @@ test.describe('fs-list: sort', () => {
   test('list_sort_buttons', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-sort-buttons?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
+    await waitCMSItemsLoaded(page);
 
     const buttonName = page.getByTestId('button-name');
     const buttonYear = page.getByTestId('button-year');
@@ -87,7 +88,7 @@ test.describe('fs-list: sort', () => {
   test('list_sort_load_buttons', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-sort-load-buttons?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
+    await waitCMSItemsLoaded(page);
 
     const buttonName = page.getByTestId('button-name');
     const buttonYear = page.getByTestId('button-year');
@@ -168,7 +169,7 @@ test.describe('fs-list: sort', () => {
   test('list_sort_select', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-sort-select?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
+    await waitCMSItemsLoaded(page);
 
     const select = page.getByTestId('select');
 
@@ -234,7 +235,7 @@ test.describe('fs-list: combine', () => {
   test('list_combine', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-combine?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
+    await waitCMSItemsLoaded(page);
 
     const mainList = page.getByTestId('main');
     const fooList = page.getByTestId('foo');
@@ -252,7 +253,7 @@ test.describe('fs-list: combine', () => {
   test('list_combine_sort', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-combine-sort?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
+    await waitCMSItemsLoaded(page);
 
     const select = page.getByTestId('select');
 
@@ -330,9 +331,7 @@ test.describe('fs-list: load', () => {
   test('list_load_more', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-load-more?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
-
-    await page.waitForTimeout(1000);
+    await waitCMSItemsLoaded(page);
 
     let listItem = page.getByTestId('list-item');
 
@@ -351,6 +350,30 @@ test.describe('fs-list: load', () => {
     listItem = page.getByTestId('list-item');
 
     await expect(listItem).toHaveCount(300);
+  });
+
+  test('list_load_more_loadcount', async ({ page }) => {
+    await page.goto('http://fs-attributes-list.webflow.io/list-load-more-loadcount?dev=true');
+
+    await waitCMSItemsLoaded(page);
+
+    let listItem = page.getByTestId('list-item');
+
+    await expect(listItem).toHaveCount(100);
+
+    const nextButton = page.getByTestId('next-button');
+
+    await nextButton.click();
+
+    listItem = page.getByTestId('list-item');
+
+    await expect(listItem).toHaveCount(120);
+
+    await nextButton.click();
+
+    listItem = page.getByTestId('list-item');
+
+    await expect(listItem).toHaveCount(140);
 
     const loadRemainingButton = page.getByTestId('load-remaining');
 
@@ -364,35 +387,9 @@ test.describe('fs-list: load', () => {
   test('list_load_all', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-load-all?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
-
-    await page.waitForTimeout(1000);
+    await waitCMSItemsLoaded(page);
 
     const listItem = page.getByTestId('list-item');
-
-    await expect(listItem).toHaveCount(300);
-
-    const nextButton = page.getByTestId('next-button');
-
-    expect(nextButton).toHaveCSS('display', 'none');
-  });
-
-  test('list_load_remaining', async ({ page }) => {
-    await page.goto('http://fs-attributes-list.webflow.io/list-load-remaining?dev=true');
-
-    await waitAttributeLoaded(page, 'list');
-
-    await page.waitForTimeout(1000);
-
-    let listItem = page.getByTestId('list-item');
-
-    await expect(listItem).toHaveCount(100);
-
-    const nextButton = page.getByTestId('next-button');
-
-    await nextButton.click();
-
-    listItem = page.getByTestId('list-item');
 
     await expect(listItem).toHaveCount(300);
   });
@@ -400,9 +397,7 @@ test.describe('fs-list: load', () => {
   test('list_load_pagination', async ({ page }) => {
     await page.goto('http://fs-attributes-list.webflow.io/list-load-pagination?dev=true');
 
-    await waitAttributeLoaded(page, 'list');
-
-    await page.waitForTimeout(1000);
+    await waitCMSItemsLoaded(page);
 
     const paginationNext = page.getByTestId('pagination-next');
     const paginationPrevious = page.getByTestId('pagination-previous');
@@ -486,3 +481,23 @@ test.describe('fs-list: load', () => {
     await expect(paginationButtonsChildren.nth(6)).toHaveText('10');
   });
 });
+
+/**
+ * Wait for the attribute to be loaded in the current test page.
+ * @param page
+ * @param attributeKey
+ */
+const waitCMSItemsLoaded = async (page: Page) => {
+  return page.evaluate<Promise<List>>(async () => {
+    return new Promise((r) => {
+      window.finsweetAttributes = window.finsweetAttributes || [];
+      window.finsweetAttributes.push([
+        'list',
+        async ([list]: List[]) => {
+          await list.loadingPaginatedItems;
+          r(list);
+        },
+      ]);
+    });
+  });
+};
