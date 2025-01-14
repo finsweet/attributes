@@ -28,16 +28,18 @@ export function addListener<
     ? (this: Element, ev: ElementEventMap[Type]) => unknown
     : EventListenerOrEventListenerObject
 >(
-  target: TargetInterface | null | undefined,
+  target: TargetInterface | TargetInterface[] | Set<TargetInterface> | null | undefined,
   type: Type,
   listener: Listener,
   options?: boolean | AddEventListenerOptions
 ): () => void {
   if (!target) return noop;
 
-  target.addEventListener(type, listener, options);
+  const targets = Array.isArray(target) ? target : target instanceof Set ? [...target] : [target];
 
-  return () => target.removeEventListener(type, listener, options);
+  targets.forEach((target) => target.addEventListener(type, listener, options));
+
+  return () => targets.forEach((target) => target.removeEventListener(type, listener, options));
 }
 
 type AllowedEvent = keyof DocumentEventMap | 'w-close';

@@ -21,6 +21,9 @@ export const sortListItems = (
     const firstItemProp = firstItem.fields[sortKey];
     const secondItemProp = secondItem.fields[sortKey];
 
+    if (!firstItemProp) return 1;
+    if (!secondItemProp) return -1;
+
     // Number sorting
     if (firstItemProp.type === 'number' && secondItemProp.type === 'number') {
       const [firstItemValue] = firstItemProp.value;

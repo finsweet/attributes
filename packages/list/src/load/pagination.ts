@@ -16,7 +16,7 @@ import type { List } from '../components/List';
 import { BREAKPOINTS_INDEX, DEFAULT_PAGE_BOUNDARY, DEFAULT_PAGE_SIBLINGS } from '../utils/constants';
 import { getCMSElementSelector } from '../utils/dom';
 import { getAttribute, getElementSelector, hasAttributeValue, queryElement } from '../utils/selectors';
-import { loadPaginatedItems } from './load';
+import { loadPaginatedCMSItems } from './load';
 
 /**
  * Inits the `Pagination` mode.
@@ -97,7 +97,7 @@ export const initPaginationMode = (list: List) => {
   const paginationButtonsCleanup = handlePaginationButtons(list);
 
   // Init items load
-  loadPaginatedItems(list);
+  loadPaginatedCMSItems(list);
 
   // Handle pagination count
   handlePaginationCount(list);
@@ -278,24 +278,31 @@ const handlePaginationCount = ({ paginationCountElement, currentPage, totalPages
  * @param list The {@link List} instance.
  */
 const handlePaginationButtons = (list: List) => {
-  const { pagesQuery, currentPage, totalPages, paginationNextElement, paginationPreviousElement } = list;
+  const buttonsCleanup = effect(() => {
+    list.allPaginationPreviousElements.value.forEach((element) => {
+      const shouldDisplay = list.currentPage.value !== 1;
 
-  // TODO: Cleanup
-  effect(() => {
-    if (paginationPreviousElement.value) {
-      paginationPreviousElement.value.style.display = currentPage.value !== 1 ? '' : 'none';
+      element.style.display = shouldDisplay ? '' : 'none';
+      element.setAttribute('aria-disabled', shouldDisplay ? 'false' : 'true');
+      element.setAttribute('aria-hidden', shouldDisplay ? 'false' : 'true');
+      element.setAttribute('tabindex', shouldDisplay ? '0' : '-1');
 
-      paginationPreviousElement.value.href = `?${pagesQuery}=${currentPage.value - 1}`;
-    }
+      element.href = `?${list.pagesQuery}=${list.currentPage.value - 1}`;
+    });
 
-    if (paginationNextElement.value) {
-      paginationNextElement.value.style.display = currentPage.value !== totalPages.value ? '' : 'none';
+    list.allPaginationNextElements.value.forEach((element) => {
+      const shouldDisplay = list.currentPage.value !== list.totalPages.value;
 
-      paginationNextElement.value.href = `?${pagesQuery}=${currentPage.value + 1}`;
-    }
+      element.style.display = shouldDisplay ? '' : 'none';
+      element.setAttribute('aria-disabled', shouldDisplay ? 'false' : 'true');
+      element.setAttribute('aria-hidden', shouldDisplay ? 'false' : 'true');
+      element.setAttribute('tabindex', shouldDisplay ? '0' : '-1');
+
+      element.href = `?${list.pagesQuery}=${list.currentPage.value + 1}`;
+    });
   });
 
-  const cleanup = addListener(window, 'click', (e) => {
+  const clicksCleanup = addListener(window, 'click', (e) => {
     const { target } = e;
 
     if (!isElement(target)) return;
@@ -321,7 +328,10 @@ const handlePaginationButtons = (list: List) => {
     list.currentPage.value = targetPage;
   });
 
-  return cleanup;
+  return () => {
+    buttonsCleanup();
+    clicksCleanup();
+  };
 };
 
 /**
