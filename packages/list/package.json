@@ -18,6 +18,10 @@
     "./selectors": {
       "types": "./src/utils/selectors.ts",
       "import": "./src/utils/selectors.ts"
+    },
+    "./dom": {
+      "types": "./src/utils/dom.ts",
+      "import": "./src/utils/dom.ts"
     }
   },
   "dependencies": {

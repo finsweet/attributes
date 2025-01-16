@@ -11,4 +11,5 @@ export const {
   getAttribute,
   hasAttributeValue,
   getInstance,
+  getInstanceSelector,
 } = generateSelectors(LIST_ATTRIBUTE, ELEMENTS, SETTINGS);

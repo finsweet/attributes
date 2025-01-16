@@ -92,6 +92,14 @@ export const generateSelectors = <
   };
 
   /**
+   * @returns A valid CSS selector for an element instance.
+   * @param instance The instance identifier.
+   */
+  const getInstanceSelector = (instance: string) => {
+    return `[${INSTANCE_ATTRIBUTE_NAME}="${instance}"]`;
+  };
+
+  /**
    * @returns The first element that matches the selector.
    * @param elementKey The key of the element.
    * @param params.instance The index of the element instance.
@@ -222,6 +230,7 @@ export const generateSelectors = <
     getClosestElement,
     getElementSelector,
     getSettingSelector,
+    getInstanceSelector,
     getSettingAttributeName,
     queryElement,
     queryAllElements,

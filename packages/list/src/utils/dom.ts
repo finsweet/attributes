@@ -12,7 +12,7 @@ import {
 import type { ELEMENTS } from './constants';
 import { getElementSelector } from './selectors';
 
-const CMS_CSS_SELECTORS = {
+export const CMS_CSS_SELECTORS = {
   wrapper: `.${CMS_CSS_CLASSES.wrapper}`,
   list: `.${CMS_CSS_CLASSES.list}`,
   item: `.${CMS_CSS_CLASSES.item}`,
