@@ -132,6 +132,7 @@ const handlePageButtons = (
 
   let renderedButtons = new Map<HTMLElement, number | null>();
 
+  // TODO: cleanup
   effect(() => {
     const totalSiblings = pageSiblings.value * 2 + 1;
     const totalBoundary = pageBoundary.value * 2;

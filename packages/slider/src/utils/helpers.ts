@@ -1,4 +1,4 @@
-import type { PaginationOptions } from 'swiper/types/modules/pagination';
+import type { PaginationOptions } from 'swiper/types';
 
 import { getAttribute } from './selectors';
 

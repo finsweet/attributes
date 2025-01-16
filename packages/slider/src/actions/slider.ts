@@ -13,8 +13,7 @@ import {
   Scrollbar,
   Thumbs,
 } from 'swiper/modules';
-import type { PaginationOptions } from 'swiper/types/modules/pagination';
-import type { SwiperOptions } from 'swiper/types/swiper-options';
+import type { PaginationOptions, SwiperOptions } from 'swiper/types';
 
 import {
   getAttribute,

@@ -28,8 +28,6 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
     const field = getAttribute(target, 'field');
     if (!field) return;
 
-    console.log({ field });
-
     const update = () => {
       const op = getAttribute(target, 'operator', true) || 'contains';
 
@@ -44,8 +42,6 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
         conditions.push(data);
       }
 
-      console.log({ conditions });
-
       dset(list.filters, 'groups.0.conditions', conditions);
     };
 
@@ -56,7 +52,6 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
 
     // With debouncing
     const rawTimeout = getAttribute(target, 'debounce');
-    console.log({ rawTimeout });
     if (rawTimeout) {
       const timeout = rawTimeout ? parseNumericAttribute(rawTimeout, 0) : 0;
 

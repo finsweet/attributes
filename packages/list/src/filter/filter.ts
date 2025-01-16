@@ -218,8 +218,8 @@ const parseFilterValue = (rawFilterValue: string, { type }: ListItemField) => {
  * @param rawB
  */
 const areEqual = <Value = ListItemField['value'][number]>(rawA: Value, rawB: Value) => {
-  const a = rawA instanceof Date ? rawA.getTime() : rawA;
-  const b = rawB instanceof Date ? rawB.getTime() : rawB;
+  const a = rawA instanceof Date ? rawA.getTime() : isString(rawA) ? rawA.toLowerCase() : rawA;
+  const b = rawB instanceof Date ? rawB.getTime() : isString(rawB) ? rawB.toLowerCase() : rawB;
 
   return a === b;
 };

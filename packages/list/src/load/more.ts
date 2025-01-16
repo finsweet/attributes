@@ -57,13 +57,8 @@ export const initMoreMode = (list: List) => {
   // Init
   loadPaginatedCMSItems(list);
 
-  /**
-   * Destroys the listeners.
-   */
-  const cleanup = () => {
+  return () => {
     cleanupPaginationNextButtons();
     cleanupLoadRemaingWatcher?.();
   };
-
-  return cleanup;
 };

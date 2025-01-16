@@ -1,5 +1,5 @@
 import { addListener, isElement, parseNumericAttribute } from '@finsweet/attributes-utils';
-import { watch, type WatchHandle } from '@vue/reactivity';
+import { effect, watch, type WatchHandle } from '@vue/reactivity';
 import throttle from 'just-throttle';
 
 import type { List } from '../components/List';
@@ -14,32 +14,13 @@ import { loadPaginatedCMSItems } from './load';
  * @returns A callback to remove all event listeners.
  */
 export const initInfiniteMode = (list: List) => {
-  const { listElement, paginationCountElement, itemsPerPage } = list;
-  if (!listElement) return;
-
-  paginationCountElement?.remove();
-
-  list.allPaginationPreviousElements.value.forEach((element) => {
-    element.style.display = 'none';
-  });
+  if (!list.listElement) return;
 
   const thresholdCoefficient = getInfiniteThreshold(list);
 
-  let isLoading = true;
-
+  // Add hook
   list.addHook('paginate', (items) => {
-    const paginatedItems = items.slice(0, itemsPerPage.value);
-    const allItemsDisplayed = paginatedItems.length === items.length;
-
-    list.allPaginationNextElements.value.forEach((element) => {
-      element.style.display = allItemsDisplayed ? 'none' : '';
-    });
-
-    if (!isLoading && allItemsDisplayed) {
-      cleanup();
-      return;
-    }
-
+    const paginatedItems = items.slice(0, list.itemsPerPage.value);
     return paginatedItems;
   });
 
@@ -48,14 +29,16 @@ export const initInfiniteMode = (list: List) => {
    * Recalculates the scroll ratio of the element.
    */
   const handleScroll = throttle(async () => {
+    if (!list.listElement) return;
+
     const { innerHeight } = window;
-    const { bottom } = listElement.getBoundingClientRect();
+    const { bottom } = list.listElement.getBoundingClientRect();
 
     const validRange = thresholdCoefficient * innerHeight;
     const shouldLoad = bottom > 0 && bottom <= validRange;
 
     if (shouldLoad) {
-      itemsPerPage.value += list.initialItemsPerPage;
+      list.itemsPerPage.value += list.initialItemsPerPage;
       list.triggerHook('paginate');
     }
   }, 100);
@@ -68,7 +51,7 @@ export const initInfiniteMode = (list: List) => {
   });
 
   // Set listeners
-  observer.observe(listElement);
+  observer.observe(list.listElement);
 
   const cleanupScroll = addListener(window, 'scroll', handleScroll);
 
@@ -96,19 +79,26 @@ export const initInfiniteMode = (list: List) => {
     list.triggerHook('paginate');
   });
 
-  // Init
-  loadPaginatedCMSItems(list).then(() => {
-    isLoading = false;
+  // Handle pagination next buttons display
+  effect(() => {
+    const allItemsDisplayed = list.itemsPerPage.value === list.items.value.length;
+
+    list.allPaginationNextElements.value.forEach((element) => {
+      element.style.display = allItemsDisplayed ? 'none' : '';
+      element.setAttribute('aria-hidden', allItemsDisplayed ? 'true' : 'false');
+      element.setAttribute('tabindex', allItemsDisplayed ? '-1' : '0');
+    });
   });
 
-  const cleanup = () => {
+  // Init
+  loadPaginatedCMSItems(list);
+
+  return () => {
     observer.disconnect();
     cleanupScroll();
     cleanupPaginationNextButtons();
     cleanupLoadRemaingWatcher?.();
   };
-
-  return cleanup;
 };
 
 /**
