@@ -1,4 +1,5 @@
 import type { List } from '@finsweet/attributes-list';
+import { getElementSelector, getSettingSelector } from '@finsweet/attributes-list/selectors';
 import { expect, type Page, test } from '@playwright/test';
 
 test.describe('fs-list: sort', () => {
@@ -479,6 +480,177 @@ test.describe('fs-list: load', () => {
     await expect(paginationButtonsChildren.nth(5)).toHaveText('...');
     expect(await paginationButtonsChildren.nth(5).getAttribute('fs-list-element')).toBe('page-dots');
     await expect(paginationButtonsChildren.nth(6)).toHaveText('10');
+  });
+
+  test('filter_basic_text', async ({ page }) => {
+    await page.goto('http://fs-attributes-list.webflow.io/list-filter-basic-text?dev=true');
+
+    await waitCMSItemsLoaded(page);
+
+    const filters = page.locator(getElementSelector('filters'));
+    const list = page.locator(getElementSelector('list'));
+    const itemsCount = page.locator(getElementSelector('items-count'));
+    const resultsCount = page.locator(getElementSelector('results-count'));
+    const equalInput = filters.locator(getSettingSelector('operator', 'equal'));
+    const notEqualInput = filters.locator(getSettingSelector('operator', 'not-equal'));
+    const containsInput = filters.locator(getSettingSelector('operator', 'contains'));
+    const notContainsInput = filters.locator(getSettingSelector('operator', 'not-contains'));
+    const fuzzyInput = filters.locator(getSettingSelector('operator', 'fuzzy'));
+    const nameFieldSelector = getSettingSelector('field', undefined, 'name');
+
+    await expect(itemsCount).toHaveText('300');
+    await expect(resultsCount).toHaveText('300');
+
+    await equalInput.fill('alallo');
+
+    let listItems = list.locator('.w-dyn-item');
+    let firstItemFieldName = listItems.first().locator(nameFieldSelector);
+
+    await expect(resultsCount).toHaveText('1');
+    await expect(firstItemFieldName).toHaveText('Alallo');
+
+    await equalInput.fill('');
+
+    await notEqualInput.fill('alallo');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldName = listItems.first().locator(nameFieldSelector);
+
+    await expect(resultsCount).toHaveText('299');
+    await expect(firstItemFieldName).toHaveText('Albero');
+
+    await notEqualInput.fill('');
+
+    await containsInput.fill('oge');
+
+    listItems = list.locator('.w-dyn-item');
+    const itemNames = listItems.locator(nameFieldSelector);
+
+    await expect(resultsCount).toHaveText('3');
+    await expect(itemNames).toHaveCount(3);
+    await expect(itemNames.nth(0)).toHaveText('Beljogera');
+    await expect(itemNames.nth(1)).toHaveText('Belkogera');
+    await expect(itemNames.nth(2)).toHaveText('Clalogera');
+
+    await containsInput.fill('');
+
+    await notContainsInput.fill('oge');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldName = listItems.first().locator(nameFieldSelector);
+
+    await expect(resultsCount).toHaveText('297');
+    await expect(firstItemFieldName).toHaveText('Alallo');
+
+    await fuzzyInput.fill('aldiris alalo');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldName = listItems.first().locator(nameFieldSelector);
+
+    await expect(resultsCount).toHaveText('10');
+  });
+
+  test('filter_basic_number', async ({ page }) => {
+    await page.goto('http://fs-attributes-list.webflow.io/list-filter-basic-number?dev=true');
+
+    await waitCMSItemsLoaded(page);
+
+    const filters = page.locator(getElementSelector('filters'));
+    const list = page.locator(getElementSelector('list'));
+    const itemsCount = page.locator(getElementSelector('items-count'));
+    const resultsCount = page.locator(getElementSelector('results-count'));
+    const equalInput = filters.locator(getSettingSelector('operator', 'equal'));
+    const notEqualInput = filters.locator(getSettingSelector('operator', 'not-equal'));
+    const greaterInput = filters.locator(getSettingSelector('operator', 'greater'));
+    const greaterEqualInput = filters.locator(getSettingSelector('operator', 'greater-equal'));
+    const lessInput = filters.locator(getSettingSelector('operator', 'less'));
+    const lessEqualInput = filters.locator(getSettingSelector('operator', 'less-equal'));
+    const containsInput = filters.locator(getSettingSelector('operator', 'contains'));
+    const notContainsInput = filters.locator(getSettingSelector('operator', 'not-contains'));
+    const fuzzyInput = filters.locator(getSettingSelector('operator', 'fuzzy'));
+    const yearFieldSelector = getSettingSelector('field', undefined, 'year');
+
+    await expect(itemsCount).toHaveText('300');
+    await expect(resultsCount).toHaveText('300');
+
+    await equalInput.fill('2020');
+
+    let listItems = list.locator('.w-dyn-item');
+    let firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('38');
+    await expect(firstItemFieldYear).toHaveText('2020');
+
+    await equalInput.fill('');
+    await notEqualInput.fill('2020');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('262');
+    await expect(firstItemFieldYear).toHaveText('2017');
+
+    await notEqualInput.fill('');
+    await containsInput.fill('201');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('108');
+    await expect(firstItemFieldYear).toHaveText('2017');
+
+    await containsInput.fill('');
+    await notContainsInput.fill('201');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('192');
+    await expect(firstItemFieldYear).toHaveText('2020');
+
+    await notContainsInput.fill('');
+    await fuzzyInput.fill('2020');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('192');
+
+    await fuzzyInput.fill('');
+    await greaterInput.fill('2020');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('154');
+    await expect(firstItemFieldYear).toHaveText('2021');
+
+    await greaterInput.fill('');
+    await greaterEqualInput.fill('2020');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('192');
+    await expect(firstItemFieldYear).toHaveText('2020');
+
+    await greaterEqualInput.fill('');
+    await lessInput.fill('2020');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('108');
+    await expect(firstItemFieldYear).toHaveText('2017');
+
+    await lessInput.fill('');
+    await lessEqualInput.fill('2020');
+
+    listItems = list.locator('.w-dyn-item');
+    firstItemFieldYear = listItems.first().locator(yearFieldSelector);
+
+    await expect(resultsCount).toHaveText('146');
+    await expect(firstItemFieldYear).toHaveText('2020');
   });
 });
 

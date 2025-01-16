@@ -18,6 +18,7 @@ import { animations } from '@finsweet/attributes-utils';
 import { computed, effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 import MiniSearch from 'minisearch';
 
+import { createFuzzySearch } from '../filter/fuzzy';
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
@@ -81,11 +82,7 @@ export class List {
     },
   };
 
-  public readonly fuzzySearch = new MiniSearch({
-    fields: ['name'],
-    storeFields: ['name'],
-    extractField: (item, fieldKey) => (fieldKey === 'id' ? item.id : item.fields?.[fieldKey]?.value?.[0]),
-  });
+  public fuzzySearch?: MiniSearch;
 
   /**
    * A set holding all rendered {@link ListItem} instances.
@@ -289,6 +286,7 @@ export class List {
 
       this.items.value = items;
       this.renderedItems = new Set(items);
+      this.fuzzySearch ||= createFuzzySearch(items);
       this.fuzzySearch.addAll(items);
     }
 
@@ -615,6 +613,7 @@ export class List {
       items.value = [...newItems, ...items.value];
     }
 
+    this.fuzzySearch ||= createFuzzySearch(newItems);
     this.fuzzySearch.addAll(newItems);
   }
 
