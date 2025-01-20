@@ -101,6 +101,6 @@ export const SOCIAL_SHARE_PLATFORMS = {
   twitter: 'https://twitter.com/intent/tweet/',
   pinterest: 'https://www.pinterest.com/pin/create/trigger/',
   reddit: 'https://www.reddit.com/submit',
-  linkedin: 'https://www.linkedin.com//sharing/share-offsite',
+  linkedin: 'https://www.linkedin.com/sharing/share-offsite',
   telegram: 'https://t.me/share',
 } as const;
