@@ -1,5 +1,11 @@
 # @finsweet/attributes-socialshare
 
+## 1.3.2
+
+### Patch Changes
+
+- dfe3ee1: fix: remove double backslash on linkedin link
+
 ## 1.3.1
 
 ### Patch Changes
