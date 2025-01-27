@@ -6,9 +6,9 @@ import {
   isFormField,
   parseNumericAttribute,
 } from '@finsweet/attributes-utils';
-import { effect, toRaw, watch } from '@vue/reactivity';
-import { dset } from 'dset';
+import { toRaw, watch } from '@vue/reactivity';
 
+import type { ListItem } from '../components';
 import type { List } from '../components/List';
 import { DEFAULT_FUZZY_RATIO } from '../utils/constants';
 import { setReactive } from '../utils/reactivity';
@@ -41,8 +41,6 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
       } else {
         conditions.push(data);
       }
-
-      dset(list.filters, 'groups.0.conditions', conditions);
     };
 
     const debounce = debounces.get(target);
@@ -122,17 +120,14 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
 const getConditionData = (formField: FormField, field: string, op: FilterOperator): FiltersCondition => {
   const { type } = formField;
 
+  const filterMatch = getAttribute(formField, 'filterMatch', true) || 'or';
+  const fieldMatch = getAttribute(formField, 'fieldMatch', true) || 'or';
+
   switch (type) {
     // Checkbox
     case 'checkbox': {
       // Group
-      const groupSelector = [
-        `input[name="${formField.name}"][type="checkbox"][value]`,
-        `input[name="${formField.name}"][type="checkbox"]${getSettingSelector('value')}`,
-      ].join(',');
-
-      const groupCheckboxes = formField.form?.querySelectorAll<HTMLInputElement>(groupSelector);
-
+      const groupCheckboxes = getCheckboxGroup(formField.name, formField.form);
       if (groupCheckboxes?.length) {
         const values: string[] = [];
 
@@ -147,6 +142,8 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
           value: values,
           field,
           op,
+          filterMatch,
+          fieldMatch,
         };
       }
 
@@ -157,6 +154,8 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
         value,
         field,
         op,
+        filterMatch,
+        fieldMatch,
       };
     }
 
@@ -172,6 +171,8 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
         value,
         field,
         op,
+        filterMatch,
+        fieldMatch,
       };
     }
 
@@ -183,6 +184,8 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
         value,
         field,
         op,
+        filterMatch,
+        fieldMatch,
       };
     }
 
@@ -198,6 +201,8 @@ const getConditionData = (formField: FormField, field: string, op: FilterOperato
         field,
         op,
         fuzzy,
+        filterMatch,
+        fieldMatch,
       };
     }
   }
@@ -232,12 +237,17 @@ export const getSimpleFilters = (form: HTMLFormElement) => {
   return filters;
 };
 
+/**
+ * Initializes a specific filter's results count.
+ * @param list
+ * @param form
+ */
 const initFiltersResults = (list: List, form: HTMLFormElement) => {
   for (const formField of form.elements) {
     if (!isFormField(formField)) continue;
 
     const { type } = formField;
-    if (type !== 'checkbox') continue;
+    if (type !== 'checkbox' && type !== 'radio') continue;
 
     const field = getAttribute(formField, 'field');
     if (!field) continue;
@@ -246,28 +256,54 @@ const initFiltersResults = (list: List, form: HTMLFormElement) => {
     if (!resultsCountElement) continue;
 
     const op = getAttribute(formField, 'operator', true) || 'contains';
-    const value = getAttribute(formField, 'value') || formField.value;
+    const value = getAttribute(formField, 'value') || formField.value || '';
+    const isCheckboxGroup = type === 'checkbox' && getCheckboxGroup(formField.name, formField.form)?.length;
 
     watch(
-      [list.filters, list.hooks.filter.result],
-      ([filters]) => {
+      [list.filters, list.items],
+      ([filters, items]: [Filters, ListItem[]]) => {
         const filtersClone = structuredClone(toRaw(filters)) as Filters;
-        console.log({ filtersClone });
 
         const conditions = filtersClone.groups[0]?.conditions || [];
         const conditionIndex = conditions.findIndex((c) => c.field === field && c.op === op);
 
-        if (!conditions[conditionIndex]) return;
-        if (conditions[conditionIndex].value === value) return;
+        const condition = conditions[conditionIndex];
+        if (!condition) return;
 
-        conditions[conditionIndex].value = [value];
+        if (isCheckboxGroup) {
+          const arrayValue = Array.isArray(condition.value)
+            ? condition.value
+            : condition.value
+            ? [condition.value]
+            : [];
 
-        const result = filterItems(filtersClone, list.hooks.filter.result.value);
-        console.log(result.length);
+          arrayValue.push(value);
+
+          condition.value = arrayValue;
+        } else {
+          condition.value = value;
+        }
+
+        const result = filterItems(filtersClone, items);
 
         resultsCountElement.textContent = `${result.length}`;
       },
       { deep: true, immediate: true }
     );
   }
+};
+
+/**
+ * @returns All the checkboxes in a group.
+ * @param name The name of the group.
+ * @param form The form element containing the group.
+ */
+const getCheckboxGroup = (name: string, form: HTMLFormElement | null) => {
+  const groupSelector = [
+    `input[name="${name}"][type="checkbox"][value]`,
+    `input[name="${name}"][type="checkbox"]${getSettingSelector('value')}`,
+  ].join(',');
+
+  const groupCheckboxes = form?.querySelectorAll<HTMLInputElement>(groupSelector);
+  return groupCheckboxes;
 };

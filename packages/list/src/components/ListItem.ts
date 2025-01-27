@@ -7,6 +7,7 @@ import {
 } from '@finsweet/attributes-utils';
 import { nanoid } from 'nanoid';
 
+import { getCMSElementSelector } from '../utils/dom';
 import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 
 declare module '@vue/reactivity' {
@@ -17,20 +18,23 @@ declare module '@vue/reactivity' {
 
 export type ListItemField =
   | {
+      fieldKey: string;
       type: 'text';
-      value: string[];
+      value: string | string[];
     }
   | {
+      fieldKey: string;
       type: 'date';
-      value: Date[];
+      value: Date | Date[];
     }
   | {
+      fieldKey: string;
       type: 'number';
-      value: number[];
+      value: number | number[];
     };
 
 type ListItemFields = {
-  [field: string]: ListItemField;
+  [fieldKey: string]: ListItemField;
 };
 
 /**
@@ -90,10 +94,8 @@ export class ListItem {
    * Collects the field values from child elements and stores them.
    */
   public collectFields() {
-    const { element, fields } = this;
-
     const fieldSelector = getSettingSelector('field');
-    const fieldElements = [...element.querySelectorAll<HTMLElement>(fieldSelector)];
+    const fieldElements = [...this.element.querySelectorAll<HTMLElement>(fieldSelector)];
 
     for (const element of fieldElements) {
       const fieldKey = getAttribute(element, 'field');
@@ -108,15 +110,25 @@ export class ListItem {
 
       if (value === undefined) continue;
 
-      fields[fieldKey] ||= { type, value: [] };
+      const listSelector = getCMSElementSelector('list');
+      const parentList = element.closest(listSelector);
+      const isInsideNestedList = parentList && parentList !== this.listElement;
 
-      const field = fields[fieldKey];
+      if (isInsideNestedList) {
+        this.fields[fieldKey] ||= { fieldKey, type, value: [] };
 
-      if (field.type !== type) continue;
-      if (field.value.some((v) => v === value)) continue;
+        const field = this.fields[fieldKey];
 
-      // @ts-expect-error - Value is guaranteed to be the right type
-      field.value.push(value);
+        if (field.type !== type) continue; // TODO: why are we doing this?
+        if (!Array.isArray(field.value)) continue;
+        if (field.value.some((v) => v === value)) continue;
+
+        // @ts-expect-error - Value is guaranteed to be the right type
+        field.value.push(value);
+      } else {
+        // @ts-expect-error - Value is guaranteed to be the right type
+        this.fields[fieldKey] ||= { fieldKey, type, value };
+      }
     }
   }
 }

@@ -18,6 +18,14 @@ export const createFuzzySearch = (items: ListItem[]) => {
   return new MiniSearch({
     fields,
     storeFields: fields,
-    extractField: (item, fieldKey) => (fieldKey === 'id' ? item.id : item.fields?.[fieldKey]?.value?.[0]),
+    extractField: (item: ListItem, fieldKey) => {
+      if (fieldKey === 'id') return item.id;
+
+      const value = item.fields[fieldKey]?.value;
+
+      if (Array.isArray(value)) return value.join(' ');
+
+      return value.toString();
+    },
   });
 };

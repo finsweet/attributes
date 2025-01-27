@@ -43,7 +43,8 @@ export type FiltersCondition = {
   field?: string;
   op?: FilterOperator;
   value?: string | string[];
-  match?: FilterMatch;
+  filterMatch: FilterMatch;
+  fieldMatch: FilterMatch;
   fuzzy?: number;
 };
 
