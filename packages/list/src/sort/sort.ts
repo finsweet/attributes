@@ -26,8 +26,8 @@ export const sortListItems = (
 
     // Number sorting
     if (firstItemProp.type === 'number' && secondItemProp.type === 'number') {
-      const [firstItemValue] = firstItemProp.value;
-      const [secondItemValue] = secondItemProp.value;
+      const firstItemValue = getItemValue(firstItemProp.value);
+      const secondItemValue = getItemValue(secondItemProp.value);
 
       if (isNaN(firstItemValue)) return 1;
       if (isNaN(secondItemValue)) return -1;
@@ -39,8 +39,8 @@ export const sortListItems = (
 
     // Dates sorting
     if (firstItemProp.type === 'date' && secondItemProp.type === 'date') {
-      const firstItemValue = firstItemProp.value[0].getTime();
-      const secondItemValue = secondItemProp.value[0].getTime();
+      const firstItemValue = getItemValue(firstItemProp.value).getTime();
+      const secondItemValue = getItemValue(secondItemProp.value).getTime();
 
       if (direction === 'asc') return firstItemValue - secondItemValue;
 
@@ -49,8 +49,8 @@ export const sortListItems = (
 
     // Text sorting
     if (firstItemProp.type === 'text' && secondItemProp.type === 'text') {
-      const [firstItemValue] = firstItemProp.value;
-      const [secondItemValue] = secondItemProp.value;
+      const firstItemValue = getItemValue(firstItemProp.value);
+      const secondItemValue = getItemValue(secondItemProp.value);
 
       const collatorOptions: Intl.CollatorOptions = {
         numeric: true,
@@ -66,4 +66,18 @@ export const sortListItems = (
   });
 
   return sorted;
+};
+
+/**
+ * @returns The first value of the array or the value itself.
+ * @param value
+ */
+const getItemValue = <
+  Value extends number | string | Date | number[] | string[] | Date[],
+  ReturnValue = Value extends (infer U)[] ? U : Value
+>(
+  value: Value
+) => {
+  const [firstValue] = Array.isArray(value) ? value : [value];
+  return firstValue as ReturnValue;
 };
