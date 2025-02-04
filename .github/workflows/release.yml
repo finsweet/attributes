@@ -7,6 +7,70 @@ on:
       - main
 
 jobs:
-  release:
-    uses: finsweet/workflow-release/.github/workflows/release.yml@main
-    secrets: inherit
+  Release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Project
+        run: pnpm build
+
+      # If no NPM_TOKEN secret exists, just handle regular versioning
+      - name: (No NPM) Create Release Pull Request
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ env.NPM_TOKEN == null && inputs.staging-branch != github.ref_name }}
+
+      # If NPM_TOKEN secret exists, release to npm
+      # First, create a .npmrc file to make sure we're respecting the existing ones
+      - name: Create .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: env.NPM_TOKEN != null
+
+      # If the branch is the staging branch, deploy with specific version (requires defining a pnpm release:staging script that calls changeset version)
+      - name: (Staging) Create Release Pull Request and Publish to npm
+        id: changesets-staging
+        uses: changesets/action@v1
+        with:
+          version: pnpm version:staging
+          publish: pnpm release:staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ env.NPM_TOKEN != null && inputs.staging-branch == github.ref_name }}
+
+      # If the branch is production, deploy as usual
+      - name: (Production) Create Release Pull Request and Publish to npm
+        id: changesets-production
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ env.NPM_TOKEN != null && inputs.staging-branch != github.ref_name }}
