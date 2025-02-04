@@ -10,7 +10,7 @@ import { toRaw, watch } from '@vue/reactivity';
 
 import type { ListItem } from '../components';
 import type { List } from '../components/List';
-import { DEFAULT_FUZZY_RATIO } from '../utils/constants';
+import { DEFAULT_FILTER_OPERATOR, DEFAULT_FUZZY_RATIO } from '../utils/constants';
 import { setReactive } from '../utils/reactivity';
 import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../utils/selectors';
 import { filterItems } from './filter';
@@ -29,7 +29,7 @@ export const initSimpleFilters = (list: List, form: HTMLFormElement) => {
     if (!field) return;
 
     const update = () => {
-      const op = getAttribute(target, 'operator', true) || 'contains';
+      const op = getAttribute(target, 'operator', true) || DEFAULT_FILTER_OPERATOR;
 
       const conditions = list.filters.groups[0]?.conditions || [];
 

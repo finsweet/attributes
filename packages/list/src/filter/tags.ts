@@ -1,137 +1,166 @@
-import { clearFormField, cloneNode } from '@finsweet/attributes-utils';
+import { addListener, cloneNode, isNotEmpty } from '@finsweet/attributes-utils';
+import { watch } from '@vue/reactivity';
 
 import type { List } from '../components/List';
-import { getInstance, getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
+import { DEFAULT_FILTER_OPERATOR, SETTINGS } from '../utils/constants';
+import { queryElement } from '../utils/selectors';
+import type { FilterOperator, Filters } from './types';
 
+const OPERATOR_SYMBOLS: Record<FilterOperator, string> = {
+  empty: '∅',
+  'not-empty': '!∅',
+  contains: '∈',
+  'not-contains': '∉',
+  equal: '=',
+  'not-equal': '≠',
+  less: '<',
+  'less-equal': '≤',
+  greater: '>',
+  'greater-equal': '≥',
+  fuzzy: '≈',
+};
+
+/**
+ * Inits the tags for the list.
+ * @param list
+ * @returns
+ */
 export const initTags = (list: List) => {
   const tagTemplate = queryElement('tag', { instance: list.instance });
   if (!tagTemplate) return;
 
-  const tagsWrapper = tagTemplate.parentElement;
-  if (!tagsWrapper) return;
+  const tagsListTemplate = tagTemplate.parentElement;
+  if (!tagsListTemplate) return;
+
+  const tagsListsWrapper = tagsListTemplate.parentElement;
+  if (!tagsListsWrapper) return;
 
   tagTemplate.remove();
+  tagsListTemplate.remove();
 
-  const tags = new Map<string, HTMLElement>();
+  const renderedTagLists: Array<{
+    element: HTMLElement;
+    tags: Map<string, { element: HTMLElement; cleanup: () => void }>;
+  }> = [];
 
-  // list.filters.subscribe((filters, changedKey) => {
-  //   const handleTag = (filterKey: string) => {
-  //     const filterData = filters[filterKey];
+  const watcherCleanup = watch(list.filters, (filters: Filters) => {
+    filters.groups.forEach((group, groupIndex) => {
+      // Get the tag list, if existing
+      let tagList = renderedTagLists[groupIndex];
 
-  //     let tagElement = tags.get(filterKey);
+      const tagListIsRendered = !!tagList;
 
-  //     const shouldRemove =
-  //       filterData.value === null ||
-  //       filterData.value === '' ||
-  //       (Array.isArray(filterData.value) && !filterData.value.length);
+      if (!tagList) {
+        tagList = { element: cloneNode(tagsListTemplate), tags: new Map() };
+        renderedTagLists[groupIndex] = tagList;
+      }
 
-  //     if (shouldRemove) {
-  //       tagElement?.remove();
-  //       tags.delete(filterKey);
-  //       return;
-  //     }
+      // Render the tags
+      for (const condition of group.conditions) {
+        // Get the tag, if existing
+        const tagKey = `${condition.field}_${condition.op}`;
 
-  //     const isRendered = !!tagElement;
+        let tag = tagList.tags.get(tagKey);
 
-  //     if (!tagElement) {
-  //       tagElement = cloneNode(tagTemplate);
-  //     }
+        const tagIsRendered = !!tag;
 
-  //     updateTag(tagElement, filterData);
+        // Remove the tag if the value is empty
+        const hasValue = condition.value && (Array.isArray(condition.value) ? condition.value.length : true);
+        if (!hasValue) {
+          tag?.cleanup();
+          continue;
+        }
 
-  //     if (!isRendered) {
-  //       tagsWrapper.append(tagElement);
-  //     }
+        if (!tag) {
+          // TODO: rethink the tag cleanup because it should also remove the filter value!!!!!!
+          const element = cloneNode(tagTemplate);
+          const removeElement = queryElement('tag-remove', { scope: element });
+          const removeCleanup = addListener(removeElement, 'click', () => {
+            condition.value = Array.isArray(condition.value) ? [] : '';
+          });
 
-  //     tags.set(filterKey, tagElement);
-  //   };
+          tag = {
+            element,
+            cleanup: () => {
+              removeCleanup();
+              tag?.element.remove();
+              tagList.tags.delete(tagKey);
+            },
+          };
 
-  //   // If a specific filter changed, only handle that one
-  //   if (changedKey) {
-  //     handleTag(changedKey);
-  //   }
+          tagList.tags.set(tagKey, tag);
+        }
 
-  //   // Otherwise, handle all filters
-  //   else {
-  //     for (const filterKey in filters) {
-  //       handleTag(filterKey);
-  //     }
-  //   }
-  // });
+        const fieldElement = queryElement('tag-field', { scope: tag.element });
+        const operatorElement = queryElement('tag-operator', { scope: tag.element });
+        const valueElement = queryElement('tag-value', { scope: tag.element });
+        const operatorOverwriteElements = new Map(
+          Object.values(SETTINGS.operator.values)
+            .map((operator) => {
+              const operatorOverwriteElement = queryElement(`tag-operator-${operator}`, { scope: tag.element });
+              if (!operatorOverwriteElement) return;
+
+              return [operator, operatorOverwriteElement] as const;
+            })
+            .filter(isNotEmpty)
+        );
+
+        if (fieldElement) {
+          fieldElement.textContent = condition.field;
+        }
+
+        if (valueElement) {
+          if (!condition.value) {
+            valueElement.remove();
+          } else {
+            const value = Array.isArray(condition.value)
+              ? condition.value.join(condition.filterMatch === 'or' ? ' | ' : ' & ')
+              : condition.value;
+
+            valueElement.textContent = value;
+          }
+        }
+
+        const operator = condition.op || DEFAULT_FILTER_OPERATOR;
+        const operatorOverwriteElement = operatorOverwriteElements.get(operator);
+
+        if (operatorElement || operatorOverwriteElement) {
+          // Overwrite exists
+          if (operatorOverwriteElement) {
+            operatorElement?.remove();
+            operatorOverwriteElements.delete(operator);
+          }
+
+          // Fallback
+          else if (operatorElement) {
+            const operatorSymbol = OPERATOR_SYMBOLS[operator];
+            operatorElement.textContent = operatorSymbol;
+          }
+
+          // Remove all unused overwrites
+          for (const [, element] of operatorOverwriteElements) {
+            element.remove();
+          }
+        }
+
+        if (!tagIsRendered) {
+          tagList.element.appendChild(tag.element);
+        }
+      }
+
+      if (!tagListIsRendered) {
+        tagsListsWrapper.appendChild(tagList.element);
+      }
+    });
+  });
+
+  return () => {
+    watcherCleanup();
+
+    for (const { tags } of renderedTagLists) {
+      for (const [, tag] of tags) {
+        tag.cleanup();
+      }
+    }
+  };
 };
-
-// const updateTag = (tagElement: HTMLElement, filterData: FilterData) => {
-//   const tagValue = queryElement('tag-value', { scope: tagElement });
-//   const tagField = queryElement('tag-field', { scope: tagElement });
-//   const tagOperator = queryElement('tag-operator', { scope: tagElement });
-
-//   if (tagValue) tagValue.innerHTML = String(filterData.value);
-//   if (tagField) tagField.innerHTML = filterData.fieldKeys?.join(', ') || '';
-//   if (tagOperator) tagOperator.innerHTML = filterData.op;
-// };
-
-// export const handleTags = (filters: FiltersData, template: HTMLElement, wrapper: HTMLElement) => {
-//   const activeFilters = queryAllElements('tag');
-
-//   activeFilters.forEach((tag) => {
-//     const value = queryElement('tag-value', { scope: tag })?.textContent;
-//     const key = queryElement('tag-field', { scope: tag })?.textContent;
-
-//     if (key && value) {
-//       const filterValue = filters[key].value;
-
-//       if (Array.isArray(filterValue) && !filterValue.includes(value)) {
-//         tag.remove();
-//       }
-
-//       if (!Array.isArray(filterValue) && filterValue !== value) {
-//         tag.remove();
-//       }
-//     }
-//   });
-
-//   for (const filterKey in filters) {
-//     const filterValues = (
-//       Array.isArray(filters[filterKey].value) ? filters[filterKey].value : [filters[filterKey].value]
-//     ) as string[];
-
-//     filterValues?.forEach((filterValue) => {
-//       const stringValue = String(filterValue || '');
-
-//       const existingTag = activeFilters.find((tag) => {
-//         const tagValue = queryElement('tag-value', { scope: tag })?.textContent;
-//         const tagKey = queryElement('tag-field', { scope: tag })?.textContent;
-//         return tagKey === filterKey && tagValue === stringValue;
-//       });
-
-//       if (!existingTag && stringValue.length > 0) {
-//         const tag = cloneNode(template);
-//         const tagText = queryElement('tag-value', { scope: tag });
-//         const tagField = queryElement('tag-field', { scope: tag });
-//         const tagOperator = queryElement('tag-operator', { scope: tag });
-//         if (tagText) tagText.innerHTML = stringValue;
-//         if (tagField) tagField.innerHTML = filterKey;
-//         if (tagOperator) tagOperator.innerHTML = ':';
-//         const removeButton = queryElement('tag-remove', { scope: tag });
-//         if (removeButton) {
-//           removeButton.addEventListener('click', () => {
-//             const valueSelector = getSettingSelector('value').replace(/[\[\]]/g, '');
-//             const keySelector = getSettingSelector('field').replace(/[\[\]]/g, '');
-//             const multipleSelector = `input[${valueSelector}="${stringValue}"][${keySelector}="${filterKey}"]`;
-//             const multipleTypeToClear = document.querySelector<HTMLInputElement>(multipleSelector);
-
-//             if (multipleTypeToClear) {
-//               clearFormField(multipleTypeToClear);
-//             } else {
-//               const singleSelector = `input[${keySelector}="${filterKey}"]`;
-//               const singleTypeToClear = document.querySelector<HTMLInputElement>(singleSelector);
-//               if (singleTypeToClear) clearFormField(singleTypeToClear);
-//             }
-//             tag.remove();
-//           });
-//         }
-//         wrapper.appendChild(tag);
-//       }
-//     });
-//   }
-// };

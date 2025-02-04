@@ -40,7 +40,7 @@ export type FilterMatch = 'and' | 'or';
 // };
 
 export type FiltersCondition = {
-  field?: string;
+  field: string;
   op?: FilterOperator;
   value?: string | string[];
   filterMatch: FilterMatch;

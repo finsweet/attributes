@@ -39,11 +39,11 @@ export const initListFiltering = (list: List, form: HTMLFormElement) => {
 
   const isAdvanced = !!queryElement('condition-group', { scope: form });
 
-  // TODO - Init tags + cleanup
-  initTags(list);
-
   // Init filters
   const filteringCleanup = isAdvanced ? initAdvancedFilters(list, form) : initSimpleFilters(list, form);
+
+  // TODO - Init tags + cleanup
+  initTags(list);
 
   // Trigger the hook when the filters change
   let queued = false;

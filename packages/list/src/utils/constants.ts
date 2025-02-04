@@ -128,8 +128,20 @@ export const ELEMENTS = [
 
   /**
    * Defines the element inside each tag.
+   * Tag operators can be overwritten by the `tag-operator-OPERATOR` attribute.
    */
   'tag-operator',
+  'tag-operator-equal',
+  'tag-operator-not-equal',
+  'tag-operator-contains',
+  'tag-operator-not-contains',
+  'tag-operator-greater',
+  'tag-operator-greater-equal',
+  'tag-operator-less',
+  'tag-operator-less-equal',
+  'tag-operator-empty',
+  'tag-operator-not-empty',
+  'tag-operator-fuzzy',
 
   /**
    * Defines the element inside each Tag that should remove it.
@@ -411,6 +423,8 @@ export const DEFAULT_PAGE_SIBLINGS = 1;
 export const DEFAULT_PAGE_BOUNDARY = 1;
 
 export const DEFAULT_FUZZY_RATIO = 0.2;
+
+export const DEFAULT_FILTER_OPERATOR = 'contains';
 
 export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {
   main: 0,
