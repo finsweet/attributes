@@ -35,5 +35,6 @@
     "patchedDependencies": {
       "body-scroll-lock@4.0.0-beta.0": "patches/body-scroll-lock@4.0.0-beta.0.patch"
     }
-  }
+  },
+  "packageManager": "pnpm@10.2.0"
 }
