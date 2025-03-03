@@ -15,7 +15,7 @@ import { initTags } from './tags';
  */
 export const initListFiltering = (list: List, form: HTMLFormElement) => {
   // Init hook
-  const hookCleanup = list.addHook('filter', (items) => filterItems(list.filters, items, list.fuzzySearch));
+  const hookCleanup = list.addHook('filter', (items) => filterItems(list.filters, items));
 
   // Handle elements
   const elementsCleanup = effect(() => {

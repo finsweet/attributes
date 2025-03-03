@@ -31,6 +31,8 @@
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*",
     "@floating-ui/dom": "^1.6.5",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.18.2",
     "just-debounce": "^1.1.0"
   }
 }

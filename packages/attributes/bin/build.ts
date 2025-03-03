@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { ATTRIBUTES } from '@finsweet/attributes-utils';
 import * as esbuild from 'esbuild';
+import inlineWorkerPlugin from 'esbuild-plugin-inline-worker';
 import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -32,6 +33,7 @@ const buildOptions: esbuild.BuildOptions = {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
     SERVE_PORT: JSON.stringify(SERVE_PORT),
   },
+  plugins: [inlineWorkerPlugin()],
 };
 
 // Create contexts

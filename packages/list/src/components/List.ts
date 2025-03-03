@@ -17,7 +17,6 @@ import { animations } from '@finsweet/attributes-utils';
 import { computed, effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 import MiniSearch from 'minisearch';
 
-import { createFuzzySearch } from '../filter/fuzzy';
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
@@ -194,7 +193,10 @@ export class List {
   /**
    * Defines the active filters.
    */
-  public readonly filters = reactive<Filters>({ groups: [{ conditions: [] }] });
+  public readonly filters = reactive<Filters>({
+    groups: [{ conditions: [], conditionsMatch: 'and' }],
+    groupsMatch: 'and',
+  });
 
   /**
    * Defines if the pagination query param should be added to the URL when switching pages.
@@ -285,8 +287,6 @@ export class List {
 
       this.items.value = items;
       this.renderedItems = new Set(items);
-      this.fuzzySearch ||= createFuzzySearch(items);
-      this.fuzzySearch.addAll(items);
     }
 
     // Extract pagination data
@@ -572,9 +572,6 @@ export class List {
     } else {
       items.value = [...newItems, ...items.value];
     }
-
-    this.fuzzySearch ||= createFuzzySearch(newItems);
-    this.fuzzySearch.addAll(newItems);
   }
 
   /**

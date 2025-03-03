@@ -320,9 +320,9 @@ const initFiltersResults = (list: List, form: HTMLFormElement) => {
         condition.value = value;
       }
 
-      const result = filterItems(filtersClone, items);
-
-      resultsCountElement.textContent = `${result.length}`;
+      filterItems(filtersClone, items).then((filteredItems) => {
+        resultsCountElement.textContent = `${filteredItems.length}`;
+      });
     }, 0);
 
     watch([list.filters, list.items], handler, { deep: true, immediate: true });
