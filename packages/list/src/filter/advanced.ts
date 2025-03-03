@@ -45,7 +45,7 @@ export const initAdvancedFilters = (list: List, form: HTMLFormElement) => {
     });
 
     const inputCleanup = addListener(conditionGroupMatch, 'input', () => {
-      list.filters.match = conditionGroupMatch.value as FilterMatch;
+      list.filters.groupsMatch = conditionGroupMatch.value as FilterMatch;
     });
 
     cleanups.add(renderCleanup);
@@ -145,9 +145,9 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
     });
 
     const inputCleanup = addListener(conditionMatch, 'input', () => {
-      const match = conditionMatch.value as FilterMatch;
+      const conditionsMatch = conditionMatch.value as FilterMatch;
 
-      dset(list.filters, conditionGroupPath.value, { match, conditions: [] });
+      dset(list.filters, conditionGroupPath.value, { conditionsMatch, conditions: [] });
     });
 
     cleanups.add(renderCleanup);
@@ -381,12 +381,12 @@ const getConditionValue = (conditionValue?: FormField | null) => {
  */
 export const getAdvancedFilters = (form: HTMLFormElement) => {
   const conditionGroupMatch = queryElement<HTMLSelectElement>('condition-group-match', { scope: form });
-  const match = conditionGroupMatch?.value as FilterMatch | undefined;
+  const groupsMatch = conditionGroupMatch?.value as FilterMatch | undefined;
 
   const conditionGroups = queryAllElements('condition-group', { scope: form });
   const groups = conditionGroups.map((conditionGroup) => {
     const conditionMatch = queryElement<HTMLSelectElement>('condition-match', { scope: conditionGroup });
-    const match = conditionMatch?.value as FilterMatch | undefined;
+    const conditionsMatch = conditionMatch?.value as FilterMatch | undefined;
 
     const conditions = queryAllElements('condition', { scope: conditionGroup }).map((condition) => {
       const conditionField = queryElement<HTMLSelectElement>('condition-field', { scope: condition });
@@ -401,8 +401,8 @@ export const getAdvancedFilters = (form: HTMLFormElement) => {
       return { field, op, value };
     });
 
-    return { match, conditions };
+    return { conditionsMatch, conditions };
   });
 
-  return { match, groups };
+  return { groupsMatch, groups };
 };
