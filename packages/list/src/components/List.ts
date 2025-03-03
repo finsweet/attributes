@@ -15,7 +15,6 @@ import {
 } from '@finsweet/attributes-utils';
 import { animations } from '@finsweet/attributes-utils';
 import { computed, effect, reactive, type Ref, ref, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
-import MiniSearch from 'minisearch';
 
 import type { Filters } from '../filter/types';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
@@ -79,8 +78,6 @@ export class List {
       result: shallowRef([]),
     },
   };
-
-  public fuzzySearch?: MiniSearch;
 
   /**
    * A set holding all rendered {@link ListItem} instances.
