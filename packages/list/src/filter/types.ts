@@ -30,5 +30,10 @@ export type Filters = {
 
 export type PickedListItem = Pick<ListItem, 'id' | 'fields'>;
 
-export type FilterRequestMessage = { id: number; filters: Filters; items: PickedListItem[] };
-export type FilterResponseMessage = { id: number; filteredItems: PickedListItem[] };
+export type FilterTaskData = { filters: Filters; items: PickedListItem[] };
+export type FilterTaskResult = PickedListItem[];
+export type FilterTask = {
+  data: FilterTaskData;
+  resolve: (result: FilterTaskResult) => void;
+  reject: (error: unknown) => void;
+};

@@ -10,15 +10,15 @@ import {
 import type { SearchResult } from 'minisearch';
 import MiniSearch from 'minisearch';
 
-import type { ListItem, ListItemField } from '../components';
-import type { FilterRequestMessage, FiltersCondition, FiltersGroup, PickedListItem } from './types';
+import type { ListItemField } from '../components';
+import type { FiltersCondition, FiltersGroup, FilterTaskData, PickedListItem } from './types';
 
-const miniSearchCache = new Map<string, MiniSearch<PickedListItem>>();
+self.onmessage = (e: MessageEvent<FilterTaskData>) => {
+  let miniSearch: MiniSearch<PickedListItem> | undefined;
 
-self.onmessage = (e: MessageEvent<FilterRequestMessage>) => {
-  const fuzzySearchCache = new Map<string, SearchResult[]>();
+  const miniSearchCache = new Map<string, SearchResult[]>();
 
-  const { id, filters, items } = e.data;
+  const { filters, items } = e.data;
 
   const filteredItems = items.filter((item) => {
     const groupsPredicate = (groupData: FiltersGroup) => {
@@ -45,12 +45,12 @@ self.onmessage = (e: MessageEvent<FilterRequestMessage>) => {
               // TODO: check if fuzzy search still works as expected
               if (!isString(rawFilterValue)) return false;
 
-              const miniSearch = createMiniSearch(items);
+              miniSearch ||= createMiniSearch(items);
 
               const search =
-                fuzzySearchCache.get(field) || miniSearch.search(rawFilterValue, { fuzzy: filterData.fuzzy });
+                miniSearchCache.get(field) || miniSearch.search(rawFilterValue, { fuzzy: filterData.fuzzy });
 
-              fuzzySearchCache.set(field, search);
+              miniSearchCache.set(field, search);
 
               return search.some((result) => result.id === item.id);
             }
@@ -685,7 +685,7 @@ self.onmessage = (e: MessageEvent<FilterRequestMessage>) => {
     return filters.groupsMatch === 'or' ? filters.groups.some(groupsPredicate) : filters.groups.every(groupsPredicate);
   });
 
-  self.postMessage({ id, filteredItems });
+  self.postMessage(filteredItems);
 };
 
 /**
@@ -776,36 +776,11 @@ const numericCompare = (
 };
 
 /**
- * Generates a hash for the provided items.
- * @param items
- * @returns
- */
-const generateItemsHash = (items: Pick<ListItem, 'id' | 'fields'>[]) => {
-  const sortedIds = items.map((item) => item.id).sort();
-  const str = sortedIds.join('|');
-
-  // Simple FNV-1a hash
-  let hash = 2166136261;
-
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-  }
-
-  return `${items.length}_${(hash >>> 0).toString(16)}`;
-};
-
-/**
  * MiniSearch factory method.
  * @param items
  * @returns A new MiniSearch instance.
  */
 const createMiniSearch = (items: PickedListItem[]) => {
-  const hash = generateItemsHash(items);
-
-  const cachedMiniSearch = miniSearchCache.get(hash);
-  if (cachedMiniSearch) return cachedMiniSearch;
-
   const fields = [
     ...items.reduce<Set<string>>((acc, item) => {
       Object.keys(item.fields).forEach((key) => acc.add(key));
@@ -828,7 +803,6 @@ const createMiniSearch = (items: PickedListItem[]) => {
   });
 
   miniSearch.addAll(items);
-  miniSearchCache.set(hash, miniSearch);
 
   return miniSearch;
 };

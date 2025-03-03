@@ -1,15 +1,89 @@
 import { toRaw } from '@vue/reactivity';
 
 import type { ListItem } from '../components/ListItem';
-// @ts-expect-error - Worker is not recognized by TypeScript
+// @ts-expect-error - FilterWorker is not recognized by TypeScript
 import FilterWorker from './filter.worker.js';
-import type { FilterResponseMessage, Filters } from './types';
+import type { Filters, FilterTask, FilterTaskData, FilterTaskResult } from './types';
 
-const filterWorker = new FilterWorker() as Worker;
+const WORKER_POOL_SIZE = navigator.hardwareConcurrency || 4;
 
-let messageCount = 0;
+const workers: Worker[] = new Array(WORKER_POOL_SIZE).fill(null).map(() => new FilterWorker());
+const freeWorkers = workers.slice();
+const taskQueue: FilterTask[] = [];
 
-export const filterItems = (filters: Filters, items: ListItem[]) => {
+/**
+ * Processes a filter task using a worker.
+ * Once finished, it will process the next task in the queue.
+ * @param worker
+ * @param task
+ */
+const processFilterTask = (worker: FilterWorker, task: FilterTask) => {
+  const controller = new AbortController();
+  const { signal } = controller;
+
+  const conclude = () => {
+    controller.abort();
+
+    const nextTask = taskQueue.shift();
+    if (nextTask) {
+      processFilterTask(worker, nextTask);
+    } else {
+      freeWorkers.push(worker);
+    }
+  };
+
+  worker.addEventListener(
+    'message',
+    (event: MessageEvent<FilterTaskResult>) => {
+      task.resolve(event.data);
+      conclude();
+    },
+    { signal, once: true }
+  );
+
+  worker.addEventListener(
+    'error',
+    (error: string | Event) => {
+      task.reject(error);
+      conclude();
+    },
+    { signal, once: true }
+  );
+
+  worker.postMessage(task.data);
+};
+
+/**
+ * Queues a filter task to be processed.
+ * @param task
+ */
+const queueFilterTask = (task: FilterTask) => {
+  const worker = freeWorkers.pop();
+  if (worker) {
+    processFilterTask(worker, task);
+  } else {
+    taskQueue.push(task);
+  }
+};
+
+/**
+ * Runs a filter task.
+ * @param data
+ * @returns A promise that resolves with the filtered items.
+ */
+const runFilterTask = (data: FilterTaskData) => {
+  return new Promise<FilterTaskResult>((resolve, reject) => {
+    queueFilterTask({ data, resolve, reject });
+  });
+};
+
+/**
+ * Filters the provided items based on the provided filters.
+ * @param filters
+ * @param items
+ * @returns The filtered items.
+ */
+export const filterItems = async (filters: Filters, items: ListItem[]) => {
   const itemsMap = new Map<string, ListItem>();
   const itemsData = items.map((item) => {
     itemsMap.set(item.id, item);
@@ -18,30 +92,9 @@ export const filterItems = (filters: Filters, items: ListItem[]) => {
     return { id, fields };
   });
 
-  messageCount += 1;
+  const filteredItems = await runFilterTask({ items: itemsData, filters: toRaw(filters) });
 
-  const id = messageCount;
-
-  const controller = new AbortController();
-
-  return new Promise<ListItem[]>((resolve) => {
-    filterWorker.addEventListener(
-      'message',
-      (e: MessageEvent<FilterResponseMessage>) => {
-        if (e.data.id !== id) return;
-
-        controller.abort();
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The map is guaranteed to have the item
-        const result = e.data.filteredItems.map(({ id }) => itemsMap.get(id)!);
-
-        resolve(result);
-      },
-      {
-        signal: controller.signal,
-      }
-    );
-
-    filterWorker.postMessage({ id, items: itemsData, filters: toRaw(filters) });
-  });
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const result = filteredItems.map(({ id }) => itemsMap.get(id)!);
+  return result;
 };
