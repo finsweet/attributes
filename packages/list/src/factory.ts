@@ -10,9 +10,10 @@ import { initListSliders } from './slider';
 import { initListSorting } from './sort';
 import { initListTabs } from './tabs';
 import { getCMSElementSelector, getCollectionElements } from './utils/dom';
-import { getAttribute, queryAllElements, queryElement } from './utils/selectors';
+import { getAttribute, getElementSelector, queryAllElements, queryElement } from './utils/selectors';
 import { listInstancesStore } from './utils/store';
 import { initPrevNext } from './prevnext';
+import { initStaticItems } from './static';
 
 /**
  * Creates a new `CMSList` instance, making sure there are no already existing instances on the page.
@@ -49,73 +50,81 @@ export const initList = (list: List) => {
 
   const items = list.items.value;
 
+  const cleanups = new Set<(() => void) | undefined>();
+
+  // Filter
   const filtersForm = queryElement('filters', { instance });
-  const sortTriggers = queryAllElements('sort-trigger', { instance });
-  const load = getAttribute(list.listOrWrapper, 'load', { filterInvalid: true });
-  const combine = getAttribute(list.listOrWrapper, 'combine');
-  const sliders = queryAllElements('slider', { instance });
-  const tabs = queryAllElements('tabs', { instance });
-  const selects = queryAllElements('select', { instance });
-  const previousItemTarget = queryElement('previous-item', { instance });
-  const nextItemTarget = queryElement('next-item', { instance });
-  const nest = items.length ? !!queryElement('nest-target', { scope: items[0].element }) : false;
-
-  const cleanups = new Set<() => void>();
-
   if (filtersForm instanceof HTMLFormElement) {
     const cleanup = initListFiltering(list, filtersForm);
-    if (cleanup) {
-      cleanups.add(cleanup);
-    }
+    cleanups.add(cleanup);
   }
 
+  // Sort
+  const sortTriggers = queryAllElements('sort-trigger', { instance });
   if (sortTriggers.length) {
     const cleanup = initListSorting(list, sortTriggers);
-    if (cleanup) {
-      cleanups.add(cleanup);
-    }
+    cleanups.add(cleanup);
   }
 
+  // Load
+  const load = getAttribute(list.listOrWrapper, 'load', { filterInvalid: true });
   if (load) {
     const cleanup = initListLoading(list, load);
-    if (cleanup) {
-      cleanups.add(cleanup);
-    }
+    cleanups.add(cleanup);
   }
 
+  // Combine
+  const combine = getAttribute(list.listOrWrapper, 'combine');
   if (combine) {
     const cleanup = initListCombine(list, combine);
-    if (cleanup) {
-      cleanups.add(cleanup);
-    }
+    cleanups.add(cleanup);
   }
 
+  // Nest
+  const nest = items.length ? !!queryElement('nest-target', { scope: items[0].element }) : false;
   if (nest) {
     const cleanup = initListNest(list);
-    if (cleanup) {
-      cleanups.add(cleanup);
-    }
+    cleanups.add(cleanup);
   }
 
+  // Static Items
+  const listSelector = getElementSelector('list', { instance });
+  const itemSelector = getElementSelector('item', { instance });
+  const staticItemSelector = `${itemSelector}:not(${listSelector} ${itemSelector})`;
+  const staticItems = document.querySelectorAll<HTMLElement>(staticItemSelector);
+  if (staticItems.length) {
+    const cleanup = initStaticItems(list, [...staticItems]);
+    cleanups.add(cleanup);
+  }
+
+  // Sliders
+  const sliders = queryAllElements('slider', { instance });
   if (sliders.length) {
     initListSliders(list, sliders);
   }
 
+  // Tabs
+  const tabs = queryAllElements('tabs', { instance });
   if (tabs.length) {
     initListTabs(list, tabs);
   }
 
+  // Selects
+  const selects = queryAllElements('select', { instance });
   if (selects.length) {
     initListSelects(list, selects);
   }
 
+  // Prev/Next
+  const previousItemTarget = queryElement('previous-item', { instance });
+  const nextItemTarget = queryElement('next-item', { instance });
   if (previousItemTarget || nextItemTarget) {
     initPrevNext(list, previousItemTarget, nextItemTarget);
   }
 
   return () => {
     for (const cleanup of cleanups) {
-      cleanup();
+      cleanup?.();
     }
 
     cleanups.clear();

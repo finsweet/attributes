@@ -485,6 +485,21 @@ export const SETTINGS = {
    * A specific locale can be forced using IETF BCP 47 language tags like "en-US".
    */
   formatdisplay: { key: 'formatdisplay', values: ['true'] },
+
+  /**
+   * Defines the position for a static list item.
+   */
+  position: { key: 'position', isNumeric: true, defaultValue: '1' },
+
+  /**
+   * If added to a static list item, the item will be repeated every X items.
+   */
+  repeat: { key: 'repeat', isNumeric: true },
+
+  /**
+   * If defined on a static item, the item will be filtered, sorted, etc…
+   */
+  interactive: { key: 'interactive', values: ['true'] },
 } as const satisfies AttributeSettings;
 
 export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {
