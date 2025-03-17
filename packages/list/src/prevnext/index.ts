@@ -1,7 +1,8 @@
+import { cloneNode } from '@finsweet/attributes-utils';
 import { watch } from '@vue/reactivity';
+
 import type { List, ListItem } from '../components';
 import { queryElement } from '../utils/selectors';
-import { cloneNode } from '@finsweet/attributes-utils';
 
 /**
  * Initializes the previous and next items for a collection template page.

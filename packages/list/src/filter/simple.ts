@@ -459,7 +459,7 @@ const handleClearButtons = (list: List, debounces: Map<string, number>) => {
 const setActiveClass = (formField: FormField, activeClass: string) => {
   switch (formField.type) {
     case 'checkbox': {
-      const checked = (formField as HTMLInputElement).checked;
+      const { checked } = formField as HTMLInputElement;
       const checkboxParent = formField.closest(`.${FORM_CSS_CLASSES.checkboxField}`);
       const target = checkboxParent || formField;
 

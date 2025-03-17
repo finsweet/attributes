@@ -5,15 +5,15 @@ import { List } from './components/List';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
 import { initListNest } from './nest';
+import { initPrevNext } from './prevnext';
 import { initListSelects } from './select';
 import { initListSliders } from './slider';
 import { initListSorting } from './sort';
+import { initStaticItems } from './static';
 import { initListTabs } from './tabs';
 import { getCMSElementSelector, getCollectionElements } from './utils/dom';
 import { getAttribute, getElementSelector, queryAllElements, queryElement } from './utils/selectors';
 import { listInstancesStore } from './utils/store';
-import { initPrevNext } from './prevnext';
-import { initStaticItems } from './static';
 
 /**
  * Creates a new `CMSList` instance, making sure there are no already existing instances on the page.
