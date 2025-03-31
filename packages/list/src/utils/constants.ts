@@ -151,7 +151,6 @@ export const ELEMENTS = [
   'tag-operator-less-equal',
   'tag-operator-empty',
   'tag-operator-not-empty',
-  'tag-operator-fuzzy',
 
   /**
    * Defines the element inside each Tag that should remove it.
@@ -484,7 +483,6 @@ export const SETTINGS = {
       'less-equal',
       'empty',
       'not-empty',
-      'fuzzy',
     ],
   },
 

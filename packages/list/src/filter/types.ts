@@ -16,7 +16,7 @@ export type FiltersCondition = {
   value: string | string[];
   filterMatch: FilterMatch;
   fieldMatch: FilterMatch;
-  fuzzy?: number;
+  fuzzyThreshold?: number;
   interacted?: boolean;
 };
 

@@ -29,6 +29,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const customTagField = getAttribute(formField, 'tagfield');
   const filterMatch = getAttribute(formField, 'filtermatch', { filterInvalid: true });
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
+  const fuzzyThreshold = getAttribute(formField, 'fuzzy');
 
   const baseData = {
     fieldKey,
@@ -36,6 +37,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     op,
     filterMatch,
     fieldMatch,
+    fuzzyThreshold,
     interacted,
     customTagField,
   } satisfies Partial<FiltersCondition>;
@@ -113,12 +115,9 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     default: {
       const { value } = formField;
 
-      const fuzzy = getAttribute(formField, 'fuzzy');
-
       return {
         ...baseData,
         value,
-        fuzzy,
       };
     }
   }

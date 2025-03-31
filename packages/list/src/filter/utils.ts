@@ -6,6 +6,7 @@ import {
   normalizeDate,
   normalizeNumber,
 } from '@finsweet/attributes-utils';
+import * as fuzzysort from 'fuzzysort';
 
 import type { ListItemField, ListItemFieldValue } from '../components';
 
@@ -51,23 +52,37 @@ export const parseFilterValue = (
 };
 /**
  * Checks if two values are equal.
- * @param rawA
- * @param rawB
+ * @param fieldValue
+ * @param filterValue
+ * @param fuzzyThreshold
  */
-export const areEqual = (rawA: ListItemFieldValue, rawB: ListItemFieldValue) => {
+export const areEqual = (fieldValue: ListItemFieldValue, filterValue: ListItemFieldValue, fuzzyThreshold?: number) => {
   // Ensure that dates are compared as dates
-  if (typeof rawA !== typeof rawB) {
-    if (isDate(rawA)) {
-      rawB = normalizeDate(rawB) || rawB;
-    } else if (isDate(rawB)) {
-      rawA = normalizeDate(rawA) || rawA;
+  if (typeof fieldValue !== typeof filterValue) {
+    if (isDate(fieldValue)) {
+      filterValue = normalizeDate(filterValue) || filterValue;
+    } else if (isDate(filterValue)) {
+      fieldValue = normalizeDate(fieldValue) || fieldValue;
     }
   }
 
-  const a = isDate(rawA) ? rawA.getTime() : isString(rawA) ? rawA.toLowerCase() : rawA;
-  const b = isDate(rawB) ? rawB.getTime() : isString(rawB) ? rawB.toLowerCase() : rawB;
+  const normalizedFieldValue = isDate(fieldValue)
+    ? fieldValue.getTime()
+    : isString(fieldValue)
+    ? fieldValue.toLowerCase()
+    : fieldValue;
+  const normalizedFilterValue = isDate(filterValue)
+    ? filterValue.getTime()
+    : isString(filterValue)
+    ? filterValue.toLowerCase()
+    : filterValue;
 
-  return a === b;
+  if (fuzzyThreshold) {
+    const score = fuzzysort.single(normalizedFilterValue.toString(), normalizedFieldValue.toString())?.score;
+    return score && score >= fuzzyThreshold;
+  }
+
+  return normalizedFieldValue === normalizedFilterValue;
 };
 /**
  * Compares two numeric values.

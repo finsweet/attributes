@@ -4,7 +4,7 @@ import { watch } from '@vue/reactivity';
 import type { List } from '../components/List';
 import { SETTINGS } from '../utils/constants';
 import { getAttribute, getElementSelector, queryElement } from '../utils/selectors';
-import type { FilterOperator, Filters, FiltersCondition, FiltersGroup } from './types';
+import type { FilterOperator, Filters, FiltersCondition } from './types';
 import { parseFilterValue } from './utils';
 
 type TagData = {
@@ -30,7 +30,6 @@ const OPERATOR_SYMBOLS: Record<FilterOperator, string> = {
   'less-equal': '≤',
   greater: '>',
   'greater-equal': '≥',
-  fuzzy: '≈',
 };
 
 /**

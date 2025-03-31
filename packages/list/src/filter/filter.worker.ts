@@ -1,16 +1,10 @@
-import { extractCommaSeparatedValues, isString } from '@finsweet/attributes-utils';
-import type { SearchResult } from 'minisearch';
-import MiniSearch from 'minisearch';
+import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
 
 import type { ListItemFieldValue } from '../components';
-import type { FiltersCondition, FiltersGroup, FilterTaskData, FilterTaskItem } from './types';
+import type { FiltersCondition, FiltersGroup, FilterTaskData } from './types';
 import { areEqual, numericCompare, parseFilterValue } from './utils';
 
 self.onmessage = (e: MessageEvent<FilterTaskData>) => {
-  let miniSearch: MiniSearch<FilterTaskItem> | undefined;
-
-  const miniSearchCache = new Map<string, SearchResult[]>();
-
   const { filters, items } = e.data;
 
   const filteredItems = items.filter((item) => {
@@ -34,20 +28,6 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
               return Array.isArray(fieldValue) ? !!fieldValue.length : !!fieldValue;
             }
 
-            case 'fuzzy': {
-              // TODO: check if fuzzy search still works as expected
-              if (!isString(filterValue)) return false;
-
-              miniSearch ||= createMiniSearch(items);
-
-              const search =
-                miniSearchCache.get(fieldKey) || miniSearch.search(filterValue, { fuzzy: filterData.fuzzy });
-
-              miniSearchCache.set(fieldKey, search);
-
-              return search.some((result) => result.id === item.id);
-            }
-
             case 'equal': {
               const compare = ({
                 fieldValue,
@@ -58,7 +38,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                 parsedFilterValue: ListItemFieldValue;
                 filterValue: string;
               }) => {
-                const match = areEqual(fieldValue, parsedFilterValue);
+                const match = areEqual(fieldValue, parsedFilterValue, filterData.fuzzyThreshold);
                 if (match) {
                   item.matchedFields[fieldKey] ||= [];
                   item.matchedFields[fieldKey].push({ fieldValue, filterValue });
@@ -182,6 +162,14 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
             }
 
             case 'not-equal': {
+              const compare = ({
+                fieldValue,
+                parsedFilterValue,
+              }: {
+                fieldValue: ListItemFieldValue;
+                parsedFilterValue: ListItemFieldValue;
+              }) => areEqual(fieldValue, parsedFilterValue, filterData.fuzzyThreshold);
+
               // Both are arrays
               if (Array.isArray(filterValue) && Array.isArray(fieldValue)) {
                 if (!filterValue.length) return true;
@@ -196,7 +184,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                     const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                     if (parsedFilterValue === null) return false;
 
-                    return fieldValue.some((fieldValue) => areEqual(fieldValue, parsedFilterValue));
+                    return fieldValue.some((fieldValue) => compare({ fieldValue, parsedFilterValue }));
                   });
                 }
 
@@ -209,7 +197,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                     const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                     if (parsedFilterValue === null) return false;
 
-                    return fieldValue.some((fieldValue) => !areEqual(fieldValue, parsedFilterValue));
+                    return fieldValue.some((fieldValue) => !compare({ fieldValue, parsedFilterValue }));
                   });
                 }
 
@@ -222,7 +210,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                     const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                     if (parsedFilterValue === null) return false;
 
-                    return fieldValue.every((fieldValue) => !areEqual(fieldValue, parsedFilterValue));
+                    return fieldValue.every((fieldValue) => !compare({ fieldValue, parsedFilterValue }));
                   });
                 }
 
@@ -235,7 +223,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                     const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                     if (parsedFilterValue === null) return false;
 
-                    return fieldValue.some((fieldValue) => !areEqual(fieldValue, parsedFilterValue));
+                    return fieldValue.some((fieldValue) => !compare({ fieldValue, parsedFilterValue }));
                   });
                 }
               }
@@ -251,7 +239,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                     const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                     if (parsedFilterValue === null) return false;
 
-                    return !areEqual(fieldValue, parsedFilterValue);
+                    return !compare({ fieldValue, parsedFilterValue });
                   });
                 }
 
@@ -262,7 +250,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                     const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                     if (parsedFilterValue === null) return false;
 
-                    return !areEqual(fieldValue, parsedFilterValue);
+                    return !compare({ fieldValue, parsedFilterValue });
                   });
                 }
               }
@@ -277,13 +265,13 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                 // AND matching
                 if (filterData.fieldMatch === 'and') {
                   // All field values must be not equal to the single filter value
-                  return fieldValue.every((fieldValue) => !areEqual(fieldValue, parsedFilterValue));
+                  return fieldValue.every((fieldValue) => !compare({ fieldValue, parsedFilterValue }));
                 }
 
                 // OR matching
                 if (filterData.fieldMatch === 'or') {
                   // At least one field value must be not equal to the filter value
-                  return fieldValue.some((fieldValue) => !areEqual(fieldValue, parsedFilterValue));
+                  return fieldValue.some((fieldValue) => !compare({ fieldValue, parsedFilterValue }));
                 }
               }
 
@@ -292,7 +280,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                 const parsedFilterValue = parseFilterValue(filterValue, filterData.type, fieldData.type);
                 if (parsedFilterValue === null) return false;
 
-                return !areEqual(fieldValue, parsedFilterValue);
+                return !compare({ fieldValue, parsedFilterValue });
               }
             }
 
@@ -717,36 +705,4 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
   });
 
   self.postMessage(filteredItems);
-};
-
-/**
- * MiniSearch factory method.
- * @param items
- * @returns A new MiniSearch instance.
- */
-const createMiniSearch = (items: FilterTaskItem[]) => {
-  const fields = [
-    ...items.reduce<Set<string>>((acc, item) => {
-      Object.keys(item.fields).forEach((key) => acc.add(key));
-      return acc;
-    }, new Set()),
-  ];
-
-  const miniSearch = new MiniSearch({
-    fields,
-    storeFields: fields,
-    extractField: (item: FilterTaskItem, fieldKey) => {
-      if (fieldKey === 'id') return item.id;
-
-      const value = item.fields[fieldKey]?.value;
-
-      if (Array.isArray(value)) return value.join(' ');
-
-      return value.toString();
-    },
-  });
-
-  miniSearch.addAll(items);
-
-  return miniSearch;
 };
