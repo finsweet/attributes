@@ -78,8 +78,10 @@ export const areEqual = (fieldValue: ListItemFieldValue, filterValue: ListItemFi
     : filterValue;
 
   if (fuzzyThreshold) {
+    const normalizedFuzzyThreshold = fuzzyThreshold / 100;
+
     const score = fuzzysort.single(normalizedFilterValue.toString(), normalizedFieldValue.toString())?.score;
-    return score && score >= fuzzyThreshold;
+    return score && score >= normalizedFuzzyThreshold;
   }
 
   return normalizedFieldValue === normalizedFilterValue;
