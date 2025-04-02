@@ -112,6 +112,7 @@ export class List {
 
   /**
    * All the `Previous` buttons defined by the user or native Webflow CMS.
+   * TODO: the way we're assigning to this shallowRef property may not trigger reactivity
    */
   public readonly allPaginationPreviousElements = shallowRef<Set<PaginationButtonElement>>(new Set());
 
@@ -126,6 +127,7 @@ export class List {
 
   /**
    * The `Next` buttons defined by the user or native Webflow CMS.
+   * TODO: the way we're assigning to this shallowRef property may not trigger reactivity
    */
   public readonly allPaginationNextElements = shallowRef<Set<PaginationButtonElement>>(new Set());
 
@@ -470,14 +472,14 @@ export class List {
    */
   #initElements() {
     // items-count
-    const itemsCountCleanup = effect(() => {
+    const itemsCountRunner = effect(() => {
       if (this.itemsCountElement) {
         this.itemsCountElement.textContent = `${this.items.value.length}`;
       }
     });
 
     // initial
-    const initialElementCleanup = effect(() => {
+    const initialElementRunner = effect(() => {
       if (this.initialElement) {
         this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
         this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
@@ -485,8 +487,8 @@ export class List {
     });
 
     return () => {
-      itemsCountCleanup();
-      initialElementCleanup();
+      itemsCountRunner.effect.stop();
+      initialElementRunner.effect.stop();
     };
   }
 

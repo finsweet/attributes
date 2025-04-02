@@ -10,7 +10,7 @@ import { getAttribute } from '../utils/selectors';
  * @returns A cleanup function.
  */
 export const handleFilterElements = (list: List) => {
-  const elementsCleanup = effect(() => {
+  const elementsRunner = effect(() => {
     const filteredItems = list.hooks.filter.result.value;
     const hasItems = !!filteredItems.length;
 
@@ -30,7 +30,7 @@ export const handleFilterElements = (list: List) => {
     }
   });
 
-  return elementsCleanup;
+  return () => elementsRunner.effect.stop();
 };
 
 /**

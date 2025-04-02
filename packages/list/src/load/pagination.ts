@@ -138,8 +138,7 @@ const handlePageButtons = (
 
   let renderedButtons = new Map<HTMLElement, number | null>();
 
-  // TODO: cleanup
-  effect(() => {
+  const pageButtonsRunner = effect(() => {
     const totalSiblings = pageSiblings.value * 2 + 1;
     const totalBoundary = pageBoundary.value * 2;
 
@@ -234,7 +233,10 @@ const handlePageButtons = (
     list.currentPage.value = targetPage;
   });
 
-  return cleanupClicks;
+  return () => {
+    pageButtonsRunner.effect.stop();
+    cleanupClicks();
+  };
 };
 
 /**
@@ -274,12 +276,12 @@ const createPageButton = (
 const handlePaginationCount = ({ paginationCountElement, currentPage, totalPages }: List) => {
   if (!paginationCountElement) return;
 
-  const cleanup = effect(() => {
+  const runner = effect(() => {
     paginationCountElement.setAttribute('aria-label', `Page ${currentPage.value} of ${totalPages.value}`);
     paginationCountElement.textContent = `${currentPage.value} / ${totalPages.value}`;
   });
 
-  return cleanup;
+  return () => runner.effect.stop();
 };
 
 /**
@@ -290,11 +292,11 @@ const handlePaginationCount = ({ paginationCountElement, currentPage, totalPages
 const handlePaginationWrapper = (list: List) => {
   if (!list.paginationWrapperElement) return;
 
-  const cleanup = effect(() => {
+  const runner = effect(() => {
     list.paginationWrapperElement!.style.display = list.hooks.pagination.result.value.length > 0 ? '' : 'none';
   });
 
-  return cleanup;
+  return () => runner.effect.stop();
 };
 
 /**
@@ -313,7 +315,7 @@ const handlePaginationButtons = (list: List) => {
     element.setAttribute('tabindex', shouldDisplay ? '0' : '-1');
   };
 
-  const buttonsCleanup = effect(() => {
+  const buttonsRunner = effect(() => {
     list.allPaginationPreviousElements.value.forEach((element) => {
       const shouldDisplay = list.currentPage.value !== 1;
 
@@ -358,7 +360,7 @@ const handlePaginationButtons = (list: List) => {
   });
 
   return () => {
-    buttonsCleanup();
+    buttonsRunner.effect.stop();
     clicksCleanup();
   };
 };

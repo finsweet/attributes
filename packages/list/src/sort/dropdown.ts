@@ -126,7 +126,7 @@ const initDropdownOptions = (dropdownList: DropdownList, activeOption: Ref<Dropd
     }
 
     // Handle active state
-    const cleanup = effect(() => {
+    const runner = effect(() => {
       const isSelected = activeOption.value?.element === element;
 
       if (isSelected) {
@@ -138,7 +138,12 @@ const initDropdownOptions = (dropdownList: DropdownList, activeOption: Ref<Dropd
       }
     });
 
-    dropdownOptions.set(element, { element, field, direction, cleanup });
+    dropdownOptions.set(element, {
+      element,
+      field,
+      direction,
+      cleanup: () => runner.effect.stop(),
+    });
   }
 
   return dropdownOptions;
@@ -155,7 +160,7 @@ const initDropdownLabel = (dropdownToggle: DropdownToggle, activeOption: Ref<Dro
 
   const originalHTML = dropdownLabel.innerHTML;
 
-  const cleanup = effect(() => {
+  const runner = effect(() => {
     if (!activeOption.value) {
       dropdownLabel.innerHTML = originalHTML;
       return;
@@ -164,7 +169,7 @@ const initDropdownLabel = (dropdownToggle: DropdownToggle, activeOption: Ref<Dro
     dropdownLabel.innerHTML = activeOption.value.element.innerHTML;
   });
 
-  return cleanup;
+  return () => runner.effect.stop();
 };
 
 /**

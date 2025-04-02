@@ -20,7 +20,7 @@ export const initListCombine = (targetList: List, rawSourceInstances: string) =>
   if (!sourceLists.length) return;
 
   const cleanups = sourceLists.map((sourceList) => {
-    const cleanup = effect(() => {
+    const runner = effect(() => {
       if (!sourceList.items.value.length) return;
 
       const elements = sourceList.items.value.map((item) => targetList.createItem(item.element));
@@ -29,7 +29,7 @@ export const initListCombine = (targetList: List, rawSourceInstances: string) =>
       targetList.items.value = [...targetList.items.value, ...elements];
     });
 
-    return cleanup;
+    return () => runner.effect.stop();
   });
 
   return () => {

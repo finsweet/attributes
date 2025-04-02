@@ -43,7 +43,7 @@ export const initButtons = (buttons: HTMLElement[], list: List) => {
         return currentDirection.value === 'asc' ? ARIA_SORT_VALUES.ascending : ARIA_SORT_VALUES.descending;
       });
 
-      const ariaSortCleanup = effect(() => {
+      const ariaSortRunner = effect(() => {
         button.setAttribute(ARIA_SORT_KEY, ariaSort.value);
       });
 
@@ -54,7 +54,7 @@ export const initButtons = (buttons: HTMLElement[], list: List) => {
         return currentDirection.value === 'asc' ? ascClass : desClass;
       });
 
-      const cssClassCleanup = effect(() => {
+      const cssClassRunner = effect(() => {
         button.classList.remove(ascClass, desClass);
 
         if (cssClass.value) {
@@ -76,7 +76,7 @@ export const initButtons = (buttons: HTMLElement[], list: List) => {
         };
       });
 
-      return [ariaSortCleanup, cssClassCleanup, clickCleanup];
+      return [() => ariaSortRunner.effect.stop(), () => cssClassRunner.effect.stop(), clickCleanup];
     })
     .filter(isNotEmpty);
 

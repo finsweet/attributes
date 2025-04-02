@@ -44,7 +44,7 @@ export const initMoreMode = (list: List) => {
   });
 
   // Handle pagination next buttons display
-  effect(() => {
+  const paginationNextRunner = effect(() => {
     const allItemsDisplayed = list.itemsPerPage.value === list.items.value.length;
 
     list.allPaginationNextElements.value.forEach((element) => {
@@ -60,5 +60,6 @@ export const initMoreMode = (list: List) => {
   return () => {
     cleanupPaginationNextButtons();
     cleanupLoadRemaingWatcher?.();
+    paginationNextRunner.effect.stop();
   };
 };

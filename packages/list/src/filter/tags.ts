@@ -142,7 +142,7 @@ export const initTags = (list: List) => {
               tagGroupData.element.insertBefore(tagData.element, anchor);
             }
 
-            renderedTags++;
+            renderedTags += 1;
 
             return true;
           })
@@ -159,7 +159,7 @@ export const initTags = (list: List) => {
           tagsListsWrapper.insertBefore(tagGroupData.element, anchor);
         }
 
-        renderedGroups++;
+        renderedGroups += 1;
       });
     },
     { deep: true }

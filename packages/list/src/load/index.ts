@@ -17,7 +17,7 @@ type LoadMode = LoadModeValues[keyof LoadModeValues];
  */
 export const initListLoading = (list: List, mode: LoadMode) => {
   // Handle elements
-  const elementsCleanup = effect(() => {
+  const elementsRunner = effect(() => {
     const filteredItems = list.hooks.filter.result.value;
 
     if (list.visibleCountElement) {
@@ -54,6 +54,6 @@ export const initListLoading = (list: List, mode: LoadMode) => {
 
   return () => {
     loadModeCleanup?.();
-    elementsCleanup();
+    elementsRunner.effect.stop();
   };
 };

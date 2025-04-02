@@ -176,11 +176,13 @@ export const ELEMENTS = [
    * Defines a matching value for the conditions groups.
    */
   'condition-group-match',
+  'condition-groups-match',
 
   /**
    * Defines an element that when clicked will add a new condition group.
    */
   'condition-group-add',
+  'condition-groups-add',
 
   /**
    * Defines an element that when clicked will remove a condition group.

@@ -19,7 +19,7 @@ import { listInstancesStore } from '../utils/store';
 export const initListNest = (list: List) => {
   const handledItems = new Set<ListItem>();
 
-  const cleanup = effect(() => {
+  const runner = effect(() => {
     for (const item of list.items.value) {
       if (handledItems.has(item)) continue;
 
@@ -34,7 +34,7 @@ export const initListNest = (list: List) => {
   });
 
   return () => {
-    cleanup();
+    runner.effect.stop();
     handledItems.clear();
   };
 };
