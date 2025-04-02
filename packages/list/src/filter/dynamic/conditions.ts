@@ -7,15 +7,15 @@ import {
   isHTMLSelectElement,
   Renderer,
 } from '@finsweet/attributes-utils';
-import { computed, type ComputedRef, effect, watch } from '@vue/reactivity';
+import { computed, type ComputedRef, effect } from '@vue/reactivity';
 import { dset } from 'dset';
 
 import type { List } from '../../components';
+import { SETTINGS } from '../../utils/constants';
 import { getAttribute, queryElement } from '../../utils/selectors';
 import type { FilterOperator, FiltersCondition } from '../types';
 import type { ConditionGroup } from './groups';
 import { getFilterMatchValue } from './utils';
-import { SETTINGS } from '../../utils/constants';
 
 export type Condition = {
   element: HTMLElement;
