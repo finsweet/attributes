@@ -1,13 +1,21 @@
-import { addListener, cloneNode, type FormField, Renderer } from '@finsweet/attributes-utils';
+import {
+  addListener,
+  cloneNode,
+  type FormField,
+  type FormFieldType,
+  isFormField,
+  isHTMLSelectElement,
+  Renderer,
+} from '@finsweet/attributes-utils';
 import { computed, type ComputedRef, effect, watch } from '@vue/reactivity';
 import { dset } from 'dset';
 
 import type { List } from '../../components';
-import { queryElement } from '../../utils/selectors';
+import { getAttribute, queryElement } from '../../utils/selectors';
 import type { FilterOperator, FiltersCondition } from '../types';
-import { getConditionValue } from '.';
 import type { ConditionGroup } from './groups';
 import { getFilterMatchValue } from './utils';
+import { SETTINGS } from '../../utils/constants';
 
 export type Condition = {
   element: HTMLElement;
@@ -108,6 +116,62 @@ const initConditionRemove = (element: HTMLElement, condition: Condition, conditi
 };
 
 /**
+ * Retrieves a condition's data.
+ * @param conditionFieldSelect
+ * @param conditionOperatorSelect
+ * @param conditionValueField
+ */
+const getConditionData = (
+  conditionFieldSelect: HTMLSelectElement,
+  conditionOperatorSelect: HTMLSelectElement,
+  conditionValueField: FormField
+): FiltersCondition | undefined => {
+  const type = conditionValueField.type as FormFieldType;
+  const rawOp = conditionOperatorSelect.value as FilterOperator;
+
+  const fieldKey = conditionFieldSelect.value;
+  if (!fieldKey) return;
+
+  const op = SETTINGS.operator.values.includes(rawOp) ? rawOp : null;
+  if (!op) return;
+
+  const fuzzyThreshold = getAttribute(conditionValueField, 'fuzzy');
+
+  let value: string | string[];
+
+  switch (type) {
+    // Select multiple
+    case 'select-multiple': {
+      value = [...(conditionValueField as HTMLSelectElement).selectedOptions].map((option) => option.value);
+    }
+
+    // Dates
+    case 'date':
+    case 'month':
+    case 'week':
+    case 'time': {
+      const { valueAsDate, value: _value } = conditionValueField as HTMLInputElement;
+      value = valueAsDate ? valueAsDate.toISOString() : _value;
+    }
+
+    // Default - Text
+    default: {
+      value = conditionValueField.value;
+    }
+  }
+
+  return {
+    type,
+    fieldKey,
+    op,
+    value,
+    fuzzyThreshold,
+    fieldMatch: 'or', // TODO
+    filterMatch: 'or', // TODO
+  };
+};
+
+/**
  * Inits a condition
  * @param list
  * @param element
@@ -115,14 +179,14 @@ const initConditionRemove = (element: HTMLElement, condition: Condition, conditi
  * @returns A cleanup function
  */
 export const initCondition = (list: List, element: HTMLElement, conditionGroup: ConditionGroup) => {
-  const conditionField = queryElement<HTMLSelectElement>('condition-field', { scope: element });
-  if (!(conditionField instanceof HTMLSelectElement)) return;
+  const conditionFieldSelect = queryElement('condition-field', { scope: element });
+  if (!isHTMLSelectElement(conditionFieldSelect)) return;
 
-  const conditionOperator = queryElement<FormField>('condition-operator', { scope: element });
-  if (!conditionOperator) return;
+  const conditionOperatorSelect = queryElement('condition-operator', { scope: element });
+  if (!isHTMLSelectElement(conditionOperatorSelect)) return;
 
-  const conditionValue = queryElement<FormField>('condition-value', { scope: element });
-  if (!conditionValue) return;
+  const conditionValueField = queryElement('condition-value', { scope: element });
+  if (!isFormField(conditionValueField)) return;
 
   // Store the condition
   const cleanups = new Set<() => void>();
@@ -160,21 +224,10 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
 
   // Bind condition values
   const changeCleanup = addListener(element, 'change', () => {
-    const fieldKey = conditionField.value;
-    const op = conditionOperator.value as FilterOperator;
-    const value = getConditionValue(conditionValue);
+    const conditionData = getConditionData(conditionFieldSelect, conditionOperatorSelect, conditionValueField);
+    if (!conditionData) return;
 
-    if (!fieldKey || !op) return;
-
-    // TODO: merge values instead of overriding
-    dset(list.filters.value, condition.path.value, {
-      fieldKey,
-      op,
-      value,
-      fieldMatch: 'or', // TODO
-      filterMatch: 'or', // TODO
-      type: 'select-one', // TODO
-    } satisfies FiltersCondition);
+    dset(list.filters.value, condition.path.value, conditionData);
   });
 
   cleanups.add(changeCleanup);

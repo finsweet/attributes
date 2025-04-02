@@ -31,16 +31,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
   const fuzzyThreshold = getAttribute(formField, 'fuzzy');
 
-  const baseData = {
-    fieldKey,
-    type,
-    op,
-    filterMatch,
-    fieldMatch,
-    fuzzyThreshold,
-    interacted,
-    customTagField,
-  } satisfies Partial<FiltersCondition>;
+  let value: string | string[];
 
   switch (type) {
     // Checkbox
@@ -48,29 +39,19 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
       // Group
       const groupCheckboxes = getCheckboxGroup(formField.name, formField.form);
       if (groupCheckboxes?.length) {
-        const values: string[] = [];
+        value = [];
 
         for (const checkbox of groupCheckboxes) {
-          const value = getAttribute(checkbox, 'value') ?? checkbox.value;
-          if (!value || !checkbox.checked) continue;
+          const checkboxValue = getAttribute(checkbox, 'value') ?? checkbox.value;
+          if (!checkboxValue || !checkbox.checked) continue;
 
-          values.push(value);
+          value.push(checkboxValue);
         }
-
-        return {
-          ...baseData,
-          value: values,
-        };
       }
 
       // Single
       const { checked } = formField as HTMLInputElement;
-      const value = checked ? 'true' : '';
-
-      return {
-        ...baseData,
-        value,
-      };
+      value = checked ? 'true' : '';
     }
 
     // Radio
@@ -79,22 +60,12 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
         `input[name="${formField.name}"][type="radio"]:checked`
       );
 
-      const value = checkedRadio ? getAttribute(checkedRadio, 'value') ?? checkedRadio.value : '';
-
-      return {
-        ...baseData,
-        value,
-      };
+      value = checkedRadio ? getAttribute(checkedRadio, 'value') ?? checkedRadio.value : '';
     }
 
     // Select multiple
     case 'select-multiple': {
-      const value = [...(formField as HTMLSelectElement).selectedOptions].map((option) => option.value);
-
-      return {
-        ...baseData,
-        value,
-      };
+      value = [...(formField as HTMLSelectElement).selectedOptions].map((option) => option.value);
     }
 
     // Dates
@@ -103,24 +74,26 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     case 'week':
     case 'time': {
       const { valueAsDate, value: _value } = formField as HTMLInputElement;
-      const value = valueAsDate ? valueAsDate.toISOString() : _value;
-
-      return {
-        ...baseData,
-        value,
-      };
+      value = valueAsDate ? valueAsDate.toISOString() : _value;
     }
 
     // Default - Text
     default: {
-      const { value } = formField;
-
-      return {
-        ...baseData,
-        value,
-      };
+      value = formField.value;
     }
   }
+
+  return {
+    fieldKey,
+    type,
+    op,
+    value,
+    filterMatch,
+    fieldMatch,
+    fuzzyThreshold,
+    interacted,
+    customTagField,
+  };
 };
 
 /**

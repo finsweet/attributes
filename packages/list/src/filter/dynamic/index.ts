@@ -1,9 +1,9 @@
-import { cloneNode, type FormField } from '@finsweet/attributes-utils';
+import { cloneNode } from '@finsweet/attributes-utils';
 import { shallowRef } from '@vue/reactivity';
 
 import type { List } from '../../components/List';
-import { queryAllElements, queryElement } from '../../utils/selectors';
-import type { FilterMatch, FilterOperator, Filters, FiltersCondition, FiltersGroup } from '../types';
+import { queryElement } from '../../utils/selectors';
+import type { FilterMatch } from '../types';
 import { type ConditionGroup, initConditionGroup, initConditionGroupsAdd, initConditionGroupsMatch } from './groups';
 import { getFilterMatchValue } from './utils';
 
@@ -83,68 +83,4 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
 
     cleanups.clear();
   };
-};
-
-/**
- * @returns The value of a given form field.
- * @param conditionValue
- */
-export const getConditionValue = (conditionValue?: FormField | null) => {
-  if (!conditionValue) return '';
-
-  const value =
-    conditionValue instanceof HTMLInputElement
-      ? conditionValue.type === 'checkbox'
-        ? String(conditionValue.checked)
-        : conditionValue.value
-      : conditionValue.value;
-
-  return value;
-};
-
-/**
- * Gets the advanced filters from a form
- * @param form
- */
-const getAdvancedFilters = (form: HTMLFormElement) => {
-  const conditionGroupMatch = queryElement<HTMLSelectElement>('condition-group-match', { scope: form });
-  const groupsMatch = (conditionGroupMatch?.value || 'and') as FilterMatch;
-
-  const conditionGroups = queryAllElements('condition-group', { scope: form });
-  const groups = conditionGroups.map((conditionGroup) => {
-    const conditionMatch = queryElement<HTMLSelectElement>('condition-match', { scope: conditionGroup });
-    const conditionsMatch = (conditionMatch?.value || 'and') as FilterMatch;
-
-    const conditions = queryAllElements('condition', { scope: conditionGroup }).reduce<FiltersCondition[]>(
-      (acc, condition) => {
-        const conditionField = queryElement<HTMLSelectElement>('condition-field', { scope: condition });
-        const fieldKey = conditionField?.value;
-        if (!fieldKey) return acc;
-
-        const conditionOperator = queryElement<HTMLSelectElement>('condition-operator', { scope: condition });
-        const op = conditionOperator?.value as FilterOperator;
-        if (!op) return acc;
-
-        const conditionValue = queryElement<FormField>('condition-value', { scope: condition });
-        const value = getConditionValue(conditionValue);
-        if (!value) return acc;
-
-        acc.push({
-          fieldKey,
-          op,
-          value,
-          fieldMatch: 'or', // TODO
-          filterMatch: 'or', // TODO
-          type: 'select-one', // TODO
-        });
-
-        return acc;
-      },
-      []
-    );
-
-    return { conditionsMatch, conditions } satisfies FiltersGroup;
-  });
-
-  return { groupsMatch, groups } satisfies Filters;
 };
