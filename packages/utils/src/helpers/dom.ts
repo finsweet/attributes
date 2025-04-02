@@ -83,7 +83,11 @@ export const isScrollable = (element: Element): boolean => {
   return overflow === 'auto' || overflow === 'scroll';
 };
 
-export class RenderController {
+/**
+ * A render controller for an element.
+ * It allows to render and remove the element from the DOM.
+ */
+export class Renderer {
   #rendered = true;
   #anchor = new Comment();
 
@@ -130,11 +134,11 @@ export class RenderController {
    * Destroys the render controller.
    * @param forceRender Whether to force the element to be rendered after destroying the controller.
    */
-  destroy(forceRender = true) {
+  destroy = (forceRender = true) => {
     if (forceRender) {
       this.render();
     }
 
     this.#anchor.remove();
-  }
+  };
 }

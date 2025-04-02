@@ -1,9 +1,8 @@
-import { addListener, cloneNode, type FormField, RenderController, simulateEvent } from '@finsweet/attributes-utils';
-import { computed, effect, type Ref, ref, watch } from '@vue/reactivity';
+import { addListener, cloneNode, type FormField, Renderer } from '@finsweet/attributes-utils';
+import { computed, effect, shallowRef, type ComputedRef, type ShallowRef } from '@vue/reactivity';
 import { dset } from 'dset';
 
 import type { List } from '../components/List';
-import type { ListItem } from '../components/ListItem';
 import { queryAllElements, queryElement } from '../utils/selectors';
 import type { FilterMatch, FilterOperator, Filters, FiltersCondition, FiltersGroup } from './types';
 
@@ -28,19 +27,19 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
 
   const conditionGroupTemplate = cloneNode(conditionGroup);
 
-  const conditionGroups = ref<HTMLElement[]>([]);
+  const conditionGroups = shallowRef<HTMLElement[]>([]);
 
   const cleanups = new Set<() => void>();
 
   // Handle condition groups matching
   const conditionGroupMatch = queryElement<HTMLSelectElement>('condition-group-match', { scope: form });
   if (conditionGroupMatch) {
-    const renderController = new RenderController(conditionGroupMatch);
+    const conditionGroupMatchRenderer = new Renderer(conditionGroupMatch);
 
-    const renderCleanup = effect(() => {
+    const conditionGroupMatchRenderCleanup = effect(() => {
       const shouldRender = conditionGroups.value.length > 1;
 
-      renderController.update(shouldRender);
+      conditionGroupMatchRenderer.update(shouldRender);
     });
 
     // TODO: support fs-list-filteron
@@ -48,8 +47,8 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
       list.filters.value.groupsMatch = conditionGroupMatch.value as FilterMatch;
     });
 
-    cleanups.add(renderCleanup);
-    cleanups.add(() => renderController.destroy());
+    cleanups.add(conditionGroupMatchRenderCleanup);
+    cleanups.add(conditionGroupMatchRenderer.destroy);
     cleanups.add(inputCleanup);
   }
 
@@ -113,13 +112,13 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
   return destroy;
 };
 
-const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGroups: Ref<HTMLElement[]>) => {
+const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGroups: ShallowRef<HTMLElement[]>) => {
   const condition = queryElement('condition', { scope: conditionGroup });
   if (!condition) return;
 
   const conditionTemplate = cloneNode(condition);
 
-  const groupConditions = ref<HTMLElement[]>([]);
+  const groupConditions = shallowRef<HTMLElement[]>([]);
 
   // Store the condition group
   conditionGroups.value = [...conditionGroups.value, conditionGroup];
@@ -133,7 +132,7 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
   dset(list.filters.value, conditionGroupPath.value, {
     conditionsMatch: 'and',
     conditions: [],
-  });
+  } satisfies FiltersGroup);
 
   // Store cleanups
   const cleanups = new Set<() => void>();
@@ -141,12 +140,12 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
   // Handle condition matching
   const conditionMatch = queryElement<HTMLSelectElement>('condition-match', { scope: conditionGroup });
   if (conditionMatch) {
-    const renderController = new RenderController(conditionMatch);
+    const conditionMatchRenderer = new Renderer(conditionMatch);
 
-    const renderCleanup = effect(() => {
+    const conditionMatchRenderCleanup = effect(() => {
       const shouldRender = groupConditions.value.length > 1;
 
-      renderController.update(shouldRender);
+      conditionMatchRenderer.update(shouldRender);
     });
 
     const inputCleanup = addListener(conditionMatch, 'change', () => {
@@ -155,8 +154,8 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
       dset(list.filters.value, `${conditionGroupPath.value}.conditionsMatch`, conditionsMatch);
     });
 
-    cleanups.add(renderCleanup);
-    cleanups.add(() => renderController.destroy());
+    cleanups.add(conditionMatchRenderCleanup);
+    cleanups.add(conditionMatchRenderer.destroy);
     cleanups.add(inputCleanup);
   }
 
@@ -195,17 +194,17 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
     });
 
     // Handle remove button display
-    const renderController = new RenderController(conditionGroupRemove);
+    const conditionGroupRemoveRenderer = new Renderer(conditionGroupRemove);
 
-    const renderCleanup = effect(() => {
+    const conditionGroupRemoveRenderCleanup = effect(() => {
       const shouldRender = conditionGroups.value.length > 1;
 
-      renderController.update(shouldRender);
+      conditionGroupRemoveRenderer.update(shouldRender);
     });
 
     cleanups.add(clickCleanup);
-    cleanups.add(renderCleanup);
-    cleanups.add(() => renderController.destroy());
+    cleanups.add(conditionGroupRemoveRenderCleanup);
+    cleanups.add(conditionGroupRemoveRenderer.destroy);
   }
 
   // Init default condition
@@ -240,8 +239,8 @@ const initConditionGroup = (list: List, conditionGroup: HTMLElement, conditionGr
 const initCondition = (
   list: List,
   condition: HTMLElement,
-  groupConditions: Ref<HTMLElement[]>,
-  conditionGroupPath: Ref<string>
+  groupConditions: ShallowRef<HTMLElement[]>,
+  conditionGroupPath: ComputedRef<string>
 ) => {
   const conditionField = queryElement<HTMLSelectElement>('condition-field', { scope: condition });
   if (!(conditionField instanceof HTMLSelectElement)) return;
@@ -263,7 +262,7 @@ const initCondition = (
   const cleanups = new Set<() => void>();
 
   // Bind condition values
-  const changeHandler = () => {
+  const changeCleanup = addListener(condition, 'change', () => {
     const fieldKey = conditionField.value;
     const op = conditionOperator.value as FilterOperator;
     const value = getConditionValue(conditionValue);
@@ -278,16 +277,10 @@ const initCondition = (
       fieldMatch: 'or', // TODO
       filterMatch: 'or', // TODO
       type: 'select-one', // TODO
-    });
-  };
+    } satisfies FiltersCondition);
+  });
 
-  const fieldInputCleanup = addListener(conditionField, 'change', changeHandler);
-  const operatorInputCleanup = addListener(conditionOperator, 'change', changeHandler);
-  const valueInputCleanup = addListener(conditionValue, 'change', changeHandler);
-
-  cleanups.add(fieldInputCleanup);
-  cleanups.add(operatorInputCleanup);
-  cleanups.add(valueInputCleanup);
+  cleanups.add(changeCleanup);
 
   // Handle remove button
   const conditionRemove = queryElement('condition-remove', { scope: condition });
@@ -329,7 +322,7 @@ const initCondition = (
  * @param conditionValue
  */
 const getConditionValue = (conditionValue?: FormField | null) => {
-  if (!conditionValue) return;
+  if (!conditionValue) return '';
 
   const value =
     conditionValue instanceof HTMLInputElement
