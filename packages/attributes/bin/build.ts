@@ -4,6 +4,7 @@ import * as esbuild from 'esbuild';
 import inlineWorkerPlugin from 'esbuild-plugin-inline-worker';
 import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import http from 'http';
 
 declare const process: {
   env: {
@@ -21,7 +22,8 @@ const BUILD_DIRECTORY = './';
 const ENTRY_POINTS = ['src/attributes.ts'];
 
 // Config dev serving
-const SERVE_PORT = 3000;
+const SERVE_PORT = 3001;
+const PROXY_PORT = 3000;
 
 const buildOptions: esbuild.BuildOptions = {
   bundle: true,
@@ -59,15 +61,42 @@ try {
 // Watch and serve files in dev
 if (DEV) {
   await context.watch();
-  await context
-    .serve({
-      servedir: '.',
-      port: SERVE_PORT,
+  const { hosts, port } = await context.serve({
+    servedir: '.',
+    port: SERVE_PORT,
+  });
+
+  /**
+   * Proxy esbuild requests to add CORS headers.
+   * This is required since {@link https://github.com/evanw/esbuild/blob/main/CHANGELOG.md#0250 esbuild@0.25.0},
+   * esbuild removed the built-in CORS headers for security reasons and now it's in userland to add them.
+   */
+  http
+    .createServer((req, res) => {
+      const { url, method, headers } = req;
+
+      const proxyReq = http.request(
+        {
+          port,
+          method,
+          headers,
+          path: url,
+          hostname: hosts[0],
+        },
+        (proxyRes) => {
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.writeHead(proxyRes.statusCode!, proxyRes.headers);
+
+          proxyRes.pipe(res, { end: true });
+        }
+      );
+
+      req.pipe(proxyReq, { end: true });
     })
-    .then(() => {
-      console.log(`Serving:`);
-      console.log(`<script async type="module" src="http://localhost:${SERVE_PORT}/attributes.js"></script>`);
-    });
+    .listen(PROXY_PORT);
+
+  console.log(`Serving:`);
+  console.log(`<script async type="module" src="http://localhost:${PROXY_PORT}/attributes.js"></script>`);
 }
 
 // Build files in prod
