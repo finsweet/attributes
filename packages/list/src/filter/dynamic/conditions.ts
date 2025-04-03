@@ -276,6 +276,15 @@ const initConditionOperatorSelect = (
   };
 };
 
+/**
+ * Initializes the condition value form fields.
+ * @param list
+ * @param initialFormField
+ * @param conditionElement
+ * @param condition
+ * @param allFieldsData
+ * @returns A cleanup function
+ */
 const initConditionValueField = (
   { instance, filters }: List,
   initialFormField: FormField,
@@ -283,11 +292,6 @@ const initConditionValueField = (
   condition: Condition,
   allFieldsData: ComputedRef<AllFieldsData>
 ) => {
-  // const changeCleanup = addListener(element, 'change', () => {
-  //   const value = getConditionValue(element);
-  //   dset(filters.value, `${condition.path.value}.value`, value);
-  // });
-
   const conditionValueFieldAnchor = new Comment();
   initialFormField.after(conditionValueFieldAnchor);
 
