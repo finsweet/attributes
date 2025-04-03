@@ -5,6 +5,7 @@ import {
   type FormFieldType,
   isFormField,
   isHTMLSelectElement,
+  isNotEmpty,
   Renderer,
   simulateEvent,
 } from '@finsweet/attributes-utils';
@@ -12,10 +13,10 @@ import { computed, type ComputedRef, effect } from '@vue/reactivity';
 import dlv from 'dlv';
 import { dset } from 'dset';
 
-import type { List, ListItemField } from '../../components';
+import type { List } from '../../components';
 import { ALLOWED_DYNAMIC_FIELD_TYPES, SETTINGS } from '../../utils/constants';
 import { getAttribute, getElementSelector, queryAllElements, queryElement } from '../../utils/selectors';
-import type { FilterMatch, FilterOperator, FiltersCondition } from '../types';
+import type { AllFieldsData, FilterMatch, FilterOperator, FiltersCondition } from '../types';
 import type { ConditionGroup } from './groups';
 import { getFilterMatchValue } from './utils';
 
@@ -61,7 +62,7 @@ export const initConditionsMatch = (list: List, element: HTMLSelectElement, cond
  * @param element
  * @param conditionTemplate
  * @param conditionGroup
- * @param fieldsData
+ * @param allFieldsData
  * @returns A cleanup function
  */
 export const initConditionAdd = (
@@ -69,12 +70,12 @@ export const initConditionAdd = (
   element: HTMLElement,
   conditionTemplate: HTMLElement,
   conditionGroup: ConditionGroup,
-  fieldsData: ComputedRef<Map<string, ListItemField>>
+  allFieldsData: ComputedRef<AllFieldsData>
 ) => {
   const cleanup = addListener(element, 'click', () => {
     const conditionClone = cloneNode(conditionTemplate);
 
-    const condition = initCondition(list, conditionClone, conditionGroup, fieldsData);
+    const condition = initCondition(list, conditionClone, conditionGroup, allFieldsData);
     if (!condition) return;
 
     const $conditions = conditionGroup.conditions.value;
@@ -124,14 +125,14 @@ const initConditionRemove = (element: HTMLElement, condition: Condition, conditi
  * @param list
  * @param element
  * @param condition
- * @param fieldsData
+ * @param allFieldsData
  * @returns A cleanup function
  */
 const initConditionFieldKeySelect = (
   { filters }: List,
   element: HTMLSelectElement,
   condition: Condition,
-  fieldsData: ComputedRef<Map<string, ListItemField>>
+  allFieldsData: ComputedRef<AllFieldsData>
 ) => {
   const changeCleanup = addListener(element, 'change', () => {
     dset(filters.value, `${condition.path.value}.fieldKey`, element.value);
@@ -141,7 +142,7 @@ const initConditionFieldKeySelect = (
     let invalidSelectedOption = false;
 
     for (const option of element.options) {
-      const isValid = fieldsData.value.has(option.value);
+      const isValid = !!allFieldsData.value[option.value];
 
       option.style.display = isValid ? '' : 'none';
       option.disabled = !isValid;
@@ -197,14 +198,14 @@ const parseOperatorValue = (value: string): { op?: FilterOperator; fieldMatch?: 
  * @param list
  * @param element
  * @param condition
- * @param fieldsData
+ * @param allFieldsData
  * @returns A cleanup function
  */
 const initConditionOperatorSelect = (
   { filters }: List,
   element: HTMLSelectElement,
   condition: Condition,
-  fieldsData: ComputedRef<Map<string, ListItemField>>
+  allFieldsData: ComputedRef<AllFieldsData>
 ) => {
   // Change listener
   const changeCleanup = addListener(element, 'change', () => {
@@ -217,7 +218,7 @@ const initConditionOperatorSelect = (
   // Options display logic
   const optionsRunner = effect(() => {
     const { fieldKey }: FiltersCondition = dlv(filters.value, condition.path.value);
-    const fieldData = fieldsData.value.get(fieldKey);
+    const fieldData = fieldKey ? allFieldsData.value[fieldKey] : undefined;
 
     let invalidSelectedOption = false;
 
@@ -226,24 +227,21 @@ const initConditionOperatorSelect = (
       const { op, fieldMatch } = parseOperatorValue(option.value);
 
       let isValid = option.value === '';
-      let fieldValueType: 'single' | 'multiple' | undefined;
 
       if (!isValid && fieldData && op) {
-        fieldValueType = Array.isArray(fieldData.value) ? 'multiple' : 'single';
-
-        isValid = !!ALLOWED_DYNAMIC_FIELD_TYPES[fieldData.type]?.[fieldValueType]?.[op];
+        isValid = !!ALLOWED_DYNAMIC_FIELD_TYPES[fieldData.type]?.[fieldData.valueType]?.[op];
       }
 
-      return { option, op, fieldMatch, isValid, fieldValueType };
+      return { option, op, fieldMatch, isValid };
     });
 
     // Filter out invalid options, or options that have less preference
-    for (const { option, op, fieldMatch, isValid, fieldValueType } of optionsData) {
+    for (const { option, op, fieldMatch, isValid } of optionsData) {
       let shouldDisplay = isValid;
 
       // Options that have a fieldMatch are preferred over those that don't
       // when the fieldValueType is 'multiple'
-      if (isValid && fieldValueType === 'multiple' && !fieldMatch) {
+      if (isValid && fieldData?.valueType === 'multiple' && !fieldMatch) {
         shouldDisplay = !optionsData.some(
           (other) => other.option !== option && other.isValid && other.op === op && other.fieldMatch
         );
@@ -251,7 +249,7 @@ const initConditionOperatorSelect = (
 
       // Options that don't have a fieldMatch are preferred over those that do
       // when the fieldValueType is 'single'
-      if (isValid && fieldValueType === 'single' && fieldMatch) {
+      if (isValid && fieldData?.valueType === 'single' && fieldMatch) {
         shouldDisplay = !optionsData.some(
           (other) => other.option !== option && other.isValid && other.op === op && !other.fieldMatch
         );
@@ -283,7 +281,7 @@ const initConditionValueField = (
   initialFormField: FormField,
   conditionElement: HTMLElement,
   condition: Condition,
-  fieldsData: ComputedRef<Map<string, ListItemField>>
+  allFieldsData: ComputedRef<AllFieldsData>
 ) => {
   // const changeCleanup = addListener(element, 'change', () => {
   //   const value = getConditionValue(element);
@@ -300,7 +298,7 @@ const initConditionValueField = (
   const internalConditionFormFields = queryAllElements('condition-value', { scope: conditionElement });
   const externalConditionFormFields = document.querySelectorAll<HTMLElement>(externalConditionValueSelector);
 
-  const allConditionFormFields = new Map<string, FormField>();
+  const allConditionFormFields = new Map<FormFieldType, FormField>();
 
   for (const internalConditionFormField of internalConditionFormFields) {
     if (!isFormField(internalConditionFormField)) continue;
@@ -340,16 +338,14 @@ const initConditionValueField = (
     addListener(formField, 'change', changeHandler)
   );
 
-  const optionsRunner = effect(() => {
+  const formFieldsRunner = effect(() => {
     const { fieldKey, op }: FiltersCondition = dlv(filters.value, condition.path.value);
-    const fieldData = fieldsData.value.get(fieldKey);
+    const fieldData = fieldKey ? allFieldsData.value[fieldKey] : undefined;
 
     let allowedFormFields: FormFieldType[] = [];
 
     if (fieldData && op) {
-      const fieldValueType = Array.isArray(fieldData.value) ? 'multiple' : 'single';
-
-      allowedFormFields = ALLOWED_DYNAMIC_FIELD_TYPES[fieldData.type]?.[fieldValueType]?.[op] || [];
+      allowedFormFields = ALLOWED_DYNAMIC_FIELD_TYPES[fieldData.type]?.[fieldData.valueType]?.[op] || [];
     }
 
     const previouslyActiveFormFieldType = activeFormFieldType;
@@ -367,9 +363,52 @@ const initConditionValueField = (
     if (activeFormFieldType && previouslyActiveFormFieldType !== activeFormFieldType) {
       const activeFormField = allConditionFormFields.get(activeFormFieldType)!;
 
-      // TODO: reset the value of the field before triggering the event
+      if (isHTMLSelectElement(activeFormField)) {
+        activeFormField.selectedIndex = 0;
+      } else {
+        activeFormField.value = '';
+      }
 
       simulateEvent(activeFormField, ['input', 'change']);
+    }
+  });
+
+  const optionsRunner = effect(() => {
+    const selectElements = [...allConditionFormFields.values()].filter(isHTMLSelectElement);
+    if (!selectElements.length) return;
+
+    const { fieldKey }: FiltersCondition = dlv(filters.value, condition.path.value);
+    const fieldData = fieldKey ? allFieldsData.value[fieldKey] : undefined;
+    const rawValues = fieldData?.rawValues || new Set<string>();
+
+    const valuesToAdd = new Set(rawValues);
+
+    const activeSelect = activeFormFieldType ? allConditionFormFields.get(activeFormFieldType) : undefined;
+    if (!isHTMLSelectElement(activeSelect)) return;
+
+    let invalidSelectedOption = false;
+
+    for (const option of [...activeSelect.options]) {
+      const isValid = option.value === '' || valuesToAdd.has(option.value);
+
+      if (!isValid) {
+        option.remove();
+        invalidSelectedOption = true;
+      }
+
+      valuesToAdd.delete(option.value);
+    }
+
+    for (const value of valuesToAdd) {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value;
+
+      activeSelect.append(option);
+    }
+
+    if (invalidSelectedOption) {
+      simulateEvent(activeSelect, ['input', 'change']);
     }
   });
 
@@ -378,6 +417,7 @@ const initConditionValueField = (
       cleanup();
     }
 
+    formFieldsRunner.effect.stop();
     optionsRunner.effect.stop();
   };
 };
@@ -453,14 +493,14 @@ const getConditionData = (
  * @param list
  * @param element
  * @param conditionGroup
- * @param fieldsData
+ * @param allFieldsData
  * @returns A cleanup function
  */
 export const initCondition = (
   list: List,
   element: HTMLElement,
   conditionGroup: ConditionGroup,
-  fieldsData: ComputedRef<Map<string, ListItemField>>
+  allFieldsData: ComputedRef<AllFieldsData>
 ) => {
   const conditionFieldKeySelect = queryElement('condition-field', { scope: element });
   if (!isHTMLSelectElement(conditionFieldKeySelect)) return;
@@ -519,7 +559,7 @@ export const initCondition = (
     list,
     conditionFieldKeySelect,
     condition,
-    fieldsData
+    allFieldsData
   );
   cleanups.add(conditionFieldKeySelectCleanup);
 
@@ -527,7 +567,7 @@ export const initCondition = (
     list,
     conditionOperatorSelect,
     condition,
-    fieldsData
+    allFieldsData
   );
   cleanups.add(conditionOperatorSelectCleanup);
 
@@ -536,7 +576,7 @@ export const initCondition = (
     initialConditionValueFormField,
     element,
     condition,
-    fieldsData
+    allFieldsData
   );
   cleanups.add(conditionValueFieldCleanup);
 

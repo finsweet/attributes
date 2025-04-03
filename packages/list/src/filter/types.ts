@@ -1,6 +1,6 @@
 import type { FormFieldType } from '@finsweet/attributes-utils';
 
-import type { ListItem } from '../components';
+import type { ListItem, ListItemField } from '../components';
 import type { SETTINGS } from '../utils/constants';
 
 // General
@@ -32,6 +32,7 @@ export type Filters = {
 };
 
 export type FieldValue = string | number | Date;
+export type FieldValueType = 'single' | 'multiple';
 
 // Filter tasks
 export type FilterTaskMatchedFields = {
@@ -51,7 +52,8 @@ export type FilterTask = {
 // Dynamic filters
 export type AllFieldsData = {
   [fieldKey: string]: {
-    valueType: 'single' | 'multiple';
-    values: Set<FieldValue>;
+    type: ListItemField['type'];
+    valueType: FieldValueType;
+    rawValues: Set<string>;
   };
 };

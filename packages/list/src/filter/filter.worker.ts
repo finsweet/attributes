@@ -10,7 +10,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
     const groupsPredicate = (groupData: FiltersGroup) => {
       const conditionsPredicate = (filterData: FiltersCondition) => {
         const fieldsPredicate = (fieldKey: string) => {
-          if (!filterData.fieldKey || !filterData.op || !filterData.value) return true;
+          if (!filterData.op) return true;
 
           const fieldData = item.fields[fieldKey];
           if (!fieldData) return false;
@@ -28,6 +28,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
             }
 
             case 'equal': {
+              if (!filterValue) return true;
+
               const compare = ({
                 fieldValue,
                 parsedFilterValue,
@@ -161,6 +163,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
             }
 
             case 'not-equal': {
+              if (!filterValue) return true;
+
               const compare = ({
                 fieldValue,
                 parsedFilterValue,
@@ -284,6 +288,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
             }
 
             case 'contain': {
+              if (!filterValue) return true;
+
               const compare = ({
                 fieldValue,
                 filterValue,
@@ -433,6 +439,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
             }
 
             case 'not-contain': {
+              if (!filterValue) return true;
+
               // Both are arrays
               if (Array.isArray(filterValue) && Array.isArray(fieldValue)) {
                 if (!filterValue.length) return true;
@@ -565,6 +573,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
             case 'greater-equal':
             case 'less':
             case 'less-equal': {
+              if (!filterValue) return true;
+
               const operator = filterData.op as 'greater' | 'greater-equal' | 'less' | 'less-equal';
 
               // Both are arrays

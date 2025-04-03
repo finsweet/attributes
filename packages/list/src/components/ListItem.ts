@@ -20,14 +20,17 @@ declare module '@vue/reactivity' {
 export type ListItemField =
   | {
       type: 'text';
+      rawValue: string | string[];
       value: string | string[];
     }
   | {
       type: 'date';
+      rawValue: string | string[];
       value: Date | Date[];
     }
   | {
       type: 'number';
+      rawValue: string | string[];
       value: number | number[];
     };
 
@@ -132,19 +135,22 @@ export class ListItem {
       const isInsideNestedList = this.list.listElement && parentList && parentList !== this.list.listElement; // TODO: support custom lists and nested lists via `fs-list-element="nest-target"`
 
       if (isInsideNestedList) {
-        this.fields[fieldKey] ||= { type, value: [] };
+        this.fields[fieldKey] ||= { type, rawValue: [], value: [] };
 
         const field = this.fields[fieldKey];
 
         if (field.type !== type) continue;
         if (!Array.isArray(field.value)) continue;
+        if (!Array.isArray(field.rawValue)) continue;
         if (field.value.some((v) => v === value)) continue;
+        if (field.rawValue.some((v) => v === rawValue)) continue;
 
         // @ts-expect-error - Value is guaranteed to be the right type
         field.value.push(value);
+        field.rawValue.push(rawValue);
       } else {
         // @ts-expect-error - Value is guaranteed to be the right type
-        this.fields[fieldKey] ||= { fieldKey, type, value };
+        this.fields[fieldKey] ||= { fieldKey, type, rawValue, value };
       }
     }
   }
