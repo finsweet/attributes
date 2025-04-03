@@ -491,7 +491,7 @@ export const SETTINGS = {
   /**
    * Defines a fuzzy ratio for a filter.
    */
-  fuzzy: { key: 'fuzzy', defaultValue: '0.2', isNumeric: true },
+  fuzzy: { key: 'fuzzy', isNumeric: true },
 
   /**
    * Defines when the lists should be filtered.
