@@ -1,9 +1,13 @@
 import {
   type AttributeElements,
   type AttributeSettings,
+  type FormFieldType,
   LIST_ATTRIBUTE,
   type WebflowBreakpoint,
 } from '@finsweet/attributes-utils';
+
+import type { ListItemField } from '../components';
+import type { FilterOperator } from '../filter/types';
 
 export const ELEMENTS = [
   /**
@@ -303,6 +307,22 @@ export const ELEMENTS = [
   'next-empty',
 ] as const satisfies AttributeElements;
 
+const TEXT = 'text';
+const NUMBER = 'number';
+const DATE = 'date';
+const SELECT_ONE = 'select-one';
+const SELECT_MULTIPLE = 'select-multiple';
+const OP_CONTAIN = 'contain';
+const OP_NOT_CONTAIN = 'not-contain';
+const OP_EQUAL = 'equal';
+const OP_NOT_EQUAL = 'not-equal';
+const OP_GREATER = 'greater';
+const OP_GREATER_EQUAL = 'greater-equal';
+const OP_LESS = 'less';
+const OP_LESS_EQUAL = 'less-equal';
+const OP_EMPTY = 'empty';
+const OP_NOT_EMPTY = 'not-empty';
+
 export const SETTINGS = {
   /**
    * Defines an item field.
@@ -475,16 +495,16 @@ export const SETTINGS = {
   operator: {
     key: 'operator',
     values: [
-      'equal',
-      'not-equal',
-      'contain',
-      'not-contain',
-      'greater',
-      'greater-equal',
-      'less',
-      'less-equal',
-      'empty',
-      'not-empty',
+      OP_EQUAL,
+      OP_NOT_EQUAL,
+      OP_CONTAIN,
+      OP_NOT_CONTAIN,
+      OP_GREATER,
+      OP_GREATER_EQUAL,
+      OP_LESS,
+      OP_LESS_EQUAL,
+      OP_EMPTY,
+      OP_NOT_EMPTY,
     ],
   },
 
@@ -565,3 +585,71 @@ export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {
   small: 2,
   tiny: 3,
 } as const;
+
+export const ALLOWED_DYNAMIC_FIELD_TYPES: Record<
+  ListItemField['type'],
+  Record<'single' | 'multiple', Partial<Record<FilterOperator, FormFieldType[]>>>
+> = {
+  text: {
+    single: {
+      [OP_CONTAIN]: [TEXT],
+      [OP_NOT_CONTAIN]: [TEXT],
+      [OP_EQUAL]: [SELECT_ONE, TEXT],
+      [OP_NOT_EQUAL]: [SELECT_ONE, TEXT],
+      [OP_EMPTY]: [],
+      [OP_NOT_EMPTY]: [],
+    },
+    multiple: {
+      [OP_CONTAIN]: [TEXT],
+      [OP_NOT_CONTAIN]: [TEXT],
+      [OP_EQUAL]: [SELECT_MULTIPLE, SELECT_ONE, TEXT],
+      [OP_NOT_EQUAL]: [SELECT_MULTIPLE, SELECT_ONE, TEXT],
+      [OP_EMPTY]: [],
+      [OP_NOT_EMPTY]: [],
+    },
+  },
+  number: {
+    single: {
+      [OP_EQUAL]: [NUMBER, TEXT],
+      [OP_NOT_EQUAL]: [NUMBER, TEXT],
+      [OP_LESS]: [NUMBER, TEXT],
+      [OP_LESS_EQUAL]: [NUMBER, TEXT],
+      [OP_GREATER]: [NUMBER, TEXT],
+      [OP_GREATER_EQUAL]: [NUMBER, TEXT],
+      [OP_EMPTY]: [],
+      [OP_NOT_EMPTY]: [],
+    },
+    multiple: {
+      [OP_EQUAL]: [SELECT_MULTIPLE, SELECT_ONE, NUMBER, TEXT],
+      [OP_NOT_EQUAL]: [SELECT_MULTIPLE, SELECT_ONE, NUMBER, TEXT],
+      [OP_LESS]: [NUMBER, TEXT],
+      [OP_LESS_EQUAL]: [NUMBER, TEXT],
+      [OP_GREATER]: [NUMBER, TEXT],
+      [OP_GREATER_EQUAL]: [NUMBER, TEXT],
+      [OP_EMPTY]: [],
+      [OP_NOT_EMPTY]: [],
+    },
+  },
+  date: {
+    single: {
+      [OP_EQUAL]: [DATE, TEXT],
+      [OP_NOT_EQUAL]: [DATE, TEXT],
+      [OP_LESS]: [DATE, TEXT],
+      [OP_LESS_EQUAL]: [DATE, TEXT],
+      [OP_GREATER]: [DATE, TEXT],
+      [OP_GREATER_EQUAL]: [DATE, TEXT],
+      [OP_EMPTY]: [],
+      [OP_NOT_EMPTY]: [],
+    },
+    multiple: {
+      [OP_EQUAL]: [SELECT_MULTIPLE, SELECT_ONE, DATE, TEXT],
+      [OP_NOT_EQUAL]: [SELECT_MULTIPLE, SELECT_ONE, DATE, TEXT],
+      [OP_LESS]: [DATE, TEXT],
+      [OP_LESS_EQUAL]: [DATE, TEXT],
+      [OP_GREATER]: [DATE, TEXT],
+      [OP_GREATER_EQUAL]: [DATE, TEXT],
+      [OP_EMPTY]: [],
+      [OP_NOT_EMPTY]: [],
+    },
+  },
+};

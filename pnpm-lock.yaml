@@ -269,6 +269,9 @@ importers:
       '@vue/reactivity':
         specifier: ^3.5.13
         version: 3.5.13
+      dlv:
+        specifier: ^1.1.3
+        version: 1.1.3
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -284,6 +287,10 @@ importers:
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
+    devDependencies:
+      '@types/dlv':
+        specifier: ^1.1.5
+        version: 1.1.5
 
   packages/mirrorclick:
     dependencies:
@@ -895,6 +902,9 @@ packages:
   '@types/body-scroll-lock@3.1.0':
     resolution: {integrity: sha512-3owAC4iJub5WPqRhxd8INarF2bWeQq1yQHBgYhN0XLBJMpd5ED10RrJ3aKiAwlTyL5wK7RkBD4SZUQz2AAAMdA==}
 
+  '@types/dlv@1.1.5':
+    resolution: {integrity: sha512-JHOWNfiWepAhfwlSw17kiWrWrk6od2dEQgHltJw9AS0JPFoLZJBge5+Dnil2NfdjAvJ/+vGSX60/BRW20PpUXw==}
+
   '@types/dompurify@3.0.2':
     resolution: {integrity: sha512-YBL4ziFebbbfQfH5mlC+QTJsvh0oJUrWbmxKMyEdL7emlHJqGR2Qb34TEFKj+VCayBvjKy3xczMFNhugThUsfQ==}
 
@@ -1185,6 +1195,9 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
+
+  dlv@1.1.3:
+    resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
 
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
@@ -2687,6 +2700,8 @@ snapshots:
 
   '@types/body-scroll-lock@3.1.0': {}
 
+  '@types/dlv@1.1.5': {}
+
   '@types/dompurify@3.0.2':
     dependencies:
       '@types/trusted-types': 2.0.2
@@ -2991,6 +3006,8 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
+
+  dlv@1.1.3: {}
 
   doctrine@3.0.0:
     dependencies:

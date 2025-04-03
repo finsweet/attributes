@@ -6,7 +6,7 @@ import {
 } from '@finsweet/attributes-utils';
 import { nanoid } from 'nanoid';
 
-import type { FilterTaskMatchedFields } from '../filter/types';
+import type { FieldValue, FilterTaskMatchedFields } from '../filter/types';
 import { getCMSElementSelector } from '../utils/dom';
 import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 import type { List } from './List';
@@ -17,28 +17,23 @@ declare module '@vue/reactivity' {
   }
 }
 
-export type ListItemFieldValue = string | number | Date;
-
 export type ListItemField =
   | {
-      fieldKey: string;
       type: 'text';
       value: string | string[];
     }
   | {
-      fieldKey: string;
       type: 'date';
       value: Date | Date[];
     }
   | {
-      fieldKey: string;
       type: 'number';
       value: number | number[];
     };
 
 type ListItemFieldElements = {
   [fieldKey: string]: Array<{
-    value: ListItemFieldValue;
+    value: FieldValue;
     element: HTMLElement;
     originalHTML: string;
   }>;
@@ -137,11 +132,11 @@ export class ListItem {
       const isInsideNestedList = this.list.listElement && parentList && parentList !== this.list.listElement; // TODO: support custom lists and nested lists via `fs-list-element="nest-target"`
 
       if (isInsideNestedList) {
-        this.fields[fieldKey] ||= { fieldKey, type, value: [] };
+        this.fields[fieldKey] ||= { type, value: [] };
 
         const field = this.fields[fieldKey];
 
-        if (field.type !== type) continue; // TODO: why are we doing this?
+        if (field.type !== type) continue;
         if (!Array.isArray(field.value)) continue;
         if (field.value.some((v) => v === value)) continue;
 

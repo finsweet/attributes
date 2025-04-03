@@ -2,7 +2,7 @@ import { addListener, cloneNode, Renderer } from '@finsweet/attributes-utils';
 import { computed, type ComputedRef, effect, type ShallowRef, shallowRef } from '@vue/reactivity';
 import { dset } from 'dset';
 
-import type { List } from '../../components';
+import type { List, ListItemField } from '../../components';
 import { queryElement } from '../../utils/selectors';
 import type { FilterMatch, FiltersGroup } from '../types';
 import { type Condition, initCondition, initConditionAdd, initConditionsMatch } from './conditions';
@@ -55,6 +55,7 @@ export const initConditionGroupsMatch = (
  * @param conditionGroupTemplate
  * @param conditionGroupsWrapper
  * @param conditionGroups
+ * @param fieldsData
  * @returns A cleanup function
  */
 export const initConditionGroupsAdd = (
@@ -62,12 +63,13 @@ export const initConditionGroupsAdd = (
   element: HTMLElement,
   conditionGroupTemplate: HTMLElement,
   conditionGroupsWrapper: HTMLElement,
-  conditionGroups: ShallowRef<ConditionGroup[]>
+  conditionGroups: ShallowRef<ConditionGroup[]>,
+  fieldsData: ComputedRef<Map<string, ListItemField>>
 ) => {
   const clickCleanup = addListener(element, 'click', () => {
     const clone = cloneNode(conditionGroupTemplate);
 
-    const conditionGroup = initConditionGroup(list, clone, conditionGroups);
+    const conditionGroup = initConditionGroup(list, clone, conditionGroups, fieldsData);
     if (!conditionGroup) return;
 
     const previousConditionGroup = conditionGroups.value[conditionGroups.value.length - 2];
@@ -120,12 +122,14 @@ const initConditionGroupRemove = (
  * @param list
  * @param element
  * @param conditionGroups
+ * @param fieldsData
  * @returns The condition group instance
  */
 export const initConditionGroup = (
   list: List,
   element: HTMLElement,
-  conditionGroups: ShallowRef<ConditionGroup[]>
+  conditionGroups: ShallowRef<ConditionGroup[]>,
+  fieldsData: ComputedRef<Map<string, ListItemField>>
 ): ConditionGroup | undefined => {
   const conditionElement = queryElement('condition', { scope: element });
   if (!conditionElement) return;
@@ -176,7 +180,7 @@ export const initConditionGroup = (
   // Handle adding conditions to the group
   const conditionAddButton = queryElement('condition-add', { scope: element });
   if (conditionAddButton) {
-    const cleanup = initConditionAdd(list, conditionAddButton, conditionTemplate, conditionGroup);
+    const cleanup = initConditionAdd(list, conditionAddButton, conditionTemplate, conditionGroup, fieldsData);
     cleanups.add(cleanup);
   }
 
@@ -194,7 +198,7 @@ export const initConditionGroup = (
   } satisfies FiltersGroup);
 
   // Init default condition
-  initCondition(list, conditionElement, conditionGroup);
+  initCondition(list, conditionElement, conditionGroup, fieldsData);
 
   return conditionGroup;
 };

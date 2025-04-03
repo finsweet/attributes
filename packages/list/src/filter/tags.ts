@@ -204,9 +204,10 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
 
   // Operator
   const operator = condition.op;
-  const operatorOverwriteElement = operatorOverwriteElements.get(operator);
 
-  if (operatorElement || operatorOverwriteElement) {
+  if (operator) {
+    const operatorOverwriteElement = operatorOverwriteElements.get(operator);
+
     // Overwrite exists
     if (operatorOverwriteElement) {
       operatorElement?.remove();

@@ -8,7 +8,8 @@ import {
 } from '@finsweet/attributes-utils';
 import * as fuzzysort from 'fuzzysort';
 
-import type { ListItemField, ListItemFieldValue } from '../components';
+import type { ListItemField } from '../components';
+import type { FieldValue } from './types';
 
 /**
  * Parses the filter value based on the field type.
@@ -20,7 +21,7 @@ export const parseFilterValue = (
   filterValue: string,
   filterType: FormFieldType,
   fieldType?: ListItemField['type']
-): ListItemFieldValue | null => {
+): FieldValue | null => {
   if (
     fieldType === 'date' ||
     filterType === 'date' ||
@@ -50,13 +51,14 @@ export const parseFilterValue = (
 
   return filterValue;
 };
+
 /**
  * Checks if two values are equal.
  * @param fieldValue
  * @param filterValue
  * @param fuzzyThreshold
  */
-export const areEqual = (fieldValue: ListItemFieldValue, filterValue: ListItemFieldValue, fuzzyThreshold?: number) => {
+export const areEqual = (fieldValue: FieldValue, filterValue: FieldValue, fuzzyThreshold?: number) => {
   // Ensure that dates are compared as dates
   if (typeof fieldValue !== typeof filterValue) {
     if (isDate(fieldValue)) {
@@ -86,6 +88,7 @@ export const areEqual = (fieldValue: ListItemFieldValue, filterValue: ListItemFi
 
   return normalizedFieldValue === normalizedFilterValue;
 };
+
 /**
  * Compares two numeric values.
  * @param rawA
@@ -94,8 +97,8 @@ export const areEqual = (fieldValue: ListItemFieldValue, filterValue: ListItemFi
  * @returns `true` if the comparison is successful.
  */
 export const numericCompare = (
-  rawA: ListItemFieldValue,
-  rawB: ListItemFieldValue,
+  rawA: FieldValue,
+  rawB: FieldValue,
   op: 'greater' | 'greater-equal' | 'less' | 'less-equal'
 ) => {
   let a: number | undefined;

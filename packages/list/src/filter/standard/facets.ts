@@ -130,7 +130,7 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
           groupIndex,
           value,
         })?.then((filteredItems) => {
-          const hasResults = filteredItems.length > 0;
+          const disabled = !filteredItems.length;
 
           if (displayFacetCounts) {
             const label = optionLabels.get(option) || '';
@@ -138,7 +138,8 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
           }
 
           if (hideOnEmpty && !option.selected) {
-            option.style.display = hasResults ? '' : 'none';
+            option.style.display = disabled ? 'none' : '';
+            option.disabled = disabled;
           }
         });
       }

@@ -1,7 +1,6 @@
 import { extractCommaSeparatedValues } from '@finsweet/attributes-utils';
 
-import type { ListItemFieldValue } from '../components';
-import type { FiltersCondition, FiltersGroup, FilterTaskData } from './types';
+import type { FieldValue, FiltersCondition, FiltersGroup, FilterTaskData } from './types';
 import { areEqual, numericCompare, parseFilterValue } from './utils';
 
 self.onmessage = (e: MessageEvent<FilterTaskData>) => {
@@ -34,8 +33,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                 parsedFilterValue,
                 filterValue,
               }: {
-                fieldValue: ListItemFieldValue;
-                parsedFilterValue: ListItemFieldValue;
+                fieldValue: FieldValue;
+                parsedFilterValue: FieldValue;
                 filterValue: string;
               }) => {
                 const match = areEqual(fieldValue, parsedFilterValue, filterData.fuzzyThreshold);
@@ -166,8 +165,8 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                 fieldValue,
                 parsedFilterValue,
               }: {
-                fieldValue: ListItemFieldValue;
-                parsedFilterValue: ListItemFieldValue;
+                fieldValue: FieldValue;
+                parsedFilterValue: FieldValue;
               }) => areEqual(fieldValue, parsedFilterValue, filterData.fuzzyThreshold);
 
               // Both are arrays
@@ -291,7 +290,7 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
                 lowerCaseFieldValue,
                 lowerCaseFilterValue,
               }: {
-                fieldValue: ListItemFieldValue;
+                fieldValue: FieldValue;
                 filterValue: string;
                 lowerCaseFieldValue: string;
                 lowerCaseFilterValue: string;

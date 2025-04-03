@@ -1,9 +1,10 @@
 import { cloneNode } from '@finsweet/attributes-utils';
-import { shallowRef } from '@vue/reactivity';
+import { computed, shallowRef, watch } from '@vue/reactivity';
 
+import type { ListItemField } from '../../components';
 import type { List } from '../../components/List';
 import { queryElement } from '../../utils/selectors';
-import type { FilterMatch } from '../types';
+import type { AllFieldsData, FilterMatch } from '../types';
 import { type ConditionGroup, initConditionGroup, initConditionGroupsAdd, initConditionGroupsMatch } from './groups';
 import { getFilterMatchValue } from './utils';
 
@@ -20,10 +21,42 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
   const conditionGroupsWrapper = conditionGroupElement.parentElement;
   if (!conditionGroupsWrapper) return;
 
+  watch(list.filters, (f) => console.log(f), { deep: true });
+
   const conditionGroupTemplate = cloneNode(conditionGroupElement);
   const conditionGroups = shallowRef<ConditionGroup[]>([]);
 
   const cleanups = new Set<() => void>();
+
+  const fieldsData = computed(() =>
+    list.items.value.reduce((acc, item) => {
+      for (const [key, field] of Object.entries(item.fields)) {
+        if (!acc.has(key)) {
+          acc.set(key, field);
+        }
+      }
+
+      return acc;
+    }, new Map<string, ListItemField>())
+  );
+
+  const fieldsData2 = computed(() =>
+    list.items.value.reduce<AllFieldsData>((acc, item) => {
+      for (const [key, field] of Object.entries(item.fields)) {
+        acc[key] ||= {
+          valueType: Array.isArray(field.value) ? 'multiple' : 'single',
+          values: new Set<string>(),
+        };
+
+        const fieldValues = Array.isArray(field.value) ? field.value : [field.value];
+        for (const value of fieldValues) {
+          acc[key].values.add(value);
+        }
+      }
+
+      return acc;
+    }, {})
+  );
 
   // Handle adding condition groups
   const conditionGroupAddButton =
@@ -35,7 +68,8 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
       conditionGroupAddButton,
       conditionGroupTemplate,
       conditionGroupsWrapper,
-      conditionGroups
+      conditionGroups,
+      fieldsData
     );
 
     cleanups.add(cleanup);
@@ -58,7 +92,7 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
   list.filters.value.groupsMatch = groupsMatch;
 
   // Init default condition group
-  initConditionGroup(list, conditionGroupElement, conditionGroups);
+  initConditionGroup(list, conditionGroupElement, conditionGroups, fieldsData);
 
   return () => {
     for (const conditionGroup of conditionGroups.value) {

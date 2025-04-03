@@ -47,11 +47,15 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
 
           value.push(checkboxValue);
         }
+
+        break;
       }
 
       // Single
       const { checked } = formField as HTMLInputElement;
       value = checked ? 'true' : '';
+
+      break;
     }
 
     // Radio
@@ -61,11 +65,15 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
       );
 
       value = checkedRadio ? getAttribute(checkedRadio, 'value') ?? checkedRadio.value : '';
+
+      break;
     }
 
     // Select multiple
     case 'select-multiple': {
       value = [...(formField as HTMLSelectElement).selectedOptions].map((option) => option.value);
+
+      break;
     }
 
     // Dates
@@ -75,6 +83,8 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     case 'time': {
       const { valueAsDate, value: _value } = formField as HTMLInputElement;
       value = valueAsDate ? valueAsDate.toISOString() : _value;
+
+      break;
     }
 
     // Default - Text
