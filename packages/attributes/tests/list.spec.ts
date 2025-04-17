@@ -1,7 +1,9 @@
-import type { List } from '@finsweet/attributes-list';
+import { type List } from '@finsweet/attributes-list';
 import { CMS_CSS_SELECTORS } from '@finsweet/attributes-list/dom';
 import { getElementSelector, getInstanceSelector, getSettingSelector } from '@finsweet/attributes-list/selectors';
 import { expect, type Page, test } from '@playwright/test';
+import { parseOperatorValue } from '../../list/src/filter/dynamic/utils.js';
+import { SETTINGS } from '../../list/src/utils/constants.js';
 
 test.describe('fs-list: sort', () => {
   test('sort_buttons', async ({ page }) => {
@@ -685,6 +687,128 @@ test.describe('fs-list: load', () => {
 
     await expect(resultsCount).toHaveText('146');
     await expect(firstItemFieldYear).toHaveText('2020');
+  });
+});
+
+test.describe('parseOperatorValue', () => {
+  test('should correctly extract valid operator', () => {
+    const result = parseOperatorValue('equal');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBeUndefined();
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should return undefined for invalid operators', () => {
+    const result = parseOperatorValue('invalid-operator');
+    expect(result.op).toBeUndefined();
+    expect(result.fieldKey).toBeUndefined();
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should extract a single field modifier', () => {
+    const result = parseOperatorValue('equal[field=name]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBe('name');
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should extract a single fieldmatch modifier', () => {
+    const result = parseOperatorValue('equal[fieldmatch=or]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBeUndefined();
+    expect(result.fieldMatch).toBe('or');
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should extract a single filtermatch modifier', () => {
+    const result = parseOperatorValue('equal[filtermatch=and]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBeUndefined();
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBe('and');
+  });
+
+  test('should extract values with double quotes', () => {
+    const result = parseOperatorValue('equal[field="product name"]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBe('product name');
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should extract multiple modifiers in any order', () => {
+    const result = parseOperatorValue('contain[fieldmatch=and][field=tags][filtermatch=or]');
+    expect(result.op).toBe('contain');
+    expect(result.fieldKey).toBe('tags');
+    expect(result.fieldMatch).toBe('and');
+    expect(result.filterMatch).toBe('or');
+  });
+
+  test('should handle mixed quoting styles', () => {
+    const result = parseOperatorValue('contain[fieldmatch="and"][field=tags][filtermatch=or]');
+    expect(result.op).toBe('contain');
+    expect(result.fieldKey).toBe('tags');
+    expect(result.fieldMatch).toBe('and');
+    expect(result.filterMatch).toBe('or');
+  });
+
+  test('should ignore invalid fieldmatch values', () => {
+    const result = parseOperatorValue('equal[fieldmatch=invalid]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBeUndefined();
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should ignore invalid filtermatch values', () => {
+    const result = parseOperatorValue('equal[filtermatch=invalid]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBeUndefined();
+    expect(result.fieldMatch).toBeUndefined();
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should handle all operators from settings', async () => {
+    // Test with all valid operators
+    for (const op of SETTINGS.operator.values) {
+      const result = parseOperatorValue(`${op}`);
+      expect(result.op).toBe(op);
+    }
+  });
+
+  test('should handle complex cases with multiple modifiers and special characters', () => {
+    const result = parseOperatorValue('not-equal[field="product.name with spaces"][fieldmatch=and][filtermatch=or]');
+    expect(result.op).toBe('not-equal');
+    expect(result.fieldKey).toBe('product.name with spaces');
+    expect(result.fieldMatch).toBe('and');
+    expect(result.filterMatch).toBe('or');
+  });
+
+  test('should ignore modifiers with malformed syntax', () => {
+    const result = parseOperatorValue('equal[field=name[fieldmatch=or]');
+    expect(result.op).toBe('equal');
+    expect(result.fieldKey).toBe('name[fieldmatch=or');
+    expect(result.fieldMatch).toBe('or');
+    expect(result.filterMatch).toBeUndefined();
+  });
+
+  test('should handle all allowed fieldmatch values', async () => {
+    for (const value of SETTINGS.fieldmatch.values) {
+      const result = parseOperatorValue(`equal[fieldmatch=${value}]`);
+      expect(result.op).toBe('equal');
+      expect(result.fieldMatch).toBe(value);
+    }
+  });
+
+  test('should handle all allowed filtermatch values', async () => {
+    for (const value of SETTINGS.filtermatch.values) {
+      const result = parseOperatorValue(`equal[filtermatch=${value}]`);
+      expect(result.op).toBe('equal');
+      expect(result.filterMatch).toBe(value);
+    }
   });
 });
 

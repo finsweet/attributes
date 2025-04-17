@@ -43,3 +43,4 @@ packages/*/*.js.map
 .DS_Store
 
 dist
+test-results/

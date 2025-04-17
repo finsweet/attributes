@@ -1,11 +1,11 @@
 import {
   addListener,
   cloneNode,
+  extractCommaSeparatedValues,
   type FormField,
   type FormFieldType,
   isFormField,
   isHTMLSelectElement,
-  isNotEmpty,
   Renderer,
   simulateEvent,
 } from '@finsweet/attributes-utils';
@@ -16,9 +16,9 @@ import { dset } from 'dset';
 import type { List } from '../../components';
 import { ALLOWED_DYNAMIC_FIELD_TYPES, SETTINGS } from '../../utils/constants';
 import { getAttribute, getElementSelector, queryAllElements, queryElement } from '../../utils/selectors';
-import type { AllFieldsData, FilterMatch, FilterOperator, FiltersCondition } from '../types';
+import type { AllFieldsData, FilterOperator, FiltersCondition } from '../types';
 import type { ConditionGroup } from './groups';
-import { getFilterMatchValue } from './utils';
+import { getFilterMatchValue, parseOperatorValue } from './utils';
 
 export type Condition = {
   element: HTMLElement;
@@ -165,33 +165,6 @@ const initConditionFieldKeySelect = (
 };
 
 /**
- * Parses the operator and field match value from a condition operator selection.
- * @param value
- */
-const parseOperatorValue = (value: string): { op?: FilterOperator; fieldMatch?: FilterMatch } => {
-  let op: FilterOperator | undefined;
-  let fieldMatch: FilterMatch | undefined;
-
-  const SUFFIXES = ['', '-and', '-or'];
-
-  for (const operator of SETTINGS.operator.values) {
-    if (!SUFFIXES.some((s) => value === `${operator}${s}`)) continue;
-
-    op = operator;
-
-    if (value.endsWith('-and')) {
-      fieldMatch = 'and';
-    } else if (value.endsWith('-or')) {
-      fieldMatch = 'or';
-    }
-
-    break;
-  }
-
-  return { op, fieldMatch };
-};
-
-/**
  * Inits the condition operator select of a condition.
  * The options are dynamically displayed depending on the selected field key.
  * The logic for displaying options is defined in {@link ALLOWED_DYNAMIC_FIELD_TYPES}.
@@ -209,56 +182,138 @@ const initConditionOperatorSelect = (
 ) => {
   // Change listener
   const changeCleanup = addListener(element, 'change', () => {
-    const { op, fieldMatch = SETTINGS.fieldmatch.defaultValue } = parseOperatorValue(element.value);
+    const {
+      op,
+      fieldMatch = SETTINGS.fieldmatch.defaultValue,
+      filterMatch = SETTINGS.filtermatch.defaultValue,
+    } = parseOperatorValue(element.value);
 
     dset(filters.value, `${condition.path.value}.op`, op);
     dset(filters.value, `${condition.path.value}.fieldMatch`, fieldMatch);
+    dset(filters.value, `${condition.path.value}.filterMatch`, filterMatch);
   });
 
   // Options display logic
   const optionsRunner = effect(() => {
-    const { fieldKey }: FiltersCondition = dlv(filters.value, condition.path.value);
+    const { fieldKey, value: filterValue }: FiltersCondition = dlv(filters.value, condition.path.value);
     const fieldData = fieldKey ? allFieldsData.value[fieldKey] : undefined;
 
     let invalidSelectedOption = false;
 
     // Collect all options data
-    const optionsData = [...element.options].map((option) => {
-      const { op, fieldMatch } = parseOperatorValue(option.value);
+    type OptionData = { option: HTMLOptionElement } & ReturnType<typeof parseOperatorValue>;
 
-      let isValid = option.value === '';
+    const { optionsData, optionsDataByOp, optionsToHide, optionsToDisplay } = [...element.options].reduce<{
+      optionsData: OptionData[];
+      optionsDataByOp: Map<FilterOperator, OptionData[]>;
+      optionsToHide: HTMLOptionElement[];
+      optionsToDisplay: HTMLOptionElement[];
+    }>(
+      (acc, option) => {
+        const invalid = () => {
+          acc.optionsToHide.push(option);
+          return acc;
+        };
 
-      if (!isValid && fieldData && op) {
-        isValid = !!ALLOWED_DYNAMIC_FIELD_TYPES[fieldData.type]?.[fieldData.valueType]?.[op];
+        if (!option.value) return invalid();
+        if (!fieldData) return invalid();
+
+        const operatorData = parseOperatorValue(option.value);
+        if (!operatorData.op) return invalid();
+
+        let isFieldKeyValid = !operatorData.fieldKey;
+
+        if (operatorData.fieldKey) {
+          const fieldKeys =
+            operatorData.fieldKey === '*'
+              ? Object.keys(allFieldsData.value)
+              : extractCommaSeparatedValues(operatorData.fieldKey);
+
+          isFieldKeyValid = fieldKeys.some((key) => key === fieldKey);
+        }
+
+        if (!isFieldKeyValid) return invalid();
+
+        const isValid = !!ALLOWED_DYNAMIC_FIELD_TYPES[fieldData.type]?.[fieldData.valueType]?.[operatorData.op];
+        if (!isValid) return invalid();
+
+        const optionData: OptionData = { option, ...operatorData };
+
+        acc.optionsData.push(optionData);
+        acc.optionsDataByOp.set(operatorData.op, [...(acc.optionsDataByOp.get(operatorData.op) || []), optionData]);
+
+        return acc;
+      },
+      {
+        optionsData: [],
+        optionsDataByOp: new Map(),
+        optionsToHide: [],
+        optionsToDisplay: [],
+      }
+    );
+
+    const isMultiFilterValue = Array.isArray(filterValue);
+    const isMultiFieldValue = fieldData?.valueType === 'multiple';
+
+    for (const {
+      op,
+      option,
+      fieldMatch = SETTINGS.fieldmatch.defaultValue,
+      filterMatch = SETTINGS.filtermatch.defaultValue,
+    } of optionsData) {
+      const opOptionsData = optionsDataByOp.get(op!) || [];
+
+      let optionWithPreference;
+
+      if (isMultiFilterValue && isMultiFieldValue) {
+        optionWithPreference =
+          opOptionsData.find((other) => other.fieldMatch === fieldMatch && other.filterMatch === filterMatch) ||
+          opOptionsData.find((other) => other.fieldMatch === fieldMatch) ||
+          opOptionsData.find((other) => other.filterMatch === filterMatch) ||
+          opOptionsData.find((other) => other.fieldMatch && other.filterMatch) ||
+          opOptionsData.find((other) => other.fieldMatch) ||
+          opOptionsData.find((other) => other.filterMatch) ||
+          opOptionsData.find((other) => !other.fieldMatch && !other.filterMatch);
       }
 
-      return { option, op, fieldMatch, isValid };
-    });
-
-    // Filter out invalid options, or options that have less preference
-    for (const { option, op, fieldMatch, isValid } of optionsData) {
-      let shouldDisplay = isValid;
-
-      // Options that have a fieldMatch are preferred over those that don't
-      // when the fieldValueType is 'multiple'
-      if (isValid && fieldData?.valueType === 'multiple' && !fieldMatch) {
-        shouldDisplay = !optionsData.some(
-          (other) => other.option !== option && other.isValid && other.op === op && other.fieldMatch
-        );
+      if (!isMultiFilterValue && isMultiFieldValue) {
+        optionWithPreference =
+          opOptionsData.find((other) => !other.filterMatch && other.fieldMatch === fieldMatch) ||
+          opOptionsData.find((other) => other.fieldMatch === fieldMatch) ||
+          opOptionsData.find((other) => other.fieldMatch) ||
+          opOptionsData.find((other) => !other.fieldMatch && !other.filterMatch);
       }
 
-      // Options that don't have a fieldMatch are preferred over those that do
-      // when the fieldValueType is 'single'
-      if (isValid && fieldData?.valueType === 'single' && fieldMatch) {
-        shouldDisplay = !optionsData.some(
-          (other) => other.option !== option && other.isValid && other.op === op && !other.fieldMatch
-        );
+      if (isMultiFilterValue && !isMultiFieldValue) {
+        optionWithPreference =
+          opOptionsData.find((other) => !other.fieldMatch && other.filterMatch === filterMatch) ||
+          opOptionsData.find((other) => other.filterMatch === filterMatch) ||
+          opOptionsData.find((other) => other.filterMatch) ||
+          opOptionsData.find((other) => !other.filterMatch && !other.fieldMatch);
       }
 
-      option.style.display = shouldDisplay ? '' : 'none';
-      option.disabled = !shouldDisplay;
+      if (!isMultiFilterValue && !isMultiFieldValue) {
+        optionWithPreference = opOptionsData.find((other) => !other.filterMatch && !other.fieldMatch);
+      }
 
-      if (!shouldDisplay && option.selected) {
+      const otherOptionHasPreference = optionWithPreference?.option !== option;
+      if (otherOptionHasPreference) {
+        optionsToHide.push(option);
+      } else {
+        optionsToDisplay.push(option);
+      }
+    }
+
+    for (const option of optionsToDisplay) {
+      option.style.display = '';
+      option.disabled = false;
+    }
+
+    for (const option of optionsToHide) {
+      option.style.display = 'none';
+      option.disabled = true;
+
+      if (option.selected) {
         option.selected = false;
         invalidSelectedOption = true;
       }

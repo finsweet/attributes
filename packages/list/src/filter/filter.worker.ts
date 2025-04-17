@@ -108,12 +108,12 @@ self.onmessage = (e: MessageEvent<FilterTaskData>) => {
           return false;
         };
 
-        const fields =
+        const fieldKeys =
           filterData.fieldKey === '*'
             ? Object.keys(items[0]?.fields || {})
             : extractCommaSeparatedValues(filterData.fieldKey);
 
-        return filterData.fieldMatch === 'and' ? fields.every(fieldsPredicate) : fields.some(fieldsPredicate);
+        return filterData.fieldMatch === 'and' ? fieldKeys.every(fieldsPredicate) : fieldKeys.some(fieldsPredicate);
       };
 
       return groupData.conditionsMatch === 'or'
