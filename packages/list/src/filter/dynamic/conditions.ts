@@ -462,7 +462,9 @@ const getConditionValue = (conditionValueField: FormField) => {
   switch (type) {
     // Select multiple
     case 'select-multiple': {
-      value = [...(conditionValueField as HTMLSelectElement).selectedOptions].map((option) => option.value);
+      value = [...(conditionValueField as HTMLSelectElement).selectedOptions]
+        .map((option) => option.value)
+        .filter(Boolean);
       break;
     }
 

@@ -71,7 +71,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
 
     // Select multiple
     case 'select-multiple': {
-      value = [...(formField as HTMLSelectElement).selectedOptions].map((option) => option.value);
+      value = [...(formField as HTMLSelectElement).selectedOptions].map((option) => option.value).filter(Boolean);
 
       break;
     }
