@@ -15,8 +15,8 @@ export type FiltersCondition = {
   op?: FilterOperator;
   type: FormFieldType;
   value: string | string[];
-  filterMatch: FilterMatch;
-  fieldMatch: FilterMatch;
+  filterMatch?: FilterMatch;
+  fieldMatch?: FilterMatch;
   fuzzyThreshold?: number;
   interacted?: boolean;
 };

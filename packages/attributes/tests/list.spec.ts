@@ -696,7 +696,6 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBe('equal');
     expect(result.fieldKey).toBeUndefined();
     expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBeUndefined();
   });
 
   test('should return undefined for invalid operators', () => {
@@ -704,7 +703,6 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBeUndefined();
     expect(result.fieldKey).toBeUndefined();
     expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBeUndefined();
   });
 
   test('should extract a single field modifier', () => {
@@ -712,7 +710,6 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBe('equal');
     expect(result.fieldKey).toBe('name');
     expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBeUndefined();
   });
 
   test('should extract a single fieldmatch modifier', () => {
@@ -720,15 +717,6 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBe('equal');
     expect(result.fieldKey).toBeUndefined();
     expect(result.fieldMatch).toBe('or');
-    expect(result.filterMatch).toBeUndefined();
-  });
-
-  test('should extract a single filtermatch modifier', () => {
-    const result = parseOperatorValue('equal[filtermatch=and]');
-    expect(result.op).toBe('equal');
-    expect(result.fieldKey).toBeUndefined();
-    expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBe('and');
   });
 
   test('should extract values with double quotes', () => {
@@ -736,23 +724,20 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBe('equal');
     expect(result.fieldKey).toBe('product name');
     expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBeUndefined();
   });
 
   test('should extract multiple modifiers in any order', () => {
-    const result = parseOperatorValue('contain[fieldmatch=and][field=tags][filtermatch=or]');
+    const result = parseOperatorValue('contain[fieldmatch=and][field=tags]');
     expect(result.op).toBe('contain');
     expect(result.fieldKey).toBe('tags');
     expect(result.fieldMatch).toBe('and');
-    expect(result.filterMatch).toBe('or');
   });
 
   test('should handle mixed quoting styles', () => {
-    const result = parseOperatorValue('contain[fieldmatch="and"][field=tags][filtermatch=or]');
+    const result = parseOperatorValue('contain[fieldmatch="and"][field=tags]');
     expect(result.op).toBe('contain');
     expect(result.fieldKey).toBe('tags');
     expect(result.fieldMatch).toBe('and');
-    expect(result.filterMatch).toBe('or');
   });
 
   test('should ignore invalid fieldmatch values', () => {
@@ -760,15 +745,6 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBe('equal');
     expect(result.fieldKey).toBeUndefined();
     expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBeUndefined();
-  });
-
-  test('should ignore invalid filtermatch values', () => {
-    const result = parseOperatorValue('equal[filtermatch=invalid]');
-    expect(result.op).toBe('equal');
-    expect(result.fieldKey).toBeUndefined();
-    expect(result.fieldMatch).toBeUndefined();
-    expect(result.filterMatch).toBeUndefined();
   });
 
   test('should handle all operators from settings', async () => {
@@ -780,11 +756,10 @@ test.describe('parseOperatorValue', () => {
   });
 
   test('should handle complex cases with multiple modifiers and special characters', () => {
-    const result = parseOperatorValue('not-equal[field="product.name with spaces"][fieldmatch=and][filtermatch=or]');
+    const result = parseOperatorValue('not-equal[field="product.name with spaces"][fieldmatch=and]');
     expect(result.op).toBe('not-equal');
     expect(result.fieldKey).toBe('product.name with spaces');
     expect(result.fieldMatch).toBe('and');
-    expect(result.filterMatch).toBe('or');
   });
 
   test('should ignore modifiers with malformed syntax', () => {
@@ -792,7 +767,6 @@ test.describe('parseOperatorValue', () => {
     expect(result.op).toBe('equal');
     expect(result.fieldKey).toBe('name[fieldmatch=or');
     expect(result.fieldMatch).toBe('or');
-    expect(result.filterMatch).toBeUndefined();
   });
 
   test('should handle all allowed fieldmatch values', async () => {
@@ -800,14 +774,6 @@ test.describe('parseOperatorValue', () => {
       const result = parseOperatorValue(`equal[fieldmatch=${value}]`);
       expect(result.op).toBe('equal');
       expect(result.fieldMatch).toBe(value);
-    }
-  });
-
-  test('should handle all allowed filtermatch values', async () => {
-    for (const value of SETTINGS.filtermatch.values) {
-      const result = parseOperatorValue(`equal[filtermatch=${value}]`);
-      expect(result.op).toBe('equal');
-      expect(result.filterMatch).toBe(value);
     }
   });
 });

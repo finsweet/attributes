@@ -1,13 +1,10 @@
 import { SETTINGS } from '../../utils/constants';
 import type { FilterMatch, FilterOperator } from '../types';
 
-const FIELD_MATCH_VALUES = SETTINGS.fieldmatch.values.join('|');
-const FILTER_MATCH_VALUES = SETTINGS.filtermatch.values.join('|');
-
 const FIELD_REGEX = /\[field=(?:"([^"]*)"|([^\]]+))\]/;
 const OPERATOR_REGEX = new RegExp(`^(${SETTINGS.operator.values.join('|')})`);
+const FIELD_MATCH_VALUES = SETTINGS.fieldmatch.values.join('|');
 const FIELD_MATCH_REGEX = new RegExp(`\\[fieldmatch=(${FIELD_MATCH_VALUES}|"(${FIELD_MATCH_VALUES})")\\]`);
-const FILTER_MATCH_REGEX = new RegExp(`\\[filtermatch=(${FILTER_MATCH_VALUES}|"(${FILTER_MATCH_VALUES})")\\]`);
 
 /**
  * @returns The filter match value of a given select element.
@@ -23,11 +20,10 @@ export const getFilterMatchValue = (selectElement: HTMLSelectElement): FilterMat
  */
 export const parseOperatorValue = (
   value: string
-): { op?: FilterOperator; fieldKey?: string; fieldMatch?: FilterMatch; filterMatch?: FilterMatch } => {
+): { op?: FilterOperator; fieldKey?: string; fieldMatch?: FilterMatch } => {
   let op: FilterOperator | undefined;
   let fieldKey: string | undefined;
   let fieldMatch: FilterMatch | undefined;
-  let filterMatch: FilterMatch | undefined;
 
   const opMatch = value.match(OPERATOR_REGEX);
   if (opMatch) {
@@ -44,10 +40,5 @@ export const parseOperatorValue = (
     fieldMatch = (fieldMatchMatch[2] || fieldMatchMatch[1]) as FilterMatch;
   }
 
-  const filterMatchMatch = value.match(FILTER_MATCH_REGEX);
-  if (filterMatchMatch) {
-    filterMatch = (filterMatchMatch[2] || filterMatchMatch[1]) as FilterMatch;
-  }
-
-  return { op, fieldKey, fieldMatch, filterMatch };
+  return { op, fieldKey, fieldMatch };
 };

@@ -34,7 +34,6 @@ export type Condition = {
  * @param conditionGroup
  */
 export const initConditionsMatch = (list: List, element: HTMLSelectElement, conditionGroup: ConditionGroup) => {
-  // TODO: support fs-list-filteron
   const inputCleanup = addListener(element, 'change', () => {
     const conditionsMatch = getFilterMatchValue(element);
 
@@ -182,15 +181,10 @@ const initConditionOperatorSelect = (
 ) => {
   // Change listener
   const changeCleanup = addListener(element, 'change', () => {
-    const {
-      op,
-      fieldMatch = SETTINGS.fieldmatch.defaultValue,
-      filterMatch = SETTINGS.filtermatch.defaultValue,
-    } = parseOperatorValue(element.value);
+    const { op, fieldMatch = SETTINGS.fieldmatch.defaultValue } = parseOperatorValue(element.value);
 
     dset(filters.value, `${condition.path.value}.op`, op);
     dset(filters.value, `${condition.path.value}.fieldMatch`, fieldMatch);
-    dset(filters.value, `${condition.path.value}.filterMatch`, filterMatch);
   });
 
   // Options display logic
@@ -252,48 +246,20 @@ const initConditionOperatorSelect = (
       }
     );
 
-    const isMultiFilterValue = Array.isArray(filterValue);
     const isMultiFieldValue = fieldData?.valueType === 'multiple';
 
-    for (const {
-      op,
-      option,
-      fieldMatch = SETTINGS.fieldmatch.defaultValue,
-      filterMatch = SETTINGS.filtermatch.defaultValue,
-    } of optionsData) {
+    for (const { op, option, fieldMatch = SETTINGS.fieldmatch.defaultValue } of optionsData) {
       const opOptionsData = optionsDataByOp.get(op!) || [];
 
       let optionWithPreference;
 
-      if (isMultiFilterValue && isMultiFieldValue) {
+      if (isMultiFieldValue) {
         optionWithPreference =
-          opOptionsData.find((other) => other.fieldMatch === fieldMatch && other.filterMatch === filterMatch) ||
-          opOptionsData.find((other) => other.fieldMatch === fieldMatch) ||
-          opOptionsData.find((other) => other.filterMatch === filterMatch) ||
-          opOptionsData.find((other) => other.fieldMatch && other.filterMatch) ||
-          opOptionsData.find((other) => other.fieldMatch) ||
-          opOptionsData.find((other) => other.filterMatch) ||
-          opOptionsData.find((other) => !other.fieldMatch && !other.filterMatch);
-      }
-
-      if (!isMultiFilterValue && isMultiFieldValue) {
-        optionWithPreference =
-          opOptionsData.find((other) => !other.filterMatch && other.fieldMatch === fieldMatch) ||
           opOptionsData.find((other) => other.fieldMatch === fieldMatch) ||
           opOptionsData.find((other) => other.fieldMatch) ||
-          opOptionsData.find((other) => !other.fieldMatch && !other.filterMatch);
-      }
-
-      if (isMultiFilterValue && !isMultiFieldValue) {
-        optionWithPreference =
-          opOptionsData.find((other) => !other.fieldMatch && other.filterMatch === filterMatch) ||
-          opOptionsData.find((other) => other.filterMatch === filterMatch) ||
-          opOptionsData.find((other) => other.filterMatch) ||
-          opOptionsData.find((other) => !other.filterMatch && !other.fieldMatch);
-      }
-
-      if (!isMultiFilterValue && !isMultiFieldValue) {
-        optionWithPreference = opOptionsData.find((other) => !other.filterMatch && !other.fieldMatch);
+          opOptionsData.find((other) => !other.fieldMatch);
+      } else {
+        optionWithPreference = opOptionsData.find((other) => !other.fieldMatch);
       }
 
       const otherOptionHasPreference = optionWithPreference?.option !== option;
@@ -531,10 +497,9 @@ const getConditionData = (
   conditionOperatorSelect: HTMLSelectElement,
   conditionValueField: FormField
 ): FiltersCondition | undefined => {
-  const type = conditionValueField.type as FormFieldType;
-  const rawOp = conditionOperatorSelect.value as FilterOperator;
   const fieldKey = conditionFieldSelect.value;
-  const op = SETTINGS.operator.values.includes(rawOp) ? rawOp : undefined;
+  const type = conditionValueField.type as FormFieldType;
+  const { op, fieldMatch } = parseOperatorValue(conditionOperatorSelect.value);
 
   const value = getConditionValue(conditionValueField);
   const fuzzyThreshold = getAttribute(conditionValueField, 'fuzzy');
@@ -545,8 +510,7 @@ const getConditionData = (
     op,
     value,
     fuzzyThreshold,
-    fieldMatch: 'or', // TODO
-    filterMatch: 'or', // TODO
+    fieldMatch,
   };
 };
 

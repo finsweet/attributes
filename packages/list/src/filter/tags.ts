@@ -275,7 +275,7 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
 
       // Set the value
       const value = Array.isArray(formattedValue)
-        ? formattedValue.join(condition.filterMatch === 'or' ? ' | ' : ' & ')
+        ? formattedValue.join(condition.filterMatch === 'and' ? ' & ' : ' | ')
         : formattedValue;
 
       valueElement.textContent = value;
