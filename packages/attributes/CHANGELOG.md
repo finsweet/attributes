@@ -1,5 +1,19 @@
 # @finsweet/attributes
 
+## 2.1.0
+
+### Minor Changes
+
+- 99ec3f2: feat: fs-list
+
+### Patch Changes
+
+- Updated dependencies [99ec3f2]
+  - @finsweet/attributes-list@1.0.0
+  - @finsweet/attributes-accordion@2.0.1
+  - @finsweet/attributes-socialshare@1.3.2
+  - @finsweet/attributes-videohls@1.0.4
+
 ## 2.0.5
 
 ### Patch Changes

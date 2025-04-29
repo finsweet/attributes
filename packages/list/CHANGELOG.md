@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.0.0
+
+### Major Changes
+
+- 99ec3f2: feat: fs-list
+
 ## 0.1.1
 
 ### Patch Changes
