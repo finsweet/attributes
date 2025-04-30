@@ -1,5 +1,12 @@
 # @finsweet/attributes-docs
 
+## 2.0.5
+
+### Patch Changes
+
+- 6094885: handle radio and checkboxes
+- 6094885: chore: xray always target its elements and add borders color update
+
 ## 2.0.4
 
 ### Patch Changes
