@@ -266,11 +266,7 @@ const queryElementsWithFsAttributes = () => {
       altTags.includes(element.tagName) &&
       (element.getAttribute('type') === 'checkbox' || element.getAttribute('type') === 'radio')
     ) {
-      return (
-        element.parentElement?.querySelector<HTMLElement>('.fs-checkbox_button') ||
-        element.parentElement?.querySelector<HTMLElement>('.fs-radio_button') ||
-        element
-      );
+      return element.closest('label') || element;
     }
 
     return element;
