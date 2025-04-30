@@ -323,15 +323,15 @@ const xrayInit = (): void => {
 
   xrayElements = queryElementsWithFsAttributes();
 
-  if (xrayActive) {
-    xrayElements.forEach((element) => {
-      if (checkAndIgnoreElement(element)) return;
+  xrayElements.forEach((element) => {
+    if (checkAndIgnoreElement(element)) return;
 
-      if (element && !element.classList.contains(targetClass)) {
-        element.classList.add(targetClass);
-      }
-    });
-  }
+    const hasClass = element.classList.contains(targetClass);
+
+    if ((!xrayActive && hasClass) || (xrayActive && !hasClass)) {
+      element.classList.toggle(targetClass);
+    }
+  });
 };
 
 /**
