@@ -29,10 +29,6 @@ let xrayActive = true;
  */
 let tooltip: HTMLElement | null;
 /**
- * Initial load state.
- */
-let initialLoad = true;
-/**
  * Store for elements with 'x-ray' attribute.
  */
 let xrayElements: HTMLElement[] = [];
@@ -295,13 +291,13 @@ const updateTooltipStyle = () => {
 
     document.head.appendChild(style);
   }
-
   style.innerHTML = `
     .${targetClass}, .${targetClass}:hover {
       outline-color: ${backgroundColor} !important;
       outline-offset: 3px !important;
       outline-width: 1px !important;
       outline-style: solid !important;
+      border-radius: 0.25rem !important;
     }
   `;
 };
@@ -331,16 +327,14 @@ const xrayInit = (): void => {
 
   xrayElements = queryElementsWithFsAttributes();
 
-  if (initialLoad) {
+  if (xrayActive) {
     xrayElements.forEach((element) => {
       if (checkAndIgnoreElement(element)) return;
 
-      if (element) {
+      if (element && !element.classList.contains(targetClass)) {
         element.classList.add(targetClass);
       }
     });
-
-    initialLoad = false;
   }
 };
 
