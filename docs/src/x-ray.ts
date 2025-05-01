@@ -326,11 +326,7 @@ const xrayInit = (): void => {
   xrayElements.forEach((element) => {
     if (checkAndIgnoreElement(element)) return;
 
-    const hasClass = element.classList.contains(targetClass);
-
-    if ((!xrayActive && hasClass) || (xrayActive && !hasClass)) {
-      element.classList.toggle(targetClass);
-    }
+    element.classList.toggle(targetClass, xrayActive);
   });
 };
 
@@ -349,7 +345,7 @@ const handleKeydown = (e: KeyboardEvent) => {
     xrayElements.forEach((element) => {
       if (checkAndIgnoreElement(element)) return;
 
-      element.classList.toggle(targetClass);
+      element.classList.toggle(targetClass, xrayActive);
     });
   }
 };
