@@ -25,6 +25,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const type = formField.type as FormFieldType;
 
   const op = getConditionOperator(formField);
+  const id = `${fieldKey}_${op}`;
 
   const customTagField = getAttribute(formField, 'tagfield');
   const filterMatch = getAttribute(formField, 'filtermatch', { filterInvalid: true });
@@ -94,6 +95,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   }
 
   return {
+    id,
     fieldKey,
     type,
     op,
@@ -249,6 +251,7 @@ export const getStandardFiltersGroup = (list: List, form: HTMLFormElement, inter
   list.readingFilters = true;
 
   const group: FiltersGroup = {
+    id: crypto.randomUUID(),
     conditions: [],
     conditionsMatch: getAttribute(form, 'conditionsmatch', { filterInvalid: true }),
   };

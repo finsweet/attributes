@@ -32,7 +32,7 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
   const filteringCleanup = isDynamic ? initDynamicFilters(list, forms[0]) : initStandardFilters(list, forms);
 
   // Init Tags
-  const tagsCleanup = initTags(list);
+  const tagsCleanup = initTags(list, isDynamic);
 
   // Trigger the hook when the filters change
   const filtersCleanup = watch(

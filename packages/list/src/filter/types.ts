@@ -10,6 +10,7 @@ export type FilterOperator = FilterOperatorValues[number];
 export type FilterMatch = 'and' | 'or';
 
 export type FiltersCondition = {
+  id: string;
   fieldKey: string;
   customTagField?: string;
   op?: FilterOperator;
@@ -22,6 +23,7 @@ export type FiltersCondition = {
 };
 
 export type FiltersGroup = {
+  id: string;
   conditionsMatch: FilterMatch;
   conditions: FiltersCondition[];
 };

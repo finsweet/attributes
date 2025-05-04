@@ -16,6 +16,7 @@ type TagData = {
 type TagGroupData = {
   element: HTMLElement;
   renderedTags: Map<string, TagData>;
+  remove: () => void;
   cleanup: () => void;
 };
 
@@ -39,9 +40,10 @@ const OPERATOR_SYMBOLS: Record<FilterOperator, string> = {
 /**
  * Inits the tags for the list.
  * @param list
- * @returns
+ * @param isDynamic Defines if the filters are dynamic or not
+ * @returns A cleanup function
  */
-export const initTags = (list: List) => {
+export const initTags = (list: List, isDynamic: boolean) => {
   const tagTemplate = queryElement('tag', { instance: list.instance });
   if (!tagTemplate) return;
 
@@ -76,12 +78,19 @@ export const initTags = (list: List) => {
           const element = cloneNode(tagGroupTemplate);
           const removeElement = queryElement('tag-group-remove', { scope: element });
           const removeCleanup = addListener(removeElement, 'click', () => {
-            tagGroupData?.renderedTags.forEach((tag) => tag.remove());
+            tagGroupData?.remove();
           });
 
           tagGroupData = {
             element,
             renderedTags: new Map(),
+            remove: () => {
+              tagGroupData?.renderedTags.forEach((tag) => tag.remove());
+
+              if (isDynamic) {
+                filters.groups.splice(groupIndex, 1);
+              }
+            },
             cleanup: () => {
               removeCleanup();
               tagGroupData?.renderedTags.forEach((tag) => tag.cleanup());
@@ -99,9 +108,7 @@ export const initTags = (list: List) => {
         const shouldRender = group.conditions
           .map((condition, conditionIndex) => {
             // Get the tag, if existing
-            const tagKey = `${condition.fieldKey}_${condition.op}`;
-
-            let tagData = tagGroupData.renderedTags.get(tagKey);
+            let tagData = tagGroupData.renderedTags.get(condition.id);
 
             const tagIsRendered = !!tagData;
 
@@ -124,18 +131,26 @@ export const initTags = (list: List) => {
               tagData = {
                 element,
                 remove: () => {
-                  filters.groups[groupIndex].conditions[conditionIndex].value = Array.isArray(condition.value)
-                    ? []
-                    : '';
+                  const existingConditions = filters.groups[groupIndex].conditions.length;
+
+                  if (isDynamic && existingConditions > 1) {
+                    console.log({ conditions: filters.groups[groupIndex].conditions, conditionIndex });
+
+                    filters.groups[groupIndex].conditions.splice(conditionIndex, 1);
+                  } else {
+                    filters.groups[groupIndex].conditions[conditionIndex].value = Array.isArray(condition.value)
+                      ? []
+                      : '';
+                  }
                 },
                 cleanup: () => {
                   removeCleanup();
                   tagData?.element.remove();
-                  tagGroupData.renderedTags.delete(tagKey);
+                  tagGroupData.renderedTags.delete(condition.id);
                 },
               };
 
-              tagGroupData.renderedTags.set(tagKey, tagData);
+              tagGroupData.renderedTags.set(condition.id, tagData);
             }
 
             populateTag(condition, tagData);
