@@ -1,9 +1,9 @@
-import { addListener, cloneNode, Renderer } from '@finsweet/attributes-utils';
+import { addListener, cloneNode } from '@finsweet/attributes-utils';
 import { computed, type ComputedRef, effect, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 
 import type { List } from '../../components';
 import { getAttribute, queryElement } from '../../utils/selectors';
-import type { AllFieldsData, FilterMatch } from '../types';
+import type { FilterMatch } from '../types';
 import { type Condition, initCondition, initConditionAdd, initConditionsMatch } from './conditions';
 import { getFilterMatchValue } from './utils';
 
@@ -32,13 +32,6 @@ export const initConditionGroupsMatch = (
     list.filters.value.groupsMatch = getFilterMatchValue(element);
   });
 
-  const twoWayBindingCleanup = watch(
-    () => list.filters.value.groupsMatch,
-    (groupsMatch?: FilterMatch) => {
-      element.value = groupsMatch || '';
-    }
-  );
-
   const disabledClass = getAttribute(element, 'dynamicdisabledclass');
 
   const runner = effect(() => {
@@ -51,7 +44,6 @@ export const initConditionGroupsMatch = (
   return () => {
     inputCleanup();
     runner.effect.stop();
-    twoWayBindingCleanup();
   };
 };
 

@@ -245,13 +245,14 @@ export const getConditionOperator = (formField: FormField) => {
  * @returns An object with the form fields as keys and their values as values.
  * @param list A {@link List} instance.
  * @param form A {@link HTMLFormElement} element.
+ * @param groupIndex The index of the group.
  * @param interacted Indicates if the form has been interacted with.
  */
-export const getStandardFiltersGroup = (list: List, form: HTMLFormElement, interacted = false) => {
+export const getStandardFiltersGroup = (list: List, form: HTMLFormElement, groupIndex: number, interacted = false) => {
   list.readingFilters = true;
 
   const group: FiltersGroup = {
-    id: crypto.randomUUID(),
+    id: groupIndex.toString(),
     conditions: [],
     conditionsMatch: getAttribute(form, 'conditionsmatch', { filterInvalid: true }),
   };

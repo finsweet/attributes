@@ -44,7 +44,7 @@ const initStandardFiltersForm = (list: List, form: HTMLFormElement, groupIndex: 
   const groupsMatch = getAttribute(form, 'groupsmatch', { filterInvalid: true });
 
   list.filters.value.groupsMatch ||= groupsMatch;
-  list.filters.value.groups[groupIndex] = getStandardFiltersGroup(list, form);
+  list.filters.value.groups[groupIndex] = getStandardFiltersGroup(list, form, groupIndex);
 
   // 2 way binding
   const twoWayBindingCleanup = watch(
@@ -83,7 +83,7 @@ const handleFormFields = (list: List, form: HTMLFormElement, groupIndex: number,
     return addListener(form, 'submit', () => {
       list.readingFilters = true;
 
-      list.filters.value.groups[groupIndex] = getStandardFiltersGroup(list, form, true);
+      list.filters.value.groups[groupIndex] = getStandardFiltersGroup(list, form, groupIndex, true);
 
       list.readingFilters = false;
     });

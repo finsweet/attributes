@@ -50,8 +50,6 @@ const processFilterTask = (worker: FilterWorker, task: FilterTask) => {
     { signal, once: true }
   );
 
-  console.log(task.data);
-
   worker.postMessage(task.data);
 };
 
