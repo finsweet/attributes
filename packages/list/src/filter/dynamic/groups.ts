@@ -10,7 +10,6 @@ import { getFilterMatchValue } from './utils';
 export type ConditionGroup = {
   id: string;
   element: HTMLElement;
-  index: ComputedRef<number>;
   conditions: ShallowRef<Condition[]>;
   cleanup: () => void;
 };
@@ -115,6 +114,15 @@ const initConditionGroupRemove = (
 };
 
 /**
+ * @returns The condition group with the given ID, or undefined if not found.
+ * @param list
+ * @param conditionGroup
+ */
+export const getFiltersGroup = (list: List, conditionGroup: ConditionGroup) => {
+  return list.filters.value.groups.find((group) => group.id === conditionGroup.id);
+};
+
+/**
  * Inits a condition group for a dynamic filters setup.
  * @param list
  * @param element
@@ -139,7 +147,6 @@ export const initConditionGroup = (
     id,
     element,
     conditions: shallowRef<Condition[]>([]),
-    index: computed(() => list.filters.value.groups.findIndex((group) => group.id === id)),
 
     cleanup: () => {
       for (const condition of conditionGroup.conditions.value) {
@@ -154,7 +161,11 @@ export const initConditionGroup = (
       element.remove();
 
       conditionGroups.value = conditionGroups.value.filter((group) => group.id !== id);
-      list.filters.value.groups.splice(conditionGroup.index.value, 1);
+
+      const conditionGroupIndex = list.filters.value.groups.findIndex((group) => group.id === id);
+      if (conditionGroupIndex === -1) return;
+
+      list.filters.value.groups.splice(conditionGroupIndex, 1);
     },
   };
 
@@ -194,6 +205,17 @@ export const initConditionGroup = (
 
   // Init default condition
   initCondition(list, conditionElement, conditionGroup);
+
+  const autoCleanup = watch(
+    () => getFiltersGroup(list, conditionGroup),
+    (filtersGroup) => {
+      if (!filtersGroup) {
+        conditionGroup.cleanup();
+      }
+    }
+  );
+
+  cleanups.add(autoCleanup);
 
   return conditionGroup;
 };

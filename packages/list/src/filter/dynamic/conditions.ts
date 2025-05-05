@@ -8,20 +8,19 @@ import {
   isHTMLSelectElement,
   simulateEvent,
 } from '@finsweet/attributes-utils';
-import { computed, type ComputedRef, effect, watch } from '@vue/reactivity';
+import { effect, watch } from '@vue/reactivity';
 import debounce from 'just-debounce';
 
 import type { List } from '../../components';
 import { ALLOWED_DYNAMIC_FIELD_TYPES, SETTINGS } from '../../utils/constants';
 import { getAttribute, getElementSelector, queryAllElements, queryElement } from '../../utils/selectors';
-import type { AllFieldsData, FilterOperator, FiltersCondition } from '../types';
-import type { ConditionGroup } from './groups';
+import type { AllFieldsData, FilterOperator, FiltersCondition, FiltersGroup } from '../types';
+import { type ConditionGroup, getFiltersGroup } from './groups';
 import { getFilterMatchValue, parseOperatorValue } from './utils';
 
 export type Condition = {
   id: string;
   element: HTMLElement;
-  index: ComputedRef<number>;
   conditionGroup: ConditionGroup;
   cleanup: () => void;
 };
@@ -35,9 +34,12 @@ export type Condition = {
 export const initConditionsMatch = (list: List, element: HTMLSelectElement, conditionGroup: ConditionGroup) => {
   // TODO: support fs-list-filteron
   const inputCleanup = addListener(element, 'change', () => {
+    const filtersGroup = getFiltersGroup(list, conditionGroup);
+    if (!filtersGroup) return;
+
     const conditionsMatch = getFilterMatchValue(element);
 
-    list.filters.value.groups[conditionGroup.index.value].conditionsMatch = conditionsMatch;
+    filtersGroup.conditionsMatch = conditionsMatch;
   });
 
   const disabledClass = getAttribute(element, 'dynamicdisabledclass');
@@ -126,8 +128,10 @@ const initConditionRemove = (element: HTMLElement, condition: Condition, conditi
  */
 const initConditionFieldKeySelect = (list: List, element: HTMLSelectElement, condition: Condition) => {
   const changeCleanup = addListener(element, 'change', () => {
-    list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value].fieldKey =
-      element.value;
+    const filtersCondition = getFiltersCondition(list, condition);
+    if (!filtersCondition) return;
+
+    filtersCondition.fieldKey = element.value;
   });
 
   const fieldsRunner = effect(() => {
@@ -168,12 +172,12 @@ const initConditionFieldKeySelect = (list: List, element: HTMLSelectElement, con
 const initConditionOperatorSelect = (list: List, element: HTMLSelectElement, condition: Condition) => {
   // Change listener
   const changeCleanup = addListener(element, 'change', () => {
+    const filtersCondition = getFiltersCondition(list, condition);
+    if (!filtersCondition) return;
+
     const { op, fieldMatch = SETTINGS.fieldmatch.defaultValue } = parseOperatorValue(element.value);
 
-    Object.assign(list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value], {
-      op,
-      fieldMatch,
-    });
+    Object.assign(filtersCondition, { op, fieldMatch });
   });
 
   // Options display logic
@@ -279,10 +283,7 @@ const initConditionOperatorSelect = (list: List, element: HTMLSelectElement, con
   };
 
   const optionsCleanup = watch(
-    [
-      () => list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value].fieldKey,
-      list.allFieldsData,
-    ],
+    [() => getFiltersCondition(list, condition)?.fieldKey, list.allFieldsData],
     debounce(optionsHandler, 0),
     { immediate: true }
   );
@@ -344,12 +345,15 @@ const initConditionValueField = (
   const changeHandler = () => {
     if (!activeFormFieldType) return;
 
+    const filtersCondition = getFiltersCondition(list, condition);
+    if (!filtersCondition) return;
+
     const activeFormField = allConditionFormFields.get(activeFormFieldType)!;
 
     const value = getConditionValue(activeFormField);
     const fuzzyThreshold = getAttribute(activeFormField, 'fuzzy');
 
-    Object.assign(list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value], {
+    Object.assign(filtersCondition, {
       value,
       fuzzyThreshold,
       type: activeFormFieldType,
@@ -437,8 +441,8 @@ const initConditionValueField = (
 
   const formFieldsCleanup = watch(
     [
-      () => list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value].fieldKey,
-      () => list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value].op,
+      () => getFiltersCondition(list, condition)?.fieldKey,
+      () => getFiltersCondition(list, condition)?.op,
       list.allFieldsData,
     ],
     debounce(formFieldsHandler, 0),
@@ -446,10 +450,7 @@ const initConditionValueField = (
   );
 
   const optionsCleanup = watch(
-    [
-      () => list.filters.value.groups[condition.conditionGroup.index.value].conditions[condition.index.value].fieldKey,
-      list.allFieldsData,
-    ],
+    [() => getFiltersCondition(list, condition)?.fieldKey, list.allFieldsData],
     debounce(optionsHandler, 0),
     { immediate: true }
   );
@@ -502,6 +503,13 @@ const getConditionValue = (conditionValueField: FormField) => {
   return value;
 };
 
+const getFiltersCondition = (list: List, condition: Condition) => {
+  const group = getFiltersGroup(list, condition.conditionGroup);
+  if (!group) return;
+
+  return group.conditions.find((c) => c.id === condition.id);
+};
+
 /**
  * Inits a condition
  * @param list
@@ -527,9 +535,6 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
     id,
     element,
     conditionGroup,
-    index: computed(() =>
-      list.filters.value.groups[conditionGroup.index.value].conditions.findIndex((condition) => condition.id === id)
-    ),
 
     cleanup: () => {
       for (const cleanup of cleanups) {
@@ -540,21 +545,16 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
       element.remove();
 
       conditionGroup.conditions.value = conditionGroup.conditions.value.filter((condition) => condition.id !== id);
-      list.filters.value.groups[conditionGroup.index.value].conditions.splice(condition.index.value, 1);
+
+      const filtersGroup = getFiltersGroup(list, conditionGroup);
+      if (!filtersGroup) return;
+
+      const conditionIndex = filtersGroup.conditions.findIndex((condition) => condition.id === id);
+      if (conditionIndex === -1) return;
+
+      filtersGroup.conditions.splice(conditionIndex, 1);
     },
   };
-
-  const test = computed(() =>
-    list.filters.value.groups[conditionGroup.index.value].conditions.find((condition) => condition.id === id)
-  );
-
-  console.log(test);
-
-  // watch(condition.index, (index) => {
-  //   if (index === -1) {
-  //     condition.cleanup();
-  //   }
-  // });
 
   // Store the condition
   const fieldKey = conditionFieldKeySelect.value;
@@ -566,7 +566,10 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
 
   conditionGroup.conditions.value = [...conditionGroup.conditions.value, condition];
 
-  list.filters.value.groups[conditionGroup.index.value].conditions.push({
+  const filtersGroup = getFiltersGroup(list, conditionGroup);
+  if (!filtersGroup) return;
+
+  filtersGroup.conditions.push({
     id,
     type,
     fieldKey,
@@ -592,6 +595,17 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
 
   const conditionValueFieldCleanup = initConditionValueField(list, initialConditionValueFormField, element, condition);
   cleanups.add(conditionValueFieldCleanup);
+
+  const autoCleanup = watch(
+    () => getFiltersCondition(list, condition),
+    (filtersCondition) => {
+      if (!filtersCondition) {
+        condition.cleanup();
+      }
+    }
+  );
+
+  cleanups.add(autoCleanup);
 
   return condition;
 };
