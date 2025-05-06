@@ -183,15 +183,34 @@ export class ListItem {
 
       // If matched, highlight the corresponding elements
       for (const { value, element, originalHTML } of fieldElementsData) {
+        element.innerHTML = originalHTML;
+
         const match = matchedField.find(({ fieldValue }) => fieldValue === value);
-        if (!match) {
-          element.innerHTML = originalHTML;
-          continue;
-        }
+        if (!match) continue;
 
         const regex = new RegExp(match.filterValue, 'gi');
 
-        element.innerHTML = originalHTML.replace(regex, `<span class="${this.highlightClass}">$&</span>`);
+        const walkNodes = (parent: Node) => {
+          for (const node of Array.from(parent.childNodes)) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              walkNodes(node);
+              continue;
+            }
+
+            if (node.nodeType !== Node.TEXT_NODE) continue;
+
+            const text = node.textContent || '';
+
+            if (!regex.test(text)) continue;
+
+            const template = document.createElement('template');
+            template.innerHTML = text.replace(regex, `<span class="${this.highlightClass}">$&</span>`);
+
+            node.replaceWith(template.content);
+          }
+        };
+
+        walkNodes(element);
       }
     }
   }
