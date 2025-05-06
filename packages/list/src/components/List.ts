@@ -436,7 +436,7 @@ export class List {
       let renderIndex = 0;
 
       const renderPromise = Promise.all(
-        items.map(async (item, index) => {
+        items.map((item, index) => {
           startingClass ||= getAttribute(item.element, 'startingclass');
           stagger ||= getAttribute(item.element, 'stagger');
 
@@ -459,7 +459,7 @@ export class List {
             item.currentIndex = index;
             renderIndex += 1;
 
-            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await new Promise(requestAnimationFrame);
 
             item.element.classList.remove(startingClass);
 
@@ -476,16 +476,16 @@ export class List {
 
           // Is rendered
           if (isNumber(item.currentIndex)) {
-            if (item.currentIndex !== index) {
-              await render();
-            }
-
             this.renderedItems.delete(item);
+
+            if (item.currentIndex !== index) {
+              return render();
+            }
           }
 
           // Is not rendered
           else {
-            await render();
+            return render();
           }
         })
       );
