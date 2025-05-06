@@ -3,12 +3,12 @@ import { watch } from '@vue/reactivity';
 import debounce from 'just-debounce';
 
 import type { List } from '../components/List';
+import { getAttribute } from '../utils/selectors';
 import { initButtons } from './buttons';
 import { initDropdown } from './dropdown';
 import { initHTMLSelect } from './select';
 import { sortListItems } from './sort';
 import type { Sorting } from './types';
-import { getAttribute } from '../utils/selectors';
 
 /**
  * Inits sorting functionality for the list.

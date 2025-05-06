@@ -2,11 +2,11 @@ import { effect } from '@vue/reactivity';
 
 import type { List } from '../components/List';
 import type { SETTINGS } from '../utils/constants';
+import { getAttribute } from '../utils/selectors';
 import { initAllMode } from './all';
 import { initInfiniteMode } from './infinite';
 import { initMoreMode } from './more';
 import { initPaginationMode } from './pagination';
-import { getAttribute } from '../utils/selectors';
 
 type LoadModeValues = (typeof SETTINGS)['load']['values'];
 type LoadMode = LoadModeValues[keyof LoadModeValues];

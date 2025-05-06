@@ -17,12 +17,12 @@ import { computed, effect, type Ref, ref, type ShallowRef, shallowRef, watch } f
 
 import type { AllFieldsData, Filters } from '../filter/types';
 import type { Sorting } from '../sort/types';
+import { RENDER_INDEX_CSS_VARIABLE } from '../utils/constants';
 import { getAllCollectionListWrappers, getCMSElementSelector, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
 import { getAttribute, getInstance, queryAllElements, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
-import { RENDER_INDEX_CSS_VARIABLE } from '../utils/constants';
 
 type HookKey = 'filter' | 'sort' | 'pagination' | 'beforeRender' | 'render' | 'afterRender';
 type HookCallback = (items: ListItem[]) => ListItem[] | Promise<ListItem[]> | void | Promise<void>;
