@@ -9,7 +9,7 @@ import { getCollectionElements } from '../utils/dom';
  *
  * @returns Nothing, it mutates the `List` instance.
  */
-export const loadPaginatedCMSItems = async (list: List): Promise<void> => {
+export const loadPaginatedCMSItems = (list: List): Promise<void> => {
   const {
     paginationNextCMSElement,
     paginationPreviousCMSElement,
@@ -19,24 +19,26 @@ export const loadPaginatedCMSItems = async (list: List): Promise<void> => {
     cache: cacheItems,
   } = list;
 
-  if (!paginationNextCMSElement.value && !paginationPreviousCMSElement.value) return;
+  if (!paginationNextCMSElement.value && !paginationPreviousCMSElement.value) {
+    return Promise.resolve();
+  }
+
+  if (loaderElement) {
+    loaderElement.style.display = '';
+    loaderElement.style.opacity = '1';
+  }
+
+  // Attempt to get the total amount of pages from the `Page Count` element.
+  let totalPages;
+
+  if (paginationCountElement) {
+    const [, rawTotalPages] = paginationCountElement.textContent?.split('/') || [];
+    if (rawTotalPages) {
+      totalPages = parseInt(rawTotalPages.trim());
+    }
+  }
 
   list.loadingPaginatedItems = (async () => {
-    if (loaderElement) {
-      loaderElement.style.display = '';
-      loaderElement.style.opacity = '1';
-    }
-
-    // Attempt to get the total amount of pages from the `Page Count` element.
-    let totalPages;
-
-    if (paginationCountElement) {
-      const [, rawTotalPages] = paginationCountElement.textContent?.split('/') || [];
-      if (rawTotalPages) {
-        totalPages = parseInt(rawTotalPages.trim());
-      }
-    }
-
     await loadingSearchParamsData;
 
     if (totalPages) {
@@ -49,6 +51,8 @@ export const loadPaginatedCMSItems = async (list: List): Promise<void> => {
       loaderElement.style.display = 'none';
     }
   })();
+
+  return list.loadingPaginatedItems;
 };
 
 /**

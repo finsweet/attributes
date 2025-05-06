@@ -18,10 +18,28 @@ export const initMoreMode = (list: List) => {
     return paginatedItems;
   });
 
-  // Listeners
-  let cleanupLoadRemaingWatcher: WatchHandle | undefined;
+  // Init
+  loadPaginatedCMSItems(list);
 
-  const cleanupPaginationNextButtons = addListener(list.allPaginationNextElements.value, 'click', async (e) => {
+  // Listeners
+  const cleanupPaginationNextButtons = handlePaginationNextButtons(list);
+  const cleanupElements = handleElements(list);
+
+  return () => {
+    cleanupPaginationNextButtons();
+    cleanupElements();
+  };
+};
+
+/**
+ * Handles the pagination next buttons.
+ * @param list
+ * @returns A cleanup function.
+ */
+export const handlePaginationNextButtons = (list: List) => {
+  let cleanupLoadRemaining: WatchHandle | undefined;
+
+  const cleanupClick = addListener(list.allPaginationNextElements.value, 'click', async (e) => {
     if (!e.target || !isElement(e.target)) return;
 
     e.preventDefault();
@@ -29,7 +47,7 @@ export const initMoreMode = (list: List) => {
     const rawLoadCount = getAttribute(e.target, 'loadcount') || getAttribute(list.listOrWrapper, 'loadcount');
 
     if (rawLoadCount === 'all') {
-      cleanupLoadRemaingWatcher ||= watch(
+      cleanupLoadRemaining ||= watch(
         list.items,
         (items) => {
           list.itemsPerPage.value = items.length;
@@ -43,8 +61,19 @@ export const initMoreMode = (list: List) => {
     list.triggerHook('pagination');
   });
 
-  // Handle pagination next buttons display
-  const paginationNextRunner = effect(() => {
+  return () => {
+    cleanupClick();
+    cleanupLoadRemaining?.();
+  };
+};
+
+/**
+ * Handles the display of elements.
+ * @param list
+ * @returns A cleanup function.
+ */
+export const handleElements = (list: List) => {
+  const runner = effect(() => {
     const allItemsDisplayed = list.itemsPerPage.value === list.items.value.length;
 
     list.allPaginationNextElements.value.forEach((element) => {
@@ -52,14 +81,17 @@ export const initMoreMode = (list: List) => {
       element.setAttribute('aria-hidden', allItemsDisplayed ? 'true' : 'false');
       element.setAttribute('tabindex', allItemsDisplayed ? '-1' : '0');
     });
+
+    if (list.paginationCountElement) {
+      const totalPages = Math.ceil(list.items.value.length / list.initialItemsPerPage);
+      const currentPage = Math.ceil(list.itemsPerPage.value / list.initialItemsPerPage);
+
+      list.paginationCountElement.innerText = `${currentPage} / ${totalPages}`;
+      list.paginationCountElement.setAttribute('aria-label', `Page ${currentPage} of ${totalPages}`);
+    }
   });
 
-  // Init
-  loadPaginatedCMSItems(list);
-
   return () => {
-    cleanupPaginationNextButtons();
-    cleanupLoadRemaingWatcher?.();
-    paginationNextRunner.effect.stop();
+    runner.effect.stop();
   };
 };

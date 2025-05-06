@@ -1,10 +1,10 @@
-import { addListener, isElement, parseNumericAttribute } from '@finsweet/attributes-utils';
-import { effect, watch, type WatchHandle } from '@vue/reactivity';
+import { addListener } from '@finsweet/attributes-utils';
 import throttle from 'just-throttle';
 
 import type { List } from '../components/List';
 import { getAttribute } from '../utils/selectors';
 import { loadPaginatedCMSItems } from './load';
+import { handleElements, handlePaginationNextButtons } from './more';
 
 /**
  * Inits the infinite mode.
@@ -22,6 +22,9 @@ export const initInfiniteMode = (list: List) => {
     const paginatedItems = items.slice(0, list.itemsPerPage.value);
     return paginatedItems;
   });
+
+  // Init
+  loadPaginatedCMSItems(list);
 
   /**
    * Handles a scroll event.
@@ -53,51 +56,14 @@ export const initInfiniteMode = (list: List) => {
   observer.observe(list.listElement);
 
   const cleanupScroll = addListener(window, 'scroll', handleScroll);
-
-  let cleanupLoadRemaingWatcher: WatchHandle | undefined;
-
-  const cleanupPaginationNextButtons = addListener(list.allPaginationNextElements.value, 'click', async (e) => {
-    if (!e.target || !isElement(e.target)) return;
-
-    e.preventDefault();
-
-    const rawLoadCount = getAttribute(e.target, 'loadcount') || getAttribute(list.listOrWrapper, 'loadcount');
-
-    if (rawLoadCount === 'all') {
-      cleanupLoadRemaingWatcher ||= watch(
-        list.items,
-        (items) => {
-          list.itemsPerPage.value = items.length;
-        },
-        { immediate: true }
-      );
-    } else {
-      list.itemsPerPage.value += parseNumericAttribute(rawLoadCount, list.initialItemsPerPage);
-    }
-
-    list.triggerHook('pagination');
-  });
-
-  // Handle pagination next buttons display
-  const paginationNextRunner = effect(() => {
-    const allItemsDisplayed = list.itemsPerPage.value === list.items.value.length;
-
-    list.allPaginationNextElements.value.forEach((element) => {
-      element.style.display = allItemsDisplayed ? 'none' : '';
-      element.setAttribute('aria-hidden', allItemsDisplayed ? 'true' : 'false');
-      element.setAttribute('tabindex', allItemsDisplayed ? '-1' : '0');
-    });
-  });
-
-  // Init
-  loadPaginatedCMSItems(list);
+  const cleanupPaginationNextButtons = handlePaginationNextButtons(list);
+  const cleanupElements = handleElements(list);
 
   return () => {
     observer.disconnect();
     cleanupScroll();
     cleanupPaginationNextButtons();
-    cleanupLoadRemaingWatcher?.();
-    paginationNextRunner.effect.stop();
+    cleanupElements();
   };
 };
 
