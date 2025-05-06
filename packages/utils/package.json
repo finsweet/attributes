@@ -22,7 +22,6 @@
     "@motionone/types": "^10.15.1"
   },
   "dependencies": {
-    "motion": "^10.16.2",
-    "nanoid": "^5.0.9"
+    "motion": "^10.16.2"
   }
 }

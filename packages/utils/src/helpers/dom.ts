@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid';
-
 import { isHTMLElement } from './guards';
 
 /**
@@ -10,7 +8,7 @@ import { isHTMLElement } from './guards';
  */
 export const ensureUniqueId = (element: Element) => {
   if (!element.id || document.getElementById(element.id) !== element) {
-    const id = nanoid();
+    const id = crypto.randomUUID();
     element.id = id;
     return id;
   }

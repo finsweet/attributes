@@ -4,7 +4,6 @@ import {
   normalizeDate,
   normalizeNumber,
 } from '@finsweet/attributes-utils';
-import { nanoid } from 'nanoid';
 
 import type { FieldValue, FilterTaskMatchedFields } from '../filter/types';
 import { getCMSElementSelector } from '../utils/dom';
@@ -50,7 +49,7 @@ type ListItemFields = {
  * An instance of a list item.
  */
 export class ListItem {
-  public readonly id = nanoid();
+  public readonly id = crypto.randomUUID();
 
   /**
    * The URL of the item's `Template Page`.
