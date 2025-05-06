@@ -21,7 +21,7 @@ export const loadPaginatedCMSItems = async (list: List): Promise<void> => {
 
   if (!paginationNextCMSElement.value && !paginationPreviousCMSElement.value) return;
 
-  list.loadingPaginatedItems = new Promise(async (resolve) => {
+  list.loadingPaginatedItems = (async () => {
     if (loaderElement) {
       loaderElement.style.display = '';
       loaderElement.style.opacity = '1';
@@ -48,9 +48,7 @@ export const loadPaginatedCMSItems = async (list: List): Promise<void> => {
     if (loaderElement) {
       loaderElement.style.display = 'none';
     }
-
-    resolve();
-  });
+  })();
 };
 
 /**

@@ -14,19 +14,19 @@ export function addListener<
   Type extends TargetInterface extends Window
     ? keyof WindowEventMap | string
     : TargetInterface extends Document
-    ? keyof DocumentEventMap | string
-    : TargetInterface extends HTMLElement
-    ? keyof HTMLElementEventMap | string
-    : keyof ElementEventMap | string,
+      ? keyof DocumentEventMap | string
+      : TargetInterface extends HTMLElement
+        ? keyof HTMLElementEventMap | string
+        : keyof ElementEventMap | string,
   Listener extends Type extends keyof WindowEventMap
     ? (this: Document, ev: WindowEventMap[Type]) => unknown
     : Type extends keyof DocumentEventMap
-    ? (this: Document, ev: DocumentEventMap[Type]) => unknown
-    : Type extends keyof HTMLElementEventMap
-    ? (this: HTMLElement, ev: HTMLElementEventMap[Type]) => unknown
-    : Type extends keyof ElementEventMap
-    ? (this: Element, ev: ElementEventMap[Type]) => unknown
-    : EventListenerOrEventListenerObject
+      ? (this: Document, ev: DocumentEventMap[Type]) => unknown
+      : Type extends keyof HTMLElementEventMap
+        ? (this: HTMLElement, ev: HTMLElementEventMap[Type]) => unknown
+        : Type extends keyof ElementEventMap
+          ? (this: Element, ev: ElementEventMap[Type]) => unknown
+          : EventListenerOrEventListenerObject,
 >(
   target: TargetInterface | TargetInterface[] | Set<TargetInterface> | null | undefined,
   type: Type,

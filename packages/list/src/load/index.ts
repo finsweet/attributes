@@ -48,10 +48,10 @@ export const initListLoading = (list: List, mode: LoadMode) => {
     mode === 'all'
       ? initAllMode(list)
       : mode === 'more'
-      ? initMoreMode(list)
-      : mode === 'infinite'
-      ? initInfiniteMode(list)
-      : initPaginationMode(list);
+        ? initMoreMode(list)
+        : mode === 'infinite'
+          ? initInfiniteMode(list)
+          : initPaginationMode(list);
 
   const beforeRenderHookCleanup = list.addHook('beforeRender', async (items) => {
     if (list.triggeredHook === 'pagination') {

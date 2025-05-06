@@ -34,12 +34,11 @@ export class Interaction {
    * @param duration Optionally, the duration can be explicitly set so the trigger methods will return an awaitable Promise.
    */
   constructor({ element, duration }: InteractionParams) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.element = typeof element === 'string' ? document.querySelector<HTMLElement>(element)! : element;
 
     this.duration = {
-      first: typeof duration === 'number' ? duration : duration?.first ?? 0,
-      second: typeof duration === 'number' ? duration : duration?.second ?? 0,
+      first: typeof duration === 'number' ? duration : (duration?.first ?? 0),
+      second: typeof duration === 'number' ? duration : (duration?.second ?? 0),
     };
   }
 

@@ -23,8 +23,8 @@ export const handleInput = (inputElement: HTMLInputElement) => {
       isNumber(min) && adjustedValue < min
         ? min.toString()
         : isNumber(max) && adjustedValue > max
-        ? max.toString()
-        : adjustedValue.toString();
+          ? max.toString()
+          : adjustedValue.toString();
   });
 
   return cleanupInput;

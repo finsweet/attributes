@@ -1,10 +1,9 @@
 /* eslint-disable no-console */
-import { ATTRIBUTES } from '@finsweet/attributes-utils';
 import * as esbuild from 'esbuild';
 import inlineWorkerPlugin from 'esbuild-plugin-inline-worker';
-import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readdirSync, unlinkSync } from 'fs';
 import http from 'http';
+import { join } from 'path';
 
 declare const process: {
   env: {
@@ -52,11 +51,13 @@ const context = await esbuild.context({
 try {
   const files = readdirSync(BUILD_DIRECTORY);
   files.forEach((file) => {
-    if (file.startsWith('dist') || file.startsWith('schemas')) {
+    if (file.startsWith('dist')) {
       unlinkSync(join(BUILD_DIRECTORY, file));
     }
   });
-} catch (err) {}
+} catch {
+  //
+}
 
 // Watch and serve files in dev
 if (DEV) {
@@ -103,20 +104,4 @@ if (DEV) {
 else {
   await context.rebuild();
   context.dispose();
-}
-
-// Generate schemas
-const schemasDirectory = join(BUILD_DIRECTORY, 'schemas');
-mkdirSync(schemasDirectory, { recursive: true });
-
-for (const attribute of Object.values(ATTRIBUTES)) {
-  try {
-    const { SCHEMA } = await import(`@finsweet/attributes-${attribute}/schema`);
-    if (!SCHEMA) continue;
-
-    const schemaPath = join(schemasDirectory, `${attribute}.json`);
-    const schema = JSON.stringify(SCHEMA, null, 2);
-
-    writeFileSync(schemaPath, schema, { encoding: 'utf8' });
-  } catch (err) {}
 }

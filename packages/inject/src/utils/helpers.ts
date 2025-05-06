@@ -29,6 +29,8 @@ export const convertRelativeUrlsToAbsolute = (component: HTMLElement, source: UR
     try {
       const url = new URL(href, source.origin);
       link.href = url.toString();
-    } catch (err) {}
+    } catch {
+      //
+    }
   }
 };

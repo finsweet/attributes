@@ -1,5 +1,5 @@
 import { addListener, cloneNode } from '@finsweet/attributes-utils';
-import { computed, type ComputedRef, effect, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
+import { effect, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 
 import type { List } from '../../components';
 import { getAttribute, queryElement } from '../../utils/selectors';

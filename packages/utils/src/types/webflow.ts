@@ -83,12 +83,12 @@ export interface Webflow extends Pick<Callback[], 'push'> {
     | (Key extends 'commerce'
         ? WebflowCommerce
         : Key extends 'lightbox'
-        ? WebflowLightbox
-        : Key extends 'slider'
-        ? WebflowSlider
-        : Key extends 'tabs'
-        ? WebflowTabs
-        : WebflowIx2)
+          ? WebflowLightbox
+          : Key extends 'slider'
+            ? WebflowSlider
+            : Key extends 'tabs'
+              ? WebflowTabs
+              : WebflowIx2)
     | undefined;
 }
 

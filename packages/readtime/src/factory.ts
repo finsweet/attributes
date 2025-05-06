@@ -13,7 +13,7 @@ export const initReadTime = (timeElement: Element) => {
   const wpm = getAttribute(timeElement, 'wpm');
   const decimals = getAttribute(timeElement, 'decimals');
 
-  const wordsCount = contentsElement.innerText.match(/[\w\d\’\'-]+/gi)?.length ?? 0;
+  const wordsCount = contentsElement.innerText.match(/[\w\d’'-]+/gi)?.length ?? 0;
 
   const readTime = wordsCount / wpm;
 

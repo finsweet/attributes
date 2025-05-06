@@ -70,7 +70,7 @@ export const sortListItems = (items: ListItem[], { field, direction }: Sorting):
  */
 const getItemValue = <
   Value extends number | string | Date | number[] | string[] | Date[],
-  ReturnValue = Value extends (infer U)[] ? U : Value
+  ReturnValue = Value extends (infer U)[] ? U : Value,
 >(
   value: Value
 ) => {

@@ -28,7 +28,7 @@ export const enhancedSubmit = async (form: HTMLFormElement, action: string, meth
     });
 
     return response.ok;
-  } catch (err) {
+  } catch {
     return false;
   }
 };

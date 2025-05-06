@@ -1,6 +1,0 @@
-{
-  "extends": ["@finsweet"],
-  "rules": {
-    "no-useless-constructor": "off"
-  }
-}

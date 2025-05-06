@@ -1,8 +1,6 @@
 {
   "extends": "@finsweet/tsconfig",
-  "exclude": ["./**/api/schema.ts"], // TODO: Remove all the old /api/schema.ts files
   "compilerOptions": {
-    "types": ["@webflow/designer-extension-typings"],
     "moduleResolution": "bundler"
   }
 }

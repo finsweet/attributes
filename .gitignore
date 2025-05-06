@@ -28,16 +28,8 @@ typings/
 temp/
 
 # Production files
-packages/**/changesets.json
-packages/**/examples.json
-packages/**/schema.json
-packages/**/schemas
-
 packages/*/*.js
 packages/*/*.js.map
-
-!packages/support/*.js
-
 
 .idea
 .DS_Store

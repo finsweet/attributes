@@ -757,10 +757,10 @@ export class List {
       (action === 'filter'
         ? scrollAnchorFilterElement
         : action === 'sort'
-        ? scrollAnchorSortElement
-        : action === 'pagination'
-        ? scrollAnchorPaginationElement
-        : scrollAnchorElement) || scrollAnchorElement;
+          ? scrollAnchorSortElement
+          : action === 'pagination'
+            ? scrollAnchorPaginationElement
+            : scrollAnchorElement) || scrollAnchorElement;
 
     if (!anchor) return;
 

@@ -3,7 +3,7 @@
   "version": "2.0.6",
   "description": "Attributes documentation custom code.",
   "homepage": "https://www.finsweet.com/attributes",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "author": {
     "name": "Finsweet",
     "url": "https://finsweet.com/"
@@ -31,10 +31,10 @@
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*",
     "@floating-ui/dom": "^1.6.5",
-    "cross-env": "^7.0.3",
     "just-debounce": "^1.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.2"
+    "esbuild": "^0.25.2",
+    "cross-env": "^7.0.3"
   }
 }

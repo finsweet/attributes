@@ -97,7 +97,6 @@ export const filterItems = async (filters: Filters, items: ListItem[], highlight
   const filteredItems = await runFilterTask({ items: itemsData, filters: toRaw(filters) });
 
   const result = filteredItems.map(({ id, matchedFields }) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const item = itemsMap.get(id)!;
 
     itemsMap.delete(id);

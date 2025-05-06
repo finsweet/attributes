@@ -8,7 +8,7 @@ import type { AttributeElements, AttributeSettings, FinsweetAttributeKey, LooseS
  */
 export const generateSelectors = <
   ElementsDefinition extends AttributeElements,
-  SettingsDefinition extends AttributeSettings
+  SettingsDefinition extends AttributeSettings,
 >(
   attributeKey: FinsweetAttributeKey,
   elements: ElementsDefinition,
@@ -166,10 +166,10 @@ export const generateSelectors = <
     SettingValue = SettingValueIsNumeric extends true
       ? number
       : SettingValues extends Array<string>
-      ? FilterInvalid extends true
-        ? SettingValues[number]
-        : string
-      : string
+        ? FilterInvalid extends true
+          ? SettingValues[number]
+          : string
+        : string,
   >(
     element: Element | null,
     settingKey: SettingKey,

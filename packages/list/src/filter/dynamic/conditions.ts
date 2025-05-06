@@ -14,7 +14,7 @@ import debounce from 'just-debounce';
 import type { List } from '../../components';
 import { ALLOWED_DYNAMIC_FIELD_TYPES, SETTINGS } from '../../utils/constants';
 import { getAttribute, getElementSelector, queryAllElements, queryElement } from '../../utils/selectors';
-import type { AllFieldsData, FilterOperator, FiltersCondition, FiltersGroup } from '../types';
+import type { AllFieldsData, FilterOperator, FiltersCondition } from '../types';
 import { type ConditionGroup, getFiltersGroup } from './groups';
 import { getFilterMatchValue, parseOperatorValue } from './utils';
 
@@ -370,7 +370,7 @@ const initConditionValueField = (
   const formFieldsHandler = ([fieldKey, op, allFieldsData]: [
     FiltersCondition['fieldKey'],
     FiltersCondition['op'],
-    AllFieldsData
+    AllFieldsData,
   ]) => {
     const fieldData = fieldKey ? allFieldsData[fieldKey] : undefined;
 

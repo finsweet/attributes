@@ -19,6 +19,7 @@
     "test": "pnpm playwright test",
     "test:headed": "pnpm playwright test --headed"
   },
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/finsweet/attributes.git"
@@ -40,11 +41,11 @@
     "@finsweet/attributes-autovideo": "workspace:*",
     "@finsweet/attributes-codehighlight": "workspace:*",
     "@finsweet/attributes-combobox": "workspace:*",
-    "@finsweet/attributes-inject": "workspace:*",
     "@finsweet/attributes-copyclip": "workspace:*",
     "@finsweet/attributes-displayvalues": "workspace:*",
     "@finsweet/attributes-favcustom": "workspace:*",
     "@finsweet/attributes-formsubmit": "workspace:*",
+    "@finsweet/attributes-inject": "workspace:*",
     "@finsweet/attributes-inputactive": "workspace:*",
     "@finsweet/attributes-inputcounter": "workspace:*",
     "@finsweet/attributes-list": "workspace:*",
@@ -66,10 +67,10 @@
     "@finsweet/attributes-videohls": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^18.16.1",
+    "@types/node": "^22.15.12",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.25.2",
+    "esbuild": "^0.25.4",
     "esbuild-plugin-inline-worker": "^0.1.1",
-    "tsx": "^4.7.1"
+    "tsx": "^4.19.4"
   }
 }

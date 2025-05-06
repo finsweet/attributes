@@ -65,7 +65,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
         `input[name="${formField.name}"][type="radio"]:checked`
       );
 
-      value = checkedRadio ? getAttribute(checkedRadio, 'value') ?? checkedRadio.value : '';
+      value = checkedRadio ? (getAttribute(checkedRadio, 'value') ?? checkedRadio.value) : '';
 
       break;
     }

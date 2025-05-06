@@ -22,8 +22,8 @@ export const initListSorting = (list: List, triggers: HTMLElement[]) => {
   const modeCleanup = isSelect
     ? initHTMLSelect(firstTrigger, list)
     : isDropdown
-    ? initDropdown(isDropdown, list)
-    : initButtons(triggers, list);
+      ? initDropdown(isDropdown, list)
+      : initButtons(triggers, list);
 
   // Set up hooks
   const sortHookCleanup = list.addHook('sort', (items) => {
@@ -74,7 +74,9 @@ export const initListSorting = (list: List, triggers: HTMLElement[]) => {
 
     try {
       list.sorting.value = JSON.parse(rawSorting);
-    } catch {}
+    } catch {
+      //
+    }
   });
 
   return () => {

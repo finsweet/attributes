@@ -85,7 +85,9 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
 
     try {
       list.filters.value = JSON.parse(rawFilters);
-    } catch {}
+    } catch {
+      //
+    }
   });
 
   return () => {

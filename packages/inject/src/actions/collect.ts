@@ -35,7 +35,7 @@ export const collectComponentTargetsData = () => {
           if (source.origin !== window.location.origin && proxy) {
             proxiedSource = new URL(proxy + source.href);
           }
-        } catch (err) {
+        } catch {
           // Source is invalid
           return;
         }

@@ -67,7 +67,7 @@ export const fetchPageDocument = async (
     // If the page is not in the DB, fetch it and store it in the DB.
     const page = await fetchAndCachePageInDB(db, url, siteId, cacheExternal);
     return page;
-  } catch (err) {
+  } catch {
     return null;
   }
 };
@@ -177,7 +177,7 @@ const createCacheDB = (dbName: string, dbVersion: number) => {
 
         resolve(db);
       };
-    } catch (err) {
+    } catch {
       resolve(null);
     }
   });

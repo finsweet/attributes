@@ -65,8 +65,6 @@ const handleNestTarget = (list: List, item: ListItem, target: HTMLElement) => {
       handleExternalNesting(list, item, target, instance).then(resolve);
     }
   });
-
-  item.nesting;
 };
 
 /**

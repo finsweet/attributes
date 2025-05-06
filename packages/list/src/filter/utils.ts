@@ -71,13 +71,13 @@ export const areEqual = (fieldValue: FieldValue, filterValue: FieldValue, fuzzyT
   const normalizedFieldValue = isDate(fieldValue)
     ? fieldValue.getTime()
     : isString(fieldValue)
-    ? fieldValue.toLowerCase()
-    : fieldValue;
+      ? fieldValue.toLowerCase()
+      : fieldValue;
   const normalizedFilterValue = isDate(filterValue)
     ? filterValue.getTime()
     : isString(filterValue)
-    ? filterValue.toLowerCase()
-    : filterValue;
+      ? filterValue.toLowerCase()
+      : filterValue;
 
   if (fuzzyThreshold) {
     const normalizedFuzzyThreshold = fuzzyThreshold / 100;
