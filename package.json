@@ -6,9 +6,6 @@
   "private": true,
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.8.1",
-  "engines": {
-    "pnpm": ">=10.0.0"
-  },
   "scripts": {
     "dev": "pnpm --filter @finsweet/attributes dev",
     "build": "pnpm --filter @finsweet/attributes --filter @finsweet/attributes-docs build",
