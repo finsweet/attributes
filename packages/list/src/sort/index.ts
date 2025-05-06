@@ -14,6 +14,8 @@ import type { Sorting } from './types';
  * Inits sorting functionality for the list.
  */
 export const initListSorting = (list: List, triggers: HTMLElement[]) => {
+  const sortingClass = getAttribute(list.listElement, 'sortingclass');
+
   // Init mode
   const [firstTrigger] = triggers;
   const isSelect = isHTMLSelectElement(firstTrigger);
@@ -35,9 +37,7 @@ export const initListSorting = (list: List, triggers: HTMLElement[]) => {
 
   const beforeRenderHookCleanup = list.addHook('beforeRender', async (items) => {
     if (list.triggeredHook === 'sort') {
-      const className = getAttribute(list.listElement, 'sortingclass');
-
-      list.wrapperElement.classList.add(className);
+      list.wrapperElement.classList.add(sortingClass);
 
       const animations = list.wrapperElement.getAnimations({ subtree: true });
 
@@ -48,8 +48,7 @@ export const initListSorting = (list: List, triggers: HTMLElement[]) => {
   });
 
   const afterRenderHookCleanup = list.addHook('afterRender', (items) => {
-    const className = getAttribute(list.listElement, 'sortingclass');
-    list.wrapperElement.classList.remove(className);
+    list.wrapperElement.classList.remove(sortingClass);
 
     return items;
   });

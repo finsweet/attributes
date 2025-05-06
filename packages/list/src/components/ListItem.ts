@@ -57,9 +57,19 @@ export class ListItem {
   public readonly href?: string;
 
   /**
+   * Defines the class to apply before rendering the item.
+   */
+  public readonly startingClass: string;
+
+  /**
    * Defines the class to apply when highlighting matched fields.
    */
   public readonly highlightClass: string;
+
+  /**
+   * Defines if the item's transitions should be staggered.
+   */
+  public readonly stagger?: number;
 
   /**
    * The item's properties.
@@ -105,6 +115,8 @@ export class ListItem {
 
     this.href = link?.href;
     this.highlightClass = getAttribute(element, 'highlightclass');
+    this.startingClass = getAttribute(element, 'startingclass');
+    this.stagger = getAttribute(element, 'stagger');
 
     this.collectFields();
   }

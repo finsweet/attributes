@@ -1,9 +1,8 @@
-import { effect } from '@vue/reactivity';
-
 import type { List } from '../components/List';
 import type { SETTINGS } from '../utils/constants';
-import { getAttribute } from '../utils/selectors';
+import { getAttribute, hasAttributeValue } from '../utils/selectors';
 import { initAllMode } from './all';
+import { handleLoadElements } from './elements';
 import { initInfiniteMode } from './infinite';
 import { initMoreMode } from './more';
 import { initPaginationMode } from './pagination';
@@ -17,31 +16,15 @@ type LoadMode = LoadModeValues[keyof LoadModeValues];
  * @param mode
  */
 export const initListLoading = (list: List, mode: LoadMode) => {
+  const loadingClass = getAttribute(list.listElement, 'loadingclass');
+  const resetIx = hasAttributeValue(list.listOrWrapper, 'resetix', 'true');
+
+  if (resetIx) {
+    list.webflowModules.add('ix2');
+  }
+
   // Handle elements
-  const elementsRunner = effect(() => {
-    const filteredItems = list.hooks.filter.result.value;
-
-    if (list.visibleCountElement) {
-      const visibleCountTotal = Math.min(list.itemsPerPage.value, filteredItems.length);
-
-      list.visibleCountElement.textContent = `${visibleCountTotal}`;
-    }
-
-    if (list.visibleCountFromElement) {
-      const visibleCountFrom = Math.min(
-        (list.currentPage.value - 1) * list.itemsPerPage.value + 1,
-        filteredItems.length
-      );
-
-      list.visibleCountFromElement.textContent = `${visibleCountFrom}`;
-    }
-
-    if (list.visibleCountToElement) {
-      const visibleCountTo = Math.min(list.currentPage.value * list.itemsPerPage.value, filteredItems.length);
-
-      list.visibleCountToElement.textContent = `${visibleCountTo}`;
-    }
-  });
+  const elementsCleanup = handleLoadElements(list);
 
   // Init mode
   const loadModeCleanup =
@@ -55,9 +38,7 @@ export const initListLoading = (list: List, mode: LoadMode) => {
 
   const beforeRenderHookCleanup = list.addHook('beforeRender', async (items) => {
     if (list.triggeredHook === 'pagination') {
-      const className = getAttribute(list.listElement, 'loadingclass');
-
-      list.wrapperElement.classList.add(className);
+      list.wrapperElement.classList.add(loadingClass);
 
       const animations = list.wrapperElement.getAnimations({ subtree: true });
 
@@ -68,8 +49,7 @@ export const initListLoading = (list: List, mode: LoadMode) => {
   });
 
   const afterRenderHookCleanup = list.addHook('afterRender', (items) => {
-    const className = getAttribute(list.listElement, 'loadingclass');
-    list.wrapperElement.classList.remove(className);
+    list.wrapperElement.classList.remove(loadingClass);
 
     return items;
   });
@@ -78,6 +58,6 @@ export const initListLoading = (list: List, mode: LoadMode) => {
     loadModeCleanup?.();
     beforeRenderHookCleanup();
     afterRenderHookCleanup();
-    elementsRunner.effect.stop();
+    elementsCleanup();
   };
 };

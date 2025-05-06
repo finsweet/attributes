@@ -623,6 +623,11 @@ export const SETTINGS = {
    * If applied, the items will receive a `transition-delay` CSS property.
    */
   stagger: { key: 'stagger', isNumeric: true },
+
+  /**
+   * Defines if Webflow's ix2 should be reset when rendering the list items.
+   */
+  resetix: { key: 'resetix', values: ['true'] },
 } as const satisfies AttributeSettings;
 
 export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {

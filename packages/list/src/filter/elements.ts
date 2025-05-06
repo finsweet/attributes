@@ -2,7 +2,7 @@ import { addListener, type FormField, getFormFieldWrapper, getRadioGroupInputs }
 import { effect } from '@vue/reactivity';
 
 import type { List } from '../components';
-import { getAttribute } from '../utils/selectors';
+import { getAttribute, hasAttributeValue } from '../utils/selectors';
 
 /**
  * Handles the filter-specific elements like the list element, empty element, and results count element.
@@ -28,7 +28,7 @@ export const handleFilterElements = (list: List) => {
  * @returns A cleanup function.
  */
 export const handleFiltersForm = (form: HTMLFormElement) => {
-  const allowSubmit = getAttribute(form, 'allowsubmit') === 'true';
+  const allowSubmit = hasAttributeValue(form, 'allowsubmit', 'true');
 
   return addListener(form, 'submit', (e) => {
     if (!allowSubmit) {

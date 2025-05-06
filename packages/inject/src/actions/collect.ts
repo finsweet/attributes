@@ -1,6 +1,6 @@
 import { extractCommaSeparatedValues, isNotEmpty } from '@finsweet/attributes-utils';
 
-import { getAttribute, getInstance, queryAllElements } from '../utils/selectors';
+import { getAttribute, getInstance, hasAttributeValue, queryAllElements } from '../utils/selectors';
 import type { ComponentTargetData } from '../utils/types';
 
 /**
@@ -17,11 +17,10 @@ export const collectComponentTargetsData = () => {
       const rawSource = getAttribute(target, 'source');
       const rawLoadCSS = getAttribute(target, 'css');
       const rawAutoRender = getAttribute(target, 'render');
-      const rawResetIx = getAttribute(target, 'resetix');
+      const resetIx = hasAttributeValue(target, 'resetix', 'true');
 
       const loadCSS = !rawLoadCSS || rawLoadCSS === 'true';
       const autoRender = !rawAutoRender || rawAutoRender === 'true';
-      const resetIx = rawResetIx === 'true';
       const positions = rawPosition ? extractCommaSeparatedValues(rawPosition).map(getPosition) : [0.5];
 
       let source: URL | undefined;

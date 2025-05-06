@@ -16,6 +16,8 @@ import type { Filters } from './types';
  * @param forms
  */
 export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
+  const filteringClass = getAttribute(list.listElement, 'filteringclass');
+
   // Init hooks
   const filterHookCleanup = list.addHook('filter', async (items) => {
     list.currentPage.value = 1; // Reset the current page
@@ -26,9 +28,7 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
 
   const beforeRenderHookCleanup = list.addHook('beforeRender', async (items) => {
     if (list.triggeredHook === 'filter') {
-      const className = getAttribute(list.listElement, 'filteringclass');
-
-      list.wrapperElement.classList.add(className);
+      list.wrapperElement.classList.add(filteringClass);
 
       const animations = list.wrapperElement.getAnimations({ subtree: true });
 
@@ -39,8 +39,7 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
   });
 
   const afterRenderHookCleanup = list.addHook('afterRender', (items) => {
-    const className = getAttribute(list.listElement, 'filteringclass');
-    list.wrapperElement.classList.remove(className);
+    list.wrapperElement.classList.remove(filteringClass);
 
     const hasItems = !!items.length;
 

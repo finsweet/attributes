@@ -20,7 +20,7 @@ import type { Sorting } from '../sort/types';
 import { RENDER_INDEX_CSS_VARIABLE } from '../utils/constants';
 import { getAllCollectionListWrappers, getCMSElementSelector, getCollectionElements } from '../utils/dom';
 import { getPaginationSearchEntries } from '../utils/pagination';
-import { getAttribute, getInstance, queryAllElements, queryElement } from '../utils/selectors';
+import { getAttribute, getInstance, hasAttributeValue, queryAllElements, queryElement } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
@@ -368,9 +368,9 @@ export class List {
     this.scrollAnchorFilterElement = queryElement('scroll-anchor-filter', { instance });
     this.scrollAnchorSortElement = queryElement('scroll-anchor-sort', { instance });
     this.scrollAnchorPaginationElement = queryElement('scroll-anchor-pagination', { instance });
-    this.cache = getAttribute(this.listOrWrapper, 'cache') === 'true';
-    this.showQuery = getAttribute(this.listOrWrapper, 'showquery') === 'true';
-    this.highlight = getAttribute(this.listOrWrapper, 'highlight') === 'true';
+    this.cache = hasAttributeValue(this.listOrWrapper, 'cache', 'true');
+    this.showQuery = hasAttributeValue(this.listOrWrapper, 'showquery', 'true');
+    this.highlight = hasAttributeValue(this.listOrWrapper, 'highlight', 'true');
 
     // Get pagination next elements
     const paginationNextElement = getCollectionElements(wrapperElement, 'pagination-next');
@@ -431,23 +431,18 @@ export class List {
   #initHooks() {
     // Add render hook
     this.addHook('render', async (items) => {
-      let startingClass: string;
-      let stagger: number | undefined;
       let renderIndex = 0;
 
       const renderPromise = Promise.all(
         items.map((item, index) => {
-          startingClass ||= getAttribute(item.element, 'startingclass');
-          stagger ||= getAttribute(item.element, 'stagger');
-
           const previousItem = items[index - 1];
 
           const render = async () => {
             item.element.style.setProperty(RENDER_INDEX_CSS_VARIABLE, `${renderIndex}`);
-            item.element.classList.add(startingClass);
+            item.element.classList.add(item.startingClass);
 
-            if (stagger) {
-              item.element.style.transitionDelay = `${renderIndex * stagger}ms`;
+            if (item.stagger) {
+              item.element.style.transitionDelay = `${renderIndex * item.stagger}ms`;
             }
 
             if (previousItem) {
@@ -461,14 +456,14 @@ export class List {
 
             await new Promise(requestAnimationFrame);
 
-            item.element.classList.remove(startingClass);
+            item.element.classList.remove(item.startingClass);
 
             const animations = item.element.getAnimations({ subtree: true });
 
             return Promise.all(animations.map((a) => a.finished)).then(() => {
               item.element.style.removeProperty(RENDER_INDEX_CSS_VARIABLE);
 
-              if (stagger) {
+              if (item.stagger) {
                 item.element.style.transitionDelay = '';
               }
             });
