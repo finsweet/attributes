@@ -1,8 +1,8 @@
-import { cloneNode } from '@finsweet/attributes-utils';
+import { addListener, cloneNode } from '@finsweet/attributes-utils';
 import { shallowRef, watch } from '@vue/reactivity';
 
 import type { List } from '../../components/List';
-import { queryElement } from '../../utils/selectors';
+import { getElementSelector, queryElement } from '../../utils/selectors';
 import { handleFiltersForm } from '../elements';
 import type { FilterMatch } from '../types';
 import { type ConditionGroup, initConditionGroup, initConditionGroupsAdd, initConditionGroupsMatch } from './groups';
@@ -64,6 +64,10 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
 
   list.filters.value.groupsMatch = groupsMatch;
 
+  // Handle global clear buttons
+  const clearCleanup = handleClearButtons(list);
+  cleanups.add(clearCleanup);
+
   // Init default condition group
   initConditionGroup(list, conditionGroupElement, conditionGroups);
 
@@ -78,4 +82,36 @@ export const initDynamicFilters = (list: List, form: HTMLFormElement) => {
 
     cleanups.clear();
   };
+};
+
+/**
+ * Handles the clear buttons.
+ * @param list
+ * @returns A cleanup function.
+ */
+const handleClearButtons = (list: List) => {
+  return addListener(window, 'click', (e) => {
+    const { target } = e;
+
+    if (!(target instanceof Element)) return;
+
+    const { instance, filters } = list;
+
+    const clearElementSelector = getElementSelector('clear', { instance });
+    const clearElement = target?.closest(clearElementSelector);
+    if (!clearElement) return;
+
+    // Remove all groups and conditions except the first one
+    filters.value.groups.splice(1);
+
+    const firstGroup = filters.value.groups[0];
+    if (!firstGroup) return;
+
+    firstGroup.conditions.splice(1);
+
+    const firstCondition = firstGroup.conditions[0];
+    if (!firstCondition) return;
+
+    firstCondition.value = Array.isArray(firstCondition.value) ? [] : '';
+  });
 };
