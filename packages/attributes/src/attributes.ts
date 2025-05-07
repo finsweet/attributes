@@ -1,6 +1,14 @@
-import { ATTRIBUTES, type FinsweetAttributeKey, type FinsweetAttributesCallback } from '@finsweet/attributes-utils';
+import {
+  ATTRIBUTES,
+  type FinsweetAttributeKey,
+  type FinsweetAttributesCallback,
+  waitDOMReady,
+} from '@finsweet/attributes-utils';
 
 import { loadAttribute } from './load';
+
+const ATTRIBUTES_ATTRIBUTE_PREFIX = 'fs-attributes';
+const ATTRIBUTE_KEYS = new Set(Object.values(ATTRIBUTES));
 
 /**
  * Inits the Finsweet Attributes library.
@@ -50,34 +58,61 @@ const init = () => {
 };
 
 /**
- * Inits all Attributes that are defined in the current script.
+ * Inits all Attributes that are defined in the current script
+ * or in the DOM if fs-attributes-auto is enabled.
  */
 const initAttributes = () => {
+  let autoLoad = false;
+
   for (const script of window.finsweetAttributes.scripts) {
-    for (const attribute of Object.values(ATTRIBUTES)) {
-      const isDefined = script.hasAttribute(`fs-${attribute}`);
+    autoLoad ||= script.getAttribute(`${ATTRIBUTES_ATTRIBUTE_PREFIX}-auto`) === 'true';
+
+    for (const key of ATTRIBUTE_KEYS) {
+      const isDefined = script.hasAttribute(`fs-${key}`);
       if (!isDefined) continue;
 
-      initAttribute(attribute);
+      initAttribute(key);
     }
   }
+
+  if (!autoLoad) return;
+
+  waitDOMReady().then(() => {
+    const usedAttributes = new Set<FinsweetAttributeKey>();
+    const allElements = document.querySelectorAll('*');
+
+    for (const element of allElements) {
+      for (const name of element.getAttributeNames()) {
+        const fsMatch = name.match(/^fs-([^-]+)/);
+        const key = fsMatch?.[1] as FinsweetAttributeKey | undefined;
+
+        if (key && ATTRIBUTE_KEYS.has(key)) {
+          usedAttributes.add(key);
+        }
+      }
+    }
+
+    for (const attribute of usedAttributes) {
+      initAttribute(attribute);
+    }
+  });
 };
 
 /**
  * Inits an individual Attribute.
- * @param attribute
+ * @param key
  * @param script The <script> tag that defines the Attribute.
  *
  * @returns A Promise that resolves once the Attribute has loaded and executed.
  */
-const initAttribute = async (attribute: FinsweetAttributeKey) => {
+const initAttribute = async (key: FinsweetAttributeKey) => {
   // Ensure that the attribute is only initted once
-  if (window.finsweetAttributes.process.has(attribute)) return;
+  if (window.finsweetAttributes.process.has(key)) return;
 
-  window.finsweetAttributes.process.add(attribute);
+  window.finsweetAttributes.process.add(key);
 
   // Init controls
-  const controls = (window.finsweetAttributes.modules[attribute] ||= {});
+  const controls = (window.finsweetAttributes.modules[key] ||= {});
 
   controls.loading = new Promise((resolve) => {
     controls.resolve = (value) => {
@@ -88,7 +123,7 @@ const initAttribute = async (attribute: FinsweetAttributeKey) => {
 
   // Load Attribute package
   try {
-    const { init, version } = await loadAttribute(attribute);
+    const { init, version } = await loadAttribute(key);
 
     // Init attribute
     const { result, destroy } = (await init()) || {};
@@ -98,12 +133,12 @@ const initAttribute = async (attribute: FinsweetAttributeKey) => {
 
     controls.destroy = () => {
       destroy?.();
-      window.finsweetAttributes.process.delete(attribute);
+      window.finsweetAttributes.process.delete(key);
     };
 
     controls.restart = () => {
       controls.destroy?.();
-      return window.finsweetAttributes.load(attribute);
+      return window.finsweetAttributes.load(key);
     };
 
     controls.resolve?.(result);
