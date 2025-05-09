@@ -14,23 +14,23 @@ const ATTRIBUTE_KEYS = new Set(Object.values(ATTRIBUTES));
  * Inits the Finsweet Attributes library.
  */
 const init = () => {
-  const { finsweetAttributes } = window;
+  const { FinsweetAttributes } = window;
 
   // Avoid initting the Attributes API more than once.
   // If the API is already initted, just init the individual Attributes and escape.
-  if (finsweetAttributes && !Array.isArray(finsweetAttributes)) {
+  if (FinsweetAttributes && !Array.isArray(FinsweetAttributes)) {
     initAttributes();
     return;
   }
 
   // Collect pre-existing callbacks
-  const callbacks = Array.isArray(finsweetAttributes) ? (finsweetAttributes as FinsweetAttributesCallback[]) : [];
+  const callbacks = Array.isArray(FinsweetAttributes) ? (FinsweetAttributes as FinsweetAttributesCallback[]) : [];
 
   // Collect library scripts
   const scripts = [...document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`)];
 
   // Init Attributes object
-  window.finsweetAttributes = window.FinsweetAttributes = {
+  window.FinsweetAttributes = {
     scripts,
     modules: {},
     process: new Set<FinsweetAttributeKey>(),
@@ -54,7 +54,7 @@ const init = () => {
   initAttributes();
 
   // Run pre-existing callbacks
-  window.finsweetAttributes.push(...callbacks);
+  window.FinsweetAttributes.push(...callbacks);
 };
 
 /**
@@ -64,7 +64,7 @@ const init = () => {
 const initAttributes = () => {
   let autoLoad = false;
 
-  for (const script of window.finsweetAttributes.scripts) {
+  for (const script of window.FinsweetAttributes.scripts) {
     autoLoad ||= script.getAttribute(`${ATTRIBUTES_ATTRIBUTE_PREFIX}-auto`) === 'true';
 
     for (const key of ATTRIBUTE_KEYS) {
@@ -107,12 +107,12 @@ const initAttributes = () => {
  */
 const initAttribute = async (key: FinsweetAttributeKey) => {
   // Ensure that the attribute is only initted once
-  if (window.finsweetAttributes.process.has(key)) return;
+  if (window.FinsweetAttributes.process.has(key)) return;
 
-  window.finsweetAttributes.process.add(key);
+  window.FinsweetAttributes.process.add(key);
 
   // Init controls
-  const controls = (window.finsweetAttributes.modules[key] ||= {});
+  const controls = (window.FinsweetAttributes.modules[key] ||= {});
 
   controls.loading = new Promise((resolve) => {
     controls.resolve = (value) => {
@@ -133,12 +133,12 @@ const initAttribute = async (key: FinsweetAttributeKey) => {
 
     controls.destroy = () => {
       destroy?.();
-      window.finsweetAttributes.process.delete(key);
+      window.FinsweetAttributes.process.delete(key);
     };
 
     controls.restart = () => {
       controls.destroy?.();
-      return window.finsweetAttributes.load(key);
+      return window.FinsweetAttributes.load(key);
     };
 
     controls.resolve?.(result);

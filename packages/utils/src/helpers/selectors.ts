@@ -185,7 +185,7 @@ export const generateSelectors = <
 
     // Check the script tags
     if (!rawValue) {
-      for (const script of window.finsweetAttributes.scripts) {
+      for (const script of window.FinsweetAttributes.scripts) {
         rawValue = script.getAttribute(attributeName);
 
         if (rawValue) break;

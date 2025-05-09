@@ -95,7 +95,6 @@ export type FinsweetAttributeInit = () => AttributeInitResult | Promise<Attribut
  */
 declare global {
   interface Window {
-    finsweetAttributes: FinsweetAttributes;
     FinsweetAttributes: FinsweetAttributes;
   }
 }

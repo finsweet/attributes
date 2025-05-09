@@ -787,8 +787,8 @@ test.describe('parseOperatorValue', () => {
 const waitCMSItemsLoaded = async (page: Page) => {
   return page.evaluate<Promise<List>>(async () => {
     return new Promise((r) => {
-      window.finsweetAttributes = window.finsweetAttributes || [];
-      window.finsweetAttributes.push([
+      window.FinsweetAttributes = window.FinsweetAttributes || [];
+      window.FinsweetAttributes.push([
         'list',
         async ([list]: List[]) => {
           await list.loadingPaginatedItems;

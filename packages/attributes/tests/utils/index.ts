@@ -9,8 +9,8 @@ import type { Page } from '@playwright/test';
 export const waitAttributeLoaded = async (page: Page, attributeKey: FinsweetAttributeKey) => {
   return page.evaluate<Promise<unknown>, FinsweetAttributeKey>(async (attributeKey) => {
     return new Promise((r) => {
-      window.finsweetAttributes = window.finsweetAttributes || [];
-      window.finsweetAttributes.push([attributeKey, r]);
+      window.FinsweetAttributes = window.FinsweetAttributes || [];
+      window.FinsweetAttributes.push([attributeKey, r]);
     });
   }, attributeKey);
 };

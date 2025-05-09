@@ -21,7 +21,7 @@ export const init: FinsweetAttributeInit = async () => {
 
     queryParamFactory(queryParamElements, paramValue);
 
-    if (window.finsweetAttributes.process.has('list')) {
+    if (window.FinsweetAttributes.process.has('list')) {
       continue;
     }
 
