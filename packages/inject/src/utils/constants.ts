@@ -10,6 +10,7 @@ export const ELEMENTS = [
    * Defines a component to be loaded.
    */
   'component',
+  'element', // Alias for component
 ] as const satisfies AttributeElements;
 
 export const SETTINGS = {

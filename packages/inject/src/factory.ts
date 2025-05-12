@@ -35,7 +35,11 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
   const page = componentsSource ? await getComponentPage(componentsSource) : document;
   if (!page) return;
 
-  const components = queryAllElements('component', { instance, scope: page }).map((component) => cloneNode(component));
+  const components = [
+    ...queryAllElements('component', { instance, scope: page }),
+    ...queryAllElements('element', { instance, scope: page }),
+  ].map((component) => cloneNode(component));
+
   if (!components.length) return;
 
   const targetChildren = [...target.children];
