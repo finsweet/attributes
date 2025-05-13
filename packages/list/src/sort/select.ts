@@ -1,6 +1,7 @@
 import { addListener } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
+import { hasAttributeValue } from '../utils/selectors';
 import type { Sorting, SortingDirection } from './types';
 
 /**
@@ -22,11 +23,13 @@ export const initHTMLSelect = (selectElement: HTMLSelectElement, list: List) => 
   // Prevent submit events on the form
   const form = selectElement.closest('form');
 
-  const submitCleanup = addListener(form, 'submit', handleFormSubmit);
+  const allowSubmit = hasAttributeValue(selectElement, 'allowsubmit', 'true');
+
+  const submitCleanup = allowSubmit ? addListener(form, 'submit', handleFormSubmit) : undefined;
 
   return () => {
     changeCleanup();
-    submitCleanup();
+    submitCleanup?.();
   };
 };
 
