@@ -52,4 +52,6 @@ export const TOC_ATTRIBUTE = 'toc';
 
 export const READ_TIME_ATTRIBUTE = 'readtime';
 
+export const REMOVE_QUERY_ATTRIBUTE = 'removequery';
+
 export const VIDEO_HLS_ATTRIBUTE = 'videohls';

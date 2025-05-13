@@ -114,6 +114,9 @@ importers:
       '@finsweet/attributes-readtime':
         specifier: workspace:*
         version: link:../readtime
+      '@finsweet/attributes-removequery':
+        specifier: workspace:*
+        version: link:../removequery
       '@finsweet/attributes-scrolldisable':
         specifier: workspace:*
         version: link:../scrolldisable
@@ -314,6 +317,12 @@ importers:
         version: 1.1.0
 
   packages/readtime:
+    dependencies:
+      '@finsweet/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/removequery:
     dependencies:
       '@finsweet/attributes-utils':
         specifier: workspace:*

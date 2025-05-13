@@ -82,6 +82,10 @@ export const loadAttribute = async (key: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-readtime');
     }
 
+    case 'removequery': {
+      return import('@finsweet/attributes-removequery');
+    }
+
     case 'scrolldisable': {
       return import('@finsweet/attributes-scrolldisable');
     }
