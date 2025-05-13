@@ -733,11 +733,18 @@ export class List {
    * @param key
    * @param options.scrollToAnchor
    */
-  async triggerHook(key: HookKey, { scrollToAnchor }: { scrollToAnchor?: boolean } = {}) {
+  async triggerHook(
+    key: HookKey,
+    { scrollToAnchor, resetCurrentPage }: { scrollToAnchor?: boolean; resetCurrentPage?: boolean } = {}
+  ) {
     this.triggeredHook = key;
 
     if (scrollToAnchor) {
       this.scrollToAnchor(key);
+    }
+
+    if (resetCurrentPage) {
+      this.currentPage.value = 1;
     }
 
     await this.#runHook(key);
@@ -777,26 +784,53 @@ export class List {
   /**
    * Gets a search param from the URL using the list's search params prefix.
    * @param key
+   * @param usePrefix Whether to use the list's search params prefix or not.
    * @returns The value of the search param or null if not found.
    */
-  async getSearchParam(key: string) {
+  async getSearchParam(key: string, usePrefix = true) {
     await this.loadingSearchParamsData;
 
     const { searchParams } = new URL(location.href);
 
-    return searchParams.get(`${this.searchParamsPrefix}_${key}`);
+    const name = usePrefix ? `${this.searchParamsPrefix}_${key}` : key;
+
+    return searchParams.get(name);
+  }
+
+  /**
+   * @returns All search params from the URL using the list's search params prefix (if true).
+   * @param usePrefix Whether to use the list's search params prefix or not.
+   */
+  async getAllSearchParams(usePrefix = true) {
+    await this.loadingSearchParamsData;
+
+    const { searchParams } = new URL(location.href);
+
+    const rawEntries = [...searchParams.entries()];
+
+    const entries = usePrefix
+      ? rawEntries
+          .filter(([key]) => key.startsWith(`${this.searchParamsPrefix}_`))
+          .map(([key, value]) => {
+            const newKey = key.replace(`${this.searchParamsPrefix}_`, '');
+            return [newKey, value] as const;
+          })
+      : rawEntries;
+
+    return entries;
   }
 
   /**
    * Sets a search param in the URL using the list's search params prefix.
    * @param key
    * @param value
+   * @param usePrefix Whether to use the list's search params prefix or not.
    */
-  async setSearchParam(key: string, value?: string | null) {
+  async setSearchParam(key: string, value: string | null | undefined, usePrefix = true) {
     await this.loadingSearchParamsData;
 
     const url = new URL(location.href);
-    const name = `${this.searchParamsPrefix}_${key}`;
+    const name = usePrefix ? `${this.searchParamsPrefix}_${key}` : key;
 
     if (value) {
       url.searchParams.set(name, value);

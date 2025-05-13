@@ -6,9 +6,9 @@ import type { List } from '../components/List';
 import { getAttribute } from '../utils/selectors';
 import { initButtons } from './buttons';
 import { initDropdown } from './dropdown';
+import { getListSortingQuery, setListSortingQuery } from './query';
 import { initHTMLSelect } from './select';
 import { sortListItems } from './sort';
-import type { Sorting } from './types';
 
 /**
  * Inits sorting functionality for the list.
@@ -29,8 +29,6 @@ export const initListSorting = (list: List, triggers: HTMLElement[]) => {
 
   // Set up hooks
   const sortHookCleanup = list.addHook('sort', (items) => {
-    list.currentPage.value = 1; // Reset the current page
-
     const sortedItems = sortListItems(items, list.sorting.value);
     return sortedItems;
   });
@@ -56,27 +54,22 @@ export const initListSorting = (list: List, triggers: HTMLElement[]) => {
   // Set up reactivity
   const sortingCleanup = watch(
     list.sorting,
-    debounce((sorting: Sorting) => {
-      list.triggerHook('sort', { scrollToAnchor: list.hasInteracted.value });
+    debounce(() => {
+      list.triggerHook('sort', {
+        scrollToAnchor: list.hasInteracted.value,
+        resetCurrentPage: list.hasInteracted.value,
+      });
 
       // Handle query params
       if (list.showQuery) {
-        list.setSearchParam('sorting', JSON.stringify(sorting));
+        setListSortingQuery(list);
       }
     }, 0),
     { deep: true, immediate: true }
   );
 
   // Read query params
-  Promise.all([list.getSearchParam('sorting')]).then(([rawSorting]) => {
-    if (!rawSorting) return;
-
-    try {
-      list.sorting.value = JSON.parse(rawSorting);
-    } catch {
-      //
-    }
-  });
+  getListSortingQuery(list);
 
   return () => {
     modeCleanup?.();

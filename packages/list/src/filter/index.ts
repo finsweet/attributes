@@ -7,8 +7,8 @@ import { initDynamicFilters } from './dynamic';
 import { handleFilterElements } from './elements';
 import { filterItems } from './filter';
 import { initStandardFilters } from './standard';
+import { getListFiltersQuery, setListFiltersQuery } from './standard/query';
 import { initTags } from './tags';
-import type { Filters } from './types';
 
 /**
  * Inits loading functionality for the list.
@@ -20,8 +20,6 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
 
   // Init hooks
   const filterHookCleanup = list.addHook('filter', async (items) => {
-    list.currentPage.value = 1; // Reset the current page
-
     const filteredItems = await filterItems(list.filters.value, items, list.highlight);
     return filteredItems;
   });
@@ -67,27 +65,22 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
   // Trigger the hook when the filters change
   const filtersCleanup = watch(
     list.filters,
-    debounce((filters: Filters) => {
-      list.triggerHook('filter', { scrollToAnchor: list.hasInteracted.value });
+    debounce(() => {
+      list.triggerHook('filter', {
+        scrollToAnchor: list.hasInteracted.value,
+        resetCurrentPage: list.hasInteracted.value,
+      });
 
       // Handle query params
       if (list.showQuery) {
-        list.setSearchParam('filters', JSON.stringify(filters));
+        setListFiltersQuery(list);
       }
     }, 0),
     { deep: true }
   );
 
   // Read query params
-  list.getSearchParam('filters').then((rawFilters) => {
-    if (!rawFilters) return;
-
-    try {
-      list.filters.value = JSON.parse(rawFilters);
-    } catch {
-      //
-    }
-  });
+  getListFiltersQuery(list);
 
   return () => {
     filterHookCleanup();
