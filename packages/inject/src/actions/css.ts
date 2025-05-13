@@ -1,3 +1,5 @@
+import { cloneNode } from '@finsweet/attributes-utils';
+
 /**
  * Attaches the page styles to a Shadow DOM.
  * @param shadowRoot The root of the Shadow DOM.
@@ -11,9 +13,11 @@ export const attachPageStyles = async (shadowRoot: ShadowRoot, page: Document) =
     styleTags.map(
       (styleTag) =>
         new Promise((resolve) => {
+          const clone = cloneNode(styleTag);
+
           // Load styles
-          styleTag.addEventListener('load', () => resolve(undefined), { once: true });
-          shadowRoot.append(styleTag);
+          clone.addEventListener('load', () => resolve(undefined), { once: true });
+          shadowRoot.append(clone);
 
           // Max 10s timeout
           window.setTimeout(() => resolve(undefined), 10000);

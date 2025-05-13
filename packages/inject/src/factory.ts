@@ -76,7 +76,11 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
 
           // Normal component injection
           else {
-            target.append(component);
+            if (componentTargetData.replace) {
+              target.replaceWith(component);
+            } else {
+              target.append(component);
+            }
           }
         };
 

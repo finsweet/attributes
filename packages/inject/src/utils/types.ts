@@ -1,5 +1,5 @@
 export type ComponentTargetData = {
-  target: HTMLElement;
+  target: Element;
   instance: string | null;
   source?: URL;
   proxiedSource?: URL;
@@ -7,6 +7,7 @@ export type ComponentTargetData = {
   autoRender: boolean;
   resetIx: boolean;
   positions: number[];
+  replace?: boolean;
 };
 
 export type ComponentData = ComponentTargetData & {

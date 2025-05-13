@@ -1,50 +1,82 @@
-import { extractCommaSeparatedValues, isNotEmpty } from '@finsweet/attributes-utils';
+import { extractCommaSeparatedValues, isNotEmpty, RICH_TEXT_BLOCK_CSS_CLASS } from '@finsweet/attributes-utils';
 
 import { getAttribute, getInstance, hasAttributeValue, queryAllElements } from '../utils/selectors';
 import type { ComponentTargetData } from '../utils/types';
 
+const RICHTEXT_COMPONENT_REGEX = /\{\{([^=}"]+)(?:="([^"]*)")?\}\}/;
+
 /**
  * Collects the component targets.
- * @param proxy A CORS proxy to use for external sources.
  */
 export const collectComponentTargetsData = () => {
   const targetElements = queryAllElements('target');
-  const targetsData = [...targetElements]
-    .map<ComponentTargetData | undefined>((target) => {
-      const instance = getInstance(target);
-      const proxy = getAttribute(null, 'proxy');
-      const rawPosition = getAttribute(target, 'position');
-      const rawSource = getAttribute(target, 'source');
-      const rawLoadCSS = getAttribute(target, 'css');
-      const rawAutoRender = getAttribute(target, 'render');
-      const resetIx = hasAttributeValue(target, 'resetix', 'true');
 
-      const loadCSS = !rawLoadCSS || rawLoadCSS === 'true';
-      const autoRender = !rawAutoRender || rawAutoRender === 'true';
-      const positions = rawPosition ? extractCommaSeparatedValues(rawPosition).map(getPosition) : [0.5];
+  const targetsData = targetElements.map((target) => collectComponentTargetData(target)).filter(isNotEmpty);
 
-      let source: URL | undefined;
-      let proxiedSource: URL | undefined;
+  const richTextBlocks = document.querySelectorAll(`.${RICH_TEXT_BLOCK_CSS_CLASS}`);
 
-      if (rawSource) {
-        try {
-          source = new URL(rawSource, window.location.origin);
+  for (const rtb of richTextBlocks) {
+    const children = [...rtb.querySelectorAll('*')];
 
-          // If source is external, prefix it with the proxy if provided
-          if (source.origin !== window.location.origin && proxy) {
-            proxiedSource = new URL(proxy + source.href);
-          }
-        } catch {
-          // Source is invalid
-          return;
-        }
-      }
+    for (const child of children) {
+      const match = child.innerHTML.match(RICHTEXT_COMPONENT_REGEX);
+      if (!match) continue;
+      if (targetsData.some((data) => data.target === child)) continue;
 
-      return { target, instance, source, proxiedSource, loadCSS, autoRender, resetIx, positions };
-    })
-    .filter(isNotEmpty);
+      const targetData = collectComponentTargetData(child, match[1], match[2], true);
+      if (!targetData) continue;
+
+      targetsData.push(targetData);
+    }
+  }
 
   return targetsData;
+};
+
+/**
+ * Collects a component target data.
+ * @param target
+ * @param instance
+ * @param rawSource
+ * @returns The component target data.
+ */
+const collectComponentTargetData = (
+  target: Element,
+  instance?: string | null,
+  rawSource?: string,
+  replace?: boolean
+): ComponentTargetData | undefined => {
+  instance ||= getInstance(target);
+  rawSource ||= getAttribute(target, 'source');
+
+  const proxy = getAttribute(null, 'proxy');
+  const rawPosition = getAttribute(target, 'position');
+  const rawLoadCSS = getAttribute(target, 'css');
+  const rawAutoRender = getAttribute(target, 'render');
+  const resetIx = hasAttributeValue(target, 'resetix', 'true');
+
+  const loadCSS = !rawLoadCSS || rawLoadCSS === 'true';
+  const autoRender = !rawAutoRender || rawAutoRender === 'true';
+  const positions = rawPosition ? extractCommaSeparatedValues(rawPosition).map(getPosition) : [0.5];
+
+  let source: URL | undefined;
+  let proxiedSource: URL | undefined;
+
+  if (rawSource) {
+    try {
+      source = new URL(rawSource, window.location.origin);
+
+      // If source is external, prefix it with the proxy if provided
+      if (source.origin !== window.location.origin && proxy) {
+        proxiedSource = new URL(proxy + source.href);
+      }
+    } catch {
+      // Source is invalid
+      return;
+    }
+  }
+
+  return { target, instance, source, proxiedSource, loadCSS, autoRender, resetIx, positions, replace };
 };
 
 /**
