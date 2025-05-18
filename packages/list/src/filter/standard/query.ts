@@ -1,4 +1,4 @@
-import { isNotEmpty } from '@finsweet/attributes-utils';
+import { isNotEmpty, isString } from '@finsweet/attributes-utils';
 
 import type { List } from '../../components';
 import { SETTINGS } from '../../utils/constants';
@@ -46,7 +46,9 @@ export const getListFiltersQuery = async (list: List) => {
     try {
       const parsedValue = JSON.parse(value);
 
-      if (Array.isArray(parsedValue)) {
+      if (Array.isArray(parsedValue) && parsedValue.every(isString)) {
+        valueToSet = parsedValue;
+      } else if (isString(parsedValue)) {
         valueToSet = parsedValue;
       }
     } catch {
