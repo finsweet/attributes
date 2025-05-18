@@ -3,6 +3,7 @@ import { isNotEmpty } from '@finsweet/attributes-utils';
 import type { List } from '../../components';
 import { SETTINGS } from '../../utils/constants';
 import { listInstancesStore } from '../../utils/store';
+import type { FiltersCondition } from '../types';
 
 /**
  * @param list
@@ -40,12 +41,20 @@ export const getListFiltersQuery = async (list: List) => {
 
     if (!condition) continue;
 
+    let valueToSet: FiltersCondition['value'] = value;
+
     try {
-      condition.value = JSON.parse(value);
-      condition.interacted = true;
+      const parsedValue = JSON.parse(value);
+
+      if (Array.isArray(parsedValue)) {
+        valueToSet = parsedValue;
+      }
     } catch {
       // Skip
     }
+
+    condition.value = valueToSet;
+    condition.interacted = true;
   }
 };
 
@@ -73,11 +82,19 @@ export const setListFiltersQuery = async (list: List) => {
 
       const key = [multipleGroups ? index : undefined, fieldKey, op].filter(isNotEmpty).join('_');
 
-      try {
-        list.setSearchParam(key, JSON.stringify(value), usePrefix);
-      } catch {
-        // Skip
+      let valueToSet = null;
+
+      if (Array.isArray(value)) {
+        try {
+          valueToSet = JSON.stringify(value);
+        } catch {
+          //
+        }
+      } else {
+        valueToSet = value;
       }
+
+      list.setSearchParam(key, valueToSet, usePrefix);
     });
   });
 };
