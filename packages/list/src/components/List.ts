@@ -725,7 +725,7 @@ export class List {
       result = (await callback(result)) || result;
     }
 
-    hook.result.value = result;
+    hook.result.value = [...result];
 
     this.currentHook = undefined;
   }

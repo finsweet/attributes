@@ -11,8 +11,16 @@ import type { FiltersCondition } from '../types';
  */
 const getListFiltersQueryRegex = (list: List) => {
   const allFieldKeys = Object.keys(list.allFieldsData.value);
+  const allFilterKeys = list.filters.value.groups.flatMap((group) =>
+    group.conditions.flatMap((condition) => condition.fieldKey)
+  );
 
-  const regex = new RegExp(`^(?:([0-9]+)_)?(${allFieldKeys.join('|')})(?:_(${SETTINGS.operator.values.join('|')}))?$`);
+  const allKeys = new Set([...allFieldKeys, ...allFilterKeys]);
+
+  // Escape special regex characters in the keys
+  const escapedKeys = [...allKeys].map((key) => key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+  const regex = new RegExp(`^(?:([0-9]+)_)?(${escapedKeys.join('|')})(?:_(${SETTINGS.operator.values.join('|')}))?$`);
   return regex;
 };
 
