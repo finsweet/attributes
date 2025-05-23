@@ -1,4 +1,4 @@
-import { isHTMLInputElement, isHTMLSelectElement } from '@finsweet/attributes-utils';
+import { isElement, isHTMLInputElement, isHTMLSelectElement } from '@finsweet/attributes-utils';
 import { toRaw, watch } from '@vue/reactivity';
 import debounce from 'just-debounce';
 
@@ -16,14 +16,16 @@ import { getConditionOperator } from './conditions';
  * @param groupIndex
  */
 export const initFacets = (list: List, form: HTMLFormElement, groupIndex: number) => {
-  const cleanups = [...form.elements].map((formField) => {
-    const isInput = isHTMLInputElement(formField);
-    const isSelect = isHTMLSelectElement(formField);
+  const cleanups = new Map<Node, (() => void) | undefined>();
+
+  const init = (element: Element) => {
+    const isInput = isHTMLInputElement(element);
+    const isSelect = isHTMLSelectElement(element);
     if (!isInput && !isSelect) return;
 
     const handler = isInput
-      ? createInputFacetsHandler(list, formField, groupIndex)
-      : createSelectOptionsFacetsHandler(list, formField, groupIndex);
+      ? createInputFacetsHandler(list, element, groupIndex)
+      : createSelectOptionsFacetsHandler(list, element, groupIndex);
 
     if (!handler) return;
 
@@ -34,10 +36,44 @@ export const initFacets = (list: List, form: HTMLFormElement, groupIndex: number
       itemsCleanup();
       filtersCleanup();
     };
+  };
+
+  // Init existing elements
+  for (const node of [...form.elements]) {
+    const cleanup = init(node);
+    cleanups.set(node, cleanup);
+  }
+
+  // Observe new or removed elements
+  const observer = new MutationObserver((mutations) => {
+    for (const { addedNodes, removedNodes } of mutations) {
+      for (const node of addedNodes) {
+        if (!isElement(node)) continue;
+
+        const elements = [node, ...node.querySelectorAll('input, select')];
+
+        for (const element of elements) {
+          if (cleanups.has(element)) continue;
+
+          const cleanup = init(element);
+          cleanups.set(element, cleanup);
+        }
+      }
+
+      for (const node of removedNodes) {
+        const cleanup = cleanups.get(node);
+        cleanup?.();
+        cleanups.delete(node);
+      }
+    }
   });
 
+  observer.observe(form, { childList: true, subtree: true });
+
   return () => {
-    for (const cleanup of cleanups) {
+    observer.disconnect();
+
+    for (const [, cleanup] of cleanups) {
       cleanup?.();
     }
   };
