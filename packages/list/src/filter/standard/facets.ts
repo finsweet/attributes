@@ -61,9 +61,15 @@ export const initFacets = (list: List, form: HTMLFormElement, groupIndex: number
       }
 
       for (const node of removedNodes) {
-        const cleanup = cleanups.get(node);
-        cleanup?.();
-        cleanups.delete(node);
+        if (!isElement(node)) continue;
+
+        const elements = [node, ...node.querySelectorAll('input, select')];
+
+        for (const element of elements) {
+          const cleanup = cleanups.get(element);
+          cleanup?.();
+          cleanups.delete(element);
+        }
       }
     }
   });
