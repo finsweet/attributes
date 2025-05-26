@@ -26,6 +26,7 @@ export const getSettings = (
       step: number;
       precision: number;
       updateOnRelease: boolean;
+      isLazy: boolean;
     }
   | undefined => {
   const trackElement = queryElement('track', { scope: wrapperElement });
@@ -41,6 +42,8 @@ export const getSettings = (
   const formatValueDisplay = getAttribute(wrapperElement, 'formatdisplay');
 
   const updateOnRelease = hasAttributeValue(wrapperElement, 'update', 'release');
+
+  const isLazy = hasAttributeValue(wrapperElement, 'lazy', 'true');
 
   if (!handleElements.length || !trackElement) {
     console.error('The rangeslider is missing a Track element or a Handle element.');
@@ -89,5 +92,6 @@ export const getSettings = (
     step,
     precision,
     updateOnRelease,
+    isLazy,
   };
 };

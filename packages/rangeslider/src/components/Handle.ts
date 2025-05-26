@@ -47,6 +47,7 @@ export class Handle {
       step,
       precision,
       startValue,
+      isLazy,
       inputElement,
       displayValueElement,
       formatValueDisplay,
@@ -58,6 +59,7 @@ export class Handle {
       step: number;
       precision: number;
       startValue: number;
+      isLazy: boolean;
       inputElement?: HTMLInputElement;
       displayValueElement?: HTMLElement;
       formatValueDisplay?: string;
@@ -82,7 +84,7 @@ export class Handle {
     setHandleStyles(element);
     setHandleA11Y(element, inputElement);
 
-    this.setValue(inputElement?.value ? parseFloat(inputElement.value) : startValue);
+    this.setValue(inputElement?.value ? parseFloat(inputElement.value) : startValue, !isLazy);
     this.destroy = this.listenEvents();
   }
 

@@ -72,6 +72,14 @@ export const SETTINGS = {
     values: ['move', 'release'],
     defaultValue: 'move',
   },
+
+  /**
+   * Defines if the input values should be updated lazily.
+   */
+  lazy: {
+    key: 'lazy',
+    values: ['true'],
+  },
 } as const satisfies AttributeSettings;
 
 export const HANDLE_INCREMENT_KEYS = [ARROW_UP_KEY, ARROW_RIGHT_KEY];

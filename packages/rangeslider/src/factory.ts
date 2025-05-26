@@ -20,6 +20,7 @@ export const createHandleInstances = ({
   trackWidth,
   step,
   precision,
+  isLazy,
 }: RangeSliderSettings): HandleInstances | undefined => {
   const handles = handleElements
     .slice(0, 2)
@@ -56,6 +57,7 @@ export const createHandleInstances = ({
         inputElement,
         displayValueElement,
         formatValueDisplay,
+        isLazy,
       });
 
       return handle;
