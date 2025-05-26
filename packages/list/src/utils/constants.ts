@@ -571,6 +571,11 @@ export const SETTINGS = {
   tagfield: { key: 'tagfield' },
 
   /**
+   * Defines if the tag for a specific filter should be displayed.
+   */
+  showtag: { key: 'showtag', values: ['false'] },
+
+  /**
    * If added to a tag, numeric and date numbers will be formatted when displaying them in the tags.
    * If "true" the format will default to the user’s locale.
    * A specific locale can be forced using IETF BCP 47 language tags like "en-US".

@@ -117,6 +117,7 @@ export const initTags = (list: List, isDynamic: boolean) => {
 
             // Remove the tag if the value is empty
             const shouldRender =
+              condition.showTag &&
               !!condition.interacted &&
               !!condition.value &&
               (Array.isArray(condition.value) ? !!condition.value.length : true);

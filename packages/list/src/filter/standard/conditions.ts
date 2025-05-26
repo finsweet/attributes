@@ -7,7 +7,7 @@ import {
 } from '@finsweet/attributes-utils';
 
 import type { List } from '../../components/List';
-import { CUSTOM_VALUE_ATTRIBUTE, getAttribute, getSettingSelector } from '../../utils/selectors';
+import { CUSTOM_VALUE_ATTRIBUTE, getAttribute, getSettingSelector, hasAttributeValue } from '../../utils/selectors';
 import type { FiltersCondition, FiltersGroup } from '../types';
 
 /**
@@ -26,6 +26,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const filterMatch = getAttribute(formField, 'filtermatch', { filterInvalid: true });
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
   const fuzzyThreshold = getAttribute(formField, 'fuzzy');
+  const showTag = !hasAttributeValue(formField, 'showtag', 'false');
 
   const value = getFormFieldValue(formField, CUSTOM_VALUE_ATTRIBUTE);
 
@@ -40,6 +41,7 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     fuzzyThreshold,
     interacted,
     customTagField,
+    showTag,
   };
 };
 

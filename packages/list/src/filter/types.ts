@@ -12,7 +12,6 @@ export type FilterMatch = 'and' | 'or';
 export type FiltersCondition = {
   id: string;
   fieldKey: string;
-  customTagField?: string;
   op?: FilterOperator;
   type: FormFieldType;
   value: string | string[];
@@ -20,6 +19,8 @@ export type FiltersCondition = {
   fieldMatch?: FilterMatch;
   fuzzyThreshold?: number;
   interacted?: boolean;
+  customTagField?: string;
+  showTag: boolean;
 };
 
 export type FiltersGroup = {

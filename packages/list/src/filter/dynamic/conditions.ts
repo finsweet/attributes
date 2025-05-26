@@ -604,6 +604,7 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
     value,
     fuzzyThreshold,
     fieldMatch,
+    showTag: true,
     interacted: true,
   });
 
