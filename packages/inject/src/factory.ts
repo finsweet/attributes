@@ -54,22 +54,22 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
     components
       .map<ComponentData | undefined>((component, index) => {
         let shadowRoot: ShadowRoot | undefined;
-        let shadowRootTarget: HTMLElement | undefined;
+        let shadowRootWrapper: HTMLElement | undefined;
 
-        const render = (component: HTMLElement) => {
+        const render = (element: HTMLElement) => {
           // Handle CSS
           if (!isSamePage && !noCSS) {
-            shadowRootTarget = document.createElement('div');
-            shadowRootTarget.style.display = 'contents';
+            shadowRootWrapper = document.createElement('div');
+            shadowRootWrapper.style.display = 'contents';
 
-            shadowRoot = shadowRootTarget.attachShadow({ mode: 'open' });
+            shadowRoot = shadowRootWrapper.attachShadow({ mode: 'open' });
 
             attachPageStyles(shadowRoot, page).then(() => {
-              shadowRoot!.append(component);
+              shadowRoot!.append(element);
             });
           }
 
-          const toRender = shadowRootTarget || component;
+          const toRender = shadowRootWrapper || element;
 
           // Rich Text Block component injection
           if (isRTB) {
