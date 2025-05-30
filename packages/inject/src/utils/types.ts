@@ -3,7 +3,7 @@ export type ComponentTargetData = {
   instance: string | null;
   source?: URL;
   proxiedSource?: URL;
-  loadCSS: boolean;
+  noCSS: boolean;
   autoRender: boolean;
   resetIx: boolean;
   positions: number[];

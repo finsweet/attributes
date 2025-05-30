@@ -28,7 +28,7 @@ export const initComponents = async (componentTargetsData: ComponentTargetData[]
  * @returns The component data.
  */
 const initComponent = async (componentTargetData: ComponentTargetData): Promise<Array<ComponentData> | undefined> => {
-  const { target, instance, proxiedSource, source, loadCSS, autoRender, positions } = componentTargetData;
+  const { target, instance, proxiedSource, source, noCSS, autoRender, positions } = componentTargetData;
 
   const componentsSource = proxiedSource || source;
 
@@ -43,6 +43,7 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
   if (!components.length) return;
 
   const targetChildren = [...target.children];
+  const isSamePage = page === document;
   const isSameSite = isSameWebflowProject(page);
   const isRTB = target.classList.contains(RICH_TEXT_BLOCK_CSS_CLASS);
 
@@ -52,7 +53,24 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
   return Promise.all(
     components
       .map<ComponentData | undefined>((component, index) => {
+        let shadowRoot: ShadowRoot | undefined;
+        let shadowRootTarget: HTMLElement | undefined;
+
         const render = (component: HTMLElement) => {
+          // Handle CSS
+          if (!isSamePage && !noCSS) {
+            shadowRootTarget = document.createElement('div');
+            shadowRootTarget.style.display = 'contents';
+
+            shadowRoot = shadowRootTarget.attachShadow({ mode: 'open' });
+
+            attachPageStyles(shadowRoot, page).then(() => {
+              shadowRoot!.append(component);
+            });
+          }
+
+          const toRender = shadowRootTarget || component;
+
           // Rich Text Block component injection
           if (isRTB) {
             const position = positions[index] ?? 0.5;
@@ -68,60 +86,30 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
             }
 
             if (targetPosition < 0) {
-              target.prepend(component);
+              target.prepend(toRender);
             } else {
-              target.insertBefore(component, referenceNode || null);
+              target.insertBefore(toRender, referenceNode || null);
             }
           }
 
           // Normal component injection
           else {
             if (componentTargetData.replace) {
-              target.replaceWith(component);
+              target.replaceWith(toRender);
             } else {
-              target.append(component);
+              target.append(toRender);
             }
           }
         };
 
-        // Same site component
-        if (isSameSite) {
-          if (autoRender) {
-            render(component);
-          }
-
-          return {
-            ...componentTargetData,
-            component,
-          };
-        }
-
-        // External component
-        if (!source) return;
-
-        // Create a shadow root
-        let shadowRoot: ShadowRoot | undefined;
-        let shadowRootTarget: HTMLElement | undefined;
-
-        // Load the CSS
-        // To load the external CSS, we attach a Shadow DOM to the target element
-        if (loadCSS) {
-          shadowRootTarget = document.createElement('div');
-          shadowRootTarget.style.display = 'contents';
-
-          shadowRoot = shadowRootTarget.attachShadow({ mode: 'open' });
-
-          attachPageStyles(shadowRoot, page).then(() => {
-            shadowRoot!.append(component);
-          });
-        }
-
         // Convert relative URLs to absolute URLs
-        convertRelativeUrlsToAbsolute(component, source);
+        if (!isSameSite && source) {
+          convertRelativeUrlsToAbsolute(component, source);
+        }
 
         // Render the component
         if (autoRender) {
-          render(shadowRootTarget || component);
+          render(component);
         }
 
         return {

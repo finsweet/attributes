@@ -34,7 +34,7 @@ export const SETTINGS = {
    */
   css: {
     key: 'css',
-    values: ['true'],
+    values: ['false'],
   },
 
   /**
@@ -47,6 +47,7 @@ export const SETTINGS = {
   render: {
     key: 'render',
     values: ['true'],
+    defaultValue: 'true',
   },
 
   /**

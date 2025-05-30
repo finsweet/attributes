@@ -51,12 +51,10 @@ const collectComponentTargetData = (
 
   const proxy = getAttribute(null, 'proxy');
   const rawPosition = getAttribute(target, 'position');
-  const rawLoadCSS = getAttribute(target, 'css');
-  const rawAutoRender = getAttribute(target, 'render');
+  const noCSS = hasAttributeValue(target, 'css', 'false');
+  const autoRender = hasAttributeValue(target, 'render', 'true');
   const resetIx = hasAttributeValue(target, 'resetix', 'true');
 
-  const loadCSS = !rawLoadCSS || rawLoadCSS === 'true';
-  const autoRender = !rawAutoRender || rawAutoRender === 'true';
   const positions = rawPosition ? extractCommaSeparatedValues(rawPosition).map(getPosition) : [0.5];
 
   let source: URL | undefined;
@@ -76,7 +74,7 @@ const collectComponentTargetData = (
     }
   }
 
-  return { target, instance, source, proxiedSource, loadCSS, autoRender, resetIx, positions, replace };
+  return { target, instance, source, proxiedSource, noCSS, autoRender, resetIx, positions, replace };
 };
 
 /**
