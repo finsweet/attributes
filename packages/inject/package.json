@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-inject",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Import components from any internal or external Webflow project.",
   "private": true,
   "type": "module",

@@ -1,5 +1,12 @@
 # @finsweet/attributes-readtime
 
+## 1.2.11
+
+### Patch Changes
+
+- Updated dependencies [3978889]
+  - @finsweet/attributes-utils@0.1.1
+
 ## 1.2.10
 
 ### Patch Changes

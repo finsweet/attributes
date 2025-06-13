@@ -1,5 +1,11 @@
 # @finsweet/attributes-utils
 
+## 0.1.1
+
+### Patch Changes
+
+- 3978889: refactor: unnecessary expression
+
 ## 0.1.0
 
 ### Minor Changes

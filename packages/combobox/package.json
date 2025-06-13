@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-combobox",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "A combo box that helps users select an item from a large list of options.",
   "private": true,
   "type": "module",
