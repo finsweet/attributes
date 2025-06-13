@@ -350,11 +350,7 @@ const handlePaginationButtons = (list: List) => {
 
     e.preventDefault();
 
-    let targetPage: number | null | undefined;
-
-    if (nextButton) targetPage = list.currentPage.value + 1;
-    else targetPage = list.currentPage.value - 1;
-
+    const targetPage = nextButton ? list.currentPage.value + 1 : list.currentPage.value - 1;
     if (!targetPage) return;
     if (targetPage < 1) return;
     if (targetPage > list.totalPages.value) return;
