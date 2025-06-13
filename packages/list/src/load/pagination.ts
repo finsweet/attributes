@@ -30,7 +30,6 @@ export const initPaginationMode = (list: List) => {
 
   // Init hook
   list.addHook('pagination', (items) => {
-    console.log('paginating...', { list, items });
     const $itemsPerPage = itemsPerPage.value;
 
     const start = (currentPage.value - 1) * $itemsPerPage;
@@ -348,8 +347,6 @@ const handlePaginationButtons = (list: List) => {
     const button = nextButton || previousButton;
 
     if (!button || getInstance(button) !== list.instance) return;
-
-    console.log({ isNextButton: nextButton, isPreviousButton: previousButton });
 
     e.preventDefault();
 
