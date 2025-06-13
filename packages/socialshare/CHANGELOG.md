@@ -1,5 +1,12 @@
 # @finsweet/attributes-socialshare
 
+## 1.3.10
+
+### Patch Changes
+
+- Updated dependencies [3978889]
+  - @finsweet/attributes-utils@0.1.1
+
 ## 1.3.9
 
 ### Patch Changes

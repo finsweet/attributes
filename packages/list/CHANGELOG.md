@@ -1,5 +1,14 @@
 # @finsweet/attributes-list
 
+## 1.5.1
+
+### Patch Changes
+
+- 3978889: fix: respect instances when multiple lists with pagination exist on the same page
+- 3978889: fix: don't add aria-hidden to pagination buttons
+- Updated dependencies [3978889]
+  - @finsweet/attributes-utils@0.1.1
+
 ## 1.5.0
 
 ### Minor Changes
