@@ -15,7 +15,7 @@ import debounce from 'just-debounce';
 import type { List } from '../components/List';
 import { BREAKPOINTS_INDEX } from '../utils/constants';
 import { getCMSElementSelector } from '../utils/dom';
-import { getAttribute, getElementSelector, queryElement } from '../utils/selectors';
+import { getAttribute, getElementSelector, getInstance, queryElement } from '../utils/selectors';
 import { loadPaginatedCMSItems } from './load';
 
 /**
@@ -311,7 +311,6 @@ const handlePaginationButtons = (list: List) => {
     element.style.display = '';
     element.classList[shouldDisplay ? 'remove' : 'add'](disabledClass);
     element.setAttribute('aria-disabled', shouldDisplay ? 'false' : 'true');
-    element.setAttribute('aria-hidden', shouldDisplay ? 'false' : 'true');
     element.setAttribute('tabindex', shouldDisplay ? '0' : '-1');
   };
 
@@ -342,23 +341,19 @@ const handlePaginationButtons = (list: List) => {
 
     if (!isElement(target)) return;
 
-    const isNextButton = target.closest(getCMSElementSelector('pagination-next'));
-    const isPreviousButton = target.closest(getCMSElementSelector('pagination-previous'));
+    const nextButton = target.closest(getCMSElementSelector('pagination-next'));
+    const previousButton = target.closest(getCMSElementSelector('pagination-previous'));
 
-    if (!isNextButton && !isPreviousButton) return;
+    const button = nextButton || previousButton;
+
+    if (!button || getInstance(button) !== list.instance) return;
 
     e.preventDefault();
 
-    const { currentPage, totalPages } = list;
-
-    let targetPage: number | null | undefined;
-
-    if (isNextButton) targetPage = currentPage.value + 1;
-    else targetPage = currentPage.value - 1;
-
+    const targetPage = nextButton ? list.currentPage.value + 1 : list.currentPage.value - 1;
     if (!targetPage) return;
     if (targetPage < 1) return;
-    if (targetPage > totalPages.value) return;
+    if (targetPage > list.totalPages.value) return;
 
     list.currentPage.value = targetPage;
   });
