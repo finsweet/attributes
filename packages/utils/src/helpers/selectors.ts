@@ -76,7 +76,7 @@ export const generateSelectors = <
     }
 
     // If instance exists, select the specific element instance
-    const instanceSelector = `[${INSTANCE_ATTRIBUTE_NAME}="${instance}"]`;
+    const instanceSelector = getInstanceSelector(instance);
 
     return `${elementSelector}${instanceSelector}, ${instanceSelector} ${elementSelector}`;
   };
