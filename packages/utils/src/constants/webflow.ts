@@ -1,5 +1,7 @@
 import type { WebflowBreakpoint } from '../types';
 
+export const WEBFLOW_ASSETS_CDN_ORIGIN = 'https://cdn.prod.website-files.com';
+
 export const CURRENT_CSS_CLASS = 'w--current';
 
 export const RICH_TEXT_BLOCK_CSS_CLASS = 'w-richtext';
