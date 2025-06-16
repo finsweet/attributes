@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.6.0
+
+### Minor Changes
+
+- 579443a: feat: support per-page CSS in list nest
+
 ## 1.5.1
 
 ### Patch Changes
