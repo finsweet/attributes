@@ -7,7 +7,7 @@ import {
 import { effect, triggerRef } from '@vue/reactivity';
 
 import { List, ListItem } from '../components';
-import { CURRENT_PAGE_STYLESHEETS } from '../utils/constants';
+import { getCurrentPageStylesheets } from '../utils/css';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import {
   getAttribute,
@@ -183,6 +183,7 @@ const handleExternalNesting = async (list: List, item: ListItem, target: HTMLEle
   if (!sourceInstance.items.value.length) return;
 
   // Collect stylesheets from the item page template
+  const currentPageStylesheets = getCurrentPageStylesheets();
   const externalStylesheets = new Map<string, HTMLLinkElement>();
   const externalStylesheetElements = scope.documentElement.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]');
 
@@ -192,7 +193,7 @@ const handleExternalNesting = async (list: List, item: ListItem, target: HTMLEle
     try {
       const { origin } = new URL(href);
       if (origin !== WEBFLOW_ASSETS_CDN_ORIGIN) continue;
-      if (CURRENT_PAGE_STYLESHEETS.has(href)) continue;
+      if (currentPageStylesheets.has(href)) continue;
 
       externalStylesheets.set(href, stylesheet);
     } catch {

@@ -3,7 +3,6 @@ import {
   type AttributeSettings,
   type FormFieldType,
   LIST_ATTRIBUTE,
-  WEBFLOW_ASSETS_CDN_ORIGIN,
   type WebflowBreakpoint,
 } from '@finsweet/attributes-utils';
 
@@ -718,26 +717,6 @@ export const ALLOWED_DYNAMIC_FIELD_TYPES: Record<
     },
   },
 };
-
-export const CURRENT_PAGE_STYLESHEETS = (() => {
-  const stylesheets = document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]');
-  const store = new Set<string>();
-
-  for (const stylesheet of stylesheets) {
-    const { href } = stylesheet;
-
-    try {
-      const { origin } = new URL(href);
-      if (origin !== WEBFLOW_ASSETS_CDN_ORIGIN) continue;
-
-      store.add(href);
-    } catch {
-      continue;
-    }
-  }
-
-  return store;
-})();
 
 export const RENDER_INDEX_CSS_VARIABLE = `--fs-${LIST_ATTRIBUTE}-renderindex`;
 
