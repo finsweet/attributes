@@ -16,7 +16,7 @@ const displayTriggersStore: Map<
  * @param trigger
  * @param preserveScrollTargets
  */
-const handleStateChange = (trigger: HTMLElement, preserveScrollTargets: Element[]) => {
+const handleStateChange = (trigger: HTMLElement, preserveScrollTargets: HTMLElement[]) => {
   // Get the trigger data
   const triggerData = displayTriggersStore.get(trigger);
   if (!triggerData) return;
@@ -49,7 +49,7 @@ const handleStateChange = (trigger: HTMLElement, preserveScrollTargets: Element[
  *
  * @returns A callback to destroy the observers and listeners.
  */
-export const initDisplayTriggers = (preserveScrollTargets: Element[]): (() => void) => {
+export const initDisplayTriggers = (preserveScrollTargets: HTMLElement[]): (() => void) => {
   // DOM Elements
   const smartNavSelector = getElementSelector('smart-nav');
 
