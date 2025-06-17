@@ -720,7 +720,7 @@ export const ALLOWED_DYNAMIC_FIELD_TYPES: Record<
 
 export const RENDER_INDEX_CSS_VARIABLE = `--fs-${LIST_ATTRIBUTE}-renderindex`;
 
-window.CSS.registerProperty({
+window.CSS?.registerProperty?.({
   name: RENDER_INDEX_CSS_VARIABLE,
   syntax: '<number>',
   inherits: false,
