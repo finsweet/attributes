@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.6.1
+
+### Patch Changes
+
+- 7c0fe8d: fix: hooks crashing when animations are aborted
+
 ## 1.6.0
 
 ### Minor Changes
