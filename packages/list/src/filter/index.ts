@@ -30,7 +30,11 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
 
       const animations = list.wrapperElement.getAnimations({ subtree: true });
 
-      await Promise.all(animations.map((a) => a.finished));
+      try {
+        await Promise.all(animations.map((a) => a.finished));
+      } catch {
+        //
+      }
     }
 
     return items;

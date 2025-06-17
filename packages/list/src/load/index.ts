@@ -42,7 +42,11 @@ export const initListLoading = (list: List, mode: LoadMode) => {
 
       const animations = list.wrapperElement.getAnimations({ subtree: true });
 
-      await Promise.all(animations.map((a) => a.finished));
+      try {
+        await Promise.all(animations.map((a) => a.finished));
+      } catch {
+        //
+      }
     }
 
     return items;
