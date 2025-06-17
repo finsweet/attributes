@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.6.2
+
+### Patch Changes
+
+- 6ab6500: fix: use optional chaining for `window.CSS.registerProperty`
+
 ## 1.6.1
 
 ### Patch Changes
