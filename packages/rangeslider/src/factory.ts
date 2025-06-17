@@ -15,6 +15,7 @@ export const createHandleInstances = ({
   inputElements,
   displayValueElements,
   formatValueDisplay,
+  formatValueOptions,
   minRange,
   maxRange,
   trackWidth,
@@ -56,6 +57,7 @@ export const createHandleInstances = ({
         startValue,
         inputElement,
         displayValueElement,
+        formatValueOptions,
         formatValueDisplay,
         isLazy,
       });

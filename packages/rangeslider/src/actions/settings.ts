@@ -17,6 +17,7 @@ export const getSettings = (
       inputElements: HTMLInputElement[];
       displayValueElements: HTMLElement[];
       formatValueDisplay?: string;
+      formatValueOptions: Intl.NumberFormatOptions;
       trackLeft: number;
       trackRight: number;
       trackWidth: number;
@@ -40,6 +41,29 @@ export const getSettings = (
   const displayValueElements = queryAllElements('display-value', { scope: wrapperElement });
 
   const formatValueDisplay = getAttribute(wrapperElement, 'formatdisplay');
+
+  const formatValueOptions: Intl.NumberFormatOptions = {
+    compactDisplay: getAttribute(wrapperElement, 'formatcompactdisplay'),
+    currency: getAttribute(wrapperElement, 'formatcurrency'),
+    currencyDisplay: getAttribute(wrapperElement, 'formatcurrencydisplay'),
+    currencySign: getAttribute(wrapperElement, 'formatcurrencysign'),
+    maximumSignificantDigits: getAttribute(wrapperElement, 'formatmaximumsignificantdigits'),
+    maximumFractionDigits: getAttribute(wrapperElement, 'formatmaximumfractiondigits'),
+    minimumFractionDigits: getAttribute(wrapperElement, 'formatminimumfractiondigits'),
+    minimumIntegerDigits: getAttribute(wrapperElement, 'formatminimumintegerdigits'),
+    minimumSignificantDigits: getAttribute(wrapperElement, 'formatminimumsignificantdigits'),
+    notation: getAttribute(wrapperElement, 'formatnotation'),
+    numberingSystem: getAttribute(wrapperElement, 'formatnumberingsystem'),
+    roundingPriority: getAttribute(wrapperElement, 'formatroundingpriority'),
+    roundingIncrement: getAttribute(wrapperElement, 'formatroundingincrement'),
+    roundingMode: getAttribute(wrapperElement, 'formatroundingmode'),
+    signDisplay: getAttribute(wrapperElement, 'formatsigndisplay'),
+    style: getAttribute(wrapperElement, 'formatstyle'),
+    trailingZeroDisplay: getAttribute(wrapperElement, 'formattrailingzerodisplay'),
+    unit: getAttribute(wrapperElement, 'formatunit'),
+    unitDisplay: getAttribute(wrapperElement, 'formatunitdisplay'),
+    useGrouping: getAttribute(wrapperElement, 'formatusegrouping'),
+  };
 
   const updateOnRelease = hasAttributeValue(wrapperElement, 'update', 'release');
 
@@ -83,6 +107,7 @@ export const getSettings = (
     inputElements,
     displayValueElements,
     formatValueDisplay,
+    formatValueOptions,
     trackLeft,
     trackRight,
     trackWidth,
