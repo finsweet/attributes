@@ -474,13 +474,17 @@ export class List {
 
             const animations = item.element.getAnimations({ subtree: true });
 
-            return Promise.all(animations.map((a) => a.finished)).then(() => {
-              item.element.style.removeProperty(RENDER_INDEX_CSS_VARIABLE);
+            try {
+              await Promise.all(animations.map((a) => a.finished));
+            } catch {
+              //
+            }
 
-              if (item.stagger) {
-                item.element.style.transitionDelay = '';
-              }
-            });
+            item.element.style.removeProperty(RENDER_INDEX_CSS_VARIABLE);
+
+            if (item.stagger) {
+              item.element.style.transitionDelay = '';
+            }
           };
 
           // Is rendered
