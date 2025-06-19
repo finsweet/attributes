@@ -2,6 +2,7 @@ import { isHTMLFormElement } from '@finsweet/attributes-utils';
 
 import { initListCombine } from './combine';
 import { List } from './components/List';
+import { initListFavoriting } from './favorite';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
 import { initListNest } from './nest';
@@ -47,6 +48,7 @@ export const initList = (list: List) => {
   const { instance } = list;
 
   const items = list.items.value;
+  const firstItemElement = items[0]?.element;
 
   const cleanups = new Set<(() => void) | undefined>();
 
@@ -79,9 +81,19 @@ export const initList = (list: List) => {
   }
 
   // Nest
-  const nest = items.length ? !!queryElement('nest-target', { scope: items[0].element }) : false;
+  const nest = items.length ? !!queryElement('nest-target', { scope: firstItemElement }) : false;
   if (nest) {
     const cleanup = initListNest(list);
+    cleanups.add(cleanup);
+  }
+
+  // Favoriting
+  const favoriteInstance = getAttribute(list.listOrWrapper, 'favorite');
+  const hasFavoriteAddButton = items.length ? !!queryElement('favorite-add', { scope: firstItemElement }) : false;
+  const hasFavoriteRemoveButton = items.length ? !!queryElement('favorite-remove', { scope: firstItemElement }) : false;
+  const hasFavoriteToggleButton = items.length ? !!queryElement('favorite-toggle', { scope: firstItemElement }) : false;
+  if (favoriteInstance || hasFavoriteAddButton || hasFavoriteRemoveButton || hasFavoriteToggleButton) {
+    const cleanup = initListFavoriting(list, favoriteInstance);
     cleanups.add(cleanup);
   }
 
