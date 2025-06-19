@@ -8,6 +8,12 @@ import { getCMSElementSelector } from '../utils/dom';
 import { getAttribute, getElementSelector, queryElement } from '../utils/selectors';
 import { favoritedItemsStore } from './store';
 
+/**
+ * Initializes favoriting functionality for the list.
+ * @param list
+ * @param instance
+ * @returns A cleanup function
+ */
 export const initListFavoriting = (list: List, instance?: string) => {
   const clickCleanup = addListener(list.listOrWrapper, 'click', ({ target }) => {
     if (!isElement(target)) return;
@@ -37,7 +43,7 @@ export const initListFavoriting = (list: List, instance?: string) => {
     }
   });
 
-  const listCleanup = instance ? initFavoritesListDisplayer(list, instance) : initFavoritesListController(list);
+  const listCleanup = instance ? initDisplayerFavoritesList(list, instance) : initControllerFavoritesList(list);
 
   return () => {
     clickCleanup();
@@ -45,7 +51,12 @@ export const initListFavoriting = (list: List, instance?: string) => {
   };
 };
 
-export const initFavoritesListController = (list: List) => {
+/**
+ * Initializes a list that controls the favorited items.
+ * @param list
+ * @returns A cleanup function
+ */
+export const initControllerFavoritesList = (list: List) => {
   const handler = debounce(
     ({
       favoritedItems = favoritedItemsStore,
@@ -80,7 +91,13 @@ export const initFavoritesListController = (list: List) => {
   };
 };
 
-export const initFavoritesListDisplayer = (list: List, instance: string) => {
+/**
+ * Initializes a list that displays favorited items.
+ * @param list
+ * @param instance
+ * @returns A cleanup function
+ */
+export const initDisplayerFavoritesList = (list: List, instance: string) => {
   let renderedItems = new Set<string>();
 
   const handler = debounce(async (favoritedItems: Set<string>) => {
