@@ -561,7 +561,7 @@ export class List {
 
     // empty
     const emptyElementRunner = effect(() => {
-      const hasItems = !!this.hooks.afterRender.result.value.length;
+      const hasItems = !!this.hooks.render.result.value.length;
 
       if (this.listElement) {
         this.listElement.style.display = hasItems ? '' : 'none';
