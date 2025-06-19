@@ -1,13 +1,8 @@
-import {
-  cloneNode,
-  extractCommaSeparatedValues,
-  fetchPageDocument,
-  WEBFLOW_ASSETS_CDN_ORIGIN,
-} from '@finsweet/attributes-utils';
+import { cloneNode, extractCommaSeparatedValues, fetchPageDocument } from '@finsweet/attributes-utils';
 import { effect, triggerRef } from '@vue/reactivity';
 
 import { List, ListItem } from '../components';
-import { getCurrentPageStylesheets } from '../utils/css';
+import { attachExternalStylesheets } from '../utils/css';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import {
   getAttribute,
@@ -17,8 +12,6 @@ import {
   queryElement,
 } from '../utils/selectors';
 import { listInstancesStore } from '../utils/store';
-
-const attachedExternalStylesheets = new Set<string>();
 
 /**
  * Initializes list nesting.
@@ -183,23 +176,7 @@ const handleExternalNesting = async (list: List, item: ListItem, target: HTMLEle
   if (!sourceInstance.items.value.length) return;
 
   // Collect stylesheets from the item page template
-  const currentPageStylesheets = getCurrentPageStylesheets();
-  const externalStylesheets = new Map<string, HTMLLinkElement>();
-  const externalStylesheetElements = scope.documentElement.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]');
-
-  for (const stylesheet of externalStylesheetElements) {
-    const { href } = stylesheet;
-
-    try {
-      const { origin } = new URL(href);
-      if (origin !== WEBFLOW_ASSETS_CDN_ORIGIN) continue;
-      if (currentPageStylesheets.has(href)) continue;
-
-      externalStylesheets.set(href, stylesheet);
-    } catch {
-      continue;
-    }
-  }
+  const externalStylesheetsPromise = attachExternalStylesheets(scope);
 
   // Recursively nest items
   await Promise.all(
@@ -223,31 +200,8 @@ const handleExternalNesting = async (list: List, item: ListItem, target: HTMLEle
   // Append external stylesheets, if any
   // This is required since Webflow launched per-page CSS splitting
   // as items may come unstyled
-  await Promise.all([...externalStylesheets].map(attachExternalStylesheet));
+  await externalStylesheetsPromise;
 
   target.append(sourceWrapper);
   item.collectFields();
-};
-
-/**
- * Attaches a stylesheet to the current page.
- * @param entry
- * @returns A promise that resolves once attached, with a 10s max timeout.
- */
-const attachExternalStylesheet = ([href, linkElement]: [string, HTMLLinkElement]) => {
-  if (attachedExternalStylesheets.has(href)) return;
-
-  attachedExternalStylesheets.add(href);
-
-  return new Promise((resolve) => {
-    const clone = cloneNode(linkElement);
-
-    // Load styles
-    clone.addEventListener('load', () => resolve(undefined), { once: true });
-
-    document.head.append(clone);
-
-    // Max 10s timeout
-    window.setTimeout(() => resolve(undefined), 10000);
-  });
 };

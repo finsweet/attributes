@@ -265,6 +265,16 @@ export class List {
   public readonly sorting = ref<Sorting>({});
 
   /**
+   * Defines if the list is currently loading items.
+   */
+  public readonly loading = ref(false);
+
+  /**
+   * Defines if the list is currently favoriting items.
+   */
+  public readonly favoriting = ref(false);
+
+  /**
    * Defines if the user has interacted with the filters.
    */
   public readonly hasInteracted = computed(
@@ -536,22 +546,44 @@ export class List {
   #initElements() {
     // items-count
     const itemsCountRunner = effect(() => {
-      if (this.itemsCountElement) {
-        this.itemsCountElement.textContent = `${this.items.value.length}`;
-      }
+      if (!this.itemsCountElement) return;
+
+      this.itemsCountElement.textContent = `${this.items.value.length}`;
     });
 
     // initial
     const initialElementRunner = effect(() => {
-      if (this.initialElement) {
-        this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
-        this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
+      if (!this.initialElement) return;
+
+      this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
+      this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
+    });
+
+    // empty
+    const emptyElementRunner = effect(() => {
+      const hasItems = !!this.hooks.afterRender.result.value.length;
+
+      if (this.listElement) {
+        this.listElement.style.display = hasItems ? '' : 'none';
       }
+
+      if (this.emptyElement.value) {
+        this.emptyElement.value.style.display = hasItems ? 'none' : '';
+      }
+    });
+
+    // loader
+    const loaderElementRunner = effect(() => {
+      if (!this.loaderElement) return;
+
+      this.loaderElement.style.display = this.loading.value || this.favoriting.value ? '' : 'none';
     });
 
     return () => {
       itemsCountRunner.effect.stop();
       initialElementRunner.effect.stop();
+      emptyElementRunner.effect.stop();
+      loaderElementRunner.effect.stop();
     };
   }
 
