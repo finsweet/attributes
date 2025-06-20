@@ -1,5 +1,11 @@
 # @finsweet/attributes-utils
 
+## 0.1.2
+
+### Patch Changes
+
+- 4e55c67: fix: prevent duplicated page fetching
+
 ## 0.1.1
 
 ### Patch Changes

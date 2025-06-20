@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-mirrorclick",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "description": "Mirrors click events between two elements.",
   "private": true,
   "type": "module",
