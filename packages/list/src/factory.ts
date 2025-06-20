@@ -81,7 +81,7 @@ export const initList = (list: List) => {
   }
 
   // Nest
-  const nest = items.length ? !!queryElement('nest-target', { scope: firstItemElement }) : false;
+  const nest = !!firstItemElement && !!queryElement('nest-target', { scope: firstItemElement });
   if (nest) {
     const cleanup = initListNest(list);
     cleanups.add(cleanup);
@@ -89,10 +89,12 @@ export const initList = (list: List) => {
 
   // Favoriting
   const favoriteInstance = getAttribute(list.listOrWrapper, 'favorite');
-  const hasFavoriteAddButton = items.length ? !!queryElement('favorite-add', { scope: firstItemElement }) : false;
-  const hasFavoriteRemoveButton = items.length ? !!queryElement('favorite-remove', { scope: firstItemElement }) : false;
-  const hasFavoriteToggleButton = items.length ? !!queryElement('favorite-toggle', { scope: firstItemElement }) : false;
-  if (favoriteInstance || hasFavoriteAddButton || hasFavoriteRemoveButton || hasFavoriteToggleButton) {
+  const favoriteButtonSelectors = ['favorite-add', 'favorite-remove', 'favorite-toggle'] as const;
+  const hasFavoriteButton =
+    !!firstItemElement &&
+    favoriteButtonSelectors.some((selector) => queryElement(selector, { scope: firstItemElement }));
+
+  if (favoriteInstance || hasFavoriteButton) {
     const cleanup = initListFavoriting(list, favoriteInstance);
     cleanups.add(cleanup);
   }
