@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-videohls",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Implement hls.js to a Webflow project.",
   "private": true,
   "type": "module",
