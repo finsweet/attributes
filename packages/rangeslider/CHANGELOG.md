@@ -1,5 +1,12 @@
 # @finsweet/attributes-rangeslider
 
+## 1.10.1
+
+### Patch Changes
+
+- Updated dependencies [4e55c67]
+  - @finsweet/attributes-utils@0.1.2
+
 ## 1.10.0
 
 ### Minor Changes

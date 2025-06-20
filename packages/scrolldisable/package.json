@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-scrolldisable",
-  "version": "1.6.10",
+  "version": "1.6.11",
   "description": "Disables scrolling on certain events.",
   "private": true,
   "type": "module",

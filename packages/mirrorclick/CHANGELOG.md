@@ -1,5 +1,12 @@
 # @finsweet/attributes-mirrorclick
 
+## 1.5.9
+
+### Patch Changes
+
+- Updated dependencies [4e55c67]
+  - @finsweet/attributes-utils@0.1.2
+
 ## 1.5.8
 
 ### Patch Changes
