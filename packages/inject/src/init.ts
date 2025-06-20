@@ -1,7 +1,6 @@
 import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { collectComponentTargetsData } from './actions/collect';
-import { prefetchComponentsPages } from './actions/prefetch';
 import { initComponents } from './factory';
 
 /**
@@ -11,8 +10,6 @@ export const init: FinsweetAttributeInit = async () => {
   await waitWebflowReady();
 
   const componentTargetsData = collectComponentTargetsData();
-
-  prefetchComponentsPages(componentTargetsData);
 
   const componentsData = await initComponents(componentTargetsData);
 
