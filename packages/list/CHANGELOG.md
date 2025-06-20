@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.6.5
+
+### Patch Changes
+
+- f6da56e: fix: make fs-list slider & tabs compatible with sorting and filtering
+
 ## 1.6.4
 
 ### Patch Changes
