@@ -26,9 +26,13 @@ export const CMS_CSS_SELECTORS = {
 /**
  * @returns A CSS selector for a CMS element.
  * @param key
+ * @param options
  */
-export const getCMSElementSelector = (key: keyof typeof CMS_CSS_SELECTORS) => {
-  return `:is(${CMS_CSS_SELECTORS[key]}, ${getElementSelector(key)})`;
+export const getCMSElementSelector = (
+  key: keyof typeof CMS_CSS_SELECTORS,
+  options?: Parameters<typeof getElementSelector>[1]
+) => {
+  return `:is(${CMS_CSS_SELECTORS[key]}, ${getElementSelector(key, options)})`;
 };
 
 /**

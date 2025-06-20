@@ -15,7 +15,6 @@ export const loadPaginatedCMSItems = (list: List): Promise<void> => {
     paginationPreviousCMSElement,
     paginationCountElement,
     loadingSearchParamsData,
-    loaderElement,
     cache: cacheItems,
   } = list;
 
@@ -23,10 +22,7 @@ export const loadPaginatedCMSItems = (list: List): Promise<void> => {
     return Promise.resolve();
   }
 
-  if (loaderElement) {
-    loaderElement.style.display = '';
-    loaderElement.style.opacity = '1';
-  }
+  list.loading.value = true;
 
   // Attempt to get the total amount of pages from the `Page Count` element.
   let totalPages;
@@ -47,9 +43,7 @@ export const loadPaginatedCMSItems = (list: List): Promise<void> => {
       await chainedPagesLoad(list, cacheItems);
     }
 
-    if (loaderElement) {
-      loaderElement.style.display = 'none';
-    }
+    list.loading.value = false;
   })();
 
   return list.loadingPaginatedItems;

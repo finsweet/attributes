@@ -43,16 +43,6 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
   const afterRenderHookCleanup = list.addHook('afterRender', (items) => {
     list.wrapperElement.classList.remove(filteringClass);
 
-    const hasItems = !!items.length;
-
-    if (list.listElement) {
-      list.listElement.style.display = hasItems ? '' : 'none';
-    }
-
-    if (list.emptyElement.value) {
-      list.emptyElement.value.style.display = hasItems ? 'none' : '';
-    }
-
     return items;
   });
 
