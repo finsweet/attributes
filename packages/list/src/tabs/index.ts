@@ -1,6 +1,6 @@
-import { ARIA_ROLE_KEY, TABS_CSS_CLASSES } from '@finsweet/attributes-utils';
+import { ARIA_ROLE_KEY, cloneNode, TABS_CSS_CLASSES } from '@finsweet/attributes-utils';
 
-import type { List, ListItem } from '../components';
+import type { List } from '../components';
 import { queryElement } from '../utils/selectors';
 
 /**
@@ -46,18 +46,19 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
 
   // Store rendered items
   const renderedItems = new Map<
-    ListItem,
+    string,
     {
       tabLink: HTMLElement;
       tabPane: HTMLElement;
     }
   >();
 
-  list.addHook('render', (items = []) => {
+  list.addHook('beforeRender', (items = []) => {
     for (const item of items) {
-      if (renderedItems.has(item)) continue;
+      if (renderedItems.has(item.id)) continue;
 
-      item.element.removeAttribute(ARIA_ROLE_KEY);
+      const elementClone = cloneNode(item.element);
+      elementClone.removeAttribute(ARIA_ROLE_KEY);
 
       const tabLink = document.createElement('div');
       tabLink.setAttribute('class', tabLinkCSS);
@@ -65,26 +66,29 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
       const tabPane = document.createElement('div');
       tabPane.setAttribute('class', tabPaneCSS);
 
-      let tabLinkContent = queryElement('tab-link', { scope: item.element });
-      if (!tabLinkContent) {
+      let tabLinkContent = queryElement('tab-link', { scope: elementClone });
+
+      if (tabLinkContent) {
+        tabLinkContent = cloneNode(tabLinkContent);
+      } else {
         tabLinkContent = document.createElement('div');
         tabLinkContent.innerHTML = /* html */ `Missing <strong>fs-list-element="tab-link"</strong>`;
       }
 
       tabLink.appendChild(tabLinkContent);
       tabsMenu.appendChild(tabLink);
-      tabPane.appendChild(item.element);
+      tabPane.appendChild(elementClone);
       tabsContent.appendChild(tabPane);
 
-      renderedItems.set(item, { tabLink, tabPane });
+      renderedItems.set(item.id, { tabLink, tabPane });
     }
 
-    for (const [item, { tabLink, tabPane }] of renderedItems) {
-      if (items.includes(item)) continue;
+    for (const [itemId, { tabLink, tabPane }] of renderedItems) {
+      if (items.some((item) => item.id === itemId)) continue;
 
       tabLink?.remove();
       tabPane?.remove();
-      renderedItems.delete(item);
+      renderedItems.delete(itemId);
     }
 
     [...renderedItems.values()].forEach(({ tabLink, tabPane }, index) => {
@@ -93,5 +97,7 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
       tabLink.dataset.wTab = dataset;
       tabPane.dataset.wTab = dataset;
     });
+
+    return [];
   });
 };
