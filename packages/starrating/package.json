@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-starrating",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Star rating radio button component inside any Webflow form.",
   "private": true,
   "type": "module",

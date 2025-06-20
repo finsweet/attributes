@@ -1,5 +1,11 @@
 # @finsweet/attributes-utils
 
+## 0.1.3
+
+### Patch Changes
+
+- ca570e1: fix: unwanted mutability in page fetching
+
 ## 0.1.2
 
 ### Patch Changes

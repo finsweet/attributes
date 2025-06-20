@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-numbercount",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "Create a number count animation in Webflow.",
   "private": true,
   "type": "module",

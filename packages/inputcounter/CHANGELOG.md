@@ -1,5 +1,12 @@
 # @finsweet/attributes-inputcounter
 
+## 1.2.15
+
+### Patch Changes
+
+- Updated dependencies [ca570e1]
+  - @finsweet/attributes-utils@0.1.3
+
 ## 1.2.14
 
 ### Patch Changes
