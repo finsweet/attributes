@@ -1,3 +1,4 @@
+import { cloneNode } from './dom';
 import { getPublishDate, getSiteId } from './webflow';
 
 const DB_OBJECT_STORE_NAME = 'pages';
@@ -47,14 +48,18 @@ export const fetchPageDocument = (source: string | URL, options: Options = {}): 
     return null;
   }
 
+  const conclude = (page: Document | null) => (page ? cloneNode(page) : null);
+
   // If the same page is being fetched simultaneously, return it from the memory cache.
   const cached = cache.get(url.href);
-  if (cached) return cached;
+  if (cached) {
+    return cached.then(conclude);
+  }
 
   const promise = createPromise(url, options);
   cache.set(url.href, promise);
 
-  return promise;
+  return promise.then(conclude);
 };
 
 /**
