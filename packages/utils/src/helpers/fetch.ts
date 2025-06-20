@@ -2,40 +2,72 @@ import { getPublishDate, getSiteId } from './webflow';
 
 const DB_OBJECT_STORE_NAME = 'pages';
 
-const memoryCache = new Map<string, Promise<string>>();
+const cache = new Map<string, Promise<Document | null>>();
+
+type Options = {
+  /**
+   * Whether to cache fetched documents. Defaults to `true`.
+   */
+  cache?: boolean;
+
+  /**
+   * Whether to cache external documents.
+   * If set to true, it will follow a [stale-while-revalidate](https://web.dev/stale-while-revalidate/) strategy.
+   */
+  cacheExternal?: boolean;
+
+  /**
+   * Defines a manual database name for the IndexedDB instance.
+   * If not provided, it will use the site ID or the current page's site ID.
+   */
+  cacheKey?: string;
+
+  /**
+   * Defines a manual version for the IndexedDB instance.
+   * If not provided, it will use the publish date of the current page or `1` as default.
+   */
+  cacheVersion?: number;
+};
 
 /**
  * Fetches and parses an external page.
  * Stores the page response in an {@link IDBDatabase} if the page belongs to the same site.
  *
  * @param source The URL of the page.
- *
- * @param params.cache Whether to cache fetched documents. Defaults to `true`.
- *
- * @param params.cacheExternal Whether to cache external documents.
- * If set to true, it will follow a [stale-while-revalidate](https://web.dev/stale-while-revalidate/) strategy.
- *
- * @param params.cacheKey Defines a manual database name for the IndexedDB instance.
- * @param params.cacheVersion Defines a manual version for the IndexedDB instance.
+ * @param options Optional {@link Options}
  *
  * @returns The page's {@link Document} if successful, `null` otherwise.
  */
-export const fetchPageDocument = async (
-  source: string | URL,
-  {
-    cache = true,
-    cacheExternal,
-    cacheKey,
-    cacheVersion,
-  }: { cache?: boolean; cacheExternal?: boolean; cacheKey?: string; cacheVersion?: number } = {}
+export const fetchPageDocument = (source: string | URL, options: Options = {}): Promise<Document | null> | null => {
+  let url;
+
+  try {
+    url = new URL(source, window.location.origin);
+  } catch {
+    return null;
+  }
+
+  // If the same page is being fetched simultaneously, return it from the memory cache.
+  const cached = cache.get(url.href);
+  if (cached) return cached;
+
+  const promise = createPromise(url, options);
+  cache.set(url.href, promise);
+
+  return promise;
+};
+
+/**
+ * Creates a promise that fetches a page and stores it in an IndexedDB.
+ * @param url
+ * @param options
+ * @returns A promise that resolves to the page's {@link Document} or `null` if the fetch fails.
+ */
+const createPromise = async (
+  url: URL,
+  { cache = true, cacheExternal, cacheKey, cacheVersion }: Options
 ): Promise<Document | null> => {
   try {
-    const url = new URL(source, window.location.origin);
-
-    // If the same page is being fetched simultaneously, return it from the memory cache.
-    const pageFromMemory = await getPageFromMemory(url);
-    if (pageFromMemory) return pageFromMemory;
-
     // Try to create a DB instance.
     const siteId = getSiteId();
     const publishDate = getPublishDate();
@@ -46,12 +78,15 @@ export const fetchPageDocument = async (
 
     // If no caching enabled or no DB created, fetch the page and store it in the memory cache.
     if (!cache || !db) {
-      const { page } = await fetchAndCachePageInMemory(url);
+      const result = await fetchPage(url);
+      if (!result) return null;
+
+      const { page } = result;
       return page;
     }
 
     // If the page is in the DB, return it from there.
-    const rawPageFromDB = await getRawPageFromDB(db, url.href);
+    const rawPageFromDB = await getRawPageFromDB(db, url);
     if (rawPageFromDB) {
       const page = parseRawPage(rawPageFromDB);
 
@@ -73,28 +108,15 @@ export const fetchPageDocument = async (
 };
 
 /**
- * @returns A page from the memory cache, if existing.
- * @param url The URL of the page.
- */
-const getPageFromMemory = async (url: URL) => {
-  const rawPagePromise = await memoryCache.get(url.href);
-  if (rawPagePromise) {
-    return parseRawPage(rawPagePromise);
-  }
-};
-
-/**
  * Fetches a page and stores it in memory.
  * @param url The URL of the page.
  * @returns The page's {@link Document} and raw HTML text.
  */
-const fetchAndCachePageInMemory = async (url: URL) => {
-  const rawPagePromise = fetch(url.href).then((response) => response.text());
-
-  memoryCache.set(url.href, rawPagePromise);
-
-  const rawPage = await rawPagePromise;
+const fetchPage = async (url: URL) => {
+  const response = await fetch(url);
+  const rawPage = await response.text();
   const page = parseRawPage(rawPage);
+
   return { page, rawPage };
 };
 
@@ -107,20 +129,22 @@ const fetchAndCachePageInMemory = async (url: URL) => {
  * @returns The page's {@link Document}.
  */
 const fetchAndCachePageInDB = async (db: IDBDatabase, url: URL, siteId: string | null, cacheExternal?: boolean) => {
-  const { page, rawPage } = await fetchAndCachePageInMemory(url);
+  const result = await fetchPage(url);
+  if (!result) return null;
 
+  const { page, rawPage } = result;
   const isSameSite = isPageSameSite(page, siteId);
 
   // If it can't be cached, just return the page.
   if (!isSameSite && !cacheExternal) return page;
 
   // Otherwise store it in the DB
-  await storeRawPageInDB(db, url.href, rawPage);
+  await storeRawPageInDB(db, url, rawPage);
 
   // If the page belongs to the same site, we can remove it from the memory cache as it's already in the DB.
   // If the page is external, we want to keep it in memory to avoid refetching it, as in every request is considered stale.
   if (isSameSite) {
-    memoryCache.delete(url.href);
+    cache.delete(url.href);
   }
 
   return page;
@@ -186,13 +210,13 @@ const createCacheDB = (dbName: string, dbVersion: number) => {
 /**
  * Gets a page from the DB.
  * @param db
- * @param href
+ * @param url
  */
-const getRawPageFromDB = async (db: IDBDatabase, href: string) => {
+const getRawPageFromDB = async (db: IDBDatabase, url: URL) => {
   return new Promise<string | null>((resolve) => {
     const transaction = db.transaction(DB_OBJECT_STORE_NAME);
     const objectStore = transaction.objectStore(DB_OBJECT_STORE_NAME);
-    const request = objectStore.get(href);
+    const request = objectStore.get(url.href);
 
     request.onerror = () => resolve(null);
     request.onsuccess = () => resolve(request.result);
@@ -202,14 +226,14 @@ const getRawPageFromDB = async (db: IDBDatabase, href: string) => {
 /**
  * Stores a page in the DB.
  * @param db
- * @param href
+ * @param url
  * @param rawPage
  */
-const storeRawPageInDB = async (db: IDBDatabase, href: string, rawPage: string) => {
+const storeRawPageInDB = async (db: IDBDatabase, url: URL, rawPage: string) => {
   return new Promise<void>((resolve) => {
     const transaction = db.transaction(DB_OBJECT_STORE_NAME, 'readwrite');
     const objectStore = transaction.objectStore(DB_OBJECT_STORE_NAME);
-    const request = objectStore.put(rawPage, href);
+    const request = objectStore.put(rawPage, url.href);
 
     request.onerror = () => resolve();
     request.onsuccess = () => resolve();
