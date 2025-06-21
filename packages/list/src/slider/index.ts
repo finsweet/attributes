@@ -62,4 +62,6 @@ const initListSlider = (list: List, sliderReference: HTMLElement) => {
 
     return [];
   });
+
+  list.triggerHook('beforeRender');
 };

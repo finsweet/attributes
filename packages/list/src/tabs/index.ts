@@ -100,4 +100,6 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
 
     return [];
   });
+
+  list.triggerHook('beforeRender');
 };
