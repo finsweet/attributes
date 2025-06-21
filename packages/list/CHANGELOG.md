@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.6.6
+
+### Patch Changes
+
+- 935b02e: fix: sliders and tabs not being populated
+
 ## 1.6.5
 
 ### Patch Changes
