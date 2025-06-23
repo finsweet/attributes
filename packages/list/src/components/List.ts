@@ -1,6 +1,6 @@
 import {
   CMS_CSS_CLASSES,
-  fetchPageDocument,
+  fetchPage,
   getObjectEntries,
   isHTMLAnchorElement,
   isNumber,
@@ -263,6 +263,11 @@ export class List {
    * Defines the active sorting.
    */
   public readonly sorting = ref<Sorting>({});
+
+  /**
+   * Defines if the list is currently loading items.
+   */
+  public readonly loading = ref(false);
 
   /**
    * Defines if the user has interacted with the filters.
@@ -536,22 +541,44 @@ export class List {
   #initElements() {
     // items-count
     const itemsCountRunner = effect(() => {
-      if (this.itemsCountElement) {
-        this.itemsCountElement.textContent = `${this.items.value.length}`;
-      }
+      if (!this.itemsCountElement) return;
+
+      this.itemsCountElement.textContent = `${this.items.value.length}`;
     });
 
     // initial
     const initialElementRunner = effect(() => {
-      if (this.initialElement) {
-        this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
-        this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
+      if (!this.initialElement) return;
+
+      this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
+      this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
+    });
+
+    // empty
+    const emptyElementRunner = effect(() => {
+      const hasItems = !!this.hooks.render.result.value.length;
+
+      if (this.listElement) {
+        this.listElement.style.display = hasItems ? '' : 'none';
       }
+
+      if (this.emptyElement.value) {
+        this.emptyElement.value.style.display = hasItems ? 'none' : '';
+      }
+    });
+
+    // loader
+    const loaderElementRunner = effect(() => {
+      if (!this.loaderElement) return;
+
+      this.loaderElement.style.display = this.loading.value ? '' : 'none';
     });
 
     return () => {
       itemsCountRunner.effect.stop();
       initialElementRunner.effect.stop();
+      emptyElementRunner.effect.stop();
+      loaderElementRunner.effect.stop();
     };
   }
 
@@ -581,7 +608,7 @@ export class List {
     else {
       const { origin, pathname } = location;
 
-      const initialPage = await fetchPageDocument(origin + pathname);
+      const initialPage = await fetchPage(origin + pathname);
       if (!initialPage) return;
 
       const initialCollectionListWrappers = initialPage.querySelectorAll(getCMSElementSelector('wrapper'));
@@ -639,7 +666,7 @@ export class List {
         const $currentPage = currentPage.value;
         if (!$currentPage || $currentPage === 1) return;
 
-        const page = await fetchPageDocument(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
+        const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
         if (!page) return;
 
         const allCollectionWrappers = getAllCollectionListWrappers(page);
@@ -662,7 +689,7 @@ export class List {
       (async () => {
         if (paginationPreviousCMSElement.value && emptyElement.value) return;
 
-        const page = await fetchPageDocument(`${origin}${pathname}?${paginationSearchParam}=9999`);
+        const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=9999`);
         if (!page) return;
 
         const allCollectionWrappers = getAllCollectionListWrappers(page);

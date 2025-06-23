@@ -57,6 +57,11 @@ export class ListItem {
   public readonly href?: string;
 
   /**
+   * The URL of the item's `Template Page` as a `URL` object.
+   */
+  public readonly url?: URL;
+
+  /**
    * Defines the class to apply before rendering the item.
    */
   public readonly startingClass: string;
@@ -117,6 +122,14 @@ export class ListItem {
     this.highlightClass = getAttribute(element, 'highlightclass');
     this.startingClass = getAttribute(element, 'startingclass');
     this.stagger = getAttribute(element, 'stagger');
+
+    if (this.href) {
+      try {
+        this.url = new URL(this.href, window.location.origin);
+      } catch {
+        //
+      }
+    }
 
     this.collectFields();
   }

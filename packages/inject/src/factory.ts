@@ -1,6 +1,6 @@
 import {
   cloneNode,
-  fetchPageDocument,
+  fetchPage,
   isNotEmpty,
   restartWebflow,
   RICH_TEXT_BLOCK_CSS_CLASS,
@@ -37,7 +37,7 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
 
   const componentsSource = proxiedSource || source;
 
-  const page = componentsSource ? await fetchPageDocument(componentsSource) : document;
+  const page = componentsSource ? await fetchPage(componentsSource) : document;
   if (!page) return;
 
   const components = [

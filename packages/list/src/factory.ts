@@ -47,6 +47,7 @@ export const initList = (list: List) => {
   const { instance } = list;
 
   const items = list.items.value;
+  const firstItemElement = items[0]?.element;
 
   const cleanups = new Set<(() => void) | undefined>();
 
@@ -79,7 +80,7 @@ export const initList = (list: List) => {
   }
 
   // Nest
-  const nest = items.length ? !!queryElement('nest-target', { scope: items[0].element }) : false;
+  const nest = !!firstItemElement && !!queryElement('nest-target', { scope: firstItemElement });
   if (nest) {
     const cleanup = initListNest(list);
     cleanups.add(cleanup);
