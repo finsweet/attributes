@@ -5,10 +5,9 @@ import {
   normalizeNumber,
 } from '@finsweet/attributes-utils';
 
-import { favoritedItemsStore } from '../favorite/store';
 import type { FieldValue, FilterTaskMatchedFields } from '../filter/types';
 import { getCMSElementSelector } from '../utils/dom';
-import { getAttribute, getSettingSelector, queryAllElements, queryElement } from '../utils/selectors';
+import { getAttribute, getSettingSelector, queryElement } from '../utils/selectors';
 import type { List } from './List';
 
 declare module '@vue/reactivity' {
@@ -73,16 +72,6 @@ export class ListItem {
   public readonly highlightClass: string;
 
   /**
-   * Defines the class to apply when the item is favorited.
-   */
-  public readonly favoriteClass: string;
-
-  /**
-   * Defines the class to apply to favorite buttons when they are disabled.
-   */
-  public readonly favoriteDisabledClass: string;
-
-  /**
    * Defines if the item's transitions should be staggered.
    */
   public readonly stagger?: number;
@@ -102,11 +91,6 @@ export class ListItem {
    * Defines an awaitable Promise that resolves when the item's nesting is complete.
    */
   public nesting?: Promise<void>;
-
-  /**
-   * Defines if the item is favorited.
-   */
-  public favorited = false;
 
   /**
    * @param element The DOM element of the item.
@@ -137,8 +121,6 @@ export class ListItem {
     this.href = link?.href;
     this.highlightClass = getAttribute(element, 'highlightclass');
     this.startingClass = getAttribute(element, 'startingclass');
-    this.favoriteClass = getAttribute(element, 'favoriteclass');
-    this.favoriteDisabledClass = getAttribute(element, 'favoritedisabledclass');
     this.stagger = getAttribute(element, 'stagger');
 
     if (this.href) {
@@ -149,39 +131,7 @@ export class ListItem {
       }
     }
 
-    this.favorited = this.#isFavorited();
-    this.#setFavoritedClasses();
-
     this.collectFields();
-  }
-
-  /**
-   * Checks if the item is favorited by looking into the local storage.
-   */
-  #isFavorited() {
-    return !!this.url && favoritedItemsStore.has(this.url.pathname);
-  }
-
-  /**
-   * Sets the class for the item based on its favorited state.
-   */
-  #setFavoritedClasses() {
-    const favoriteAddButtons = queryAllElements('favorite-add', { scope: this.element });
-    const favoriteRemoveButtons = queryAllElements('favorite-remove', { scope: this.element });
-
-    if (this.favorited) {
-      this.element.classList.add(this.favoriteClass);
-    } else {
-      this.element.classList.remove(this.favoriteClass);
-    }
-
-    for (const button of favoriteAddButtons) {
-      button.classList.toggle(this.favoriteDisabledClass, this.favorited);
-    }
-
-    for (const button of favoriteRemoveButtons) {
-      button.classList.toggle(this.favoriteDisabledClass, !this.favorited);
-    }
   }
 
   /**
@@ -288,14 +238,5 @@ export class ListItem {
         walkNodes(element);
       }
     }
-  }
-
-  /**
-   * Sets the favorited state of the item.
-   * @param favorited - Whether the item is favorited or not.
-   */
-  public setFavorited(favorited: boolean) {
-    this.favorited = favorited;
-    this.#setFavoritedClasses();
   }
 }

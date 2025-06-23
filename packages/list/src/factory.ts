@@ -2,7 +2,6 @@ import { isHTMLFormElement } from '@finsweet/attributes-utils';
 
 import { initListCombine } from './combine';
 import { List } from './components/List';
-import { initListFavoriting } from './favorite';
 import { initListFiltering } from './filter';
 import { initListLoading } from './load';
 import { initListNest } from './nest';
@@ -84,18 +83,6 @@ export const initList = (list: List) => {
   const nest = !!firstItemElement && !!queryElement('nest-target', { scope: firstItemElement });
   if (nest) {
     const cleanup = initListNest(list);
-    cleanups.add(cleanup);
-  }
-
-  // Favoriting
-  const favoriteInstance = getAttribute(list.listOrWrapper, 'favorite');
-  const favoriteButtonSelectors = ['favorite-add', 'favorite-remove', 'favorite-toggle'] as const;
-  const hasFavoriteButton =
-    !!firstItemElement &&
-    favoriteButtonSelectors.some((selector) => queryElement(selector, { scope: firstItemElement }));
-
-  if (favoriteInstance || hasFavoriteButton) {
-    const cleanup = initListFavoriting(list, favoriteInstance);
     cleanups.add(cleanup);
   }
 

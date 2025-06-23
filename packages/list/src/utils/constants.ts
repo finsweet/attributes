@@ -309,13 +309,6 @@ export const ELEMENTS = [
    * Defines an item to be displayed when the next item is empty.
    */
   'next-empty',
-
-  /**
-   * Defines a favorite button element.
-   */
-  'favorite-add',
-  'favorite-remove',
-  'favorite-toggle',
 ] as const satisfies AttributeElements;
 
 const TEXT = 'text';
@@ -568,11 +561,6 @@ export const SETTINGS = {
   nest: { key: 'nest' },
 
   /**
-   * Defines the instance of the item template for favoriting in the template page.
-   */
-  favorite: { key: 'favorite' },
-
-  /**
    * Defines if loaded Items can be cached using IndexedDB after fetching them.
    */
   cache: { key: `cache`, values: ['true'], defaultValue: 'true' },
@@ -636,24 +624,6 @@ export const SETTINGS = {
   startingclass: { key: 'startingclass', defaultValue: `is-${LIST_ATTRIBUTE}-starting` },
 
   /**
-   * Defines the CSS class to be added to the list when it's favoriting items.
-   */
-  favoritingclass: { key: 'favoritingclass', defaultValue: `is-${LIST_ATTRIBUTE}-favoriting` },
-
-  /**
-   * Defines the CSS class to be added to items when they are favorited.
-   */
-  favoriteclass: { key: 'favoriteclass', defaultValue: `is-${LIST_ATTRIBUTE}-favorite` },
-
-  /**
-   * Defines the CSS class to be added favorite buttons when they are disabled.
-   */
-  favoritedisabledclass: {
-    key: 'favoritedisabledclass',
-    defaultValue: `is-${LIST_ATTRIBUTE}-favorite-disabled`,
-  },
-
-  /**
    * Defines a stagger delay for the items when filtering.
    * If applied, the items will receive a `transition-delay` CSS property.
    */
@@ -664,8 +634,6 @@ export const SETTINGS = {
    */
   resetix: { key: 'resetix', values: ['true'] },
 } as const satisfies AttributeSettings;
-
-export const FAVORITE_STORAGE_KEY = `fs-${LIST_ATTRIBUTE}-favorite`;
 
 export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {
   main: 0,
