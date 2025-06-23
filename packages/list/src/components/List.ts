@@ -1,6 +1,6 @@
 import {
   CMS_CSS_CLASSES,
-  fetchPageDocument,
+  fetchPage,
   getObjectEntries,
   isHTMLAnchorElement,
   isNumber,
@@ -268,11 +268,6 @@ export class List {
    * Defines if the list is currently loading items.
    */
   public readonly loading = ref(false);
-
-  /**
-   * Defines if the list is currently favoriting items.
-   */
-  public readonly favoriting = ref(false);
 
   /**
    * Defines if the user has interacted with the filters.
@@ -576,7 +571,7 @@ export class List {
     const loaderElementRunner = effect(() => {
       if (!this.loaderElement) return;
 
-      this.loaderElement.style.display = this.loading.value || this.favoriting.value ? '' : 'none';
+      this.loaderElement.style.display = this.loading.value ? '' : 'none';
     });
 
     return () => {
@@ -613,7 +608,7 @@ export class List {
     else {
       const { origin, pathname } = location;
 
-      const initialPage = await fetchPageDocument(origin + pathname);
+      const initialPage = await fetchPage(origin + pathname);
       if (!initialPage) return;
 
       const initialCollectionListWrappers = initialPage.querySelectorAll(getCMSElementSelector('wrapper'));
@@ -671,7 +666,7 @@ export class List {
         const $currentPage = currentPage.value;
         if (!$currentPage || $currentPage === 1) return;
 
-        const page = await fetchPageDocument(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
+        const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
         if (!page) return;
 
         const allCollectionWrappers = getAllCollectionListWrappers(page);
@@ -694,7 +689,7 @@ export class List {
       (async () => {
         if (paginationPreviousCMSElement.value && emptyElement.value) return;
 
-        const page = await fetchPageDocument(`${origin}${pathname}?${paginationSearchParam}=9999`);
+        const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=9999`);
         if (!page) return;
 
         const allCollectionWrappers = getAllCollectionListWrappers(page);
