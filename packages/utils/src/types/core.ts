@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type * as ATTRIBUTES from '../constants/attributes';
+import { attachExternalStylesheets, fetchPage } from '../helpers';
 
 export type FinsweetAttributeKey = (typeof ATTRIBUTES)[keyof typeof ATTRIBUTES];
 
@@ -50,6 +51,11 @@ export type FinsweetAttributes = {
    * Can be multiple as the user might import the library multiple times.
    */
   scripts: HTMLScriptElement[];
+
+  utils: {
+    fetchPage: typeof fetchPage;
+    attachExternalStylesheets: typeof attachExternalStylesheets;
+  };
 };
 
 export type FinsweetAttributesCallback = [FinsweetAttributeKey, (value: any) => void];

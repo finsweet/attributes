@@ -1,4 +1,4 @@
-import { CMS_CSS_CLASSES, fetchPageDocument, isNotEmpty } from '@finsweet/attributes-utils';
+import { CMS_CSS_CLASSES, fetchPage, isNotEmpty } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
 import { getCollectionElements } from '../utils/dom';
@@ -75,7 +75,7 @@ const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
    */
   const loadPage = async (href: string) => {
     // Fetch the page
-    const page = await fetchPageDocument(href, { cache });
+    const page = await fetchPage(href, { cache });
     if (!page) return;
 
     // Check for recursion (action: `all`)
@@ -120,7 +120,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
   for (let pageNumber = currentPage - 1; pageNumber >= 1; pageNumber--) {
     const url = getPageURL(pageNumber);
 
-    const page = await fetchPageDocument(url, { cache });
+    const page = await fetchPage(url, { cache });
     if (!page) return;
 
     await parseLoadedPage(page, list, 'unshift');
@@ -135,7 +135,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
 
       const url = getPageURL(pageNumber);
 
-      const page = await fetchPageDocument(url, { cache });
+      const page = await fetchPage(url, { cache });
 
       await previousPromise;
 

@@ -1,5 +1,7 @@
 import {
+  attachExternalStylesheets,
   ATTRIBUTES,
+  fetchPage,
   type FinsweetAttributeKey,
   type FinsweetAttributesCallback,
   waitDOMReady,
@@ -34,6 +36,10 @@ const init = () => {
     scripts,
     modules: {},
     process: new Set<FinsweetAttributeKey>(),
+    utils: {
+      fetchPage,
+      attachExternalStylesheets,
+    },
 
     load: initAttribute,
 

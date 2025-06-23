@@ -39,7 +39,7 @@ type Options = {
  *
  * @returns The page's {@link Document} if successful, `null` otherwise.
  */
-export const fetchPageDocument = (source: string | URL, options: Options = {}): Promise<Document | null> | null => {
+export const fetchPage = (source: string | URL, options: Options = {}): Promise<Document | null> | null => {
   let url;
 
   try {
@@ -83,7 +83,7 @@ const createPromise = async (
 
     // If no caching enabled or no DB created, fetch the page and store it in the memory cache.
     if (!cache || !db) {
-      const result = await fetchPage(url);
+      const result = await fetchAndParsePage(url);
       if (!result) return null;
 
       const { page } = result;
@@ -113,11 +113,11 @@ const createPromise = async (
 };
 
 /**
- * Fetches a page and stores it in memory.
+ * Fetches a page and parses it into a {@link Document}.
  * @param url The URL of the page.
  * @returns The page's {@link Document} and raw HTML text.
  */
-const fetchPage = async (url: URL) => {
+const fetchAndParsePage = async (url: URL) => {
   const response = await fetch(url);
   const rawPage = await response.text();
   const page = parseRawPage(rawPage);
@@ -134,7 +134,7 @@ const fetchPage = async (url: URL) => {
  * @returns The page's {@link Document}.
  */
 const fetchAndCachePageInDB = async (db: IDBDatabase, url: URL, siteId: string | null, cacheExternal?: boolean) => {
-  const result = await fetchPage(url);
+  const result = await fetchAndParsePage(url);
   if (!result) return null;
 
   const { page, rawPage } = result;

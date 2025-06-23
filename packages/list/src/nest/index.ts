@@ -1,8 +1,12 @@
-import { cloneNode, extractCommaSeparatedValues, fetchPageDocument } from '@finsweet/attributes-utils';
+import {
+  attachExternalStylesheets,
+  cloneNode,
+  extractCommaSeparatedValues,
+  fetchPage,
+} from '@finsweet/attributes-utils';
 import { effect, triggerRef } from '@vue/reactivity';
 
 import { List, ListItem } from '../components';
-import { attachExternalStylesheets } from '../utils/css';
 import { getAllCollectionListWrappers, getCollectionElements } from '../utils/dom';
 import {
   getAttribute,
@@ -152,7 +156,7 @@ const handleManualNesting = async (
 const handleExternalNesting = async (list: List, item: ListItem, target: HTMLElement, instance: string) => {
   if (!item.href) return;
 
-  const scope = await fetchPageDocument(item.href, { cache: list.cache });
+  const scope = await fetchPage(item.href, { cache: list.cache });
   if (!scope) return;
 
   const sourceReference = queryElement('wrapper', { scope, instance }) || queryElement('list', { scope, instance });

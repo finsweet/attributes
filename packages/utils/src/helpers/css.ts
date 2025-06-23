@@ -30,6 +30,11 @@ const getCurrentPageStylesheets = () => {
   return currentPageStylesheets;
 };
 
+/**
+ * Attaches external stylesheets from the current page to the document head.
+ * @param page
+ * @returns
+ */
 export const attachExternalStylesheets = (page: Document) => {
   const currentPageStylesheets = getCurrentPageStylesheets();
   const externalStylesheetElements = [
