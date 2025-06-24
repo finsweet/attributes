@@ -23,6 +23,7 @@ import {
   queryElement,
 } from '../../utils/selectors';
 import type { AllFieldsData, FilterOperator, FiltersCondition } from '../types';
+import { getSplitSeparator, splitValue } from '../utils';
 import { type ConditionGroup, getFiltersGroup } from './groups';
 import { getFilterMatchValue, parseOperatorValue } from './utils';
 
@@ -362,16 +363,12 @@ const initConditionValueField = (
     const activeFormField = allConditionValueFormFields.get(activeFormFieldType)!;
 
     const fuzzyThreshold = getAttribute(activeFormField, 'fuzzy');
-    const rawSplitSeparator = getAttribute(activeFormField, 'split');
-    const splitSeparator = rawSplitSeparator === 'true' ? ' ' : rawSplitSeparator;
+    const splitSeparator = getSplitSeparator(activeFormField);
 
     let value = getConditionValue(activeFormField);
 
     if (isString(value) && splitSeparator) {
-      value = value
-        .split(splitSeparator)
-        .map((v) => v.trim())
-        .filter(Boolean);
+      value = splitValue(value, splitSeparator);
     }
 
     Object.assign(filtersCondition, {
