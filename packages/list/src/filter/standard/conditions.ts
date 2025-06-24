@@ -3,6 +3,7 @@ import {
   type FormFieldType,
   getFormFieldValue,
   isFormField,
+  isString,
   setFormFieldValue,
 } from '@finsweet/attributes-utils';
 
@@ -27,8 +28,17 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
   const fuzzyThreshold = getAttribute(formField, 'fuzzy');
   const showTag = !hasAttributeValue(formField, 'showtag', 'false');
+  const rawSplitSeparator = getAttribute(formField, 'split');
+  const splitSeparator = rawSplitSeparator === 'true' ? ' ' : rawSplitSeparator;
 
-  const value = getFormFieldValue(formField, CUSTOM_VALUE_ATTRIBUTE);
+  let value = getFormFieldValue(formField, CUSTOM_VALUE_ATTRIBUTE);
+
+  if (isString(value) && splitSeparator) {
+    value = value
+      .split(splitSeparator)
+      .map((v) => v.trim())
+      .filter(Boolean);
+  }
 
   return {
     id,

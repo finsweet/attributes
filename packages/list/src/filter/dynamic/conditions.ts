@@ -6,6 +6,7 @@ import {
   type FormFieldType,
   isFormField,
   isHTMLSelectElement,
+  isString,
   setFormFieldValue,
   simulateEvent,
 } from '@finsweet/attributes-utils';
@@ -360,8 +361,18 @@ const initConditionValueField = (
 
     const activeFormField = allConditionValueFormFields.get(activeFormFieldType)!;
 
-    const value = getConditionValue(activeFormField);
     const fuzzyThreshold = getAttribute(activeFormField, 'fuzzy');
+    const rawSplitSeparator = getAttribute(activeFormField, 'split');
+    const splitSeparator = rawSplitSeparator === 'true' ? ' ' : rawSplitSeparator;
+
+    let value = getConditionValue(activeFormField);
+
+    if (isString(value) && splitSeparator) {
+      value = value
+        .split(splitSeparator)
+        .map((v) => v.trim())
+        .filter(Boolean);
+    }
 
     Object.assign(filtersCondition, {
       value,

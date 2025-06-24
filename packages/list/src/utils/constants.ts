@@ -551,6 +551,12 @@ export const SETTINGS = {
   value: { key: 'value' },
 
   /**
+   * Defines a split separator for a filter value.
+   * If set to `true`, it will use a space as a separator.
+   */
+  split: { key: 'split' },
+
+  /**
    * Defines a list instance where the list should be combined with.
    */
   combine: { key: 'combine' },
