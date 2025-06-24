@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@vue/reactivity": "^3.5.13",
-    "just-debounce": "^1.1.0"
+    "just-debounce": "^1.1.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/node": "^22.15.12",

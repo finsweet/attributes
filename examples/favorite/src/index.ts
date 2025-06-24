@@ -6,12 +6,12 @@ import {
   FAVORITE_ADD_BUTTON,
   FAVORITE_CLASS,
   FAVORITE_DISABLED_CLASS,
-  FAVORITE_ELEMENT_ATTRIBUTE,
+  FAVORITE_DISPLAY_ATTRIBUTE,
+  FAVORITE_INSTANCE_ATTRIBUTE,
   FAVORITE_REMOVE_BUTTON,
-  FAVORITE_TARGET_ATTRIBUTE,
   FAVORITE_TOGGLE_BUTTON,
   FAVORITING_CLASS,
-  LIST_INSTANCE_ATTRIBUTE,
+  LIST_ELEMENT_ATTRIBUTE,
   LIST_ITEM,
 } from './constants';
 import { favoritedItemsStore } from './store';
@@ -21,23 +21,14 @@ window.FinsweetAttributes.push([
   'list',
   (listInstances: List[]) => {
     for (const list of listInstances) {
-      const items = list.items.value;
-      const firstItemElement = items[0]?.element;
+      const favoriteInstance = list.listOrWrapper.getAttribute(FAVORITE_INSTANCE_ATTRIBUTE);
+      if (!favoriteInstance) continue;
 
-      const favoriteInstance = list.listOrWrapper.getAttribute(FAVORITE_TARGET_ATTRIBUTE);
-      const favoriteButtonSelectors = [FAVORITE_ADD_BUTTON, FAVORITE_REMOVE_BUTTON, FAVORITE_TOGGLE_BUTTON] as const;
+      const isDisplay = list.listOrWrapper.getAttribute(FAVORITE_DISPLAY_ATTRIBUTE) === 'true';
 
-      const hasFavoriteButton =
-        !!firstItemElement &&
-        favoriteButtonSelectors.some((selector) =>
-          firstItemElement.querySelector(`[${FAVORITE_ELEMENT_ATTRIBUTE}="${selector}"]`)
-        );
-
-      if (favoriteInstance || hasFavoriteButton) {
-        // call cleanup() when destroying the functionality
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const cleanup = initListFavoriting(list, favoriteInstance);
-      }
+      // call cleanup() when destroying the functionality
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const cleanup = initListFavoriting(list, favoriteInstance, isDisplay);
     }
   },
 ]);
@@ -46,9 +37,10 @@ window.FinsweetAttributes.push([
  * Initializes favoriting functionality for the list.
  * @param list
  * @param instance
+ * @param isDisplay
  * @returns A cleanup function
  */
-const initListFavoriting = (list: List, instance: string | null) => {
+const initListFavoriting = (list: List, instance: string, isDisplay?: boolean) => {
   const controller = new AbortController();
   const { signal } = controller;
 
@@ -57,33 +49,39 @@ const initListFavoriting = (list: List, instance: string | null) => {
     ({ target }) => {
       if (!(target instanceof Element)) return;
 
-      const favoriteButtonAdd = target.closest(`[${FAVORITE_ELEMENT_ATTRIBUTE}="${FAVORITE_ADD_BUTTON}"]`);
-      const favoriteButtonRemove = target.closest(`[${FAVORITE_ELEMENT_ATTRIBUTE}="${FAVORITE_REMOVE_BUTTON}"]`);
-      const favoriteButtonToggle = target.closest(`[${FAVORITE_ELEMENT_ATTRIBUTE}="${FAVORITE_TOGGLE_BUTTON}"]`);
+      const favoriteButtonAdd = target.closest(`[${LIST_ELEMENT_ATTRIBUTE}="${FAVORITE_ADD_BUTTON}"]`);
+      const favoriteButtonRemove = target.closest(`[${LIST_ELEMENT_ATTRIBUTE}="${FAVORITE_REMOVE_BUTTON}"]`);
+      const favoriteButtonToggle = target.closest(`[${LIST_ELEMENT_ATTRIBUTE}="${FAVORITE_TOGGLE_BUTTON}"]`);
       const favoriteButton = favoriteButtonAdd || favoriteButtonRemove || favoriteButtonToggle;
 
       if (!favoriteButton) return;
 
-      const itemElement = favoriteButton.closest(`:is(.w-dyn-item, [${FAVORITE_ELEMENT_ATTRIBUTE}="${LIST_ITEM}"])`);
+      const itemElement = favoriteButton.closest(`:is(.w-dyn-item, [${LIST_ELEMENT_ATTRIBUTE}="${LIST_ITEM}"])`);
       if (!itemElement) return;
 
       const item = list.items.value.find((item) => item.element === itemElement);
       if (!item?.url?.pathname) return;
 
-      if (favoritedItemsStore.has(item.url.pathname)) {
+      const favorites = (favoritedItemsStore[instance] ||= []);
+
+      const index = favorites.indexOf(item.url.pathname);
+
+      if (index >= 0) {
         if (favoriteButtonRemove || favoriteButtonToggle) {
-          favoritedItemsStore.delete(item.url.pathname);
+          favorites.splice(index, 1);
         }
       } else {
         if (favoriteButtonAdd || favoriteButtonToggle) {
-          favoritedItemsStore.add(item.url.pathname);
+          favorites.push(item.url.pathname);
         }
       }
     },
     { signal }
   );
 
-  const listCleanup = instance ? initDisplayerFavoritesList(list, instance) : initControllerFavoritesList(list);
+  const listCleanup = isDisplay
+    ? initDisplayerFavoritesList(list, instance)
+    : initControllerFavoritesList(list, instance);
 
   return () => {
     listCleanup();
@@ -96,25 +94,25 @@ const initListFavoriting = (list: List, instance: string | null) => {
  * @param list
  * @returns A cleanup function
  */
-const initControllerFavoritesList = (list: List) => {
+const initControllerFavoritesList = (list: List, instance: string) => {
   const handler = debounce(
     ({
-      favoritedItems = favoritedItemsStore,
+      favoritedItems = favoritedItemsStore[instance] || [],
       items = list.items.value,
     }: {
-      favoritedItems?: Set<string>;
+      favoritedItems?: string[];
       items?: ListItem[];
     }) => {
       for (const item of items) {
         if (!item.url?.pathname) continue;
 
-        const isFavorited = favoritedItems.has(item.url.pathname);
+        const isFavorited = favoritedItems.includes(item.url.pathname);
 
         const favoriteAddButtons = item.element.querySelectorAll(
-          `[${FAVORITE_ELEMENT_ATTRIBUTE}="${FAVORITE_ADD_BUTTON}"]`
+          `[${LIST_ELEMENT_ATTRIBUTE}="${FAVORITE_ADD_BUTTON}"]`
         );
         const favoriteRemoveButtons = item.element.querySelectorAll(
-          `[${FAVORITE_ELEMENT_ATTRIBUTE}="${FAVORITE_REMOVE_BUTTON}"]`
+          `[${LIST_ELEMENT_ATTRIBUTE}="${FAVORITE_REMOVE_BUTTON}"]`
         );
 
         if (isFavorited) {
@@ -137,9 +135,9 @@ const initControllerFavoritesList = (list: List) => {
 
   const itemsCleanup = watch(list.items, (items: ListItem[]) => handler({ items }));
   const favoritedItemsCleanup = watch(
-    favoritedItemsStore,
-    (favoritedItems: Set<string>) => handler({ favoritedItems }),
-    { immediate: true }
+    () => favoritedItemsStore[instance],
+    (favoritedItems: string[] = []) => handler({ favoritedItems }),
+    { immediate: true, deep: true }
   );
 
   return () => {
@@ -157,11 +155,11 @@ const initControllerFavoritesList = (list: List) => {
 const initDisplayerFavoritesList = (list: List, instance: string) => {
   let renderedItems = new Set<string>();
 
-  const handler = debounce(async (favoritedItems: Set<string>) => {
+  const handler = debounce(async (favoritedItems: string[] = []) => {
     const itemsToPreserve = list.items.value.filter((item) => {
       if (!item.url?.pathname) return false;
 
-      return favoritedItems.has(item.url.pathname);
+      return favoritedItems.includes(item.url.pathname);
     });
 
     const itemsPathsToAdd = [...favoritedItems].filter((pathname) => !renderedItems.has(pathname));
@@ -184,7 +182,7 @@ const initDisplayerFavoritesList = (list: List, instance: string) => {
         if (!page) return;
 
         const itemElement = page.querySelector<HTMLElement>(
-          `[${FAVORITE_ELEMENT_ATTRIBUTE}="${LIST_ITEM}"][${LIST_INSTANCE_ATTRIBUTE}="${instance}"]`
+          `[${LIST_ELEMENT_ATTRIBUTE}="${LIST_ITEM}"][${FAVORITE_INSTANCE_ATTRIBUTE}="${instance}"]`
         );
         if (!itemElement) return;
 
@@ -204,7 +202,7 @@ const initDisplayerFavoritesList = (list: List, instance: string) => {
     list.loading.value = false;
   }, 0);
 
-  const favoritedItemsCleanup = watch(favoritedItemsStore, handler, { immediate: true });
+  const favoritedItemsCleanup = watch(() => favoritedItemsStore[instance], handler, { immediate: true, deep: true });
 
   const favoritingClassEffect = effect(() => {
     list.wrapperElement.classList.toggle(FAVORITING_CLASS, list.loading.value);
