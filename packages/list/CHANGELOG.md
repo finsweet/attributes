@@ -1,5 +1,15 @@
 # @finsweet/attributes-list
 
+## 1.7.0
+
+### Minor Changes
+
+- d3923b0: feat: `fs-list-split`
+
+### Patch Changes
+
+- d55892b: chore: internal updates for favoriting plugin
+
 ## 1.6.6
 
 ### Patch Changes
