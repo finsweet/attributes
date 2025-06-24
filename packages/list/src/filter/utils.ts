@@ -9,6 +9,7 @@ import {
 import * as fuzzysort from 'fuzzysort';
 
 import type { ListItemField } from '../components';
+import { getAttribute } from '../utils/selectors';
 import type { FieldValue } from './types';
 
 /**
@@ -124,3 +125,25 @@ export const numericCompare = (
 
   return false;
 };
+
+/**
+ * @returns The split separator for the element.
+ * @param element
+ */
+export const getSplitSeparator = (element: Element) => {
+  const rawSplitSeparator = getAttribute(element, 'split');
+
+  const splitSeparator = rawSplitSeparator === 'true' ? ' ' : rawSplitSeparator;
+  return splitSeparator;
+};
+
+/**
+ * Splits the value by the given separator and trims each part.
+ * @param value
+ * @param separator
+ */
+export const splitValue = (value: string, separator: string) =>
+  value
+    .split(separator)
+    .map((v) => v.trim())
+    .filter(Boolean);
