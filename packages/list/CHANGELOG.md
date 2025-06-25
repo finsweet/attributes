@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.7.1
+
+### Patch Changes
+
+- 62578cd: fix: window undefined
+
 ## 1.7.0
 
 ### Minor Changes
