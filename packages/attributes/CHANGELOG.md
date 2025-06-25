@@ -1,5 +1,20 @@
 # @finsweet/attributes
 
+## 2.5.0
+
+### Minor Changes
+
+- d55892b: feat: `window.FinsweetAttributes.utils`
+
+### Patch Changes
+
+- Updated dependencies [d3923b0]
+- Updated dependencies [d55892b]
+  - @finsweet/attributes-list@1.7.0
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
 ## 2.4.19
 
 ### Patch Changes
