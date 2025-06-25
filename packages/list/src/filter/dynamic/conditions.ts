@@ -19,11 +19,12 @@ import {
   CUSTOM_VALUE_ATTRIBUTE,
   getAttribute,
   getElementSelector,
+  getSplitSeparator,
   queryAllElements,
   queryElement,
 } from '../../utils/selectors';
 import type { AllFieldsData, FilterOperator, FiltersCondition } from '../types';
-import { getSplitSeparator, splitValue } from '../utils';
+import { splitValue } from '../utils';
 import { type ConditionGroup, getFiltersGroup } from './groups';
 import { getFilterMatchValue, parseOperatorValue } from './utils';
 
