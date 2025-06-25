@@ -8,9 +8,15 @@ import {
 } from '@finsweet/attributes-utils';
 
 import type { List } from '../../components/List';
-import { CUSTOM_VALUE_ATTRIBUTE, getAttribute, getSettingSelector, hasAttributeValue } from '../../utils/selectors';
+import {
+  CUSTOM_VALUE_ATTRIBUTE,
+  getAttribute,
+  getSettingSelector,
+  getSplitSeparator,
+  hasAttributeValue,
+} from '../../utils/selectors';
 import type { FiltersCondition, FiltersGroup } from '../types';
-import { getSplitSeparator, splitValue } from '../utils';
+import { splitValue } from '../utils';
 
 /**
  * @returns The value of a given form field.
