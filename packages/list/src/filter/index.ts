@@ -70,7 +70,7 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
         setListFiltersQuery(list);
       }
     }, 0),
-    { deep: true }
+    { deep: true, immediate: true }
   );
 
   // Read query params
