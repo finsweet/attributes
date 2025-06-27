@@ -1,5 +1,11 @@
 # @finsweet/attributes-mirrorinput
 
+## 1.4.11
+
+### Patch Changes
+
+- 67a423a: fix: radio values mirroring
+
 ## 1.4.10
 
 ### Patch Changes
