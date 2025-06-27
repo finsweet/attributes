@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.7.3
+
+### Patch Changes
+
+- 8a82e17: fix: filter the list on page load if there are default values
+
 ## 1.7.2
 
 ### Patch Changes
