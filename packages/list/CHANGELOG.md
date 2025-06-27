@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.7.2
+
+### Patch Changes
+
+- 214c086: fix: support nesting in tabs & sliders
+
 ## 1.7.1
 
 ### Patch Changes
