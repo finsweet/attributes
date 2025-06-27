@@ -481,8 +481,10 @@ const initConditionValueField = (
 
   const twoWayBindingCleanup = watch(
     () => getFiltersCondition(list, condition)?.value,
-    (value: FiltersCondition['value'] | undefined = '') => {
+    (value: FiltersCondition['value'] | undefined, oldValue: FiltersCondition['value']) => {
       if (list.readingFilters) return;
+
+      value ??= Array.isArray(oldValue) ? [] : '';
 
       for (const formField of allConditionValueFormFields.values()) {
         setFormFieldValue(formField, value, CUSTOM_VALUE_ATTRIBUTE);
