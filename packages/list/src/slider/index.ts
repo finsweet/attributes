@@ -1,4 +1,4 @@
-import { ARIA_ROLE_KEY, cloneNode, SLIDER_CSS_CLASSES } from '@finsweet/attributes-utils';
+import { ARIA_ROLE_KEY, SLIDER_CSS_CLASSES } from '@finsweet/attributes-utils';
 
 import type { List } from '../components';
 
@@ -41,13 +41,13 @@ const initListSlider = (list: List, sliderReference: HTMLElement) => {
     for (const item of items) {
       if (renderedItems.has(item.id)) continue;
 
-      const elementClone = cloneNode(item.element);
-      elementClone.removeAttribute(ARIA_ROLE_KEY);
+      item.currentIndex = undefined;
+      item.element.removeAttribute(ARIA_ROLE_KEY);
 
       const newSlide = document.createElement('div');
       newSlide.setAttribute('class', slideCSS);
 
-      newSlide.appendChild(elementClone);
+      newSlide.appendChild(item.element);
       sliderMask.appendChild(newSlide);
 
       renderedItems.set(item.id, newSlide);
@@ -59,6 +59,8 @@ const initListSlider = (list: List, sliderReference: HTMLElement) => {
       slide?.remove();
       renderedItems.delete(itemId);
     }
+
+    list.renderedItems.clear();
 
     return [];
   });
