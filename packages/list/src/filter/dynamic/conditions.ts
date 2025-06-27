@@ -191,7 +191,7 @@ const initConditionOperatorSelect = (list: List, element: HTMLSelectElement, con
   });
 
   // Options display logic
-  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'], AllFieldsData]) => {
+  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'] | undefined, AllFieldsData]) => {
     const fieldData = fieldKey ? allFieldsData[fieldKey] : undefined;
     const allFieldKeys = Object.keys(allFieldsData);
 
@@ -392,8 +392,8 @@ const initConditionValueField = (
   });
 
   const formFieldsHandler = ([fieldKey, op, allFieldsData]: [
-    FiltersCondition['fieldKey'],
-    FiltersCondition['op'],
+    FiltersCondition['fieldKey'] | undefined,
+    FiltersCondition['op'] | undefined,
     AllFieldsData,
   ]) => {
     const fieldData = fieldKey ? allFieldsData[fieldKey] : undefined;
@@ -429,7 +429,7 @@ const initConditionValueField = (
     }
   };
 
-  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'], AllFieldsData]) => {
+  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'] | undefined, AllFieldsData]) => {
     const selectElements = [...allConditionValueFormFields.values()].filter(isHTMLSelectElement);
     if (!selectElements.length) return;
 
@@ -481,7 +481,7 @@ const initConditionValueField = (
 
   const twoWayBindingCleanup = watch(
     () => getFiltersCondition(list, condition)?.value,
-    (value) => {
+    (value: FiltersCondition['value'] | undefined = '') => {
       if (list.readingFilters) return;
 
       for (const formField of allConditionValueFormFields.values()) {
