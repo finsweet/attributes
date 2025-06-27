@@ -1,9 +1,9 @@
 import {
   addListener,
   type FinsweetAttributeInit,
+  getFormFieldValue,
   isElement,
   isFormField,
-  isHTMLInputElement,
   setFormFieldValue,
 } from '@finsweet/attributes-utils';
 
@@ -25,19 +25,9 @@ export const init: FinsweetAttributeInit = () => {
     const mirrorTarget = queryElement('target', { instance });
     if (!isFormField(mirrorTarget) || mirrorTrigger.type !== mirrorTarget.type) return;
 
-    // If must update the `checked` property
-    if (
-      isHTMLInputElement(mirrorTarget) &&
-      (mirrorTarget.type === 'checkbox' || mirrorTarget.type === 'radio') &&
-      (mirrorTrigger as HTMLInputElement).checked !== mirrorTarget.checked
-    ) {
-      setFormFieldValue(mirrorTarget, !mirrorTarget.checked);
+    const triggerValue = getFormFieldValue(mirrorTrigger);
 
-      return;
-    }
-
-    // If must update the `value` property
-    setFormFieldValue(mirrorTarget, mirrorTrigger.value);
+    setFormFieldValue(mirrorTarget, triggerValue);
   });
 
   return {
