@@ -1,5 +1,12 @@
 # @finsweet/attributes-list
 
+## 1.7.4
+
+### Patch Changes
+
+- f5fdef0: fix: better handling of dynamic filters clearing
+- f5fdef0: fix: reset `interacted` when clearing filters
+
 ## 1.7.3
 
 ### Patch Changes
