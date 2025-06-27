@@ -1,5 +1,12 @@
 # @finsweet/attributes
 
+## 2.5.5
+
+### Patch Changes
+
+- Updated dependencies [67a423a]
+  - @finsweet/attributes-mirrorinput@1.4.11
+
 ## 2.5.4
 
 ### Patch Changes
