@@ -4,7 +4,7 @@ import { shallowRef } from '@vue/reactivity';
 import type { List } from '../../components/List';
 import { getElementSelector, queryElement } from '../../utils/selectors';
 import { handleFiltersForm } from '../elements';
-import type { FilterMatch } from '../types';
+import type { FilterMatch, FiltersCondition } from '../types';
 import { type ConditionGroup, initConditionGroup, initConditionGroupsAdd, initConditionGroupsMatch } from './groups';
 import { getFilterMatchValue } from './utils';
 
@@ -112,7 +112,12 @@ const handleClearButtons = (list: List) => {
     const firstCondition = firstGroup.conditions[0];
     if (!firstCondition) return;
 
-    firstCondition.value = Array.isArray(firstCondition.value) ? [] : '';
+    const updated: Partial<FiltersCondition> = {
+      value: Array.isArray(firstCondition.value) ? [] : '',
+      interacted: false,
+    };
+
+    Object.assign(firstCondition, updated);
 
     list.settingFilters = false;
   });
