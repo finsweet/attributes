@@ -35,6 +35,11 @@ export type FinsweetAttributes = {
   destroy?: () => void;
 
   /**
+   * Defines the Attributes library version.
+   */
+  version: string;
+
+  /**
    * Contains access to each Attribute solution.
    */
   modules: {
