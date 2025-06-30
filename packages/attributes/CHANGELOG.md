@@ -1,5 +1,11 @@
 # @finsweet/attributes
 
+## 2.6.0
+
+### Minor Changes
+
+- 5448462: feat: expose the library version in `window.FinsweetAttributes.version`
+
 ## 2.5.5
 
 ### Patch Changes
