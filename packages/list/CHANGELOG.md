@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.7.5
+
+### Patch Changes
+
+- ba68a30: fix: display `initial` element when all filter values are manually cleared
+
 ## 1.7.4
 
 ### Patch Changes
