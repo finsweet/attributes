@@ -279,6 +279,13 @@ export class List {
   );
 
   /**
+   * Defines if the list has any filters applied.
+   */
+  public readonly hasFilters = computed(() =>
+    this.filters.value.groups.some((group) => group.conditions.some((condition) => !!condition.value?.length))
+  );
+
+  /**
    * Defines if the pagination query param should be added to the URL when switching pages.
    * @example '?5f7457b3_page=1'
    */
@@ -550,8 +557,10 @@ export class List {
     const initialElementRunner = effect(() => {
       if (!this.initialElement) return;
 
-      this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
-      this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
+      const showInitial = !this.hasInteracted.value || !this.hasFilters.value;
+
+      this.wrapperElement.style.display = showInitial ? 'none' : '';
+      this.initialElement.style.display = showInitial ? '' : 'none';
     });
 
     // empty
