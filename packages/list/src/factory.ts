@@ -127,5 +127,6 @@ export const initList = (list: List) => {
     }
 
     cleanups.clear();
+    list.destroy();
   };
 };
