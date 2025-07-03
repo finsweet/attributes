@@ -1,5 +1,14 @@
 # @finsweet/attributes-list
 
+## 1.7.6
+
+### Patch Changes
+
+- c31ad9e: fix: race conditions when overlapping hook lifecycles
+- c31ad9e: fix: respect pagination when injecting static elements
+- c31ad9e: fix: make static item elements usable by multiple lists
+- c31ad9e: fix: add missing destroy method for List instances
+
 ## 1.7.5
 
 ### Patch Changes
