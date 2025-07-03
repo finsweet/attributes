@@ -1,7 +1,6 @@
 import {
   CMS_CSS_CLASSES,
   fetchPage,
-  getObjectEntries,
   isHTMLAnchorElement,
   isNumber,
   restartWebflow,
@@ -18,11 +17,12 @@ import { getAttribute, getInstance, hasAttributeValue, queryAllElements, queryEl
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
-type HookKey = 'start' | 'filter' | 'sort' | 'pagination' | 'beforeRender' | 'render' | 'afterRender';
+type HookKey = 'start' | 'filter' | 'sort' | 'static' | 'pagination' | 'beforeRender' | 'render' | 'afterRender';
 type HookCallback = (items: ListItem[]) => ListItem[] | Promise<ListItem[]> | void | Promise<void>;
 type Hooks = {
   [key in HookKey]: {
     previous?: HookKey;
+    index: number;
     callbacks: HookCallback[];
     result: ShallowRef<ListItem[]>;
   };
@@ -39,41 +39,55 @@ export class List {
    */
   public readonly hooks: Hooks = {
     start: {
+      index: 0,
       callbacks: [],
       result: shallowRef([]),
     },
 
     filter: {
+      index: 1,
       previous: 'start',
       callbacks: [],
       result: shallowRef([]),
     },
 
     sort: {
+      index: 2,
       previous: 'filter',
       callbacks: [],
       result: shallowRef([]),
     },
 
-    pagination: {
+    static: {
+      index: 3,
       previous: 'sort',
       callbacks: [],
       result: shallowRef([]),
     },
 
+    pagination: {
+      index: 4,
+      previous: 'static',
+      callbacks: [],
+      result: shallowRef([]),
+    },
+
     beforeRender: {
+      index: 5,
       previous: 'pagination',
       callbacks: [],
       result: shallowRef([]),
     },
 
     render: {
+      index: 6,
       previous: 'beforeRender',
       callbacks: [],
       result: shallowRef([]),
     },
 
     afterRender: {
+      index: 7,
       previous: 'render',
       callbacks: [],
       result: shallowRef([]),
@@ -89,6 +103,11 @@ export class List {
    * The hook that triggered the current lifecycle.
    */
   public triggeredHook?: HookKey;
+
+  /**
+   * A queued hook that will be executed after the current lifecycle.
+   */
+  public queuedHook?: HookKey;
 
   /**
    * A set holding all rendered {@link ListItem} instances.
@@ -221,7 +240,7 @@ export class List {
    * Defines the total amount of pages in the list.
    */
   public readonly totalPages = computed(() =>
-    Math.ceil(this.hooks.filter.result.value.length / this.itemsPerPage.value)
+    Math.ceil(this.hooks.static.result.value.length / this.itemsPerPage.value)
   );
 
   /**
@@ -345,6 +364,11 @@ export class List {
   public settingFilters?: boolean;
 
   /**
+   * A function to destroy the instance and clean up all resources.
+   */
+  public destroy = () => {};
+
+  /**
    * `@vue/reactivity`: [watch](https://vuejs.org/api/reactivity-core.html#watch)
    */
   public watch = watch;
@@ -443,18 +467,25 @@ export class List {
 
     this.loadingPaginationElements = this.#getCMSPaginationElements();
 
-    // Init hooks
-    this.#initHooks();
+    // Init hooks and element effects
+    const hooksCleanup = this.#initHooks();
+    const elementsCleanup = this.#initElements();
 
-    // Elements side effects
-    // TODO: Cleanup
-    this.#initElements();
+    // Define the destroy function
+    this.destroy = () => {
+      hooksCleanup();
+      elementsCleanup();
+
+      listInstancesStore.delete(this.wrapperElement);
+    };
   }
 
   /**
    * Initializes the lifecycle hooks.
    */
   #initHooks() {
+    const cleanups: (() => void)[] = [];
+
     // Add render hook
     this.addHook('render', async (items) => {
       let renderIndex = 0;
@@ -534,12 +565,43 @@ export class List {
     });
 
     // Start hooks chain
-    for (const [key, { previous }] of getObjectEntries(this.hooks)) {
-      const items = previous ? this.hooks[previous].result : this.items;
+    const initHook = (key: HookKey) => {
+      const { previous } = this.hooks[key];
 
-      // TODO: Cleanups
-      watch(items, () => this.#runHook(key), { immediate: true });
-    }
+      if (!previous) {
+        const cleanup = watch(this.items, () => this.triggerHook(key), { immediate: true });
+
+        cleanups.push(cleanup);
+        return;
+      }
+
+      const cleanup = watch(this.hooks[previous].result, async () => {
+        await this.#runHook(key);
+
+        if (key !== 'afterRender') return;
+
+        this.currentHook = undefined;
+        this.triggeredHook = undefined;
+
+        if (this.queuedHook) {
+          const { queuedHook } = this;
+
+          this.queuedHook = undefined;
+          this.triggerHook(queuedHook);
+        }
+      });
+
+      cleanups.push(cleanup);
+
+      initHook(previous);
+    };
+
+    initHook('afterRender');
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+      cleanups.length = 0;
+    };
   }
 
   /**
@@ -766,8 +828,6 @@ export class List {
     }
 
     hook.result.value = [...result];
-
-    this.currentHook = undefined;
   }
 
   /**
@@ -775,11 +835,28 @@ export class List {
    * @param key
    * @param options.scrollToAnchor
    */
-  async triggerHook(
+  triggerHook(
     key: HookKey,
     { scrollToAnchor, resetCurrentPage }: { scrollToAnchor?: boolean; resetCurrentPage?: boolean } = {}
   ) {
+    if (this.currentHook) {
+      const triggeredHookIndex = this.hooks[key].index;
+      const currentHookIndex = this.hooks[this.currentHook].index;
+
+      if (currentHookIndex >= triggeredHookIndex) {
+        if (this.queuedHook) {
+          const queuedHookIndex = this.hooks[this.queuedHook].index;
+          this.queuedHook = triggeredHookIndex < queuedHookIndex ? key : this.queuedHook;
+        } else {
+          this.queuedHook = key;
+        }
+      }
+
+      return;
+    }
+
     this.triggeredHook = key;
+    this.currentHook = key;
 
     if (scrollToAnchor) {
       this.scrollToAnchor(key);
@@ -789,9 +866,7 @@ export class List {
       this.currentPage.value = 1;
     }
 
-    await this.#runHook(key);
-
-    this.triggeredHook = undefined;
+    return this.#runHook(key);
   }
 
   /**
@@ -881,15 +956,6 @@ export class List {
     }
 
     history.replaceState({}, '', url.toString());
-  }
-
-  /**
-   * Destroys the instance.
-   */
-  destroy() {
-    // TODO: Call store.off() on all stores
-
-    listInstancesStore.delete(this.wrapperElement);
   }
 
   /**

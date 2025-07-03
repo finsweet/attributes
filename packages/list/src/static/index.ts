@@ -1,7 +1,10 @@
 import { cloneNode } from '@finsweet/attributes-utils';
+import { triggerRef } from '@vue/reactivity';
 
 import type { List, ListItem } from '../components';
 import { getAttribute } from '../utils/selectors';
+
+const usedStaticItems = new WeakSet<HTMLElement>();
 
 /**
  * Inits the static items for a list.
@@ -18,7 +21,16 @@ export const initStaticItems = (list: List, staticItems: HTMLElement[]) => {
       const repeat = getAttribute(staticItem, 'repeat');
       const interactive = getAttribute(staticItem, 'interactive');
 
-      const item = list.createItem(staticItem);
+      let item: ListItem;
+
+      if (usedStaticItems.has(staticItem)) {
+        const elementClone = cloneNode(staticItem);
+        item = list.createItem(elementClone);
+      } else {
+        item = list.createItem(staticItem);
+      }
+
+      usedStaticItems.add(staticItem);
 
       if (interactive) {
         acc.interactiveItems.push({ position, item });
@@ -35,7 +47,7 @@ export const initStaticItems = (list: List, staticItems: HTMLElement[]) => {
   nonInteractiveItems.sort((a, b) => a.position - b.position);
 
   // Non-interactive items are injected before rendering
-  const cleanup = list.addHook('beforeRender', (items) => {
+  const cleanup = list.addHook('static', (items) => {
     const newItems = [...items];
 
     for (const { position, item, repeat } of nonInteractiveItems) {
@@ -62,11 +74,11 @@ export const initStaticItems = (list: List, staticItems: HTMLElement[]) => {
     list.items.value.splice(position, 0, item);
   }
 
-  // Manually trigger the beforeRender hook if there are no interactive items
-  // This is necessary because the beforeRender hook will not be triggered if there are no
-  // mutations to the items array
-  if (!interactiveItems.length) {
-    list.triggerHook('beforeRender');
+  // Force trigger the hooks lifecycle
+  if (interactiveItems.length) {
+    triggerRef(list.items);
+  } else if (nonInteractiveItems.length) {
+    list.triggerHook('static');
   }
 
   return cleanup;

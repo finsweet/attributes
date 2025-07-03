@@ -1,3 +1,6 @@
 packages:
-  - 'packages/*'
+  - packages/*
   - '!packages/template'
+
+onlyBuiltDependencies:
+  - esbuild

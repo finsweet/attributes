@@ -36,6 +36,7 @@ export const initPaginationMode = (list: List) => {
     const end = start + $itemsPerPage;
 
     const paginatedItems = items.slice(start, end);
+
     return paginatedItems;
   });
 
@@ -44,9 +45,9 @@ export const initPaginationMode = (list: List) => {
     () => {
       // We reset currentPage to 1 when filtering and sorting,
       // we don't want to trigger pagination again when that happens
-      if (list.currentHook) return;
-
-      list.triggerHook('pagination', { scrollToAnchor: true });
+      if (!list.triggeredHook) {
+        list.triggerHook('pagination', { scrollToAnchor: true });
+      }
 
       if (list.showQuery) {
         list.setSearchParam('page', currentPage.value.toString());
