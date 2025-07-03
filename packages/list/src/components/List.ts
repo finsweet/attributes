@@ -580,8 +580,6 @@ export class List {
 
         if (key !== 'afterRender') return;
 
-        // console.log('All hooks executed, resetting current hook state');
-
         this.currentHook = undefined;
         this.triggeredHook = undefined;
 
@@ -589,7 +587,6 @@ export class List {
           const { queuedHook } = this;
 
           this.queuedHook = undefined;
-          // console.log(`Running queued hook: ${queuedHook}`);
           this.triggerHook(queuedHook);
         }
       });
@@ -816,8 +813,6 @@ export class List {
    * @param scrollToAnchor
    */
   async #runHook(key: HookKey) {
-    // console.log(`Running hook: ${key}`);
-
     this.currentHook = key;
 
     const hook = this.hooks[key];
@@ -844,15 +839,11 @@ export class List {
     key: HookKey,
     { scrollToAnchor, resetCurrentPage }: { scrollToAnchor?: boolean; resetCurrentPage?: boolean } = {}
   ) {
-    // console.log('About to trigger hook:', key, this.currentHook);
-
     if (this.currentHook) {
-      // console.log(`Hook ${this.currentHook} is already running, checking ${key} hook.`);
       const triggeredHookIndex = this.hooks[key].index;
       const currentHookIndex = this.hooks[this.currentHook].index;
 
       if (currentHookIndex >= triggeredHookIndex) {
-        // console.log(`Hook ${key} goes before current hook ${this.currentHook}, queuing it.`);
         if (this.queuedHook) {
           const queuedHookIndex = this.hooks[this.queuedHook].index;
           this.queuedHook = triggeredHookIndex < queuedHookIndex ? key : this.queuedHook;
@@ -864,8 +855,6 @@ export class List {
       return;
     }
 
-    // console.log(`Triggering hook: ${key}`);
-
     this.triggeredHook = key;
     this.currentHook = key;
 
@@ -874,7 +863,6 @@ export class List {
     }
 
     if (resetCurrentPage) {
-      // console.log('Resetting current page to 1');
       this.currentPage.value = 1;
     }
 
