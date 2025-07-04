@@ -232,6 +232,11 @@ export class List {
   public initialItemsPerPage: number;
 
   /**
+   * Defines a custom amount of items per page.
+   */
+  public customItemsPerPage?: number;
+
+  /**
    * Defines the amount of items per page.
    */
   public readonly itemsPerPage: Ref<number>;
@@ -445,7 +450,8 @@ export class List {
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
 
-    this.initialItemsPerPage = getAttribute(this.listOrWrapper, 'itemsperpage') || collectionItemElements.length;
+    this.customItemsPerPage = getAttribute(this.listOrWrapper, 'itemsperpage');
+    this.initialItemsPerPage = this.customItemsPerPage || collectionItemElements.length;
     this.itemsPerPage = ref(this.initialItemsPerPage);
 
     if (listElement) {

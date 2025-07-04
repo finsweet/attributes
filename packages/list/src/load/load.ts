@@ -168,8 +168,9 @@ const parseLoadedPage = async (page: Document, list: List, itemsTarget: 'push' |
   const { length: itemsLength } = collectionItems;
 
   // Make sure the itemsPerPage value is correct
-  if (nextPageURL && list.initialItemsPerPage !== itemsLength) {
+  if (nextPageURL && list.initialItemsPerPage !== itemsLength && !list.customItemsPerPage) {
     list.initialItemsPerPage = itemsLength;
+    list.itemsPerPage.value = itemsLength;
   }
 
   // Add the new items to the list
