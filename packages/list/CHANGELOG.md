@@ -1,5 +1,12 @@
 # @finsweet/attributes-list
 
+## 1.7.7
+
+### Patch Changes
+
+- 93c4734: fix: pagination sometimes loading items with undefined list query params
+- 37a6b2f: fix: respect items per page when loading a list in a non-first page
+
 ## 1.7.6
 
 ### Patch Changes
