@@ -24,7 +24,7 @@ import { loadPaginatedCMSItems } from './load';
  *
  * @returns A callback to destroy the event listeners.
  */
-export const initPaginationMode = (list: List) => {
+export const initPaginationMode = async (list: List) => {
   const { currentPage, itemsPerPage, paginationWrapperElement } = list;
   if (!paginationWrapperElement) return;
 
@@ -59,6 +59,11 @@ export const initPaginationMode = (list: List) => {
   const paginateCleanup = watch(list.itemsPerPage, () => {
     list.triggerHook('pagination', { scrollToAnchor: true });
   });
+
+  // Init items load
+  loadPaginatedCMSItems(list);
+
+  await list.loadingSearchParamsData;
 
   // Get settings
   const [pageBoundary, pageBoundaryCleanup] = getBreakpointSetting(list, 'pageboundary');
@@ -96,9 +101,6 @@ export const initPaginationMode = (list: List) => {
       );
     }
   }
-
-  // Init items load
-  loadPaginatedCMSItems(list);
 
   // Handle pagination elements
   const paginationWrapperCleanup = handlePaginationWrapper(list);
