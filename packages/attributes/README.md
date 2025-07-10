@@ -40,7 +40,7 @@ The result object will contain the API of the loaded attribute solution. Check t
 | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `process` | `Set`    | Contains the currently active Attribute solutions.                                                                                                                                                                             |
 | `modules` | `Object` | A key-value object that contains the controls for each active Attribute solution. Each key is the corresponding Attribute's key and each value is a [FinsweetAttributeControls](#the-finsweetattributecontrols-object) object. |
-| `utils`   | `Object` | Contains utility functions for working with Attributes.                                                                                                                                                                        |
+| `utils`   | `Object` | Contains utility functions [object](#the-finsweetattributesutils-object) for working with Attributes.                                                                                                                                                                        |
 
 #### Methods
 
