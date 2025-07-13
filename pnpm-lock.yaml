@@ -333,16 +333,12 @@ importers:
       '@finsweet/attributes-utils':
         specifier: workspace:*
         version: link:../utils
-      body-scroll-lock:
-        specifier: ^4.0.0-beta.0
-        version: 4.0.0-beta.0
       just-debounce:
         specifier: ^1.1.0
         version: 1.1.0
-    devDependencies:
-      '@types/body-scroll-lock':
-        specifier: ^3.1.0
-        version: 3.1.0
+      tua-body-scroll-lock:
+        specifier: ^1.5.3
+        version: 1.5.3
 
   packages/selectcustom:
     dependencies:
@@ -917,9 +913,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@types/body-scroll-lock@3.1.0':
-    resolution: {integrity: sha512-3owAC4iJub5WPqRhxd8INarF2bWeQq1yQHBgYhN0XLBJMpd5ED10RrJ3aKiAwlTyL5wK7RkBD4SZUQz2AAAMdA==}
-
   '@types/dlv@1.1.5':
     resolution: {integrity: sha512-JHOWNfiWepAhfwlSw17kiWrWrk6od2dEQgHltJw9AS0JPFoLZJBge5+Dnil2NfdjAvJ/+vGSX60/BRW20PpUXw==}
 
@@ -1037,9 +1030,6 @@ packages:
   body-parser@2.2.0:
     resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
     engines: {node: '>=18'}
-
-  body-scroll-lock@4.0.0-beta.0:
-    resolution: {integrity: sha512-a7tP5+0Mw3YlUJcGAKUqIBkYYGlYxk2fnCasq/FUph1hadxlTRjF+gAcZksxANnaMnALjxEddmSi/H3OR8ugcQ==}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -1927,6 +1917,9 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  tua-body-scroll-lock@1.5.3:
+    resolution: {integrity: sha512-44W12iqek41kZuTdpEUt3JTUsMx0IxfTajXWfQyMLgzsPaMYUPZLcJkwa4P0x24h5DQ3lYvDuYvphBo4+L0t4w==}
+
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -2462,8 +2455,6 @@ snapshots:
     dependencies:
       playwright: 1.52.0
 
-  '@types/body-scroll-lock@3.1.0': {}
-
   '@types/dlv@1.1.5': {}
 
   '@types/estree@1.0.7': {}
@@ -2612,8 +2603,6 @@ snapshots:
       type-is: 2.0.1
     transitivePeerDependencies:
       - supports-color
-
-  body-scroll-lock@4.0.0-beta.0: {}
 
   brace-expansion@1.1.11:
     dependencies:
@@ -3523,6 +3512,8 @@ snapshots:
       get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  tua-body-scroll-lock@1.5.3: {}
 
   type-check@0.4.0:
     dependencies:
