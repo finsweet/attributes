@@ -45,6 +45,28 @@ importers:
         specifier: ^8.32.0
         version: 8.32.0(eslint@9.26.0)(typescript@5.8.3)
 
+  examples/favorite:
+    dependencies:
+      '@vue/reactivity':
+        specifier: ^3.5.13
+        version: 3.5.13
+      just-debounce:
+        specifier: ^1.1.0
+        version: 1.1.0
+      zod:
+        specifier: ^3.25.67
+        version: 3.25.67
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.12
+        version: 22.15.12
+      esbuild:
+        specifier: ^0.25.5
+        version: 0.25.5
+      tsx:
+        specifier: ^4.19.4
+        version: 4.19.4
+
   packages/accordion:
     dependencies:
       '@finsweet/attributes-utils':
@@ -1989,6 +2011,9 @@ packages:
   zod@3.24.4:
     resolution: {integrity: sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==}
 
+  zod@3.25.67:
+    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+
 snapshots:
 
   '@babel/runtime@7.27.1': {}
@@ -3519,7 +3544,7 @@ snapshots:
 
   tsx@4.19.4:
     dependencies:
-      esbuild: 0.25.4
+      esbuild: 0.25.5
       get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3
@@ -3573,3 +3598,5 @@ snapshots:
       zod: 3.24.4
 
   zod@3.24.4: {}
+
+  zod@3.25.67: {}
