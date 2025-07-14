@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.7.9
+
+### Patch Changes
+
+- 98cf173: fix: initialize nesting inside combined items
+
 ## 1.7.8
 
 ### Patch Changes
