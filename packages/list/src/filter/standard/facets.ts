@@ -95,7 +95,12 @@ const createInputFacetsHandler = (list: List, formField: HTMLInputElement, group
   const fieldKey = getAttribute(formField, 'field')?.trim();
   if (!fieldKey) return;
 
-  const facetCountElement = queryElement('facet-count', { scope: formField.parentElement });
+  let facetCountElement = queryElement('facet-count', { scope: formField.parentElement });
+
+  if (isHTMLSelectElement(facetCountElement)) {
+    facetCountElement = null; // select elements have their own handler
+  }
+
   const hideOnEmptyETarget = formField.closest<HTMLElement>(getSettingSelector('emptyfacet', 'hide'));
   const addClassOnEmptyTarget = formField.closest<HTMLElement>(getSettingSelector('emptyfacet', 'add-class'));
 
