@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.7.10
+
+### Patch Changes
+
+- aaae380: fix: facet-count conflict when select and non-select facets coexist
+
 ## 1.7.9
 
 ### Patch Changes
