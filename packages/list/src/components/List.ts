@@ -341,7 +341,7 @@ export class List {
    * If pagination query exists, it is used as the prefix: '5f7457b3_page' => '5f7457b3'
    * If not, it falls back to the list's instance or the list's index.
    */
-  public searchParamsPrefix!: string;
+  public searchParamsPrefix?: string;
 
   /**
    * Defines an awaitable Promise that resolves once the pagination data (`currentPage` + `paginationSearchParam`) has been retrieved.
@@ -466,9 +466,7 @@ export class List {
 
     // Extract pagination data
     this.loadingSearchParamsData = this.#getCMSPaginationData().then((paginationSearchParam) => {
-      const prefix = paginationSearchParam ? paginationSearchParam.split('_')[0] : undefined;
-
-      this.searchParamsPrefix = prefix || instance || `${pageIndex}`;
+      this.searchParamsPrefix = paginationSearchParam?.split('_')[0];
     });
 
     this.loadingPaginationElements = this.#getCMSPaginationElements();
@@ -915,9 +913,21 @@ export class List {
 
     const { searchParams } = new URL(location.href);
 
-    const name = usePrefix ? `${this.searchParamsPrefix}_${key}` : key;
+    if (!usePrefix) {
+      return searchParams.get(key);
+    }
 
-    return searchParams.get(name);
+    const prefixes = [this.instance, this.searchParamsPrefix, this.pageIndex.toString()];
+
+    for (const prefix of prefixes) {
+      if (!prefix) continue;
+
+      const name = `${prefix}_${key}`;
+      const value = searchParams.get(name);
+      if (value) return value;
+    }
+
+    return null;
   }
 
   /**
@@ -929,18 +939,25 @@ export class List {
 
     const { searchParams } = new URL(location.href);
 
-    const rawEntries = [...searchParams.entries()];
+    if (!usePrefix) {
+      return [...searchParams.entries()];
+    }
 
-    const entries = usePrefix
-      ? rawEntries
-          .filter(([key]) => key.startsWith(`${this.searchParamsPrefix}_`))
-          .map(([key, value]) => {
-            const newKey = key.replace(`${this.searchParamsPrefix}_`, '');
-            return [newKey, value] as const;
-          })
-      : rawEntries;
+    const map = new Map<string, string>();
+    const prefixes = [this.instance, this.searchParamsPrefix, this.pageIndex.toString()];
 
-    return entries;
+    for (const [key, value] of searchParams) {
+      for (const prefix of prefixes) {
+        if (!prefix) continue;
+        if (!key.startsWith(`${prefix}_`)) continue;
+
+        const unprefixedKey = key.replace(`${prefix}_`, '');
+        map.set(unprefixedKey, value);
+        break;
+      }
+    }
+
+    return [...map.entries()];
   }
 
   /**
@@ -949,11 +966,23 @@ export class List {
    * @param value
    * @param usePrefix Whether to use the list's search params prefix or not.
    */
-  async setSearchParam(key: string, value: string | null | undefined, usePrefix = true) {
+  async setSearchParam(
+    key: string,
+    value: string | null | undefined,
+    { usePrefix = true, useSearchParamsPrefix = false }: { usePrefix?: boolean; useSearchParamsPrefix?: boolean } = {}
+  ) {
     await this.loadingSearchParamsData;
 
     const url = new URL(location.href);
-    const name = usePrefix ? `${this.searchParamsPrefix}_${key}` : key;
+
+    let name = key;
+
+    if (useSearchParamsPrefix) {
+      name = `${this.searchParamsPrefix}_${key}`;
+    } else if (usePrefix) {
+      const prefix = this.instance || this.searchParamsPrefix || this.pageIndex;
+      name = `${prefix}_${key}`;
+    }
 
     if (value) {
       url.searchParams.set(name, value);

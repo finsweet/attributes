@@ -50,7 +50,7 @@ export const initPaginationMode = async (list: List) => {
       }
 
       if (list.showQuery) {
-        list.setSearchParam('page', currentPage.value.toString());
+        list.setSearchParam('page', currentPage.value.toString(), { useSearchParamsPrefix: true });
       }
     },
     {}
