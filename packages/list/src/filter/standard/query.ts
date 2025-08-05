@@ -81,7 +81,7 @@ export const setListFiltersQuery = async (list: List) => {
   for (const [key] of existingParams) {
     if (!key.match(regex)) continue;
 
-    await list.setSearchParam(key, null, usePrefix);
+    await list.setSearchParam(key, null, { usePrefix });
   }
 
   const multipleGroups = list.filters.value.groups.length > 1;
@@ -105,7 +105,7 @@ export const setListFiltersQuery = async (list: List) => {
         valueToSet = value;
       }
 
-      list.setSearchParam(key, valueToSet, usePrefix);
+      list.setSearchParam(key, valueToSet, { usePrefix });
     });
   });
 };

@@ -51,7 +51,7 @@ export const setListSortingQuery = async (list: List) => {
   for (const [key] of existingParams) {
     if (!key.match(regex)) continue;
 
-    await list.setSearchParam(key, null, usePrefix);
+    await list.setSearchParam(key, null, { usePrefix });
   }
 
   const { fieldKey, direction } = list.sorting.value;
@@ -59,5 +59,5 @@ export const setListSortingQuery = async (list: List) => {
 
   const key = `sort_${fieldKey}`;
 
-  list.setSearchParam(key, direction, usePrefix);
+  list.setSearchParam(key, direction, { usePrefix });
 };
