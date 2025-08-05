@@ -964,7 +964,8 @@ export class List {
    * Sets a search param in the URL using the list's search params prefix.
    * @param key
    * @param value
-   * @param usePrefix Whether to use the list's search params prefix or not.
+   * @param options.usePrefix Whether to use a prefix to set the key.
+   * @param options.useSearchParamsPrefix Whether to force the use of the search params as prefix over the instance name.
    */
   async setSearchParam(
     key: string,
@@ -980,7 +981,7 @@ export class List {
     if (useSearchParamsPrefix) {
       name = `${this.searchParamsPrefix}_${key}`;
     } else if (usePrefix) {
-      const prefix = this.instance || this.searchParamsPrefix || this.pageIndex;
+      const prefix = this.instance || this.searchParamsPrefix || this.pageIndex.toString();
       name = `${prefix}_${key}`;
     }
 
