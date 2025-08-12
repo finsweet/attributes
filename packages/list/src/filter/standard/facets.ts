@@ -159,8 +159,9 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
   if (!fieldKey) return;
 
   const op = getConditionOperator(formField);
-  const displayFacetCounts = formField.matches(getElementSelector('facet-count'));
   const hideOnEmpty = getAttribute(formField, 'emptyfacet', { filterInvalid: true }) === 'hide';
+  const displayFacetCounts =
+    formField.matches(getElementSelector('facet-count')) || formField.matches(getSettingSelector('facetcount'));
 
   const options: HTMLOptionElement[] = [...formField.options];
   const optionLabels = options.reduce(
