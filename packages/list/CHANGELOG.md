@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.8.0
+
+### Minor Changes
+
+- f7fd585: feat: `fs-list-facetcount="true"` as an alternative to `fs-list-element="facet-count"`
+
 ## 1.7.10
 
 ### Patch Changes
