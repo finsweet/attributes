@@ -639,6 +639,12 @@ export const SETTINGS = {
    * Defines if Webflow's ix2 should be reset when rendering the list items.
    */
   resetix: { key: 'resetix', values: ['true'] },
+
+  /**
+   * Alternative to `fs-list-element="facet-count"`
+   * for those elements that already have an `fs-list-element` attribute.
+   */
+  facetcount: { key: 'facetcount' },
 } as const satisfies AttributeSettings;
 
 export const BREAKPOINTS_INDEX: { [key in WebflowBreakpoint]: number } = {
