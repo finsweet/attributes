@@ -1,5 +1,11 @@
 # @finsweet/attributes-selectcustom
 
+## 1.8.0
+
+### Minor Changes
+
+- e92fa33: feat: support displaying facet counts in `fs-selectcustom` elements.
+
 ## 1.7.12
 
 ### Patch Changes
