@@ -28,7 +28,9 @@ export const populateOptions = (settings: Settings) => {
   let selectedOption: OptionData | undefined;
 
   // Create new options
-  for (const { value, text } of options) {
+  for (const { value, text, disabled, hidden } of options) {
+    if (disabled || hidden) continue;
+
     let element: HTMLAnchorElement | undefined;
 
     if (!value && emptyOption) {

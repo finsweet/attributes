@@ -163,13 +163,9 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
   const displayFacetCounts =
     formField.matches(getElementSelector('facet-count')) || formField.matches(getSettingSelector('facetcount'));
 
-  const options: HTMLOptionElement[] = [...formField.options];
-  const optionLabels = options.reduce(
-    (acc, option) => acc.set(option, option.value),
-    new Map<HTMLOptionElement, string>()
-  );
+  if (!hideOnEmpty && !displayFacetCounts) return;
 
-  if (!options.length) return;
+  const optionLabels = new Map<HTMLOptionElement, string>();
 
   let filterPromise: Promise<void[]> | undefined;
 
@@ -178,9 +174,13 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
       await filterPromise;
 
       filterPromise = Promise.all(
-        [...options].map(async (option) => {
+        [...formField.options].map(async (option) => {
           const { value } = option;
           if (!value) return;
+
+          if (!optionLabels.has(option)) {
+            optionLabels.set(option, option.text);
+          }
 
           const filteredItems = await triggerFacetFilter({
             filters,
@@ -197,11 +197,11 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
 
           if (displayFacetCounts) {
             const label = optionLabels.get(option) || '';
-            option.label = `${label} (${filteredItems.length})`;
+            option.text = `${label} (${filteredItems.length})`;
           }
 
           if (hideOnEmpty && !option.selected) {
-            option.style.display = disabled ? 'none' : '';
+            option.hidden = disabled;
             option.disabled = disabled;
           }
         })
