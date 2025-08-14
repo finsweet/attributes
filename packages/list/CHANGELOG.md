@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.9.1
+
+### Patch Changes
+
+- 0f02217: fix: manual items nesting (slugs)
+
 ## 1.9.0
 
 ### Minor Changes
