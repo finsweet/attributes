@@ -106,7 +106,18 @@ const handleManualNesting = async (
   );
   if (!source) return;
 
-  const sourceItems = source.items.value;
+  const sourceItems = source.items.value.filter(({ href }) => {
+    if (!href) return false;
+
+    try {
+      const url = new URL(href);
+      const [slug] = url.pathname.match(/[^/]+(?=\/$|$)/g) || [];
+
+      return slug && slugs.includes(slug);
+    } catch {
+      return false;
+    }
+  });
 
   const sourceWrapper = cloneNode(source.wrapperElement, false);
 
