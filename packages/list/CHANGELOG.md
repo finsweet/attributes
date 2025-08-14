@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.9.2
+
+### Patch Changes
+
+- 6c7af1a: fix: ensure dynamic empty element is displayed
+
 ## 1.9.1
 
 ### Patch Changes
