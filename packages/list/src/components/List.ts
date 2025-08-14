@@ -639,17 +639,20 @@ export class List {
     });
 
     // empty
-    const emptyElementCleanup = watch(this.hooks.render.result, (items: ListItem[]) => {
-      const hasItems = items.length > 0;
+    const emptyElementCleanup = watch(
+      [this.hooks.render.result, this.emptyElement],
+      ([items, emptyElement]: [ListItem[], HTMLElement | null | undefined]) => {
+        const hasItems = items.length > 0;
 
-      if (this.listElement) {
-        this.listElement.style.display = hasItems ? '' : 'none';
-      }
+        if (this.listElement) {
+          this.listElement.style.display = hasItems ? '' : 'none';
+        }
 
-      if (this.emptyElement.value) {
-        this.emptyElement.value.style.display = hasItems ? 'none' : '';
+        if (emptyElement) {
+          emptyElement.style.display = hasItems ? 'none' : '';
+        }
       }
-    });
+    );
 
     return () => {
       itemsCountRunner.effect.stop();
