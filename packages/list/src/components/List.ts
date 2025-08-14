@@ -474,8 +474,8 @@ export class List {
     this.loadingPaginationElements = this.#getCMSPaginationElements();
 
     // Init hooks and element effects
-    const hooksCleanup = this.#initHooks();
     const elementsCleanup = this.#initElements();
+    const hooksCleanup = this.#initHooks();
 
     // Define the destroy function
     this.destroy = () => {
@@ -631,9 +631,16 @@ export class List {
       this.initialElement.style.display = showInitial ? '' : 'none';
     });
 
+    // loader
+    const loaderElementRunner = effect(() => {
+      if (!this.loaderElement) return;
+
+      this.loaderElement.style.display = this.loading.value ? '' : 'none';
+    });
+
     // empty
-    const emptyElementRunner = effect(() => {
-      const hasItems = !!this.hooks.render.result.value.length;
+    const emptyElementCleanup = watch(this.hooks.render.result, (items: ListItem[]) => {
+      const hasItems = items.length > 0;
 
       if (this.listElement) {
         this.listElement.style.display = hasItems ? '' : 'none';
@@ -644,18 +651,11 @@ export class List {
       }
     });
 
-    // loader
-    const loaderElementRunner = effect(() => {
-      if (!this.loaderElement) return;
-
-      this.loaderElement.style.display = this.loading.value ? '' : 'none';
-    });
-
     return () => {
       itemsCountRunner.effect.stop();
       initialElementRunner.effect.stop();
-      emptyElementRunner.effect.stop();
       loaderElementRunner.effect.stop();
+      emptyElementCleanup();
     };
   }
 
