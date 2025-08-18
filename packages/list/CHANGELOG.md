@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.10.0
+
+### Minor Changes
+
+- b3a0d9d: feat: prefer instances over pagination query for filters & sorting params
+
 ## 1.9.2
 
 ### Patch Changes
