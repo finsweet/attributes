@@ -125,7 +125,9 @@ const createInputFacetsHandler = (list: List, formField: HTMLInputElement, group
   const isSingleCheckbox =
     type === 'checkbox' && !getCheckboxGroup(formField.name, formField.form, CUSTOM_VALUE_ATTRIBUTE)?.length;
 
-  const value = getAttribute(formField, 'value') || (isSingleCheckbox ? 'true' : formField.value);
+  const value = isSingleCheckbox
+    ? getAttribute(formField, 'value') || 'true'
+    : getAttribute(formField, 'value') || formField.value;
 
   let filterPromise: Promise<ListItem[]> | undefined;
 
