@@ -1,10 +1,22 @@
-import { isElement, isHTMLInputElement, isHTMLSelectElement } from '@finsweet/attributes-utils';
+import {
+  type FormFieldType,
+  getCheckboxGroup,
+  isElement,
+  isHTMLInputElement,
+  isHTMLSelectElement,
+} from '@finsweet/attributes-utils';
 import { toRaw, watch } from '@vue/reactivity';
 import debounce from 'just-debounce';
 
 import type { ListItem } from '../../components';
 import type { List } from '../../components/List';
-import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../../utils/selectors';
+import {
+  CUSTOM_VALUE_ATTRIBUTE,
+  getAttribute,
+  getElementSelector,
+  getSettingSelector,
+  queryElement,
+} from '../../utils/selectors';
 import { filterItems } from '../filter';
 import type { FilterOperator, Filters } from '../types';
 import { getConditionOperator } from './conditions';
@@ -106,9 +118,14 @@ const createInputFacetsHandler = (list: List, formField: HTMLInputElement, group
 
   if (!facetCountElement && !hideOnEmptyETarget && !addClassOnEmptyTarget) return;
 
+  const type = formField.type as FormFieldType;
+
   const op = getConditionOperator(formField);
-  const value = getAttribute(formField, 'value') || formField.value || '';
   const emptyClassName = getAttribute(addClassOnEmptyTarget, 'emptyfacetclass');
+  const isSingleCheckbox =
+    type === 'checkbox' && !getCheckboxGroup(formField.name, formField.form, CUSTOM_VALUE_ATTRIBUTE)?.length;
+
+  const value = getAttribute(formField, 'value') || (isSingleCheckbox ? 'true' : formField.value);
 
   let filterPromise: Promise<ListItem[]> | undefined;
 
