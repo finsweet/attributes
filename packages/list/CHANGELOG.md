@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.10.1
+
+### Patch Changes
+
+- d296447: fix: facet count results for single checkboxes
+
 ## 1.10.0
 
 ### Minor Changes
