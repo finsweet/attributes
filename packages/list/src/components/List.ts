@@ -744,6 +744,8 @@ export class List {
         const $currentPage = currentPage.value;
         if (!$currentPage || $currentPage === 1) return;
 
+        if (!paginationSearchParam) return;
+
         const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
         if (!page) return;
 
@@ -766,6 +768,7 @@ export class List {
       // Pagination previous & Empty state
       (async () => {
         if (paginationPreviousCMSElement.value && emptyElement.value) return;
+        if (!paginationSearchParam) return;
 
         const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=9999`);
         if (!page) return;
