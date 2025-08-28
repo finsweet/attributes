@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.10.2
+
+### Patch Changes
+
+- bfcce31: fix: pagination buttons retrieval when using non-CMS lists
+
 ## 1.10.1
 
 ### Patch Changes
