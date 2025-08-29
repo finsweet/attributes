@@ -1,4 +1,4 @@
-import { addListener, cloneNode, isDate, isNotEmpty, isNumber } from '@finsweet/attributes-utils';
+import { addListener, cloneNode, type FormFieldType, isDate, isNotEmpty, isNumber } from '@finsweet/attributes-utils';
 import { watch } from '@vue/reactivity';
 
 import type { List } from '../components/List';
@@ -275,31 +275,52 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
       const formatDisplay = getAttribute(valueElement, 'formatdisplay');
       if (formatDisplay) {
         const locale = formatDisplay === 'true' ? undefined : formatDisplay;
+        const options: Intl.NumberFormatOptions & Intl.DateTimeFormatOptions = {
+          calendar: getAttribute(valueElement, 'formatcalendar'),
+          compactDisplay: getAttribute(valueElement, 'formatcompactdisplay'),
+          currency: getAttribute(valueElement, 'formatcurrency'),
+          currencyDisplay: getAttribute(valueElement, 'formatcurrencydisplay'),
+          currencySign: getAttribute(valueElement, 'formatcurrencysign'),
+          dateStyle: getAttribute(valueElement, 'formatdatestyle'),
+          day: getAttribute(valueElement, 'formatday'),
+          dayPeriod: getAttribute(valueElement, 'formatdayperiod'),
+          era: getAttribute(valueElement, 'formatera'),
+          formatMatcher: getAttribute(valueElement, 'formatformatmatcher'),
+          fractionalSecondDigits: getAttribute(valueElement, 'formatfractionalseconddigits'),
+          hour: getAttribute(valueElement, 'formathour'),
+          hour12: getAttribute(valueElement, 'formathour12'),
+          hourCycle: getAttribute(valueElement, 'formathourcycle'),
+          localeMatcher: getAttribute(valueElement, 'formatlocalematcher'),
+          maximumFractionDigits: getAttribute(valueElement, 'formatmaximumfractiondigits'),
+          maximumSignificantDigits: getAttribute(valueElement, 'formatmaximumsignificantdigits'),
+          minimumFractionDigits: getAttribute(valueElement, 'formatminimumfractiondigits'),
+          minimumIntegerDigits: getAttribute(valueElement, 'formatminimumintegerdigits'),
+          minimumSignificantDigits: getAttribute(valueElement, 'formatminimumsignificantdigits'),
+          minute: getAttribute(valueElement, 'formatminute'),
+          month: getAttribute(valueElement, 'formatmonth'),
+          notation: getAttribute(valueElement, 'formatnotation'),
+          numberingSystem: getAttribute(valueElement, 'formatnumberingsystem'),
+          roundingIncrement: getAttribute(valueElement, 'formatroundingincrement'),
+          roundingMode: getAttribute(valueElement, 'formatroundingmode'),
+          roundingPriority: getAttribute(valueElement, 'formatroundingpriority'),
+          second: getAttribute(valueElement, 'formatsecond'),
+          signDisplay: getAttribute(valueElement, 'formatsigndisplay'),
+          style: getAttribute(valueElement, 'formatstyle'),
+          timeStyle: getAttribute(valueElement, 'formattimestyle'),
+          timeZone: getAttribute(valueElement, 'formattimezone'),
+          timeZoneName: getAttribute(valueElement, 'formattimezonename'),
+          trailingZeroDisplay: getAttribute(valueElement, 'formattrailingzerodisplay'),
+          unit: getAttribute(valueElement, 'formatunit'),
+          unitDisplay: getAttribute(valueElement, 'formatunitdisplay'),
+          useGrouping: getAttribute(valueElement, 'formatusegrouping'),
+          weekday: getAttribute(valueElement, 'formatweekday'),
+          year: getAttribute(valueElement, 'formatyear'),
+        };
 
         if (Array.isArray(condition.value)) {
-          formattedValue = condition.value.map((value) => {
-            const parsedValue = parseFilterValue(value, condition.type);
-
-            if (isNumber(parsedValue)) {
-              return parsedValue.toLocaleString(locale);
-            }
-
-            if (isDate(parsedValue)) {
-              return parsedValue.toLocaleDateString(locale);
-            }
-
-            return value;
-          });
+          formattedValue = condition.value.map((value) => formatValue(value, condition.type, locale, options));
         } else {
-          const parsedValue = parseFilterValue(condition.value, condition.type);
-
-          if (isNumber(parsedValue)) {
-            formattedValue = parsedValue.toLocaleString(locale);
-          }
-
-          if (isDate(parsedValue)) {
-            formattedValue = parsedValue.toLocaleDateString(locale);
-          }
+          formattedValue = formatValue(condition.value, condition.type, locale, options);
         }
       }
 
@@ -311,4 +332,40 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
       valueElement.textContent = value;
     }
   }
+};
+
+/**
+ * Formats a value based on the locale and options.
+ * @param value
+ * @param type
+ * @param rawLocale
+ * @param options
+ * @returns The formatted value
+ */
+const formatValue = (
+  value: string,
+  type: FormFieldType,
+  rawLocale: string | undefined,
+  options: Intl.NumberFormatOptions & Intl.DateTimeFormatOptions
+) => {
+  const locale = rawLocale === 'true' ? undefined : rawLocale;
+  const parsedValue = parseFilterValue(value, type);
+
+  if (isNumber(parsedValue)) {
+    try {
+      return new Intl.NumberFormat(locale, options).format(parsedValue);
+    } catch {
+      return new Intl.NumberFormat(window.navigator?.language || undefined, options).format(parsedValue);
+    }
+  }
+
+  if (isDate(parsedValue)) {
+    try {
+      return new Intl.DateTimeFormat(locale, options).format(parsedValue);
+    } catch {
+      return new Intl.DateTimeFormat(window.navigator?.language || undefined, options).format(parsedValue);
+    }
+  }
+
+  return value;
 };
