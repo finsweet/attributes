@@ -599,7 +599,7 @@ export const SETTINGS = {
   formatformatmatcher: { key: 'formatformatmatcher' },
   formatfractionalseconddigits: { key: 'formatfractionalseconddigits', isNumeric: true },
   formathour: { key: 'formathour' },
-  formathour12: { key: 'formathour12' },
+  formathour12: { key: 'formathour12', values: ['true'] },
   formathourcycle: { key: 'formathourcycle' },
   formatlocalematcher: { key: 'formatlocalematcher' },
   formatminute: { key: 'formatminute' },
@@ -623,7 +623,7 @@ export const SETTINGS = {
   formattrailingzerodisplay: { key: 'formattrailingzerodisplay' },
   formatunit: { key: 'formatunit' },
   formatunitdisplay: { key: 'formatunitdisplay' },
-  formatusegrouping: { key: 'formatusegrouping' },
+  formatusegrouping: { key: 'formatusegrouping', values: ['true'] },
   formatweekday: { key: 'formatweekday' },
   formatyear: { key: 'formatyear' },
 

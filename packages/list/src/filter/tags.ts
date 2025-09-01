@@ -3,7 +3,7 @@ import { watch } from '@vue/reactivity';
 
 import type { List } from '../components/List';
 import { SETTINGS } from '../utils/constants';
-import { getAttribute, getElementSelector, queryElement } from '../utils/selectors';
+import { getAttribute, getElementSelector, hasAttributeValue, queryElement } from '../utils/selectors';
 import type { FilterOperator, Filters, FiltersCondition } from './types';
 import { parseFilterValue } from './utils';
 
@@ -288,7 +288,7 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
           formatMatcher: getAttribute(valueElement, 'formatformatmatcher'),
           fractionalSecondDigits: getAttribute(valueElement, 'formatfractionalseconddigits'),
           hour: getAttribute(valueElement, 'formathour'),
-          hour12: getAttribute(valueElement, 'formathour12'),
+          hour12: hasAttributeValue(valueElement, 'formathour12', 'true'),
           hourCycle: getAttribute(valueElement, 'formathourcycle'),
           localeMatcher: getAttribute(valueElement, 'formatlocalematcher'),
           maximumFractionDigits: getAttribute(valueElement, 'formatmaximumfractiondigits'),
@@ -312,7 +312,7 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
           trailingZeroDisplay: getAttribute(valueElement, 'formattrailingzerodisplay'),
           unit: getAttribute(valueElement, 'formatunit'),
           unitDisplay: getAttribute(valueElement, 'formatunitdisplay'),
-          useGrouping: getAttribute(valueElement, 'formatusegrouping'),
+          useGrouping: hasAttributeValue(valueElement, 'formatusegrouping', 'true'),
           weekday: getAttribute(valueElement, 'formatweekday'),
           year: getAttribute(valueElement, 'formatyear'),
         };
