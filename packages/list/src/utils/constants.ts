@@ -623,7 +623,7 @@ export const SETTINGS = {
   formattrailingzerodisplay: { key: 'formattrailingzerodisplay' },
   formatunit: { key: 'formatunit' },
   formatunitdisplay: { key: 'formatunitdisplay' },
-  formatusegrouping: { key: 'formatusegrouping', values: ['true'] },
+  formatusegrouping: { key: 'formatusegrouping' },
   formatweekday: { key: 'formatweekday' },
   formatyear: { key: 'formatyear' },
 

@@ -288,7 +288,9 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
           formatMatcher: getAttribute(valueElement, 'formatformatmatcher'),
           fractionalSecondDigits: getAttribute(valueElement, 'formatfractionalseconddigits'),
           hour: getAttribute(valueElement, 'formathour'),
-          hour12: hasAttributeValue(valueElement, 'formathour12', 'true'),
+          hour12: getAttribute(valueElement, 'formathour12')
+            ? hasAttributeValue(valueElement, 'formathour12', 'true')
+            : undefined,
           hourCycle: getAttribute(valueElement, 'formathourcycle'),
           localeMatcher: getAttribute(valueElement, 'formatlocalematcher'),
           maximumFractionDigits: getAttribute(valueElement, 'formatmaximumfractiondigits'),
@@ -312,7 +314,7 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
           trailingZeroDisplay: getAttribute(valueElement, 'formattrailingzerodisplay'),
           unit: getAttribute(valueElement, 'formatunit'),
           unitDisplay: getAttribute(valueElement, 'formatunitdisplay'),
-          useGrouping: hasAttributeValue(valueElement, 'formatusegrouping', 'true'),
+          useGrouping: getAttribute(valueElement, 'formatusegrouping'),
           weekday: getAttribute(valueElement, 'formatweekday'),
           year: getAttribute(valueElement, 'formatyear'),
         };
