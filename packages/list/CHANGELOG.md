@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.10.3
+
+### Patch Changes
+
+- deebb5b: fix: items loading in pages where static & CMS lists coexist
+
 ## 1.10.2
 
 ### Patch Changes
