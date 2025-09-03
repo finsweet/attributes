@@ -1,7 +1,7 @@
-import { CMS_CSS_CLASSES, fetchPage, isNotEmpty } from '@finsweet/attributes-utils';
+import { fetchPage, isNotEmpty } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getCollectionElements } from '../utils/dom';
+import { getCMSElementSelector, getCollectionElements } from '../utils/dom';
 
 /**
  * Loads all paginated items of a `List` instance.
@@ -156,8 +156,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
  * @returns The URL of the next page, if any.
  */
 const parseLoadedPage = async (page: Document, list: List, itemsTarget: 'push' | 'unshift' = 'push') => {
-  // Get DOM Elements
-  const allCollectionWrappers = page.querySelectorAll(`.${CMS_CSS_CLASSES.wrapper}`);
+  const allCollectionWrappers = page.querySelectorAll(getCMSElementSelector('wrapper'));
   const collectionListWrapper = allCollectionWrappers[list.pageIndex];
   if (!collectionListWrapper) return;
 
