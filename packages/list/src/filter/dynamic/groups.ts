@@ -3,7 +3,7 @@ import { effect, type ShallowRef, shallowRef, watch } from '@vue/reactivity';
 
 import type { List } from '../../components';
 import { getAttribute, queryElement } from '../../utils/selectors';
-import type { FilterMatch } from '../types';
+import type { FilterMatch, FiltersGroup } from '../types';
 import { type Condition, initCondition, initConditionAdd, initConditionsMatch } from './conditions';
 import { getFilterMatchValue } from './utils';
 
@@ -118,7 +118,7 @@ const initConditionGroupRemove = (
  * @param list
  * @param conditionGroup
  */
-export const getFiltersGroup = (list: List, conditionGroup: ConditionGroup) => {
+export const getFiltersGroup = (list: List, conditionGroup: ConditionGroup): FiltersGroup | undefined => {
   return list.filters.value.groups.find((group) => group.id === conditionGroup.id);
 };
 
@@ -208,7 +208,7 @@ export const initConditionGroup = (
 
   const autoCleanup = watch(
     () => getFiltersGroup(list, conditionGroup),
-    (filtersGroup) => {
+    (filtersGroup: FiltersGroup | undefined) => {
       if (!filtersGroup) {
         conditionGroup.cleanup();
       }

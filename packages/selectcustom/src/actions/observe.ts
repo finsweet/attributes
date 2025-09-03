@@ -51,16 +51,20 @@ const observeDropdownList = (settings: Settings) => {
 const observeSelectElement = (settings: Settings) => {
   const { selectElement } = settings;
 
-  const observer = new MutationObserver((mutations) => {
-    const hasMutatedOptions = mutations.some(({ addedNodes, removedNodes }) =>
-      [...addedNodes, ...removedNodes].some(isHTMLOptionElement)
+  const callback = debounce<MutationCallback>((mutations) => {
+    const hasMutatedOptions = mutations.some(({ addedNodes, removedNodes, target }) =>
+      [...addedNodes, ...removedNodes, target].some(isHTMLOptionElement)
     );
 
     if (hasMutatedOptions) populateOptions(settings);
-  });
+  }, 100);
+
+  const observer = new MutationObserver(callback);
 
   observer.observe(selectElement, {
     childList: true,
+    subtree: true,
+    attributeFilter: ['hidden', 'disabled', 'label'],
   });
 
   return observer;

@@ -3,12 +3,20 @@ import {
   type FormFieldType,
   getFormFieldValue,
   isFormField,
+  isString,
   setFormFieldValue,
 } from '@finsweet/attributes-utils';
 
 import type { List } from '../../components/List';
-import { CUSTOM_VALUE_ATTRIBUTE, getAttribute, getSettingSelector, hasAttributeValue } from '../../utils/selectors';
+import {
+  CUSTOM_VALUE_ATTRIBUTE,
+  getAttribute,
+  getSettingSelector,
+  getSplitSeparator,
+  hasAttributeValue,
+} from '../../utils/selectors';
 import type { FiltersCondition, FiltersGroup } from '../types';
+import { splitValue } from '../utils';
 
 /**
  * @returns The value of a given form field.
@@ -27,8 +35,13 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
   const fuzzyThreshold = getAttribute(formField, 'fuzzy');
   const showTag = !hasAttributeValue(formField, 'showtag', 'false');
+  const splitSeparator = getSplitSeparator(formField);
 
-  const value = getFormFieldValue(formField, CUSTOM_VALUE_ATTRIBUTE);
+  let value = getFormFieldValue(formField, CUSTOM_VALUE_ATTRIBUTE);
+
+  if (isString(value) && splitSeparator) {
+    value = splitValue(value, splitSeparator);
+  }
 
   return {
     id,

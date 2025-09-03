@@ -1,5 +1,122 @@
 # @finsweet/attributes-list
 
+## 1.10.2
+
+### Patch Changes
+
+- bfcce31: fix: pagination buttons retrieval when using non-CMS lists
+
+## 1.10.1
+
+### Patch Changes
+
+- d296447: fix: facet count results for single checkboxes
+
+## 1.10.0
+
+### Minor Changes
+
+- b3a0d9d: feat: prefer instances over pagination query for filters & sorting params
+
+## 1.9.2
+
+### Patch Changes
+
+- 6c7af1a: fix: ensure dynamic empty element is displayed
+
+## 1.9.1
+
+### Patch Changes
+
+- 0f02217: fix: manual items nesting (slugs)
+
+## 1.9.0
+
+### Minor Changes
+
+- e92fa33: feat: support displaying facet counts in `fs-selectcustom` elements.
+
+## 1.8.0
+
+### Minor Changes
+
+- f7fd585: feat: `fs-list-facetcount="true"` as an alternative to `fs-list-element="facet-count"`
+
+## 1.7.10
+
+### Patch Changes
+
+- aaae380: fix: facet-count conflict when select and non-select facets coexist
+
+## 1.7.9
+
+### Patch Changes
+
+- 98cf173: fix: initialize nesting inside combined items
+
+## 1.7.8
+
+### Patch Changes
+
+- bd5e772: fix: combine not rendering items correctly
+
+## 1.7.7
+
+### Patch Changes
+
+- 93c4734: fix: pagination sometimes loading items with undefined list query params
+- 37a6b2f: fix: respect items per page when loading a list in a non-first page
+
+## 1.7.6
+
+### Patch Changes
+
+- c31ad9e: fix: race conditions when overlapping hook lifecycles
+- c31ad9e: fix: respect pagination when injecting static elements
+- c31ad9e: fix: make static item elements usable by multiple lists
+- c31ad9e: fix: add missing destroy method for List instances
+
+## 1.7.5
+
+### Patch Changes
+
+- ba68a30: fix: display `initial` element when all filter values are manually cleared
+
+## 1.7.4
+
+### Patch Changes
+
+- f5fdef0: fix: better handling of dynamic filters clearing
+- f5fdef0: fix: reset `interacted` when clearing filters
+
+## 1.7.3
+
+### Patch Changes
+
+- 8a82e17: fix: filter the list on page load if there are default values
+
+## 1.7.2
+
+### Patch Changes
+
+- 214c086: fix: support nesting in tabs & sliders
+
+## 1.7.1
+
+### Patch Changes
+
+- 62578cd: fix: window undefined
+
+## 1.7.0
+
+### Minor Changes
+
+- d3923b0: feat: `fs-list-split`
+
+### Patch Changes
+
+- d55892b: chore: internal updates for favoriting plugin
+
 ## 1.6.6
 
 ### Patch Changes

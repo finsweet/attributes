@@ -58,8 +58,8 @@ export const initListLoading = (list: List, mode: LoadMode) => {
     return items;
   });
 
-  return () => {
-    loadModeCleanup?.();
+  return async () => {
+    (await loadModeCleanup)?.();
     beforeRenderHookCleanup();
     afterRenderHookCleanup();
     elementsCleanup();

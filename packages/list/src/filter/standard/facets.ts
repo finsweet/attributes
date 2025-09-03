@@ -1,10 +1,22 @@
-import { isElement, isHTMLInputElement, isHTMLSelectElement } from '@finsweet/attributes-utils';
+import {
+  type FormFieldType,
+  getCheckboxGroup,
+  isElement,
+  isHTMLInputElement,
+  isHTMLSelectElement,
+} from '@finsweet/attributes-utils';
 import { toRaw, watch } from '@vue/reactivity';
 import debounce from 'just-debounce';
 
 import type { ListItem } from '../../components';
 import type { List } from '../../components/List';
-import { getAttribute, getElementSelector, getSettingSelector, queryElement } from '../../utils/selectors';
+import {
+  CUSTOM_VALUE_ATTRIBUTE,
+  getAttribute,
+  getElementSelector,
+  getSettingSelector,
+  queryElement,
+} from '../../utils/selectors';
 import { filterItems } from '../filter';
 import type { FilterOperator, Filters } from '../types';
 import { getConditionOperator } from './conditions';
@@ -95,15 +107,27 @@ const createInputFacetsHandler = (list: List, formField: HTMLInputElement, group
   const fieldKey = getAttribute(formField, 'field')?.trim();
   if (!fieldKey) return;
 
-  const facetCountElement = queryElement('facet-count', { scope: formField.parentElement });
+  let facetCountElement = queryElement('facet-count', { scope: formField.parentElement });
+
+  if (isHTMLSelectElement(facetCountElement)) {
+    facetCountElement = null; // select elements have their own handler
+  }
+
   const hideOnEmptyETarget = formField.closest<HTMLElement>(getSettingSelector('emptyfacet', 'hide'));
   const addClassOnEmptyTarget = formField.closest<HTMLElement>(getSettingSelector('emptyfacet', 'add-class'));
 
   if (!facetCountElement && !hideOnEmptyETarget && !addClassOnEmptyTarget) return;
 
+  const type = formField.type as FormFieldType;
+
   const op = getConditionOperator(formField);
-  const value = getAttribute(formField, 'value') || formField.value || '';
   const emptyClassName = getAttribute(addClassOnEmptyTarget, 'emptyfacetclass');
+  const isSingleCheckbox =
+    type === 'checkbox' && !getCheckboxGroup(formField.name, formField.form, CUSTOM_VALUE_ATTRIBUTE)?.length;
+
+  const value = isSingleCheckbox
+    ? getAttribute(formField, 'value') || 'true'
+    : getAttribute(formField, 'value') || formField.value;
 
   let filterPromise: Promise<ListItem[]> | undefined;
 
@@ -154,16 +178,13 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
   if (!fieldKey) return;
 
   const op = getConditionOperator(formField);
-  const displayFacetCounts = formField.matches(getElementSelector('facet-count'));
   const hideOnEmpty = getAttribute(formField, 'emptyfacet', { filterInvalid: true }) === 'hide';
+  const displayFacetCounts =
+    formField.matches(getElementSelector('facet-count')) || formField.matches(getSettingSelector('facetcount'));
 
-  const options: HTMLOptionElement[] = [...formField.options];
-  const optionLabels = options.reduce(
-    (acc, option) => acc.set(option, option.value),
-    new Map<HTMLOptionElement, string>()
-  );
+  if (!hideOnEmpty && !displayFacetCounts) return;
 
-  if (!options.length) return;
+  const optionLabels = new Map<HTMLOptionElement, string>();
 
   let filterPromise: Promise<void[]> | undefined;
 
@@ -172,9 +193,13 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
       await filterPromise;
 
       filterPromise = Promise.all(
-        [...options].map(async (option) => {
+        [...formField.options].map(async (option) => {
           const { value } = option;
           if (!value) return;
+
+          if (!optionLabels.has(option)) {
+            optionLabels.set(option, option.text);
+          }
 
           const filteredItems = await triggerFacetFilter({
             filters,
@@ -191,11 +216,11 @@ const createSelectOptionsFacetsHandler = (list: List, formField: HTMLSelectEleme
 
           if (displayFacetCounts) {
             const label = optionLabels.get(option) || '';
-            option.label = `${label} (${filteredItems.length})`;
+            option.text = `${label} (${filteredItems.length})`;
           }
 
           if (hideOnEmpty && !option.selected) {
-            option.style.display = disabled ? 'none' : '';
+            option.hidden = disabled;
             option.disabled = disabled;
           }
         })

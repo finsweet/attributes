@@ -1,5 +1,209 @@
 # @finsweet/attributes
 
+## 2.6.13
+
+### Patch Changes
+
+- Updated dependencies [bfcce31]
+  - @finsweet/attributes-list@1.10.2
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.12
+
+### Patch Changes
+
+- Updated dependencies [d296447]
+  - @finsweet/attributes-list@1.10.1
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.11
+
+### Patch Changes
+
+- Updated dependencies [b3a0d9d]
+  - @finsweet/attributes-list@1.10.0
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.10
+
+### Patch Changes
+
+- Updated dependencies [6c7af1a]
+  - @finsweet/attributes-list@1.9.2
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.9
+
+### Patch Changes
+
+- Updated dependencies [0f02217]
+  - @finsweet/attributes-list@1.9.1
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.8
+
+### Patch Changes
+
+- Updated dependencies [e92fa33]
+  - @finsweet/attributes-selectcustom@1.8.0
+  - @finsweet/attributes-list@1.9.0
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.7
+
+### Patch Changes
+
+- Updated dependencies [f7fd585]
+  - @finsweet/attributes-list@1.8.0
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.6
+
+### Patch Changes
+
+- Updated dependencies [aaae380]
+  - @finsweet/attributes-list@1.7.10
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.5
+
+### Patch Changes
+
+- Updated dependencies [98cf173]
+  - @finsweet/attributes-list@1.7.9
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.4
+
+### Patch Changes
+
+- Updated dependencies [bd5e772]
+  - @finsweet/attributes-list@1.7.8
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.3
+
+### Patch Changes
+
+- Updated dependencies [93c4734]
+- Updated dependencies [37a6b2f]
+  - @finsweet/attributes-list@1.7.7
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.2
+
+### Patch Changes
+
+- Updated dependencies [c31ad9e]
+- Updated dependencies [c31ad9e]
+- Updated dependencies [c31ad9e]
+- Updated dependencies [c31ad9e]
+  - @finsweet/attributes-list@1.7.6
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.1
+
+### Patch Changes
+
+- Updated dependencies [ba68a30]
+  - @finsweet/attributes-list@1.7.5
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.6.0
+
+### Minor Changes
+
+- 5448462: feat: expose the library version in `window.FinsweetAttributes.version`
+
+## 2.5.5
+
+### Patch Changes
+
+- Updated dependencies [67a423a]
+  - @finsweet/attributes-mirrorinput@1.4.11
+
+## 2.5.4
+
+### Patch Changes
+
+- Updated dependencies [f5fdef0]
+- Updated dependencies [f5fdef0]
+  - @finsweet/attributes-list@1.7.4
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.5.3
+
+### Patch Changes
+
+- Updated dependencies [8a82e17]
+  - @finsweet/attributes-list@1.7.3
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.5.2
+
+### Patch Changes
+
+- Updated dependencies [214c086]
+  - @finsweet/attributes-list@1.7.2
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.5.1
+
+### Patch Changes
+
+- Updated dependencies [62578cd]
+  - @finsweet/attributes-list@1.7.1
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
+## 2.5.0
+
+### Minor Changes
+
+- d55892b: feat: `window.FinsweetAttributes.utils`
+
+### Patch Changes
+
+- Updated dependencies [d3923b0]
+- Updated dependencies [d55892b]
+  - @finsweet/attributes-list@1.7.0
+  - @finsweet/attributes-accordion@2.0.10
+  - @finsweet/attributes-socialshare@1.3.12
+  - @finsweet/attributes-videohls@1.0.13
+
 ## 2.4.19
 
 ### Patch Changes

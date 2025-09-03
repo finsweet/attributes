@@ -57,8 +57,8 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
     for (const item of items) {
       if (renderedItems.has(item.id)) continue;
 
-      const elementClone = cloneNode(item.element);
-      elementClone.removeAttribute(ARIA_ROLE_KEY);
+      item.currentIndex = undefined;
+      item.element.removeAttribute(ARIA_ROLE_KEY);
 
       const tabLink = document.createElement('div');
       tabLink.setAttribute('class', tabLinkCSS);
@@ -66,7 +66,7 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
       const tabPane = document.createElement('div');
       tabPane.setAttribute('class', tabPaneCSS);
 
-      let tabLinkContent = queryElement('tab-link', { scope: elementClone });
+      let tabLinkContent = queryElement('tab-link', { scope: item.element });
 
       if (tabLinkContent) {
         tabLinkContent = cloneNode(tabLinkContent);
@@ -77,7 +77,7 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
 
       tabLink.appendChild(tabLinkContent);
       tabsMenu.appendChild(tabLink);
-      tabPane.appendChild(elementClone);
+      tabPane.appendChild(item.element);
       tabsContent.appendChild(tabPane);
 
       renderedItems.set(item.id, { tabLink, tabPane });
@@ -97,6 +97,8 @@ const initListTab = (list: List, tabsReference: HTMLElement) => {
       tabLink.dataset.wTab = dataset;
       tabPane.dataset.wTab = dataset;
     });
+
+    list.renderedItems.clear();
 
     return [];
   });

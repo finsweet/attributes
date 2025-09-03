@@ -124,3 +124,14 @@ export const numericCompare = (
 
   return false;
 };
+
+/**
+ * Splits the value by the given separator and trims each part.
+ * @param value
+ * @param separator
+ */
+export const splitValue = (value: string, separator: string) =>
+  value
+    .split(separator)
+    .map((v) => v.trim())
+    .filter(Boolean);

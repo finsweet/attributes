@@ -35,10 +35,11 @@ The items in the list instances follow a lifecycle that is divided into the foll
 1. `start`: The items are in their initial state.
 2. `filter`: The items are being filtered.
 3. `sort`: The items are being sorted.
-4. `pagination`: The items are being paginated.
-5. `beforeRender`: The items are about to be rendered.
-6. `render`: The items are being rendered.
-7. `afterRender`: The items have been rendered.
+4. `static`: The static items are injected.
+5. `pagination`: The items are being paginated.
+6. `beforeRender`: The items are about to be rendered.
+7. `render`: The items are being rendered.
+8. `afterRender`: The items have been rendered.
 
 Not all phases are always executed, as the lifecycle may start at any point depending on the actions taken by the user. For example, if the user interacts with the sorting controls, the lifecycle will start at the `sort` phase. If the user interacts with the pagination controls, the lifecycle will start at the `pagination` phase.
 

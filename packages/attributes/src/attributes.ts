@@ -7,6 +7,7 @@ import {
   waitDOMReady,
 } from '@finsweet/attributes-utils';
 
+import { version } from '../package.json';
 import { loadAttribute } from './load';
 
 const ATTRIBUTES_ATTRIBUTE_PREFIX = 'fs-attributes';
@@ -33,6 +34,7 @@ const init = () => {
 
   // Init Attributes object
   window.FinsweetAttributes = {
+    version,
     scripts,
     modules: {},
     process: new Set<FinsweetAttributeKey>(),
