@@ -1,5 +1,11 @@
 # @finsweet/attributes-toc
 
+## 1.2.15
+
+### Patch Changes
+
+- 67c32c7: fix: add a fallback for TOC item id's when the language cannot be slugified
+
 ## 1.2.14
 
 ### Patch Changes
