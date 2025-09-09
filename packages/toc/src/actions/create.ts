@@ -22,7 +22,7 @@ export const createHeadingWrapper = (headingElement: HTMLHeadingElement) => {
     headingWrapper.id = ensureUniqueId(slugified);
   }
 
-  headingWrapper.id ||= nanoid(8);
+  headingWrapper.id ||= ensureUniqueId(nanoid(8));
 
   return headingWrapper;
 };
