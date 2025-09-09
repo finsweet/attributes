@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.11.0
+
+### Minor Changes
+
+- 1db6c0c: feat: support initializing nested lists
+
 ## 1.10.3
 
 ### Patch Changes
