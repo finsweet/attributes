@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-cmsnest",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Nest CMS collections easily on Webflow.",
   "homepage": "https://www.finsweet.com/attributes",
   "sideEffects": false,

@@ -1,5 +1,11 @@
 # @finsweet/attributes-richtext
 
+## 1.10.3
+
+### Patch Changes
+
+- 8fe673b: chore: add Webflow headers in requests
+
 ## 1.10.2
 
 ### Patch Changes

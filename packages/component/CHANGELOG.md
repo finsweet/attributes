@@ -1,5 +1,11 @@
 # @finsweet/attributes-component
 
+## 1.2.1
+
+### Patch Changes
+
+- 8fe673b: chore: add Webflow headers in requests
+
 ## 1.2.0
 
 ### Minor Changes

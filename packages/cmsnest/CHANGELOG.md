@@ -1,5 +1,11 @@
 # @finsweet/attributes-cmsnest
 
+## 1.12.1
+
+### Patch Changes
+
+- 8fe673b: chore: add Webflow headers in requests
+
 ## 1.12.0
 
 ### Minor Changes
