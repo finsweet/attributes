@@ -118,7 +118,7 @@ const createPromise = async (
  * @returns The page's {@link Document} and raw HTML text.
  */
 const fetchAndParsePage = async (url: URL) => {
-  const response = await fetch(url);
+  const response = await fetch(url, { headers: { 'X-Webflow-App-ID': 'finsweet' } });
   const rawPage = await response.text();
   const page = parseRawPage(rawPage);
 
