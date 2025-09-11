@@ -1,5 +1,40 @@
 # @finsweet/attributes
 
+## 2.6.17
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+  - @finsweet/attributes-accordion@2.0.11
+  - @finsweet/attributes-autovideo@2.0.11
+  - @finsweet/attributes-codehighlight@2.0.11
+  - @finsweet/attributes-combobox@2.0.11
+  - @finsweet/attributes-copyclip@2.0.11
+  - @finsweet/attributes-displayvalues@2.0.11
+  - @finsweet/attributes-favcustom@2.0.11
+  - @finsweet/attributes-formsubmit@2.0.11
+  - @finsweet/attributes-inject@2.4.4
+  - @finsweet/attributes-inputactive@1.0.11
+  - @finsweet/attributes-inputcounter@1.2.16
+  - @finsweet/attributes-list@1.11.1
+  - @finsweet/attributes-mirrorclick@1.5.11
+  - @finsweet/attributes-mirrorinput@1.4.12
+  - @finsweet/attributes-modal@1.1.15
+  - @finsweet/attributes-numbercount@1.2.12
+  - @finsweet/attributes-queryparam@1.2.12
+  - @finsweet/attributes-rangeslider@1.10.3
+  - @finsweet/attributes-readtime@1.2.14
+  - @finsweet/attributes-removequery@0.0.5
+  - @finsweet/attributes-scrolldisable@1.6.13
+  - @finsweet/attributes-selectcustom@1.8.1
+  - @finsweet/attributes-sliderdots@1.8.11
+  - @finsweet/attributes-smartlightbox@1.7.11
+  - @finsweet/attributes-socialshare@1.3.13
+  - @finsweet/attributes-starrating@1.0.13
+  - @finsweet/attributes-toc@1.2.16
+  - @finsweet/attributes-videohls@1.0.14
+
 ## 2.6.16
 
 ### Patch Changes

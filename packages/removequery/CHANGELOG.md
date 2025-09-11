@@ -1,5 +1,12 @@
 # @finsweet/attributes-removequery
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+
 ## 0.0.4
 
 ### Patch Changes

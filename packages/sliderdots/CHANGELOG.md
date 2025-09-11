@@ -1,5 +1,12 @@
 # @finsweet/attributes-sliderdots
 
+## 1.8.11
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+
 ## 1.8.10
 
 ### Patch Changes

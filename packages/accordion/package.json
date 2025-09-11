@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-accordion",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "Create accessible accordions inside Webflow without Webflow Interactions.",
   "private": true,
   "type": "module",
