@@ -32,8 +32,8 @@ packages/**/changesets.json
 packages/**/examples.json
 packages/**/schema.json
 
-packages/*/*.js
-packages/*/*.js.map
+packages/**/*.js
+packages/**/*.js.map
 
 !packages/support/*.js
 

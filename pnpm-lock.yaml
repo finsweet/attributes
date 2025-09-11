@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   body-scroll-lock@4.0.0-beta.0:
-    hash: okec7jrxvk2nysywuuwlnnfvtu
+    hash: 3c2cdd741082e33e9f7139f087a5ef38713d06bf9fe05b4e284304548b61222c
     path: patches/body-scroll-lock@4.0.0-beta.0.patch
 
 importers:
@@ -225,7 +225,7 @@ importers:
     dependencies:
       body-scroll-lock:
         specifier: ^4.0.0-beta.0
-        version: 4.0.0-beta.0(patch_hash=okec7jrxvk2nysywuuwlnnfvtu)
+        version: 4.0.0-beta.0(patch_hash=3c2cdd741082e33e9f7139f087a5ef38713d06bf9fe05b4e284304548b61222c)
       just-debounce:
         specifier: ^1.1.0
         version: 1.1.0
@@ -2509,7 +2509,7 @@ snapshots:
     dependencies:
       is-windows: 1.0.2
 
-  body-scroll-lock@4.0.0-beta.0(patch_hash=okec7jrxvk2nysywuuwlnnfvtu): {}
+  body-scroll-lock@4.0.0-beta.0(patch_hash=3c2cdd741082e33e9f7139f087a5ef38713d06bf9fe05b4e284304548b61222c): {}
 
   brace-expansion@1.1.11:
     dependencies:
