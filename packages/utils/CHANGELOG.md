@@ -1,5 +1,11 @@
 # @finsweet/attributes-utils
 
+## 0.1.4
+
+### Patch Changes
+
+- 894db29: chore: add Webflow headers in requests
+
 ## 0.1.3
 
 ### Patch Changes

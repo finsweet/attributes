@@ -1,5 +1,12 @@
 # @finsweet/attributes-scrolldisable
 
+## 1.6.13
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+
 ## 1.6.12
 
 ### Patch Changes

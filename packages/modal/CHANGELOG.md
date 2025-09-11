@@ -1,5 +1,12 @@
 # @finsweet/attributes-modal
 
+## 1.1.15
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+
 ## 1.1.14
 
 ### Patch Changes

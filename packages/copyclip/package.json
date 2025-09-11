@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-copyclip",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "Set any element to copy a string value to the clipboard when clicking on it.",
   "private": true,
   "type": "module",
