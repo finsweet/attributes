@@ -89,7 +89,9 @@ const getPageFromMemory = async (url: URL) => {
  * @returns The page's {@link Document} and raw HTML text.
  */
 const fetchAndCachePageInMemory = async (url: URL) => {
-  const rawPagePromise = fetch(url.href).then((response) => response.text());
+  const rawPagePromise = fetch(url.href, {
+    headers: { 'X-Webflow-App-ID': 'finsweet' },
+  }).then((response) => response.text());
 
   memoryCache.set(url.href, rawPagePromise);
 
