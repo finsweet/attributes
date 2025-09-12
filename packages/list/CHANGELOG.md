@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.12.0
+
+### Minor Changes
+
+- 5938e3c: feat: close mobile keyboards after submitting
+
 ## 1.11.1
 
 ### Patch Changes
