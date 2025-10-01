@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.13.0
+
+### Minor Changes
+
+- 1630b81: feat: `fs-list-tagvalues="separate"`
+
 ## 1.12.0
 
 ### Minor Changes
