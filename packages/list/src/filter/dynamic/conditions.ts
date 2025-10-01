@@ -600,6 +600,7 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
 
   const value = getConditionValue(initialConditionValueFormField);
   const fuzzyThreshold = getAttribute(initialConditionValueFormField, 'fuzzy');
+  const tagValuesDisplay = getAttribute(initialConditionValueFormField, 'tagvalues', { filterInvalid: true });
   const { op, fieldMatch } = parseOperatorValue(conditionOperatorSelect.value);
 
   conditionGroup.conditions.value = [...conditionGroup.conditions.value, condition];
@@ -617,6 +618,7 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
     fieldMatch,
     showTag: true,
     interacted: true,
+    tagValuesDisplay,
   });
 
   // Handle remove button
