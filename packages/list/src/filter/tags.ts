@@ -108,14 +108,80 @@ export const initTags = (list: List, isDynamic: boolean) => {
         // Render the tags
         const newRenderedTags = new Map<string, TagData>();
 
-        const shouldRender = group.conditions
+        const hasRenderedTags = group.conditions
           .map((condition) => {
-            // Get the tag, if existing
-            let tagData = tagGroupData.renderedTags.get(condition.id);
+            const conditionValue = condition.value;
+            const shouldSeparate = Array.isArray(conditionValue) && condition.tagValuesDisplay === 'separate';
 
+            // Separate tags per value
+            if (shouldSeparate) {
+              const hasRenderedValues = conditionValue.map((value) => {
+                const tagKey = `${condition.id}:${value}`;
+                let tagData = tagGroupData.renderedTags.get(tagKey);
+                const tagIsRendered = !!tagData;
+
+                const shouldRender = condition.showTag && !!condition.interacted && !!value;
+                if (!shouldRender) {
+                  tagData?.cleanup();
+                  return false;
+                }
+
+                if (!tagData) {
+                  const element = cloneNode(tagTemplate);
+                  const removeElement = queryElement('tag-remove', { scope: element });
+                  const removeCleanup = addListener(removeElement, 'click', () => tagData?.remove());
+
+                  tagData = {
+                    element,
+                    remove: () => {
+                      const hasConditions = group.conditions.length > 1;
+                      const conditionIndex = group.conditions.findIndex((c) => c.id === condition.id);
+                      const currentValues = group.conditions[conditionIndex].value;
+
+                      if (Array.isArray(currentValues) && currentValues.length > 1) {
+                        group.conditions[conditionIndex].value = currentValues.filter((v) => v !== value);
+                      } else if (isDynamic && hasConditions) {
+                        group.conditions.splice(conditionIndex, 1);
+                      } else {
+                        group.conditions[conditionIndex].value = [];
+                      }
+                    },
+                    cleanup: () => {
+                      removeCleanup();
+                      tagData?.element.remove();
+                      tagGroupData.renderedTags.delete(tagKey);
+                    },
+                  };
+
+                  tagGroupData.renderedTags.set(tagKey, tagData);
+                }
+
+                // Create a single-value condition for rendering
+                const singleValueCondition: FiltersCondition = {
+                  ...condition,
+                  value,
+                };
+
+                populateTag(singleValueCondition, tagData);
+
+                if (!tagIsRendered) {
+                  const anchor = tagGroupData.element.children[indexOfTagTemplate + newRenderedTags.size] || null;
+                  tagGroupData.element.insertBefore(tagData.element, anchor);
+                }
+
+                newRenderedTags.set(tagKey, tagData);
+
+                return true;
+              });
+
+              return hasRenderedValues.some(Boolean);
+            }
+
+            // Combined tag per all values
+            const tagKey = condition.id;
+            let tagData = tagGroupData.renderedTags.get(tagKey);
             const tagIsRendered = !!tagData;
 
-            // Remove the tag if the value is empty
             const shouldRender =
               condition.showTag &&
               !!condition.interacted &&
@@ -147,22 +213,21 @@ export const initTags = (list: List, isDynamic: boolean) => {
                 cleanup: () => {
                   removeCleanup();
                   tagData?.element.remove();
-                  tagGroupData.renderedTags.delete(condition.id);
+                  tagGroupData.renderedTags.delete(tagKey);
                 },
               };
 
-              tagGroupData.renderedTags.set(condition.id, tagData);
+              tagGroupData.renderedTags.set(tagKey, tagData);
             }
 
             populateTag(condition, tagData);
 
             if (!tagIsRendered) {
               const anchor = tagGroupData.element.children[indexOfTagTemplate + newRenderedTags.size] || null;
-
               tagGroupData.element.insertBefore(tagData.element, anchor);
             }
 
-            newRenderedTags.set(condition.id, tagData);
+            newRenderedTags.set(tagKey, tagData);
 
             return true;
           })
@@ -175,7 +240,7 @@ export const initTags = (list: List, isDynamic: boolean) => {
           }
         }
 
-        if (!shouldRender) {
+        if (!hasRenderedTags) {
           tagGroupData.cleanup();
           return;
         }
@@ -233,7 +298,7 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
 
   // Field
   if (fieldElement) {
-    fieldElement.textContent = condition.customTagField || condition.fieldKey;
+    fieldElement.textContent = condition.tagFieldDisplay || condition.fieldKey;
   }
 
   // Operator

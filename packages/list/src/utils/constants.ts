@@ -577,6 +577,11 @@ export const SETTINGS = {
   tagfield: { key: 'tagfield' },
 
   /**
+   * Defines how to render tag values.
+   */
+  tagvalues: { key: 'tagvalues', values: ['combined', 'separate'], defaultValue: 'combined' },
+
+  /**
    * Defines if the tag for a specific filter should be displayed.
    */
   showtag: { key: 'showtag', values: ['false'] },
