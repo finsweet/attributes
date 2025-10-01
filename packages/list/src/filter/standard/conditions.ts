@@ -30,7 +30,8 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const op = getConditionOperator(formField);
   const id = `${fieldKey}_${op}`;
 
-  const customTagField = getAttribute(formField, 'tagfield');
+  const tagFieldDisplay = getAttribute(formField, 'tagfield');
+  const tagValuesDisplay = getAttribute(formField, 'tagvalues', { filterInvalid: true });
   const filterMatch = getAttribute(formField, 'filtermatch', { filterInvalid: true });
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
   const fuzzyThreshold = getAttribute(formField, 'fuzzy');
@@ -53,7 +54,8 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     fieldMatch,
     fuzzyThreshold,
     interacted,
-    customTagField,
+    tagFieldDisplay,
+    tagValuesDisplay,
     showTag,
   };
 };
