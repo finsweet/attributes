@@ -44,6 +44,11 @@ export const SETTINGS = {
    * It's set to the `<script>` tag, `true` by default.
    */
   gap: { key: 'gap', values: ['true', 'false'] },
+
+  /**
+   * Defines the overflow type used to disable scrolling.
+   */
+  overflow: { key: 'overflow', values: ['hidden', 'clip'] },
 } as const satisfies AttributeSettings;
 
 /**

@@ -17,9 +17,10 @@ export const isScrollingDisabled = (): boolean => scrollingDisabled;
 export const disableScrolling = (target: HTMLElement): void => {
   scrollingDisabled = true;
 
+  const overflowType = getAttribute(target, 'overflow', { filterInvalid: true });
   const withPaddingRight = getAttribute(target, 'gap', { filterInvalid: true }) !== 'false';
 
-  lock(target, { overflowType: 'clip', withPaddingRight });
+  lock(target, { overflowType, withPaddingRight });
 };
 
 /**
