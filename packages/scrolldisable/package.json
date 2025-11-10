@@ -19,6 +19,6 @@
   "dependencies": {
     "@finsweet/attributes-utils": "workspace:*",
     "just-debounce": "^1.1.0",
-    "tua-body-scroll-lock": "^1.5.3"
+    "tua-body-scroll-lock": "^1.6.0"
   }
 }
