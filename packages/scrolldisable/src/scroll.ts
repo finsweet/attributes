@@ -1,6 +1,8 @@
 import { isHTMLElement, isScrollable } from '@finsweet/attributes-utils';
 import { clearBodyLocks, lock } from 'tua-body-scroll-lock';
 
+import { getAttribute } from './utils/selectors';
+
 let scrollingDisabled = false;
 
 /**
@@ -15,7 +17,9 @@ export const isScrollingDisabled = (): boolean => scrollingDisabled;
 export const disableScrolling = (target: HTMLElement): void => {
   scrollingDisabled = true;
 
-  lock(target, { overflowType: 'clip' });
+  const withPaddingRight = getAttribute(target, 'gap', { filterInvalid: true }) !== 'false';
+
+  lock(target, { overflowType: 'clip', withPaddingRight });
 };
 
 /**

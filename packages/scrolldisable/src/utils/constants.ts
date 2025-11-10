@@ -38,6 +38,12 @@ export const SETTINGS = {
    * Used to define a media query that restricts when an element acts as a trigger.
    */
   media: { key: 'media' },
+
+  /**
+   * Defines if the scrollbar gap must be reserved when disabling scrolling.
+   * It's set to the `<script>` tag, `true` by default.
+   */
+  gap: { key: 'gap', values: ['true', 'false'] },
 } as const satisfies AttributeSettings;
 
 /**
