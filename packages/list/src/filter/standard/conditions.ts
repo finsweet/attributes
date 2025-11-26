@@ -152,6 +152,7 @@ const getTagCustomValues = (formField: FormField): Map<string, string> | undefin
 
   switch (type) {
     case 'checkbox': {
+      // Group
       const groupCheckboxes = getCheckboxGroup(formField.name, formField.form, CUSTOM_VALUE_ATTRIBUTE);
       if (groupCheckboxes?.length) {
         for (const checkbox of groupCheckboxes) {
@@ -168,6 +169,7 @@ const getTagCustomValues = (formField: FormField): Map<string, string> | undefin
         break;
       }
 
+      // Single
       const tagValue = getAttribute(formField, 'tagvalue');
       if (!tagValue) break;
 
