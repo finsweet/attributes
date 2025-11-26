@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.0
+
+### Minor Changes
+
+- 7bb7cff: feat: `fs-list-tagvalue`
+
 ## 1.13.0
 
 ### Minor Changes
