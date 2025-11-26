@@ -1,7 +1,9 @@
 import {
   type FormField,
   type FormFieldType,
+  getCheckboxGroup,
   getFormFieldValue,
+  getRadioGroupInputs,
   isFormField,
   isString,
   setFormFieldValue,
@@ -30,7 +32,8 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
   const op = getConditionOperator(formField);
   const id = `${fieldKey}_${op}`;
 
-  const tagFieldDisplay = getAttribute(formField, 'tagfield');
+  const tagCustomField = getAttribute(formField, 'tagfield');
+  const tagCustomValues = getTagCustomValues(formField);
   const tagValuesDisplay = getAttribute(formField, 'tagvalues', { filterInvalid: true });
   const filterMatch = getAttribute(formField, 'filtermatch', { filterInvalid: true });
   const fieldMatch = getAttribute(formField, 'fieldmatch', { filterInvalid: true });
@@ -54,7 +57,8 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
     fieldMatch,
     fuzzyThreshold,
     interacted,
-    tagFieldDisplay,
+    tagCustomField,
+    tagCustomValues,
     tagValuesDisplay,
     showTag,
   };
@@ -135,4 +139,62 @@ export const getStandardFiltersGroup = (list: List, form: HTMLFormElement, group
   list.readingFilters = false;
 
   return group;
+};
+
+/**
+ * @returns A map of tag values for a given form field.
+ * @param formField
+ */
+const getTagCustomValues = (formField: FormField): Map<string, string> | undefined => {
+  let tagCustomValues: Map<string, string> | undefined;
+
+  const type = formField.type as FormFieldType;
+
+  switch (type) {
+    case 'checkbox': {
+      // Group
+      const groupCheckboxes = getCheckboxGroup(formField.name, formField.form, CUSTOM_VALUE_ATTRIBUTE);
+      if (groupCheckboxes?.length) {
+        for (const checkbox of groupCheckboxes) {
+          const checkboxValue = checkbox.getAttribute(CUSTOM_VALUE_ATTRIBUTE) ?? checkbox.value;
+          if (!checkboxValue) continue;
+
+          const tagValue = getAttribute(checkbox, 'tagvalue');
+          if (!tagValue) continue;
+
+          tagCustomValues ||= new Map<string, string>();
+          tagCustomValues.set(checkboxValue, tagValue);
+        }
+
+        break;
+      }
+
+      // Single
+      const tagValue = getAttribute(formField, 'tagvalue');
+      if (!tagValue) break;
+
+      tagCustomValues = new Map<string, string>([['true', tagValue]]);
+      break;
+    }
+
+    case 'radio': {
+      const groupRadios = getRadioGroupInputs(formField);
+      if (!groupRadios?.length) break;
+
+      for (const radio of groupRadios) {
+        const radioValue = radio.getAttribute(CUSTOM_VALUE_ATTRIBUTE) ?? radio.value;
+        if (!radioValue) continue;
+
+        const tagValue = getAttribute(radio, 'tagvalue');
+        if (!tagValue) continue;
+
+        tagCustomValues ||= new Map<string, string>();
+        tagCustomValues.set(radioValue, tagValue);
+      }
+
+      break;
+    }
+  }
+
+  return tagCustomValues;
 };
