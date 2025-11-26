@@ -155,10 +155,7 @@ const getTagCustomValues = (formField: FormField): Map<string, string> | undefin
       const groupCheckboxes = getCheckboxGroup(formField.name, formField.form, CUSTOM_VALUE_ATTRIBUTE);
       if (groupCheckboxes?.length) {
         for (const checkbox of groupCheckboxes) {
-          const checkboxValue = CUSTOM_VALUE_ATTRIBUTE
-            ? (checkbox.getAttribute(CUSTOM_VALUE_ATTRIBUTE) ?? checkbox.value)
-            : checkbox.value;
-
+          const checkboxValue = checkbox.getAttribute(CUSTOM_VALUE_ATTRIBUTE) ?? checkbox.value;
           if (!checkboxValue) continue;
 
           const tagValue = getAttribute(checkbox, 'tagvalue');
@@ -183,10 +180,7 @@ const getTagCustomValues = (formField: FormField): Map<string, string> | undefin
       if (!groupRadios?.length) break;
 
       for (const radio of groupRadios) {
-        const radioValue = CUSTOM_VALUE_ATTRIBUTE
-          ? (radio.getAttribute(CUSTOM_VALUE_ATTRIBUTE) ?? radio.value)
-          : radio.value;
-
+        const radioValue = radio.getAttribute(CUSTOM_VALUE_ATTRIBUTE) ?? radio.value;
         if (!radioValue) continue;
 
         const tagValue = getAttribute(radio, 'tagvalue');
