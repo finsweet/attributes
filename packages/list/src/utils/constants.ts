@@ -577,6 +577,11 @@ export const SETTINGS = {
   tagfield: { key: 'tagfield' },
 
   /**
+   * Defines a custom display value for a value in a tag.
+   */
+  tagvalue: { key: 'tagvalue' },
+
+  /**
    * Defines how to render tag values.
    */
   tagvalues: { key: 'tagvalues', values: ['combined', 'separate'], defaultValue: 'combined' },

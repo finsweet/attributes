@@ -19,7 +19,8 @@ export type FiltersCondition = {
   fieldMatch?: FilterMatch;
   fuzzyThreshold?: number;
   interacted?: boolean;
-  tagFieldDisplay?: string;
+  tagCustomField?: string;
+  tagCustomValues?: Map<string, string>;
   tagValuesDisplay: FilterTagValuesDisplay;
   showTag: boolean;
 };

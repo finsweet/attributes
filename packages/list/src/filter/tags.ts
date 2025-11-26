@@ -298,7 +298,7 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
 
   // Field
   if (fieldElement) {
-    fieldElement.textContent = condition.tagFieldDisplay || condition.fieldKey;
+    fieldElement.textContent = condition.tagCustomField || condition.fieldKey;
   }
 
   // Operator
@@ -337,6 +337,20 @@ const populateTag = (condition: FiltersCondition, tagData: TagData) => {
       // Format the value, if needed
       let formattedValue = condition.value;
 
+      // Custom tag values
+      if (condition.tagCustomValues) {
+        if (Array.isArray(condition.value)) {
+          formattedValue = condition.value.map((value) => {
+            const customTagValue = condition.tagCustomValues?.get(value);
+            return customTagValue || value;
+          });
+        } else {
+          const customTagValue = condition.tagCustomValues?.get(condition.value);
+          formattedValue = customTagValue || condition.value;
+        }
+      }
+
+      // Locale formatting
       const formatDisplay = getAttribute(valueElement, 'formatdisplay');
       if (formatDisplay) {
         const locale = formatDisplay === 'true' ? undefined : formatDisplay;
