@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  tua-body-scroll-lock@1.6.1:
+    hash: 04a62a2a8c3a144be525aaea115265dce3d3dada6ba8e31df66ad16053c2ca72
+    path: patches/tua-body-scroll-lock@1.6.1.patch
+
 importers:
 
   .:
@@ -338,7 +343,7 @@ importers:
         version: 1.1.0
       tua-body-scroll-lock:
         specifier: ^1.6.1
-        version: 1.6.1
+        version: 1.6.1(patch_hash=04a62a2a8c3a144be525aaea115265dce3d3dada6ba8e31df66ad16053c2ca72)
 
   packages/selectcustom:
     dependencies:
@@ -3533,7 +3538,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  tua-body-scroll-lock@1.6.1: {}
+  tua-body-scroll-lock@1.6.1(patch_hash=04a62a2a8c3a144be525aaea115265dce3d3dada6ba8e31df66ad16053c2ca72): {}
 
   type-check@0.4.0:
     dependencies:
