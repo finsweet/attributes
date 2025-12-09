@@ -1,5 +1,32 @@
 # @finsweet/attributes-rangeslider
 
+## 1.10.3
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+
+## 1.10.2
+
+### Patch Changes
+
+- Updated dependencies [ca570e1]
+  - @finsweet/attributes-utils@0.1.3
+
+## 1.10.1
+
+### Patch Changes
+
+- Updated dependencies [4e55c67]
+  - @finsweet/attributes-utils@0.1.2
+
+## 1.10.0
+
+### Minor Changes
+
+- b71f334: feat: Intl.NumberFormat options for fs-rangeslider-formatdisplay
+
 ## 1.9.1
 
 ### Patch Changes

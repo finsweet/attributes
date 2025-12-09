@@ -4,6 +4,7 @@ import {
   getFormFieldWrapper,
   getRadioGroupInputs,
   isFormField,
+  isHTMLInputElement,
 } from '@finsweet/attributes-utils';
 import { effect } from '@vue/reactivity';
 
@@ -38,9 +39,21 @@ export const handleFiltersForm = (form: HTMLFormElement) => {
   const allowSubmit = hasAttributeValue(form, 'allowsubmit', 'true');
 
   const submitCleanup = addListener(form, 'submit', (e) => {
-    if (!allowSubmit) {
-      e.preventDefault();
-      e.stopPropagation();
+    if (allowSubmit) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Blur active input on mobile devices to close virtual keyboard
+    const { activeElement } = document;
+
+    const isTouch = matchMedia('(pointer: coarse)').matches;
+    const isMobileUA = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+    const isVirtualKeyboardLikely = isTouch || isMobileUA;
+
+    if (isVirtualKeyboardLikely && isHTMLInputElement(activeElement)) {
+      activeElement.blur();
     }
   });
 

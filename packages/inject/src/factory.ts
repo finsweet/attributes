@@ -1,7 +1,12 @@
-import { cloneNode, isNotEmpty, restartWebflow, RICH_TEXT_BLOCK_CSS_CLASS } from '@finsweet/attributes-utils';
+import {
+  cloneNode,
+  fetchPage,
+  isNotEmpty,
+  restartWebflow,
+  RICH_TEXT_BLOCK_CSS_CLASS,
+} from '@finsweet/attributes-utils';
 
 import { attachPageStyles } from './actions/css';
-import { getComponentPage } from './actions/prefetch';
 import { convertRelativeUrlsToAbsolute, isSameWebflowProject } from './utils/helpers';
 import { queryAllElements } from './utils/selectors';
 import type { ComponentData, ComponentTargetData } from './utils/types';
@@ -32,7 +37,7 @@ const initComponent = async (componentTargetData: ComponentTargetData): Promise<
 
   const componentsSource = proxiedSource || source;
 
-  const page = componentsSource ? await getComponentPage(componentsSource) : document;
+  const page = componentsSource ? await fetchPage(componentsSource) : document;
   if (!page) return;
 
   const components = [

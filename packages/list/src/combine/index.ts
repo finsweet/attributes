@@ -23,7 +23,13 @@ export const initListCombine = (targetList: List, rawSourceInstances: string) =>
     const runner = effect(() => {
       if (!sourceList.items.value.length) return;
 
-      const elements = sourceList.items.value.map((item) => targetList.createItem(item.element));
+      const elements = sourceList.items.value.map((item) => {
+        item.currentIndex = undefined;
+
+        return targetList.createItem(item.element);
+      });
+
+      sourceList.renderedItems.clear();
 
       sourceList.items.value = [];
       targetList.items.value = [...targetList.items.value, ...elements];

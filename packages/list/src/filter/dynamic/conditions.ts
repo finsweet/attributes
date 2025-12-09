@@ -6,6 +6,7 @@ import {
   type FormFieldType,
   isFormField,
   isHTMLSelectElement,
+  isString,
   setFormFieldValue,
   simulateEvent,
 } from '@finsweet/attributes-utils';
@@ -18,10 +19,12 @@ import {
   CUSTOM_VALUE_ATTRIBUTE,
   getAttribute,
   getElementSelector,
+  getSplitSeparator,
   queryAllElements,
   queryElement,
 } from '../../utils/selectors';
 import type { AllFieldsData, FilterOperator, FiltersCondition } from '../types';
+import { splitValue } from '../utils';
 import { type ConditionGroup, getFiltersGroup } from './groups';
 import { getFilterMatchValue, parseOperatorValue } from './utils';
 
@@ -188,7 +191,7 @@ const initConditionOperatorSelect = (list: List, element: HTMLSelectElement, con
   });
 
   // Options display logic
-  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'], AllFieldsData]) => {
+  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'] | undefined, AllFieldsData]) => {
     const fieldData = fieldKey ? allFieldsData[fieldKey] : undefined;
     const allFieldKeys = Object.keys(allFieldsData);
 
@@ -360,8 +363,14 @@ const initConditionValueField = (
 
     const activeFormField = allConditionValueFormFields.get(activeFormFieldType)!;
 
-    const value = getConditionValue(activeFormField);
     const fuzzyThreshold = getAttribute(activeFormField, 'fuzzy');
+    const splitSeparator = getSplitSeparator(activeFormField);
+
+    let value = getConditionValue(activeFormField);
+
+    if (isString(value) && splitSeparator) {
+      value = splitValue(value, splitSeparator);
+    }
 
     Object.assign(filtersCondition, {
       value,
@@ -383,8 +392,8 @@ const initConditionValueField = (
   });
 
   const formFieldsHandler = ([fieldKey, op, allFieldsData]: [
-    FiltersCondition['fieldKey'],
-    FiltersCondition['op'],
+    FiltersCondition['fieldKey'] | undefined,
+    FiltersCondition['op'] | undefined,
     AllFieldsData,
   ]) => {
     const fieldData = fieldKey ? allFieldsData[fieldKey] : undefined;
@@ -420,7 +429,7 @@ const initConditionValueField = (
     }
   };
 
-  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'], AllFieldsData]) => {
+  const optionsHandler = ([fieldKey, allFieldsData]: [FiltersCondition['fieldKey'] | undefined, AllFieldsData]) => {
     const selectElements = [...allConditionValueFormFields.values()].filter(isHTMLSelectElement);
     if (!selectElements.length) return;
 
@@ -472,8 +481,10 @@ const initConditionValueField = (
 
   const twoWayBindingCleanup = watch(
     () => getFiltersCondition(list, condition)?.value,
-    (value) => {
+    (value: FiltersCondition['value'] | undefined, oldValue: FiltersCondition['value']) => {
       if (list.readingFilters) return;
+
+      value ??= Array.isArray(oldValue) ? [] : '';
 
       for (const formField of allConditionValueFormFields.values()) {
         setFormFieldValue(formField, value, CUSTOM_VALUE_ATTRIBUTE);
@@ -589,6 +600,7 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
 
   const value = getConditionValue(initialConditionValueFormField);
   const fuzzyThreshold = getAttribute(initialConditionValueFormField, 'fuzzy');
+  const tagValuesDisplay = getAttribute(initialConditionValueFormField, 'tagvalues', { filterInvalid: true });
   const { op, fieldMatch } = parseOperatorValue(conditionOperatorSelect.value);
 
   conditionGroup.conditions.value = [...conditionGroup.conditions.value, condition];
@@ -606,6 +618,7 @@ export const initCondition = (list: List, element: HTMLElement, conditionGroup: 
     fieldMatch,
     showTag: true,
     interacted: true,
+    tagValuesDisplay,
   });
 
   // Handle remove button

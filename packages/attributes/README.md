@@ -36,10 +36,11 @@ The result object will contain the API of the loaded attribute solution. Check t
 
 #### Properties
 
-| Property  | Type     | Description                                                                                                                    |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `process` | `Set`    | Contains the currently active Attribute solutions.                                                                             |
-| `modules` | `Object` | Contains the controls for the active Attribute solutions ([FinsweetAttributeControls](#the-finsweetattributecontrols-object)). |
+| Property  | Type     | Description                                                                                                                                                                                                                    |
+| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `process` | `Set`    | Contains the currently active Attribute solutions.                                                                                                                                                                             |
+| `modules` | `Object` | A key-value object that contains the controls for each active Attribute solution. Each key is the corresponding Attribute's key and each value is a [FinsweetAttributeControls](#the-finsweetattributecontrols-object) object. |
+| `utils`   | `Object` | Contains utility functions for working with Attributes.                                                                                                                                                                        |
 
 #### Methods
 
@@ -64,3 +65,36 @@ The result object will contain the API of the loaded attribute solution. Check t
 | ----------- | ------------------------------------------------------------------------------------------------------ | --------- |
 | `restart()` | Restarts the Attribute. In practice, this means that the Attribute will be destroyed and loaded again. |           |
 | `destroy()` | Destroys the Attribute.                                                                                |           |
+
+### The `FinsweetAttributes.utils` object
+
+```ts
+type FinsweetAttributesUtils = {
+  /**
+   * Fetches and parses an external page.
+   * Stores the page response in an IndexedDB if the page belongs to the same site.
+   *
+   * @param source The URL of the page to fetch
+   * @param options Optional configuration object
+   * @returns Promise that resolves to the page's Document if successful, null otherwise
+   */
+  fetchPage: (
+    source: string | URL,
+    options?: {
+      cache?: boolean; // Whether to cache fetched documents. Defaults to `true`
+      cacheExternal?: boolean; // Whether to cache external documents using a stale-while-revalidate strategy
+      cacheKey?: string; // Manual database name for the IndexedDB instance
+      cacheVersion?: number; // Manual version for the IndexedDB instance
+    }
+  ) => Promise<Document | null> | null;
+
+  /**
+   * Attaches external stylesheets from a fetched page to the current document head.
+   * Only attaches stylesheets hosted on the Webflow Assets CDN that aren't already present.
+   *
+   * @param page The Document object from which to extract stylesheets
+   * @returns Promise that resolves when all stylesheets have been attached
+   */
+  attachExternalStylesheets: (page: Document) => Promise<void>;
+};
+```

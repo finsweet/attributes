@@ -1,7 +1,7 @@
-import { CMS_CSS_CLASSES, fetchPageDocument, isNotEmpty } from '@finsweet/attributes-utils';
+import { fetchPage, isNotEmpty } from '@finsweet/attributes-utils';
 
 import type { List } from '../components/List';
-import { getCollectionElements } from '../utils/dom';
+import { getCMSElementSelector, getCollectionElements } from '../utils/dom';
 
 /**
  * Loads all paginated items of a `List` instance.
@@ -15,7 +15,6 @@ export const loadPaginatedCMSItems = (list: List): Promise<void> => {
     paginationPreviousCMSElement,
     paginationCountElement,
     loadingSearchParamsData,
-    loaderElement,
     cache: cacheItems,
   } = list;
 
@@ -23,10 +22,7 @@ export const loadPaginatedCMSItems = (list: List): Promise<void> => {
     return Promise.resolve();
   }
 
-  if (loaderElement) {
-    loaderElement.style.display = '';
-    loaderElement.style.opacity = '1';
-  }
+  list.loading.value = true;
 
   // Attempt to get the total amount of pages from the `Page Count` element.
   let totalPages;
@@ -47,9 +43,7 @@ export const loadPaginatedCMSItems = (list: List): Promise<void> => {
       await chainedPagesLoad(list, cacheItems);
     }
 
-    if (loaderElement) {
-      loaderElement.style.display = 'none';
-    }
+    list.loading.value = false;
   })();
 
   return list.loadingPaginatedItems;
@@ -81,7 +75,7 @@ const chainedPagesLoad = async (list: List, cache: boolean): Promise<void> => {
    */
   const loadPage = async (href: string) => {
     // Fetch the page
-    const page = await fetchPageDocument(href, { cache });
+    const page = await fetchPage(href, { cache });
     if (!page) return;
 
     // Check for recursion (action: `all`)
@@ -126,7 +120,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
   for (let pageNumber = currentPage - 1; pageNumber >= 1; pageNumber--) {
     const url = getPageURL(pageNumber);
 
-    const page = await fetchPageDocument(url, { cache });
+    const page = await fetchPage(url, { cache });
     if (!page) return;
 
     await parseLoadedPage(page, list, 'unshift');
@@ -141,7 +135,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
 
       const url = getPageURL(pageNumber);
 
-      const page = await fetchPageDocument(url, { cache });
+      const page = await fetchPage(url, { cache });
 
       await previousPromise;
 
@@ -163,7 +157,7 @@ const parallelItemsLoad = async (list: List, totalPages: number, cache: boolean)
  */
 const parseLoadedPage = async (page: Document, list: List, itemsTarget: 'push' | 'unshift' = 'push') => {
   // Get DOM Elements
-  const allCollectionWrappers = page.querySelectorAll(`.${CMS_CSS_CLASSES.wrapper}`);
+  const allCollectionWrappers = page.querySelectorAll(getCMSElementSelector('wrapper'));
   const collectionListWrapper = allCollectionWrappers[list.pageIndex];
   if (!collectionListWrapper) return;
 
@@ -174,8 +168,9 @@ const parseLoadedPage = async (page: Document, list: List, itemsTarget: 'push' |
   const { length: itemsLength } = collectionItems;
 
   // Make sure the itemsPerPage value is correct
-  if (nextPageURL && list.initialItemsPerPage !== itemsLength) {
+  if (nextPageURL && list.initialItemsPerPage !== itemsLength && !list.customItemsPerPage) {
     list.initialItemsPerPage = itemsLength;
+    list.itemsPerPage.value = itemsLength;
   }
 
   // Add the new items to the list

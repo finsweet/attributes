@@ -30,7 +30,11 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
 
       const animations = list.wrapperElement.getAnimations({ subtree: true });
 
-      await Promise.all(animations.map((a) => a.finished));
+      try {
+        await Promise.all(animations.map((a) => a.finished));
+      } catch {
+        //
+      }
     }
 
     return items;
@@ -38,16 +42,6 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
 
   const afterRenderHookCleanup = list.addHook('afterRender', (items) => {
     list.wrapperElement.classList.remove(filteringClass);
-
-    const hasItems = !!items.length;
-
-    if (list.listElement) {
-      list.listElement.style.display = hasItems ? '' : 'none';
-    }
-
-    if (list.emptyElement.value) {
-      list.emptyElement.value.style.display = hasItems ? 'none' : '';
-    }
 
     return items;
   });
@@ -76,7 +70,7 @@ export const initListFiltering = (list: List, forms: HTMLFormElement[]) => {
         setListFiltersQuery(list);
       }
     }, 0),
-    { deep: true }
+    { deep: true, immediate: true }
   );
 
   // Read query params

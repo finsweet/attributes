@@ -1,6 +1,6 @@
 import { ARIA_ROLE_KEY, SLIDER_CSS_CLASSES } from '@finsweet/attributes-utils';
 
-import type { List, ListItem } from '../components';
+import type { List } from '../components';
 
 /**
  * Inits the list sliders.
@@ -35,12 +35,13 @@ const initListSlider = (list: List, sliderReference: HTMLElement) => {
   for (const slide of existingSlides) slide.remove();
 
   // Store rendered items
-  const renderedItems = new Map<ListItem, HTMLDivElement>();
+  const renderedItems = new Map<string, HTMLDivElement>();
 
-  list.addHook('render', (items = []) => {
+  list.addHook('beforeRender', (items = []) => {
     for (const item of items) {
-      if (renderedItems.has(item)) continue;
+      if (renderedItems.has(item.id)) continue;
 
+      item.currentIndex = undefined;
       item.element.removeAttribute(ARIA_ROLE_KEY);
 
       const newSlide = document.createElement('div');
@@ -49,14 +50,20 @@ const initListSlider = (list: List, sliderReference: HTMLElement) => {
       newSlide.appendChild(item.element);
       sliderMask.appendChild(newSlide);
 
-      renderedItems.set(item, newSlide);
+      renderedItems.set(item.id, newSlide);
     }
 
-    for (const [item, slide] of renderedItems) {
-      if (items.includes(item)) continue;
+    for (const [itemId, slide] of renderedItems) {
+      if (items.some((item) => item.id === itemId)) continue;
 
       slide?.remove();
-      renderedItems.delete(item);
+      renderedItems.delete(itemId);
     }
+
+    list.renderedItems.clear();
+
+    return [];
   });
+
+  list.triggerHook('beforeRender');
 };

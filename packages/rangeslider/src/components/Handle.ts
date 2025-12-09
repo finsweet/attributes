@@ -25,6 +25,7 @@ export class Handle {
   private readonly inputElement;
   private readonly displayValueElement;
   private readonly formatValueDisplay;
+  private readonly formatValueOptions;
 
   private fill?: Fill;
   private sibling?: Handle;
@@ -51,6 +52,7 @@ export class Handle {
       inputElement,
       displayValueElement,
       formatValueDisplay,
+      formatValueOptions,
     }: {
       index: number;
       minRange: number;
@@ -63,11 +65,13 @@ export class Handle {
       inputElement?: HTMLInputElement;
       displayValueElement?: HTMLElement;
       formatValueDisplay?: string;
+      formatValueOptions: Intl.NumberFormatOptions;
     }
   ) {
     this.inputElement = inputElement;
     this.displayValueElement = displayValueElement;
     this.formatValueDisplay = formatValueDisplay;
+    this.formatValueOptions = formatValueOptions;
 
     this.index = index;
     this.minRange = minRange;
@@ -140,13 +144,13 @@ export class Handle {
     this.setValue(index === 0 ? minRange : maxRange, false);
   }
 
-  private formatValue(value: number, rawLocale: string) {
+  private formatValue(value: number, rawLocale = this.formatValueDisplay, options = this.formatValueOptions) {
     const locale = rawLocale === 'true' ? undefined : rawLocale;
 
     try {
-      return value.toLocaleString(locale);
+      return new Intl.NumberFormat(locale, options).format(value);
     } catch {
-      return value.toLocaleString(window.navigator?.language || undefined);
+      return new Intl.NumberFormat(window.navigator?.language || undefined, options).format(value);
     }
   }
 

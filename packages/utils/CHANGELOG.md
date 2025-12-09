@@ -1,5 +1,23 @@
 # @finsweet/attributes-utils
 
+## 0.1.4
+
+### Patch Changes
+
+- 894db29: chore: add Webflow headers in requests
+
+## 0.1.3
+
+### Patch Changes
+
+- ca570e1: fix: unwanted mutability in page fetching
+
+## 0.1.2
+
+### Patch Changes
+
+- 4e55c67: fix: prevent duplicated page fetching
+
 ## 0.1.1
 
 ### Patch Changes

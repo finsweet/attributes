@@ -1,5 +1,32 @@
 # @finsweet/attributes-selectcustom
 
+## 1.8.1
+
+### Patch Changes
+
+- Updated dependencies [894db29]
+  - @finsweet/attributes-utils@0.1.4
+
+## 1.8.0
+
+### Minor Changes
+
+- e92fa33: feat: support displaying facet counts in `fs-selectcustom` elements.
+
+## 1.7.12
+
+### Patch Changes
+
+- Updated dependencies [ca570e1]
+  - @finsweet/attributes-utils@0.1.3
+
+## 1.7.11
+
+### Patch Changes
+
+- Updated dependencies [4e55c67]
+  - @finsweet/attributes-utils@0.1.2
+
 ## 1.7.10
 
 ### Patch Changes

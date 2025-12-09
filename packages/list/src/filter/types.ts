@@ -4,8 +4,8 @@ import type { ListItem, ListItemField } from '../components';
 import type { SETTINGS } from '../utils/constants';
 
 // General
-type FilterOperatorValues = (typeof SETTINGS)['operator']['values'];
-export type FilterOperator = FilterOperatorValues[number];
+export type FilterOperator = (typeof SETTINGS)['operator']['values'][number];
+export type FilterTagValuesDisplay = (typeof SETTINGS)['tagvalues']['values'][number];
 
 export type FilterMatch = 'and' | 'or';
 
@@ -19,7 +19,9 @@ export type FiltersCondition = {
   fieldMatch?: FilterMatch;
   fuzzyThreshold?: number;
   interacted?: boolean;
-  customTagField?: string;
+  tagCustomField?: string;
+  tagCustomValues?: Map<string, string>;
+  tagValuesDisplay: FilterTagValuesDisplay;
   showTag: boolean;
 };
 

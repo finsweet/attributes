@@ -4,6 +4,7 @@ import { watch } from '@vue/reactivity';
 import type { List } from '../../components/List';
 import { getAttribute, getElementSelector } from '../../utils/selectors';
 import { handleFiltersForm } from '../elements';
+import type { FiltersCondition } from '../types';
 import { getConditionData, getStandardFiltersGroup, setConditionsData } from './conditions';
 import { initFacets } from './facets';
 
@@ -166,11 +167,12 @@ const handleClearButtons = (list: List, groupIndex: number, debounces: Map<strin
     for (const condition of conditionsToClear) {
       debounces.delete(`${condition.fieldKey}_${condition.op}`);
 
-      if (Array.isArray(condition.value)) {
-        condition.value = [];
-      } else {
-        condition.value = '';
-      }
+      const updated: Partial<FiltersCondition> = {
+        value: Array.isArray(condition.value) ? [] : '',
+        interacted: false,
+      };
+
+      Object.assign(condition, updated);
     }
   });
 };

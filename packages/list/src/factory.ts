@@ -46,8 +46,6 @@ export const createListInstance = (referenceElement: HTMLElement): List | undefi
 export const initList = (list: List) => {
   const { instance } = list;
 
-  const items = list.items.value;
-
   const cleanups = new Set<(() => void) | undefined>();
 
   // Filter
@@ -79,11 +77,8 @@ export const initList = (list: List) => {
   }
 
   // Nest
-  const nest = items.length ? !!queryElement('nest-target', { scope: items[0].element }) : false;
-  if (nest) {
-    const cleanup = initListNest(list);
-    cleanups.add(cleanup);
-  }
+  const nestCleanup = initListNest(list);
+  cleanups.add(nestCleanup);
 
   // Static Items
   const listSelector = getElementSelector('list', { instance });
@@ -126,5 +121,6 @@ export const initList = (list: List) => {
     }
 
     cleanups.clear();
+    list.destroy();
   };
 };

@@ -1,7 +1,6 @@
 import {
   CMS_CSS_CLASSES,
-  fetchPageDocument,
-  getObjectEntries,
+  fetchPage,
   isHTMLAnchorElement,
   isNumber,
   restartWebflow,
@@ -18,11 +17,12 @@ import { getAttribute, getInstance, hasAttributeValue, queryAllElements, queryEl
 import { listInstancesStore } from '../utils/store';
 import { ListItem } from './ListItem';
 
-type HookKey = 'start' | 'filter' | 'sort' | 'pagination' | 'beforeRender' | 'render' | 'afterRender';
+type HookKey = 'start' | 'filter' | 'sort' | 'static' | 'pagination' | 'beforeRender' | 'render' | 'afterRender';
 type HookCallback = (items: ListItem[]) => ListItem[] | Promise<ListItem[]> | void | Promise<void>;
 type Hooks = {
   [key in HookKey]: {
     previous?: HookKey;
+    index: number;
     callbacks: HookCallback[];
     result: ShallowRef<ListItem[]>;
   };
@@ -39,41 +39,55 @@ export class List {
    */
   public readonly hooks: Hooks = {
     start: {
+      index: 0,
       callbacks: [],
       result: shallowRef([]),
     },
 
     filter: {
+      index: 1,
       previous: 'start',
       callbacks: [],
       result: shallowRef([]),
     },
 
     sort: {
+      index: 2,
       previous: 'filter',
       callbacks: [],
       result: shallowRef([]),
     },
 
-    pagination: {
+    static: {
+      index: 3,
       previous: 'sort',
       callbacks: [],
       result: shallowRef([]),
     },
 
+    pagination: {
+      index: 4,
+      previous: 'static',
+      callbacks: [],
+      result: shallowRef([]),
+    },
+
     beforeRender: {
+      index: 5,
       previous: 'pagination',
       callbacks: [],
       result: shallowRef([]),
     },
 
     render: {
+      index: 6,
       previous: 'beforeRender',
       callbacks: [],
       result: shallowRef([]),
     },
 
     afterRender: {
+      index: 7,
       previous: 'render',
       callbacks: [],
       result: shallowRef([]),
@@ -89,6 +103,11 @@ export class List {
    * The hook that triggered the current lifecycle.
    */
   public triggeredHook?: HookKey;
+
+  /**
+   * A queued hook that will be executed after the current lifecycle.
+   */
+  public queuedHook?: HookKey;
 
   /**
    * A set holding all rendered {@link ListItem} instances.
@@ -213,6 +232,11 @@ export class List {
   public initialItemsPerPage: number;
 
   /**
+   * Defines a custom amount of items per page.
+   */
+  public customItemsPerPage?: number;
+
+  /**
    * Defines the amount of items per page.
    */
   public readonly itemsPerPage: Ref<number>;
@@ -221,7 +245,7 @@ export class List {
    * Defines the total amount of pages in the list.
    */
   public readonly totalPages = computed(() =>
-    Math.ceil(this.hooks.filter.result.value.length / this.itemsPerPage.value)
+    Math.ceil(this.hooks.static.result.value.length / this.itemsPerPage.value)
   );
 
   /**
@@ -265,12 +289,24 @@ export class List {
   public readonly sorting = ref<Sorting>({});
 
   /**
+   * Defines if the list is currently loading items.
+   */
+  public readonly loading = ref(false);
+
+  /**
    * Defines if the user has interacted with the filters.
    */
   public readonly hasInteracted = computed(
     () =>
       this.sorting.value.interacted ||
       this.filters.value.groups.some((group) => group.conditions.some((condition) => condition.interacted))
+  );
+
+  /**
+   * Defines if the list has any filters applied.
+   */
+  public readonly hasFilters = computed(() =>
+    this.filters.value.groups.some((group) => group.conditions.some((condition) => !!condition.value?.length))
   );
 
   /**
@@ -305,7 +341,7 @@ export class List {
    * If pagination query exists, it is used as the prefix: '5f7457b3_page' => '5f7457b3'
    * If not, it falls back to the list's instance or the list's index.
    */
-  public searchParamsPrefix!: string;
+  public searchParamsPrefix?: string;
 
   /**
    * Defines an awaitable Promise that resolves once the pagination data (`currentPage` + `paginationSearchParam`) has been retrieved.
@@ -331,6 +367,11 @@ export class List {
    * Defines if the filter field values are being set to the DOM.
    */
   public settingFilters?: boolean;
+
+  /**
+   * A function to destroy the instance and clean up all resources.
+   */
+  public destroy = () => {};
 
   /**
    * `@vue/reactivity`: [watch](https://vuejs.org/api/reactivity-core.html#watch)
@@ -409,7 +450,8 @@ export class List {
     // Collect items
     const collectionItemElements = getCollectionElements(wrapperElement, 'item');
 
-    this.initialItemsPerPage = getAttribute(this.listOrWrapper, 'itemsperpage') || collectionItemElements.length;
+    this.customItemsPerPage = getAttribute(this.listOrWrapper, 'itemsperpage');
+    this.initialItemsPerPage = this.customItemsPerPage || collectionItemElements.length;
     this.itemsPerPage = ref(this.initialItemsPerPage);
 
     if (listElement) {
@@ -424,25 +466,30 @@ export class List {
 
     // Extract pagination data
     this.loadingSearchParamsData = this.#getCMSPaginationData().then((paginationSearchParam) => {
-      const prefix = paginationSearchParam ? paginationSearchParam.split('_')[0] : undefined;
-
-      this.searchParamsPrefix = prefix || instance || `${pageIndex}`;
+      this.searchParamsPrefix = paginationSearchParam?.split('_')[0];
     });
 
     this.loadingPaginationElements = this.#getCMSPaginationElements();
 
-    // Init hooks
-    this.#initHooks();
+    // Init hooks and element effects
+    const elementsCleanup = this.#initElements();
+    const hooksCleanup = this.#initHooks();
 
-    // Elements side effects
-    // TODO: Cleanup
-    this.#initElements();
+    // Define the destroy function
+    this.destroy = () => {
+      hooksCleanup();
+      elementsCleanup();
+
+      listInstancesStore.delete(this.wrapperElement);
+    };
   }
 
   /**
    * Initializes the lifecycle hooks.
    */
   #initHooks() {
+    const cleanups: (() => void)[] = [];
+
     // Add render hook
     this.addHook('render', async (items) => {
       let renderIndex = 0;
@@ -474,13 +521,17 @@ export class List {
 
             const animations = item.element.getAnimations({ subtree: true });
 
-            return Promise.all(animations.map((a) => a.finished)).then(() => {
-              item.element.style.removeProperty(RENDER_INDEX_CSS_VARIABLE);
+            try {
+              await Promise.all(animations.map((a) => a.finished));
+            } catch {
+              //
+            }
 
-              if (item.stagger) {
-                item.element.style.transitionDelay = '';
-              }
-            });
+            item.element.style.removeProperty(RENDER_INDEX_CSS_VARIABLE);
+
+            if (item.stagger) {
+              item.element.style.transitionDelay = '';
+            }
           };
 
           // Is rendered
@@ -518,12 +569,43 @@ export class List {
     });
 
     // Start hooks chain
-    for (const [key, { previous }] of getObjectEntries(this.hooks)) {
-      const items = previous ? this.hooks[previous].result : this.items;
+    const initHook = (key: HookKey) => {
+      const { previous } = this.hooks[key];
 
-      // TODO: Cleanups
-      watch(items, () => this.#runHook(key), { immediate: true });
-    }
+      if (!previous) {
+        const cleanup = watch(this.items, () => this.triggerHook(key), { immediate: true });
+
+        cleanups.push(cleanup);
+        return;
+      }
+
+      const cleanup = watch(this.hooks[previous].result, async () => {
+        await this.#runHook(key);
+
+        if (key !== 'afterRender') return;
+
+        this.currentHook = undefined;
+        this.triggeredHook = undefined;
+
+        if (this.queuedHook) {
+          const { queuedHook } = this;
+
+          this.queuedHook = undefined;
+          this.triggerHook(queuedHook);
+        }
+      });
+
+      cleanups.push(cleanup);
+
+      initHook(previous);
+    };
+
+    initHook('afterRender');
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+      cleanups.length = 0;
+    };
   }
 
   /**
@@ -532,22 +614,49 @@ export class List {
   #initElements() {
     // items-count
     const itemsCountRunner = effect(() => {
-      if (this.itemsCountElement) {
-        this.itemsCountElement.textContent = `${this.items.value.length}`;
-      }
+      if (!this.itemsCountElement) return;
+
+      this.itemsCountElement.textContent = `${this.items.value.length}`;
     });
 
     // initial
     const initialElementRunner = effect(() => {
-      if (this.initialElement) {
-        this.wrapperElement.style.display = this.hasInteracted.value ? '' : 'none';
-        this.initialElement.style.display = this.hasInteracted.value ? 'none' : '';
-      }
+      if (!this.initialElement) return;
+
+      const showInitial = !this.hasInteracted.value || !this.hasFilters.value;
+
+      this.wrapperElement.style.display = showInitial ? 'none' : '';
+      this.initialElement.style.display = showInitial ? '' : 'none';
     });
+
+    // loader
+    const loaderElementRunner = effect(() => {
+      if (!this.loaderElement) return;
+
+      this.loaderElement.style.display = this.loading.value ? '' : 'none';
+    });
+
+    // empty
+    const emptyElementCleanup = watch(
+      [this.hooks.render.result, this.emptyElement],
+      ([items, emptyElement]: [ListItem[], HTMLElement | null | undefined]) => {
+        const hasItems = items.length > 0;
+
+        if (this.listElement) {
+          this.listElement.style.display = hasItems ? '' : 'none';
+        }
+
+        if (emptyElement) {
+          emptyElement.style.display = hasItems ? 'none' : '';
+        }
+      }
+    );
 
     return () => {
       itemsCountRunner.effect.stop();
       initialElementRunner.effect.stop();
+      loaderElementRunner.effect.stop();
+      emptyElementCleanup();
     };
   }
 
@@ -577,7 +686,7 @@ export class List {
     else {
       const { origin, pathname } = location;
 
-      const initialPage = await fetchPageDocument(origin + pathname);
+      const initialPage = await fetchPage(origin + pathname);
       if (!initialPage) return;
 
       const initialCollectionListWrappers = initialPage.querySelectorAll(getCMSElementSelector('wrapper'));
@@ -635,7 +744,9 @@ export class List {
         const $currentPage = currentPage.value;
         if (!$currentPage || $currentPage === 1) return;
 
-        const page = await fetchPageDocument(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
+        if (!paginationSearchParam) return;
+
+        const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=${$currentPage - 1}`);
         if (!page) return;
 
         const allCollectionWrappers = getAllCollectionListWrappers(page);
@@ -657,8 +768,9 @@ export class List {
       // Pagination previous & Empty state
       (async () => {
         if (paginationPreviousCMSElement.value && emptyElement.value) return;
+        if (!paginationSearchParam) return;
 
-        const page = await fetchPageDocument(`${origin}${pathname}?${paginationSearchParam}=9999`);
+        const page = await fetchPage(`${origin}${pathname}?${paginationSearchParam}=9999`);
         if (!page) return;
 
         const allCollectionWrappers = getAllCollectionListWrappers(page);
@@ -726,8 +838,6 @@ export class List {
     }
 
     hook.result.value = [...result];
-
-    this.currentHook = undefined;
   }
 
   /**
@@ -735,11 +845,28 @@ export class List {
    * @param key
    * @param options.scrollToAnchor
    */
-  async triggerHook(
+  triggerHook(
     key: HookKey,
     { scrollToAnchor, resetCurrentPage }: { scrollToAnchor?: boolean; resetCurrentPage?: boolean } = {}
   ) {
+    if (this.currentHook) {
+      const triggeredHookIndex = this.hooks[key].index;
+      const currentHookIndex = this.hooks[this.currentHook].index;
+
+      if (currentHookIndex >= triggeredHookIndex) {
+        if (this.queuedHook) {
+          const queuedHookIndex = this.hooks[this.queuedHook].index;
+          this.queuedHook = triggeredHookIndex < queuedHookIndex ? key : this.queuedHook;
+        } else {
+          this.queuedHook = key;
+        }
+      }
+
+      return;
+    }
+
     this.triggeredHook = key;
+    this.currentHook = key;
 
     if (scrollToAnchor) {
       this.scrollToAnchor(key);
@@ -749,9 +876,7 @@ export class List {
       this.currentPage.value = 1;
     }
 
-    await this.#runHook(key);
-
-    this.triggeredHook = undefined;
+    return this.#runHook(key);
   }
 
   /**
@@ -794,9 +919,21 @@ export class List {
 
     const { searchParams } = new URL(location.href);
 
-    const name = usePrefix ? `${this.searchParamsPrefix}_${key}` : key;
+    if (!usePrefix) {
+      return searchParams.get(key);
+    }
 
-    return searchParams.get(name);
+    const prefixes = [this.instance, this.searchParamsPrefix, this.pageIndex.toString()];
+
+    for (const prefix of prefixes) {
+      if (!prefix) continue;
+
+      const name = `${prefix}_${key}`;
+      const value = searchParams.get(name);
+      if (value) return value;
+    }
+
+    return null;
   }
 
   /**
@@ -808,31 +945,51 @@ export class List {
 
     const { searchParams } = new URL(location.href);
 
-    const rawEntries = [...searchParams.entries()];
+    if (!usePrefix) {
+      return [...searchParams.entries()];
+    }
 
-    const entries = usePrefix
-      ? rawEntries
-          .filter(([key]) => key.startsWith(`${this.searchParamsPrefix}_`))
-          .map(([key, value]) => {
-            const newKey = key.replace(`${this.searchParamsPrefix}_`, '');
-            return [newKey, value] as const;
-          })
-      : rawEntries;
+    const map = new Map<string, string>();
+    const prefixes = [this.instance, this.searchParamsPrefix, this.pageIndex.toString()];
 
-    return entries;
+    for (const [key, value] of searchParams) {
+      for (const prefix of prefixes) {
+        if (!prefix) continue;
+        if (!key.startsWith(`${prefix}_`)) continue;
+
+        const unprefixedKey = key.replace(`${prefix}_`, '');
+        map.set(unprefixedKey, value);
+        break;
+      }
+    }
+
+    return [...map.entries()];
   }
 
   /**
    * Sets a search param in the URL using the list's search params prefix.
    * @param key
    * @param value
-   * @param usePrefix Whether to use the list's search params prefix or not.
+   * @param options.usePrefix Whether to use a prefix to set the key.
+   * @param options.useSearchParamsPrefix Whether to force the use of the search params as prefix over the instance name.
    */
-  async setSearchParam(key: string, value: string | null | undefined, usePrefix = true) {
+  async setSearchParam(
+    key: string,
+    value: string | null | undefined,
+    { usePrefix = true, useSearchParamsPrefix = false }: { usePrefix?: boolean; useSearchParamsPrefix?: boolean } = {}
+  ) {
     await this.loadingSearchParamsData;
 
     const url = new URL(location.href);
-    const name = usePrefix ? `${this.searchParamsPrefix}_${key}` : key;
+
+    let name = key;
+
+    if (useSearchParamsPrefix) {
+      name = `${this.searchParamsPrefix}_${key}`;
+    } else if (usePrefix) {
+      const prefix = this.instance || this.searchParamsPrefix || this.pageIndex.toString();
+      name = `${prefix}_${key}`;
+    }
 
     if (value) {
       url.searchParams.set(name, value);
@@ -841,15 +998,6 @@ export class List {
     }
 
     history.replaceState({}, '', url.toString());
-  }
-
-  /**
-   * Destroys the instance.
-   */
-  destroy() {
-    // TODO: Call store.off() on all stores
-
-    listInstancesStore.delete(this.wrapperElement);
   }
 
   /**

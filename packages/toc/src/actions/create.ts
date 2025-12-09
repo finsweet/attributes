@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import slugify from 'slugify';
 
 import { ZERO_WIDTH_CHARS_REGEXP } from '../utils/constants';
@@ -13,8 +14,6 @@ export const createHeadingWrapper = (headingElement: HTMLHeadingElement) => {
   const { id, textContent } = headingElement;
   const trimmedTextContent = textContent?.trim().replace(ZERO_WIDTH_CHARS_REGEXP, '');
 
-  if (!id && !trimmedTextContent) return;
-
   if (id) {
     headingElement.removeAttribute('id');
     headingWrapper.id = ensureUniqueId(id);
@@ -22,6 +21,8 @@ export const createHeadingWrapper = (headingElement: HTMLHeadingElement) => {
     const slugified = slugify(trimmedTextContent, { lower: true, strict: true });
     headingWrapper.id = ensureUniqueId(slugified);
   }
+
+  headingWrapper.id ||= ensureUniqueId(nanoid(8));
 
   return headingWrapper;
 };
