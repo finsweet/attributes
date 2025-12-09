@@ -1,13 +1,9 @@
 import { isHTMLElement, isScrollable } from '@finsweet/attributes-utils';
-import { clearAllBodyScrollLocks, disableBodyScroll } from 'body-scroll-lock';
+import { clearBodyLocks, lock } from 'tua-body-scroll-lock';
 
-const { body } = document;
+import { getAttribute } from './utils/selectors';
 
-let reserveScrollBarGap = true;
 let scrollingDisabled = false;
-
-// TODO: This is a temporary fix, should be removed after `body-scroll-lock` releases an official update.
-let storedScrollY: number | undefined;
 
 /**
  * @returns The current scrolling state
@@ -15,24 +11,16 @@ let storedScrollY: number | undefined;
 export const isScrollingDisabled = (): boolean => scrollingDisabled;
 
 /**
- * Updates the `reserveScrollBarGap` param, which is `true` by default.
- * @param value The new value.
- */
-export const setReserveScrollBarGap = (value: boolean): void => {
-  reserveScrollBarGap = value;
-};
-
-/**
  * Disables the scrolling.
  * @param target The target that will preserve scrolling.
  */
-export const disableScrolling = (target: Element): void => {
-  storedScrollY = window.scrollY;
+export const disableScrolling = (target: HTMLElement): void => {
   scrollingDisabled = true;
 
-  disableBodyScroll(target, { reserveScrollBarGap });
+  const overflowType = getAttribute(target, 'overflow', { filterInvalid: true });
+  const withPaddingRight = getAttribute(target, 'gap', { filterInvalid: true }) !== 'false';
 
-  body.style.setProperty('top', `${storedScrollY * -1}px`);
+  lock(target, { overflowType, withPaddingRight });
 };
 
 /**
@@ -41,10 +29,7 @@ export const disableScrolling = (target: Element): void => {
 export const enableScrolling = (): void => {
   scrollingDisabled = false;
 
-  clearAllBodyScrollLocks();
-
-  body.style.setProperty('top', '');
-  if (storedScrollY) body.scrollTo(0, storedScrollY);
+  clearBodyLocks();
 };
 
 /**

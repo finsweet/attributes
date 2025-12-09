@@ -17,11 +17,8 @@
     }
   },
   "dependencies": {
-    "body-scroll-lock": "^4.0.0-beta.0",
+    "@finsweet/attributes-utils": "workspace:*",
     "just-debounce": "^1.1.0",
-    "@finsweet/attributes-utils": "workspace:*"
-  },
-  "devDependencies": {
-    "@types/body-scroll-lock": "^3.1.0"
+    "tua-body-scroll-lock": "^1.6.1"
   }
 }
