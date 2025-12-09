@@ -1,5 +1,11 @@
 # @finsweet/attributes-scrolldisable
 
+## 1.6.14
+
+### Patch Changes
+
+- fb5f9f4: fix: buggy disable scroll behaviors in iOS by switching to tua-body-scroll-lock
+
 ## 1.6.13
 
 ### Patch Changes
