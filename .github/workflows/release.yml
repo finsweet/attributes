@@ -5,13 +5,13 @@ on:
     branches:
       - master
 
-permissions:
-  id-token: write
-
 jobs:
   Release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
