@@ -2,4 +2,4 @@
 '@finsweet/attributes': patch
 ---
 
-fix: race conditions when initting multiple scripts
+fix: race conditions when initializing multiple scripts
