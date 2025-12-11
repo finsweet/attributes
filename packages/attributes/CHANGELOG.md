@@ -1,5 +1,11 @@
 # @finsweet/attributes
 
+## 2.6.22
+
+### Patch Changes
+
+- ae2ffc6: fix: race conditions when initializing multiple scripts
+
 ## 2.6.21
 
 ### Patch Changes
