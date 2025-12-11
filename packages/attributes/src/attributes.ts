@@ -66,13 +66,14 @@ const init = () => {
  * Inits all Attributes that are defined in the current script
  * or in the DOM if fs-attributes-auto is enabled.
  */
-const initAttributes = () => {
+const initAttributes = async () => {
   let autoLoad = false;
 
-  const scripts = document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`);
+  const getScripts = () =>
+    document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`);
 
-  for (const script of scripts) {
-    if (window.FinsweetAttributes.scripts.includes(script)) continue;
+  const initScript = (script: HTMLScriptElement) => {
+    if (window.FinsweetAttributes.scripts.includes(script)) return;
 
     window.FinsweetAttributes.scripts.push(script);
 
@@ -84,29 +85,33 @@ const initAttributes = () => {
 
       initAttribute(key);
     }
-  }
+  };
+
+  getScripts().forEach(initScript);
+
+  await waitDOMReady();
+
+  getScripts().forEach(initScript);
 
   if (!autoLoad) return;
 
-  waitDOMReady().then(() => {
-    const usedAttributes = new Set<FinsweetAttributeKey>();
-    const allElements = document.querySelectorAll('*');
+  const usedAttributes = new Set<FinsweetAttributeKey>();
+  const allElements = document.querySelectorAll('*');
 
-    for (const element of allElements) {
-      for (const name of element.getAttributeNames()) {
-        const fsMatch = name.match(/^fs-([^-]+)/);
-        const key = fsMatch?.[1] as FinsweetAttributeKey | undefined;
+  for (const element of allElements) {
+    for (const name of element.getAttributeNames()) {
+      const fsMatch = name.match(/^fs-([^-]+)/);
+      const key = fsMatch?.[1] as FinsweetAttributeKey | undefined;
 
-        if (key && ATTRIBUTE_KEYS.has(key)) {
-          usedAttributes.add(key);
-        }
+      if (key && ATTRIBUTE_KEYS.has(key)) {
+        usedAttributes.add(key);
       }
     }
+  }
 
-    for (const attribute of usedAttributes) {
-      initAttribute(attribute);
-    }
-  });
+  for (const attribute of usedAttributes) {
+    initAttribute(attribute);
+  }
 };
 
 /**
