@@ -1,5 +1,11 @@
 # @finsweet/attributes
 
+## 2.6.23
+
+### Patch Changes
+
+- 88d991f: fix: re-check for scripts after DOM loaded to find unprocessed entities
+
 ## 2.6.22
 
 ### Patch Changes
