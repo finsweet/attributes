@@ -29,13 +29,10 @@ const init = () => {
   // Collect pre-existing callbacks
   const callbacks = Array.isArray(FinsweetAttributes) ? (FinsweetAttributes as FinsweetAttributesCallback[]) : [];
 
-  // Collect library scripts
-  const scripts = [...document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`)];
-
   // Init Attributes object
   window.FinsweetAttributes = {
     version,
-    scripts,
+    scripts: [],
     modules: {},
     process: new Set<FinsweetAttributeKey>(),
     utils: {
@@ -72,7 +69,13 @@ const init = () => {
 const initAttributes = () => {
   let autoLoad = false;
 
-  for (const script of window.FinsweetAttributes.scripts) {
+  const scripts = document.querySelectorAll<HTMLScriptElement>(`script[type="module"][src="${import.meta.url}"]`);
+
+  for (const script of scripts) {
+    if (window.FinsweetAttributes.scripts.includes(script)) continue;
+
+    window.FinsweetAttributes.scripts.push(script);
+
     autoLoad ||= script.getAttribute(`${ATTRIBUTES_ATTRIBUTE_PREFIX}-auto`) === 'true';
 
     for (const key of ATTRIBUTE_KEYS) {
