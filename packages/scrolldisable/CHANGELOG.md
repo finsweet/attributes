@@ -1,5 +1,11 @@
 # @finsweet/attributes-scrolldisable
 
+## 1.6.15
+
+### Patch Changes
+
+- 9338171: chore: remove `tua-body-scroll-lock` local patch
+
 ## 1.6.14
 
 ### Patch Changes
