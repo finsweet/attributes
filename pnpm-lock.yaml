@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  tua-body-scroll-lock@1.6.1:
-    hash: 04a62a2a8c3a144be525aaea115265dce3d3dada6ba8e31df66ad16053c2ca72
-    path: patches/tua-body-scroll-lock@1.6.1.patch
-
 importers:
 
   .:
@@ -342,8 +337,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       tua-body-scroll-lock:
-        specifier: ^1.6.1
-        version: 1.6.1(patch_hash=04a62a2a8c3a144be525aaea115265dce3d3dada6ba8e31df66ad16053c2ca72)
+        specifier: ^1.6.2
+        version: 1.6.2
 
   packages/selectcustom:
     dependencies:
@@ -1936,8 +1931,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  tua-body-scroll-lock@1.6.1:
-    resolution: {integrity: sha512-BKJ8Jg8/SoSeE2GgKXeLKYZesa5cIGUj3jupGtnM3HoZIa5dsa+p6aeHhN6rHlP1KW7bNDsc1fhKkf4fm0krug==}
+  tua-body-scroll-lock@1.6.2:
+    resolution: {integrity: sha512-Jze2xSvqo1gWq3Dky/XkySWNeC36YcfmFhZ+3hjpUWLuI8zFHYOLtQuZuDrl6tFfn4iVqddtqLVfABIYV4SA+w==}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -3538,7 +3533,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  tua-body-scroll-lock@1.6.1(patch_hash=04a62a2a8c3a144be525aaea115265dce3d3dada6ba8e31df66ad16053c2ca72): {}
+  tua-body-scroll-lock@1.6.2: {}
 
   type-check@0.4.0:
     dependencies:

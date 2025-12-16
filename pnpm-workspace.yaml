@@ -4,6 +4,3 @@ packages:
 
 onlyBuiltDependencies:
   - esbuild
-
-patchedDependencies:
-  tua-body-scroll-lock@1.6.1: patches/tua-body-scroll-lock@1.6.1.patch
