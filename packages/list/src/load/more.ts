@@ -13,10 +13,14 @@ import { loadPaginatedCMSItems } from './load';
  */
 export const initMoreMode = (list: List) => {
   // Add hook
-  list.addHook('pagination', (items) => {
-    const paginatedItems = items.slice(0, list.itemsPerPage.value);
-    return paginatedItems;
-  });
+  list.addHook(
+    'pagination',
+    (items) => {
+      const paginatedItems = items.slice(0, list.itemsPerPage.value);
+      return paginatedItems;
+    },
+    { forceTrigger: !list.paginationNextCMSElement.value && !list.paginationPreviousCMSElement.value } // Force a render if the list is static
+  );
 
   // Init
   loadPaginatedCMSItems(list);

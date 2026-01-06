@@ -806,11 +806,16 @@ export class List {
    * Adds a hook.
    * @param key
    * @param callback
+   * @param options.forceTrigger Whether to trigger the hook immediately after adding it.
    */
-  addHook(key: HookKey, callback: HookCallback) {
+  addHook(key: HookKey, callback: HookCallback, { forceTrigger }: { forceTrigger?: boolean } = {}) {
     const hook = this.hooks[key];
 
     hook.callbacks.push(callback);
+
+    if (forceTrigger) {
+      this.triggerHook(key);
+    }
 
     return () => {
       hook.callbacks = hook.callbacks.filter((cb) => cb !== callback);

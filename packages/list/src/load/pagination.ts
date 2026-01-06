@@ -29,16 +29,20 @@ export const initPaginationMode = async (list: List) => {
   if (!paginationWrapperElement) return;
 
   // Init hook
-  list.addHook('pagination', (items) => {
-    const $itemsPerPage = itemsPerPage.value;
+  list.addHook(
+    'pagination',
+    (items) => {
+      const $itemsPerPage = itemsPerPage.value;
 
-    const start = (currentPage.value - 1) * $itemsPerPage;
-    const end = start + $itemsPerPage;
+      const start = (currentPage.value - 1) * $itemsPerPage;
+      const end = start + $itemsPerPage;
 
-    const paginatedItems = items.slice(start, end);
+      const paginatedItems = items.slice(start, end);
 
-    return paginatedItems;
-  });
+      return paginatedItems;
+    },
+    { forceTrigger: !list.paginationNextCMSElement.value && !list.paginationPreviousCMSElement.value } // Force a render if the list is static
+  );
 
   const currentPageCleanup = watch(
     list.currentPage,
