@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.1
+
+### Patch Changes
+
+- 2130d99: fix: force a pagination hook trigger when initializing non-CMS pagination
+
 ## 1.14.0
 
 ### Minor Changes
