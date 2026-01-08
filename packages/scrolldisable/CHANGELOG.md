@@ -1,5 +1,11 @@
 # @finsweet/attributes-scrolldisable
 
+## 1.6.16
+
+### Patch Changes
+
+- 337c10c: fix: `fs-scrolldisable-gap="false"` not working
+
 ## 1.6.15
 
 ### Patch Changes
