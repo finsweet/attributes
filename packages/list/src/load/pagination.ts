@@ -348,12 +348,15 @@ const handlePaginationButtons = (list: List) => {
 
     if (!isElement(target)) return;
 
+    const listWrapperElement = target.closest(getCMSElementSelector('wrapper'));
     const nextButton = target.closest(getCMSElementSelector('pagination-next'));
     const previousButton = target.closest(getCMSElementSelector('pagination-previous'));
 
     const button = nextButton || previousButton;
+    if (!button) return;
 
-    if (!button || getInstance(button) !== list.instance) return;
+    const isSameInstance = list.wrapperElement === listWrapperElement || getInstance(button) === list.instance;
+    if (!isSameInstance) return;
 
     e.preventDefault();
 
