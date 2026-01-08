@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.2
+
+### Patch Changes
+
+- 40aa55a: fix: pagination buttons not working when instance is added to the list instead of the wrapper element
+
 ## 1.14.1
 
 ### Patch Changes
