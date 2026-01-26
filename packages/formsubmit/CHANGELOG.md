@@ -1,5 +1,11 @@
 # @finsweet/attributes-formsubmit
 
+## 2.0.12
+
+### Patch Changes
+
+- ee9ca3e: fix: respect Webflow's native form redirect settings
+
 ## 2.0.11
 
 ### Patch Changes
