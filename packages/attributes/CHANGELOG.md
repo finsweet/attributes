@@ -1,5 +1,12 @@
 # @finsweet/attributes
 
+## 2.6.28
+
+### Patch Changes
+
+- Updated dependencies [ee9ca3e]
+  - @finsweet/attributes-formsubmit@2.0.12
+
 ## 2.6.27
 
 ### Patch Changes
