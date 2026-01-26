@@ -32,7 +32,7 @@ export const initFormInstance = (formElement: Element) => {
   const rawRedirect = getAttribute(formElement, 'redirect');
   const [redirect, redirectTimeout] = parseActionAttribute(rawRedirect);
 
-  const redirectUrl = getAttribute(formElement, 'redirecturl');
+  const redirectUrl = getAttribute(formElement, 'redirecturl') || form.getAttribute('redirect');
   const redirectToNewTab = hasAttributeValue(formElement, 'redirectnewtab', 'true');
 
   // Disable
