@@ -65,6 +65,15 @@ export const handleFiltersForm = (form: HTMLFormElement) => {
     setActiveClass(target);
   });
 
+  for (const formField of form.elements) {
+    if (!isFormField(formField)) continue;
+
+    const { type } = formField;
+    if (type === 'submit') continue;
+
+    setActiveClass(formField);
+  }
+
   return () => {
     submitCleanup();
     changeCleanup();
