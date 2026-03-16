@@ -1,5 +1,11 @@
 # @finsweet/attributes-videohls
 
+## 1.0.15
+
+### Patch Changes
+
+- 6ac5891: fix: HLS not initializing correctly
+
 ## 1.0.14
 
 ### Patch Changes

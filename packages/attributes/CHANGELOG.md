@@ -1,5 +1,12 @@
 # @finsweet/attributes
 
+## 2.6.30
+
+### Patch Changes
+
+- Updated dependencies [6ac5891]
+  - @finsweet/attributes-videohls@1.0.15
+
 ## 2.6.29
 
 ### Patch Changes
