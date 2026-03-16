@@ -11,7 +11,7 @@ import { hlsInstancesStore } from '../utils/stores';
  */
 export const initVideoHLS = (video: HTMLVideoElement) => {
   if (hlsInstancesStore.get(video)) return;
-  if (video.canPlayType('application/vnd.apple.mpegurl') || !Hls.isSupported()) return;
+  if (!Hls.isSupported()) return;
 
   const hlsManifestURL = getHLSManifestURL(video);
   if (!hlsManifestURL) return;
