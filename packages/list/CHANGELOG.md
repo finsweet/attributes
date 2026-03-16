@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.3
+
+### Patch Changes
+
+- 58fddce: fix: add active class to initially checked form elements
+
 ## 1.14.2
 
 ### Patch Changes
