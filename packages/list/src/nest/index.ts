@@ -61,8 +61,6 @@ export const initListNest = (list: List) => {
  * @returns
  */
 const handleNestTarget = (list: List, item: ListItem, target: HTMLElement) => {
-  if (!item.href) return;
-
   const instance = getAttribute(target, 'nest');
   if (!instance) return;
 
@@ -99,7 +97,6 @@ const handleManualNesting = async (
   instance: string
 ) => {
   if (!slugs.length) return;
-  if (!item.href) return;
 
   const source = [...listInstancesStore.values()].find(
     (sourceList) => sourceList !== list && sourceList.instance === instance
