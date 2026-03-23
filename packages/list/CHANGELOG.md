@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.4
+
+### Patch Changes
+
+- f43bdce: fix: don't require item.href in manual nesting setups
+
 ## 1.14.3
 
 ### Patch Changes
