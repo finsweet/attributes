@@ -162,7 +162,7 @@ export class ListItem {
 
       const listSelector = getCMSElementSelector('list');
       const parentList = element.closest(listSelector);
-      const isInsideNestedList = this.list.listElement && parentList && parentList !== this.list.listElement;
+      const isInsideNestedList = this.element.contains(parentList);
 
       if (isInsideNestedList) {
         this.fields[fieldKey] ||= { type, rawValue: [], value: [] };
