@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.6
+
+### Patch Changes
+
+- 4b4d4c0: chore: revert #787
+
 ## 1.14.5
 
 ### Patch Changes
