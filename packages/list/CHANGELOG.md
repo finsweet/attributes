@@ -1,5 +1,11 @@
 # @finsweet/attributes-list
 
+## 1.14.5
+
+### Patch Changes
+
+- b0f9523: fix: nested list item fields detection
+
 ## 1.14.4
 
 ### Patch Changes
