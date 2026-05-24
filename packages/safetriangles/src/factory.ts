@@ -46,7 +46,6 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
   trigger.appendChild(svg);
 
   let rects = getRects(trigger, target);
-  const pendingTimeouts = new Set<ReturnType<typeof setTimeout>>();
 
   const showTriangle = () => {
     svg.style.visibility = 'visible';
@@ -90,15 +89,12 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
   const handleMouseMove = (event: MouseEvent) => {
     showTriangle();
 
-    const timeoutId = window.setTimeout(
+    window.setTimeout(
       () => {
-        pendingTimeouts.delete(timeoutId);
         updateTriangle({ x: event.clientX, y: event.clientY });
       },
       Math.max(0, delay)
     );
-
-    pendingTimeouts.add(timeoutId);
   };
 
   const handleTriggerMouseLeave = (event: MouseEvent) => {
@@ -152,12 +148,6 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
     target.removeEventListener('mouseenter', handleTargetMouseEnter);
     target.removeEventListener('mouseleave', handleTargetMouseLeave);
     window.removeEventListener('resize', handleWindowResize);
-
-    for (const timeoutId of pendingTimeouts) {
-      window.clearTimeout(timeoutId);
-    }
-
-    pendingTimeouts.clear();
 
     svg.remove();
 
