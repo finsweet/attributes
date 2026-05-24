@@ -33,6 +33,7 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
   svg.style.pointerEvents = 'none';
   svg.style.inset = 'auto';
   svg.style.overflow = 'visible';
+  svg.style.visibility = 'hidden';
   svg.dataset.fsSafeTriangles = 'svg';
 
   const path = document.createElementNS(SVG_NS, 'path');
@@ -45,6 +46,16 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
   trigger.appendChild(svg);
 
   let rects = getRects(trigger, target);
+  const pendingTimeouts = new Set<ReturnType<typeof setTimeout>>();
+
+  const showTriangle = () => {
+    svg.style.visibility = 'visible';
+  };
+
+  const hideTriangle = () => {
+    svg.style.visibility = 'hidden';
+    path.removeAttribute('d');
+  };
 
   const updateBounds = () => {
     rects = getRects(trigger, target);
@@ -68,6 +79,7 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
 
   const handleMouseEnter = () => {
     updateBounds();
+    showTriangle();
 
     if (delay <= 0) {
       const { triggerRect } = rects;
@@ -76,12 +88,47 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    window.setTimeout(
+    showTriangle();
+
+    const timeoutId = window.setTimeout(
       () => {
+        pendingTimeouts.delete(timeoutId);
         updateTriangle({ x: event.clientX, y: event.clientY });
       },
       Math.max(0, delay)
     );
+
+    pendingTimeouts.add(timeoutId);
+  };
+
+  const handleTriggerMouseLeave = (event: MouseEvent) => {
+    const nextHoveredElement = event.relatedTarget;
+
+    if (
+      nextHoveredElement instanceof Node &&
+      (trigger.contains(nextHoveredElement) || target.contains(nextHoveredElement))
+    ) {
+      return;
+    }
+
+    hideTriangle();
+  };
+
+  const handleTargetMouseEnter = () => {
+    hideTriangle();
+  };
+
+  const handleTargetMouseLeave = (event: MouseEvent) => {
+    const nextHoveredElement = event.relatedTarget;
+
+    if (
+      nextHoveredElement instanceof Node &&
+      (trigger.contains(nextHoveredElement) || target.contains(nextHoveredElement))
+    ) {
+      return;
+    }
+
+    hideTriangle();
   };
 
   const handleWindowResize = () => {
@@ -90,14 +137,27 @@ export const initSafeTriangle = (trigger: HTMLElement, target: HTMLElement, { de
 
   trigger.addEventListener('mouseenter', handleMouseEnter);
   trigger.addEventListener('mousemove', handleMouseMove);
+  trigger.addEventListener('mouseleave', handleTriggerMouseLeave);
+  target.addEventListener('mouseenter', handleTargetMouseEnter);
+  target.addEventListener('mouseleave', handleTargetMouseLeave);
   window.addEventListener('resize', handleWindowResize);
 
   updateBounds();
+  hideTriangle();
 
   return () => {
     trigger.removeEventListener('mouseenter', handleMouseEnter);
     trigger.removeEventListener('mousemove', handleMouseMove);
+    trigger.removeEventListener('mouseleave', handleTriggerMouseLeave);
+    target.removeEventListener('mouseenter', handleTargetMouseEnter);
+    target.removeEventListener('mouseleave', handleTargetMouseLeave);
     window.removeEventListener('resize', handleWindowResize);
+
+    for (const timeoutId of pendingTimeouts) {
+      window.clearTimeout(timeoutId);
+    }
+
+    pendingTimeouts.clear();
 
     svg.remove();
 
