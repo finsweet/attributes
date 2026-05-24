@@ -86,6 +86,10 @@ export const loadAttribute = async (key: FinsweetAttributeKey) => {
       return import('@finsweet/attributes-removequery');
     }
 
+    case 'safetriangles': {
+      return import('@finsweet/attributes-safetriangles');
+    }
+
     case 'scrolldisable': {
       return import('@finsweet/attributes-scrolldisable');
     }

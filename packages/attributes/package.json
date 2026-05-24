@@ -57,6 +57,7 @@
     "@finsweet/attributes-rangeslider": "workspace:*",
     "@finsweet/attributes-readtime": "workspace:*",
     "@finsweet/attributes-removequery": "workspace:*",
+    "@finsweet/attributes-safetriangles": "workspace:*",
     "@finsweet/attributes-scrolldisable": "workspace:*",
     "@finsweet/attributes-selectcustom": "workspace:*",
     "@finsweet/attributes-sliderdots": "workspace:*",
