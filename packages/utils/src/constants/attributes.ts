@@ -36,7 +36,7 @@ export const QUERY_PARAM_ATTRIBUTE = 'queryparam';
 
 export const RANGE_SLIDER_ATTRIBUTE = 'rangeslider';
 
-export const SAFE_POLYGON_ATTRIBUTE = 'safetriangles';
+export const SAFE_TRIANGLES_ATTRIBUTE = 'safetriangles';
 
 export const SCROLL_DISABLE_ATTRIBUTE = 'scrolldisable';
 
