@@ -1,5 +1,11 @@
 # @finsweet/attributes
 
+## 2.7.0
+
+### Minor Changes
+
+- 6d6e9f2: feat: fs-safetriangles
+
 ## 2.6.33
 
 ### Patch Changes
