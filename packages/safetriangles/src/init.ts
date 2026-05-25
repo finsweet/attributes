@@ -1,4 +1,4 @@
-import { type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
+import { DROPDOWN_CSS_CLASSES, type FinsweetAttributeInit, waitWebflowReady } from '@finsweet/attributes-utils';
 
 import { initSafeTriangle } from './factory';
 import { getAttribute, getInstance, hasAttributeValue, queryAllElements, queryElement } from './utils/selectors';
@@ -13,9 +13,16 @@ export const init: FinsweetAttributeInit = async () => {
   const cleanups: Array<() => void> = [];
 
   triggers.forEach((trigger) => {
-    const instance = getInstance(trigger);
+    let target: HTMLElement | null = null;
 
-    const target = queryElement('target', { instance });
+    const webflowDropdown = trigger.closest(`.${DROPDOWN_CSS_CLASSES.dropdown}`);
+    if (webflowDropdown) {
+      trigger = webflowDropdown.querySelector(`.${DROPDOWN_CSS_CLASSES.dropdownToggle}`) || trigger;
+      target = webflowDropdown.querySelector(`.${DROPDOWN_CSS_CLASSES.dropdownList}`);
+    } else {
+      target ||= queryElement('target', { instance: getInstance(trigger) });
+    }
+
     if (!target) return;
 
     const delay = getAttribute(trigger, 'delay') ?? 100;
