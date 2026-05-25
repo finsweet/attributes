@@ -1,5 +1,12 @@
 # @finsweet/attributes
 
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies [8f7d920]
+  - @finsweet/attributes-safetriangles@0.1.0
+
 ## 2.7.0
 
 ### Minor Changes

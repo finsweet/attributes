@@ -1,6 +1,6 @@
 {
   "name": "@finsweet/attributes-safetriangles",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Generate safe triangles between trigger and target elements to keep context menus open while users move the pointer.",
   "private": true,
   "type": "module",
