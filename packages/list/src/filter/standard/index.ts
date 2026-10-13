@@ -1,11 +1,11 @@
-import { addListener, isFormField, isNumber } from '@finsweet/attributes-utils';
+import { addListener, type FormField, getRadioGroupInputs, isFormField, isNumber } from '@finsweet/attributes-utils';
 import { watch } from '@vue/reactivity';
 
 import type { List } from '../../components/List';
 import { getAttribute, getElementSelector } from '../../utils/selectors';
 import { handleFiltersForm } from '../elements';
 import type { FiltersCondition } from '../types';
-import { getConditionData, getStandardFiltersGroup, setConditionsData } from './conditions';
+import { getConditionData, getConditionOperator, getStandardFiltersGroup, setConditionsData } from './conditions';
 import { initFacets } from './facets';
 
 /**
@@ -102,18 +102,21 @@ const handleFormFields = (list: List, form: HTMLFormElement, groupIndex: number,
     if (!fieldKey) return;
 
     const condition = getConditionData(target, fieldKey, true);
+    const siblingConditions = getRadioSiblingConditions(target, fieldKey, condition.op);
 
     const update = () => {
       const conditions = list.filters.value.groups[groupIndex]?.conditions || [];
 
-      const conditionIndex = conditions.findIndex((c) => c.fieldKey === fieldKey && c.op === condition.op);
-
       list.readingFilters = true;
 
-      if (conditionIndex >= 0) {
-        conditions[conditionIndex] = condition;
-      } else {
-        conditions.push(condition);
+      for (const newCondition of [condition, ...siblingConditions]) {
+        const conditionIndex = conditions.findIndex((c) => c.fieldKey === fieldKey && c.op === newCondition.op);
+
+        if (conditionIndex >= 0) {
+          conditions[conditionIndex] = newCondition;
+        } else {
+          conditions.push(newCondition);
+        }
       }
 
       list.readingFilters = false;
@@ -139,6 +142,31 @@ const handleFormFields = (list: List, form: HTMLFormElement, groupIndex: number,
     // Without debouncing
     update();
   });
+};
+
+/**
+ * Native radio groups uncheck the previously selected radio without firing any event on it.
+ * When the radios of a group use different operators, their conditions must be updated too.
+ * @param target
+ * @param fieldKey
+ * @param op The operator of the target's condition.
+ * @returns The conditions of the other operators used in the target's radio group.
+ */
+const getRadioSiblingConditions = (target: FormField, fieldKey: string, op: FiltersCondition['op']) => {
+  const siblingConditions: FiltersCondition[] = [];
+
+  if (target.type !== 'radio') return siblingConditions;
+
+  for (const radio of getRadioGroupInputs(target)) {
+    if (getAttribute(radio, 'field')?.trim() !== fieldKey) continue;
+
+    const radioOp = getConditionOperator(radio);
+    if (radioOp === op || siblingConditions.some((c) => c.op === radioOp)) continue;
+
+    siblingConditions.push(getConditionData(radio, fieldKey, true));
+  }
+
+  return siblingConditions;
 };
 
 /**

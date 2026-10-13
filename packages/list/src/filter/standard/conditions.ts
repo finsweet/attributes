@@ -43,6 +43,11 @@ export const getConditionData = (formField: FormField, fieldKey: string, interac
 
   let value = getFormFieldValue(formField, CUSTOM_VALUE_ATTRIBUTE);
 
+  // The group value only belongs to the operator of the checked radio
+  if (type === 'radio' && isRadioGroupCheckedWithOtherOperator(formField, op)) {
+    value = '';
+  }
+
   if (isString(value) && splitSeparator) {
     value = splitValue(value, splitSeparator);
   }
@@ -82,6 +87,9 @@ export const setConditionsData = (list: List, form: HTMLFormElement, conditions:
     const formField = form.querySelector(selector);
     if (!isFormField(formField)) continue;
 
+    // Don't let an empty condition uncheck a radio that was selected with a different operator
+    if (formField.type === 'radio' && !value && isRadioGroupCheckedWithOtherOperator(formField, op)) continue;
+
     setFormFieldValue(formField, value, CUSTOM_VALUE_ATTRIBUTE);
   }
 
@@ -102,6 +110,18 @@ export const getConditionOperator = (formField: FormField) => {
 
   const op = getAttribute(formField, 'operator', { filterInvalid: true }) || opDefault;
   return op;
+};
+
+/**
+ * Radios of the same group can target the same field using different operators.
+ * @param radio A radio input of the group.
+ * @param op The operator to compare against.
+ * @returns `true` if the checked radio of the group uses a different operator.
+ */
+export const isRadioGroupCheckedWithOtherOperator = (radio: FormField, op: FiltersCondition['op']) => {
+  const checkedRadio = getRadioGroupInputs(radio).find((input) => input.checked);
+
+  return !!checkedRadio && getConditionOperator(checkedRadio) !== op;
 };
 
 /**
